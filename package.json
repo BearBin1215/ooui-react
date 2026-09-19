@@ -1,0 +1,100 @@
+{
+  "name": "ooui-react",
+  "version": "1.0.0",
+  "description": "React reimplementation of OOUI components",
+  "keywords": [
+    "react",
+    "ooui",
+    "oojs-ui",
+    "mediawiki",
+    "wikimedia",
+    "components",
+    "typescript"
+  ],
+  "bugs": {
+    "url": "https://github.com/BearBin1215/ooui-react/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BearBin1215/ooui-react.git"
+  },
+  "license": "MIT",
+  "author": "BearBin",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./locales/*": {
+      "import": {
+        "types": "./dist/locales/*.d.ts",
+        "default": "./dist/locales/*.js"
+      },
+      "require": {
+        "types": "./dist/locales/*.d.cts",
+        "default": "./dist/locales/*.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "format": "oxfmt \"**/*.{ts,tsx}\"",
+    "format:check": "oxfmt --check \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit",
+    "release": "bumpp",
+    "prepublishOnly": "pnpm run build"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "es-toolkit": "^1.52.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.1",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "@vitest/browser-playwright": "^5.0.1",
+    "@wikimedia/codex-design-tokens": "1.3.5",
+    "antd": "^6.6.4",
+    "bumpp": "^12.3.0",
+    "jquery": "3.7.1",
+    "oojs": "7.0.1",
+    "oojs-ui": "^0.54.2",
+    "oxfmt": "^0.68.0",
+    "oxlint": "^1.83.0",
+    "playwright": "^1.63.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router": "^8.4.0",
+    "tsdown": "^0.23.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.1",
+    "vitest-browser-react": "^2.3.0"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "packageManager": "pnpm@11.27.1+sha512.a81d4c21b9b09a4b0aebf90ef5e527d4262bdda322d26082978cb549023ac6d9cafc98b19fffaa5c71db438a65f70224edb78d7311187861ff96480d1cdca23c"
+}

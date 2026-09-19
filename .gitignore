@@ -1,0 +1,16 @@
+node_modules
+dist
+.vitest
+.playwright-cli
+docs/build
+docs/public/ooui
+
+*.log
+pnpm-debug.log*
+
+.DS_Store
+.vscode/*
+
+.opencode
+.kilo
+.codex-review
