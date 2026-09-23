@@ -52,6 +52,7 @@
     "dist"
   ],
   "scripts": {
+    "dev": "vite",
     "build": "tsdown",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
