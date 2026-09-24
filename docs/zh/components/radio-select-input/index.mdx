@@ -1,0 +1,69 @@
+---
+title: RadioSelectInput 单选组字段
+description: "RadioSelectInput 组件的属性说明：RadioSelect 展示加隐藏 input 承载原生提交，组件始终有选中项（值失效回退首个可选），name 仅落隐藏 input。"
+---
+
+# RadioSelectInput 单选组字段
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/RadioSelectInput) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.RadioSelectInputWidget.html "OO.ui.RadioSelectInputWidget")
+
+表单单选组：[RadioSelect](/components/radio-select/index.html) 负责展示与键盘交互，内嵌的隐藏 `<input>` 承载表单提交。
+
+## 基本用法
+
+与 [RadioSelect](/components/radio-select/index.html) 的区别：`name` 不写在各 `radio` 上（互斥由受控状态保证），且组件**始终有选中项**——传入的值不在可选项内时回退为第一个可选值，与 HTML 单选表单「必有选中项」的语义一致。
+
+```tsx preview
+import { useState } from "react";
+import { ButtonInput, FormLayout, RadioSelectInput } from "ooui-react";
+
+function App() {
+  const [notify, setNotify] = useState<string | number>("email");
+  const [submitted, setSubmitted] = useState("");
+
+  return (
+    <FormLayout
+      onSubmit={(event) => {
+        event.preventDefault();
+        setSubmitted(new FormData(event.currentTarget).get("notify")?.toString() ?? "");
+      }}
+    >
+      <RadioSelectInput
+        name="notify"
+        value={notify}
+        onChange={setNotify}
+        options={[
+          { value: "email", children: "邮件" },
+          { value: "sms", children: "短信" },
+          { value: "none", children: "不通知" },
+        ]}
+      />
+      <ButtonInput type="submit">提交</ButtonInput>
+      <div>当前值：{String(notify)}；已提交：{submitted}</div>
+    </FormLayout>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `options` | 选项集，每项含 `value` 与 `children`（选项文本），支持 `disabled` | `RadioSelectInputOptionProps[]` | — |
+| `value` | 当前选中值（受控，传入即受控模式） | `string \| number` | — |
+| `defaultValue` | 非受控初始选中值 | `string \| number` | — |
+| `onChange` | 选中值变化回调（第二参数为 radio 原生 change 事件，点击改选时携带；键盘改选与聚焦自动选中对应原版的静默更新，无事件） | `ChangeHandler<string \| number, HTMLInputElement>` | — |
+| `name` | 表单字段名（仅落在隐藏 `input` 上） | `string` | — |
+| `disabled` | 是否禁用（隐藏 `input` 一并禁用，退出提交） | `boolean` | `false` |
+| `tabIndex` | 转发给内部 RadioSelect 的根 | `number` | — |
+| `...rest` | 原生 `div` 属性直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+原版构造选项时只转发 `data` 与 `label`，`options[].disabled` 被静默丢弃；本工程按声明采纳 `disabled`，与 [CheckboxMultiselectInput](/components/checkbox-multiselect-input/index.html)、[DropdownInput](/components/dropdown-input/index.html) 的口径一致。{/* deviations: dev-radioselectinput-disabled */}
+
+## 另见
+
+- 交互层的单选组：[RadioSelect](/components/radio-select/index.html)
+- 下拉字段形态：[DropdownInput](/components/dropdown-input/index.html)
+- 复选组字段：[CheckboxMultiselectInput](/components/checkbox-multiselect-input/index.html)

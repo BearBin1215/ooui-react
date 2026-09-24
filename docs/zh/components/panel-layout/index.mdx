@@ -1,0 +1,50 @@
+---
+title: PanelLayout 面板
+description: "PanelLayout 组件的属性说明：padded/scrollable/expanded/framed 四个形态开关，作为各类布局与自绘面板的基座。"
+---
+
+# PanelLayout 面板
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/PanelLayout) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.PanelLayout.html "OO.ui.PanelLayout")
+
+面板：带一组形态开关（内边距、滚动、铺满、边框）的内容容器，也是 [StackLayout](/components/stack-layout/index.html) 等布局组件的基座。
+
+## 基本用法
+
+```tsx preview
+import { PanelLayout } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ position: "relative", height: 120 }}>
+      <PanelLayout padded scrollable framed>
+        <p>带内边距与边框的面板；内容超高时出现滚动条。</p>
+        <p>第二段。</p>
+        <p>第三段。</p>
+        <p>第四段。</p>
+        <p>第五段。</p>
+      </PanelLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+`expanded`（缺省开启）形态按绝对定位铺满父元素，父元素需自行定位并给定尺寸——上面外层 `div` 的 `position: relative` 与 `height` 即为此而设；父元素不定位、不给尺寸时，面板会以更外层的定位祖先（乃至视口）为基准铺开，看起来像「消失」。`expanded={false}` 为 static 形态、按内容收缩排列。以本组件为基座的 [StackLayout](/components/stack-layout/index.html) 等布局继承该前提。
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `padded` | 是否留出内边距 | `boolean` | `false` |
+| `scrollable` | 是否可滚动 | `boolean` | `false` |
+| `expanded` | 是否铺满父元素 | `boolean` | `true` |
+| `framed` | 是否带边框 | `boolean` | `false` |
+| `hidden` | 是否隐藏（三态语义见 [Layout](/components/layout/index.html)） | `boolean \| 'until-found'` | — |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+## 另见
+
+- 基类的 `hidden` 三态语义：[Layout](/components/layout/index.html)
+- 由它驱动的分页容器：[StackLayout](/components/stack-layout/index.html)

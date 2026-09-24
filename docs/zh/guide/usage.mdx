@@ -1,0 +1,113 @@
+---
+title: 使用方式
+description: "ooui-react 的安装命令、运行环境与样式引入，以及在 MediaWiki 站点、Preact 兼容层下的使用方式。"
+---
+
+import { PackageManagerTabs, Steps, Tab, Tabs } from "@rspress/core/theme";
+
+# 使用方式
+
+## 安装
+
+<PackageManagerTabs
+  command={{
+    npm: "npm install ooui-react",
+    yarn: "yarn add ooui-react",
+    pnpm: "pnpm add ooui-react",
+    bun: "bun add ooui-react",
+    deno: "deno add npm:ooui-react",
+  }}
+/>
+
+需 React 版本 ≥ 18。
+
+## 运行环境
+
+- **面向浏览器运行，不支持服务端渲染（SSR）**：浮层组件（`Popup`、`Dropdown` 一类菜单、工具栏弹出面板）在 render 期解析 portal 容器并 `createPortal`，服务端没有 `document` 时直接抛错。用 Next.js 一类同构框架时，把这些组件挡在服务端渲染树之外，或仅在客户端挂载后再渲染。
+- **同时提供 ESM 与 CJS 两份产物，二者是独立模块实例**：Node 进程内混用 `import` 与 `require` 加载时，语言消息注册表与 `OOUIProvider` context 互不共享；浏览器打包场景不受影响。
+
+在非MediaWiki站点使用时~~（真有人用吗）~~，样式需自行引入 OOUI 的主题 CSS 与 Codex 设计令牌表（oojs-ui 0.54 起令牌表须一并引入）。主题 CSS 按需选用其一：wikimediaui 为当前默认，apex 为遗留主题（两主题下部分状态的观感不同，本组件库输出对两者均有效）：
+
+```js
+import "@wikimedia/codex-design-tokens/dist/theme-wikimedia-ui.css";
+// 主题二选一：
+import "oojs-ui/dist/oojs-ui-wikimediaui.css";
+import "oojs-ui/dist/oojs-ui-apex.css";
+```
+
+OOUI 主题的尺寸以 MediaWiki 的正文基准字号 14px 为准，宿主页面应保持一致。
+
+:::tip
+本站导航栏提供「示例主题」切换器，可在 wikimediaui 与 apex 下预览全部实时示例；组件库本身不自带样式，切到哪个主题即还原哪个主题下的观感。
+:::
+
+## 在 MediaWiki 站点使用
+
+本组件库开发的初衷就是用于 MediaWiki 站点的用户小工具。如果对产物体积较为敏感，建议[使用 Preact 兼容层](#preact-兼容)代替完整的 React。
+
+使用示例可见[我的萌娘百科工具仓库](https://github.com/BearBin1215/MoegirlPedia)：
+
+- [`src/gadgets/AdvancedSearch`](https://github.com/BearBin1215/MoegirlPedia/tree/master/src/gadgets/AdvancedSearch)
+- [`src/gadgets/DynamicRecentChanges`](https://github.com/BearBin1215/MoegirlPedia/tree/master/src/gadgets/DynamicRecentChanges)
+- [`src/gadgets/FileInspector`](https://github.com/BearBin1215/MoegirlPedia/tree/master/src/gadgets/FileInspector)
+
+<Steps>
+
+### 声明依赖
+
+MediaWiki 站点的 OOUI 样式由其内置的 `oojs-ui` 资源模块提供，运行时通过 `mw.loader.using` 或小工具的 ResourceLoader 定义里引入：
+
+```ts
+mw.loader.using([
+  "oojs-ui", // 加载 OOUI 基础样式
+  "oojs-ui.styles.icons-media", // 加载 OOUI 对应图标组的 CSS
+]);
+```
+
+其中图标组的组名见[图标索引](/components/icon/index.html#全部图标)里的分组。
+
+### 挂载
+
+建议渲染到 `div` 或 `DocumentFragment` 元素，然后插到锚点前后：
+
+<Tabs>
+  <Tab label="index.tsx">
+
+  ```tsx
+  import React from "react";
+  import { createRoot } from "react-dom/client";
+  import App from "./App";
+
+  $(async () => {
+    await mw.loader.using(["oojs-ui"]);
+    const fragment = document.createDocumentFragment();
+    createRoot(fragment).render(<App />);
+    // 例：添加到最近更改列表前
+    document.querySelector(".mw-changeslist")!.before(fragment);
+  });
+  ```
+
+  </Tab>
+  <Tab label="App.tsx">
+
+  ```tsx
+  import { Button } from "ooui-react";
+
+  function App() {
+    return <Button onClick={() => alert("Hello ooui-react!")}>点我</Button>;
+  }
+
+  export default App;
+  ```
+
+  </Tab>
+</Tabs>
+
+</Steps>
+
+## Preact 兼容
+
+本库可在 Preact 兼容层（`preact/compat`）下运行，映射方法参考[官方指南](https://preactjs.com/guide/getting-started/#aliasing-react-to-preact)。
+
+- 版本门槛 Preact ≥ 10.18。
+- `react-dom/client` 须映射到 `preact/compat/client`，缺失时命令式 API（confirm / alert / prompt）会缺失 `createRoot` 而报错。

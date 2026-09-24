@@ -1,0 +1,77 @@
+---
+title: ToggleSwitch 开关
+description: "ToggleSwitch 组件的属性说明：拨动开关（role=switch），checked/defaultChecked/onChange 通道，Space/Enter 切换，无自带标签，配 FieldLayout 使用。"
+---
+
+# ToggleSwitch 开关
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ToggleSwitch) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ToggleSwitchWidget.html "OO.ui.ToggleSwitchWidget")
+
+拨动开关。不自带文字标签，需要标签时交给 [FieldLayout](/components/field-layout/index.html) 包裹。
+
+## 基本用法
+
+开/关状态走 `checked` / `defaultChecked` / `onChange` 三条通道，`onChange` 的第一个参数是新的开关布尔值。
+
+```tsx preview
+import { useState } from "react";
+import { ToggleSwitch } from "ooui-react";
+
+function App() {
+  const [on, setOn] = useState(true);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 12 }}>
+      <ToggleSwitch checked={on} onChange={setOn} />
+      <div>当前状态：{on ? "开" : "关"}</div>
+      <ToggleSwitch defaultChecked />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 与 FieldLayout 配合
+
+字段文字标签交给 [FieldLayout](/components/field-layout/index.html)。点击标签会**直接翻转开关**并聚焦（与多数“点标签聚焦控件”的字段不同，这是原版 `ToggleSwitchWidget` 的覆写行为）。
+
+```tsx preview
+import { ToggleSwitch, FieldLayout } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 280 }}>
+      <FieldLayout label="接收邮件通知" align="inline">
+        <ToggleSwitch defaultChecked />
+      </FieldLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 交互
+
+- 点击（仅左键）切换；`Tab` 聚焦后可用 **Space / Enter** 切换。
+- `disabled` 输出 `aria-disabled`（不用原生 `disabled`），此时不可点击、不可聚焦，点标签也不翻转。
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `checked` | 是否开启（受控，传入即受控模式） | `boolean` | — |
+| `defaultChecked` | 非受控初始开关态 | `boolean` | `false` |
+| `onChange` | 开关状态变更回调（仅回传新状态） | `(checked: boolean) => void` | — |
+| `disabled` | 是否禁用 | `boolean` | `false` |
+| `tabIndex` | Tab 序 | `number \| null` | `0` |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`aria-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+本组件没有 `children`、`label`、`icon` 落点——开关是纯图形控件，文字说明交给 [FieldLayout](/components/field-layout/index.html)。`onClick` / `onKeyDown` 由组件承载切换逻辑，不接受外部覆盖。
+
+## 另见
+
+- 按钮形态的切换控件：[ToggleButton](/components/toggle-button/index.html)
+- 带标签字段的排版：[FieldLayout](/components/field-layout/index.html)
+- 勾选通道的定位：[受控与非受控](/guide/controlled.html)

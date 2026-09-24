@@ -1,0 +1,85 @@
+---
+title: ButtonSelect 按钮选择
+description: "ButtonSelect 组件的属性说明：一排互斥的按钮式选项（选中项即按钮激活态），方向键环绕直选，value/defaultValue/onChange 通道与带图标的 options。"
+---
+
+# ButtonSelect 按钮选择
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ButtonSelect) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ButtonSelectWidget.html "OO.ui.ButtonSelectWidget")
+
+按钮式选择：把一组互斥选项呈现为一排按钮。选项数据约定见[选择与选项](/guide/options.html)。
+
+## 基本用法
+
+```tsx preview
+import { useState } from "react";
+import { ButtonSelect } from "ooui-react";
+
+const options = [
+  { value: "left", icon: "alignLeft", children: "左对齐" },
+  { value: "center", icon: "alignCenter", children: "居中" },
+  { value: "right", icon: "alignRight", children: "右对齐" },
+];
+
+function App() {
+  const [align, setAlign] = useState<string | number>("left");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <ButtonSelect options={options} value={align} onChange={setAlign} aria-label="对齐" />
+      <div>当前对齐：{String(align)}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 无边框与禁用项
+
+选项支持 `framed={false}`；带 `disabled` 的项不可选，组级 `disabled` 一并禁用全组（见[选择与选项 · 禁用](/guide/options.html#禁用)）。
+
+```tsx preview
+import { ButtonSelect } from "ooui-react";
+
+function App() {
+  return (
+    <ButtonSelect
+      defaultValue="a"
+      options={[
+        { value: "a", children: "可用" },
+        { value: "b", children: "被禁用", disabled: true },
+        { value: "c", children: "也可用" },
+      ]}
+    />
+  );
+}
+
+export default App;
+```
+
+## 键盘
+
+点击选项后焦点自动收进整组（略优于原版：原版点击后焦点留在原处，方向键不响应），↑↓←→ 随即在非禁用项间**环绕移动并直接改选**，Enter 重申当前项；也可以按 Tab 让焦点进入整组。这是“直选族”（与 [TabSelect](/components/tab-select/index.html)、[RadioSelect](/components/radio-select/index.html) 相同）的键盘模型。
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `options` | 选项集（**必填**），每项含 `value` 与 `children`（文本），可选 `icon` / `indicator` / `flags` / `framed` / `disabled` | `ButtonSelectOptionProps[]` | — |
+| `value` | 当前选中值（受控） | `string \| number` | — |
+| `defaultValue` | 非受控初始选中值 | `string \| number` | — |
+| `onChange` | 选中值变更回调（值优先） | `ChangeHandler<string \| number>` | — |
+| `disabled` | 是否禁用（一并禁用组内全部选项） | `boolean` | `false` |
+| `tabIndex` | Tab 序（焦点停在整组） | `number \| null` | `0` |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`aria-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+## 与原版的差异
+
+- **初始选中的带边框选项同样反色**：原版「初始选中不反色、点选后才反色」，本工程按主题规则统一为激活或禁用即反色。{/* deviations: dev-buttonoption-invert */}
+
+## 另见
+
+- 页签式直选：[TabSelect](/components/tab-select/index.html)
+- 单选组（带原生 radio 语义）：[RadioSelect](/components/radio-select/index.html)
+- 选项数据与键盘焦点模型：[选择与选项](/guide/options.html)

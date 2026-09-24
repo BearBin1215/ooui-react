@@ -1,0 +1,87 @@
+---
+title: ButtonGroup
+description: "Props for the ButtonGroup component: arranging several buttons side by side so they read as one connected block, with a group-level disabled propagated to the buttons inside."
+---
+
+# ButtonGroup
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ButtonGroup) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ButtonGroupWidget.html "OO.ui.ButtonGroupWidget")
+
+A button group: it lines up several [Button](/en/components/button/index.html) elements so adjacent ones connect head-to-tail into a single block.
+
+## Basic usage
+
+```tsx preview
+import { Button, ButtonGroup } from "ooui-react";
+
+function App() {
+  return (
+    <ButtonGroup>
+      <Button icon="bold">Bold</Button>
+      <Button icon="italic">Italic</Button>
+      <Button icon="link">Link</Button>
+    </ButtonGroup>
+  );
+}
+
+export default App;
+```
+
+## Mixing in toggle buttons
+
+A group can hold both plain buttons and [ToggleButton](/en/components/toggle-button/index.html) elements, common in editor toolbars.
+
+```tsx preview
+import { Button, ButtonGroup, ToggleButton } from "ooui-react";
+
+function App() {
+  return (
+    <ButtonGroup>
+      <ToggleButton icon="bold">Bold</ToggleButton>
+      <ToggleButton icon="italic">Italic</ToggleButton>
+      <Button icon="highlight" flags="destructive">
+        Clear formatting
+      </Button>
+    </ButtonGroup>
+  );
+}
+
+export default App;
+```
+
+## Group-level disable
+
+Setting `disabled` on the group **propagates it to every button inside**, so you don't have to set each one.
+
+```tsx preview
+import { Button, ButtonGroup } from "ooui-react";
+
+function App() {
+  return (
+    <ButtonGroup disabled>
+      <Button>Copy</Button>
+      <Button>Cut</Button>
+      <Button>Paste</Button>
+    </ButtonGroup>
+  );
+}
+
+export default App;
+```
+
+:::note Difference from the original
+The original propagates the group's disabled state by imperatively updating each child button; this library passes `disabled` down through a React context — the equivalent declarative convenience. A button's effective `disabled` is the OR of its own state and its group's. {/* deviations: dev-buttongroup-disabled */}
+:::
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `children` | Buttons in the group ([Button](/en/components/button/index.html) / [ToggleButton](/en/components/toggle-button/index.html), etc.) | `ReactNode` | — |
+| `disabled` | Group-level disable, propagated to the buttons inside | `boolean` | `false` |
+| `...rest` | Native `div` props (`className`, `id`, `data-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
+
+## See also
+
+- Buttons within the group: [Button](/en/components/button/index.html), [ToggleButton](/en/components/toggle-button/index.html)
+- Common pass-through and `ref` rules: [Common props](/en/guide/basics.html)

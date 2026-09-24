@@ -1,0 +1,79 @@
+---
+title: SearchWidget 搜索组件
+description: "SearchWidget 组件的属性说明：搜索框 + 常驻结果列表的组合；本组件不实现检索，查询变化经 onQueryChange 回调、由调用方填入 results，↑↓ 在结果间移动高亮、Enter 选定。"
+---
+
+# SearchWidget 搜索组件
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/SearchWidget) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.SearchWidget.html "OO.ui.SearchWidget")
+
+搜索组件：查询框配始终可见的结果列表。
+
+## 基本用法
+
+组件本身不设定高度：query 与 results 均为绝对定位，根元素没有高度样式。使用时建议为根元素提供高度（固定高度、`height: 100%` 或在 flex 列布局中 `flex: 1` 均可），否则结果列表会溢出组件盒子；示例同时给根元素加了 `position: relative`，让这些区域以组件自身为定位基准（缺省时会锚到外层最近的定位元素）。
+
+```tsx preview
+import { useState } from "react";
+import { SearchWidget } from "ooui-react";
+
+const data = ["苹果", "香蕉", "橙子", "葡萄", "西瓜"];
+
+function App() {
+  const [query, setQuery] = useState("");
+  const [picked, setPicked] = useState("（未选定）");
+
+  // 由调用方按查询过滤出结果集填入 results
+  const results = data
+    .filter((name) => name.includes(query))
+    .map((name) => ({ value: name, children: name }));
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 320 }}>
+      <SearchWidget
+        value={query}
+        onQueryChange={setQuery}
+        onChoose={(v) => setPicked(String(v))}
+        results={results}
+        placeholder="搜索水果……"
+        style={{ height: 280, position: "relative" }}
+      />
+      <div>已选定：{picked}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 查询与选定
+
+- `value` / `defaultValue` / `onQueryChange` 是查询框的受控/非受控通道（无 `onChange`，查询变化走 `onQueryChange`）。
+- `results` 每项是标准的[选项数据](/guide/options.html)（带 `value` 与 `children`）。
+- `onChoose` 在选定结果时触发（Enter 选定高亮结果，或鼠标点击结果）。结果集或查询变化时高亮自动清除。
+- 组件不实现检索，真实场景多为异步：在 `onQueryChange` 里发起请求，加载期间可先把 `results` 清空、就绪后再填入——结果集或查询每次变化高亮都会自动清除，无需手动复位。
+- `inputProps` 是**双层通道**：SearchInput 组件层的属性直接写；要落到原生 `<input>` 的属性（`aria-*`、`autoComplete` 等）经 `inputProps.inputProps` 给入（TextInput 的输入元素通道）。`inputProps.inputRef` 会被合并——该 input 兼作结果列表 `aria-activedescendant` 的焦点归属元素。
+
+## 键盘与焦点
+
+焦点始终留在查询框：↑↓ 在结果间移动高亮（端点环绕）、Enter 选定当前高亮项。查询框右侧的清除指示器由 [SearchInput](/components/search-input/index.html) 提供，有值即出现、点击清空。
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `results` | 结果选项集，由调用方按查询填充 | `SelectOptionProps[]` | `[]` |
+| `value` | 查询文本（受控） | `string` | — |
+| `defaultValue` | 非受控初始查询 | `string` | `''` |
+| `onQueryChange` | 查询变化回调（据此重填 `results`） | `ChangeHandler<string>` | — |
+| `onChoose` | 选定结果回调 | `ChangeHandler<string \| number>` | — |
+| `placeholder` | 查询框占位符 | `string` | — |
+| `inputProps` | 查询框（SearchInput）的属性覆盖（双层通道，见[查询与选定](#查询与选定)）；`value`/`defaultValue`/`onChange` 由本组件接管 | `object` | — |
+| `disabled` | 是否禁用 | `boolean` | `false` |
+| `...rest` | 原生 `div` 属性直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+## 另见
+
+- 带候选菜单、以标签呈现的查找：[MenuTagMultiselect](/components/menu-tag-multiselect/index.html)
+- 可自由输入的下拉候选：[ComboBoxInput](/components/combo-box-input/index.html)
+- 查询框本身的能力：[SearchInput](/components/search-input/index.html)

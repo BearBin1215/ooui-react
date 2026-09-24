@@ -1,0 +1,62 @@
+---
+title: Indicator
+description: "Props for the Indicator component: the up, down, clear and required indicators, mostly used embedded inside other components."
+---
+
+# Indicator
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Indicator) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.IndicatorWidget.html "OO.ui.IndicatorWidget")
+
+An indicator component, usually rendered inside other components to convey a specific meaning.
+
+## Basic usage
+
+Four values: `up`, `down`, `clear` (the close cross) and `required` (the required asterisk).
+
+```tsx preview
+import { Indicator } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <Indicator indicator="up" title="up" />
+      <Indicator indicator="down" title="down" />
+      <Indicator indicator="clear" title="clear" />
+      <Indicator indicator="required" title="required" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Disabled state
+
+`disabled` outputs `oo-ui-widget-disabled` and `aria-disabled`; the theme fades the indicator.
+
+```tsx preview
+import { Indicator } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <Indicator indicator="down" title="Normal" />
+      <Indicator indicator="down" disabled title="Disabled" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Structure
+
+The component renders a single `<span>`; `ref` points to it and undeclared props pass through to that element. An indicator is a text-free decorative glyph — when you need a screen reader to convey its meaning, give the host element an `aria-label`.
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `indicator` | Indicator kind | `'up' \| 'down' \| 'clear' \| 'required'` | — |
+| `disabled` | Whether disabled | `boolean` | `false` |
+| `...rest` | Native `span` props (`className`, `title`, `aria-*`, events, etc.) passed straight to the root | `HTMLAttributes<HTMLSpanElement>` | — |

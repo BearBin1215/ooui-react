@@ -1,0 +1,102 @@
+---
+title: MenuTagMultiselect
+description: "Props for the MenuTagMultiselect component: a tag input with a candidate menu (TagMultiselect plus required options); typing filters the menu, ↑↓/Enter choose, clicking toggles a tag; without allowArbitrary the legal range is the union of allowedValues and the options' values."
+---
+
+# MenuTagMultiselect
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/MenuTagMultiselect) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.MenuTagMultiselectWidget.html "OO.ui.MenuTagMultiselectWidget")
+
+A tag input with a candidate menu. Props match [TagMultiselect](/en/components/tag-multiselect/index.html), plus the required `options`.
+
+## Basic usage
+
+Typing filters the candidates and Enter chooses the highlighted item (with no highlight, the typed text is committed); without `allowArbitrary`, typed text outside the candidate value range is rejected (no error — simply no tag). See the next section for free entry.
+
+```tsx preview
+import { useState } from "react";
+import { MenuTagMultiselect } from "ooui-react";
+
+const options = [
+  { value: "bold", label: "Bold", icon: "bold" },
+  { value: "italic", label: "Italic", icon: "italic" },
+  { value: "link", label: "Link", icon: "link" },
+  { value: "image", label: "Image", icon: "image" },
+];
+
+function App() {
+  const [tags, setTags] = useState<(string | number)[]>(["bold"]);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 360 }}>
+      <MenuTagMultiselect
+        options={options}
+        value={tags}
+        onChange={setTags}
+        placeholder="Type to filter, or pick from the menu"
+      />
+      <div>Selected: {tags.join(", ") || "(none)"}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Toggle semantics and tag editing
+
+Menu candidates are **toggle-style**: pressing Enter / clicking an already-chosen candidate again **removes** that tag — the same candidate is both the add and the remove entry, and menu items with a corresponding tag show as selected (tags added by typing are marked selected as well). {/* deviations: dev-tag-typed-menu-selected */}
+
+Clicking a tag behaves differently depending on `allowArbitrary`: without it, clicking a tag locates it in the menu (opens the menu and highlights the matching candidate), and [TagMultiselect](/en/components/tag-multiselect/index.html)'s `allowEditTags` backfill-to-edit doesn't take effect; with `allowArbitrary`, clicking a tag moves its text back into the input for editing.
+
+:::note Differences from OOUI
+With `inputPosition='none'` (no input), clicking a tag also opens the menu and highlights the clicked candidate — the original has no path at all to open the menu in that form; keyboard navigation is not yet available once opened. {/* deviations: dev-menu-open-no-input */}
+:::
+
+## Value range and arbitrary values
+
+Without `allowArbitrary`, the legal range for tags is the union of `allowedValues` and each option's `value` — usually only `options` is given, i.e. you can only add candidate values. With `allowArbitrary`, you can also type free text outside the candidates as a tag. `clearInputOnChoose` (on by default) controls whether the input's filter text is cleared after choosing a menu item.
+
+```tsx preview
+import { useState } from "react";
+import { MenuTagMultiselect } from "ooui-react";
+
+function App() {
+  const [tags, setTags] = useState<(string | number)[]>([]);
+
+  return (
+    <div style={{ maxWidth: 360 }}>
+      <MenuTagMultiselect
+        allowArbitrary
+        options={[
+          { value: "cat", label: "Cat" },
+          { value: "dog", label: "Dog" },
+        ]}
+        value={tags}
+        onChange={setTags}
+        placeholder="Pick from candidates, or type freely and press Enter"
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Rich-content tags
+
+An option's `label` accepts a `ReactNode`; when it is rich content (not a plain string), the plain text needed for prefix filtering and backfill must be provided explicitly via `labelText`, or that option won't participate in prefix filtering (see [Selection and options · Options of tag inputs](/en/guide/options.html#options-of-tag-inputs)). Tags with `fixed: true` are fixed and can't be removed.
+
+## API
+
+On top of all [TagMultiselect](/en/components/tag-multiselect/index.html) props:
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `options` | Candidate menu option set (**required**); fields in [Selection and options](/en/guide/options.html#options-of-tag-inputs) | `MenuTagMultiselectOptionProps[]` | — |
+| `clearInputOnChoose` | Whether to clear the filter text after choosing a menu item | `boolean` | `true` |
+
+## See also
+
+- Free entry without a candidate menu: [TagMultiselect](/en/components/tag-multiselect/index.html)
+- Option data and the keyboard focus model: [Selection and options](/en/guide/options.html)

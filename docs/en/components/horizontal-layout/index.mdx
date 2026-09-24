@@ -1,0 +1,35 @@
+---
+title: HorizontalLayout
+description: "Props for the HorizontalLayout component: a horizontal container that only outputs the oo-ui-horizontalLayout root class, with arrangement left to the theme CSS."
+---
+
+# HorizontalLayout
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/HorizontalLayout) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.HorizontalLayout.html "OO.ui.HorizontalLayout")
+
+A horizontal container: it only outputs the `oo-ui-horizontalLayout` root class and leaves the arrangement to the theme CSS; write your own styles (or a plain `div`) when you need exact spacing control.
+
+## Basic usage
+
+```tsx preview
+import { Button, HorizontalLayout, TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <HorizontalLayout>
+      <TextInput placeholder="Search…" />
+      <Button flags="primary">Search</Button>
+    </HorizontalLayout>
+  );
+}
+
+export default App;
+```
+
+## API
+
+Inherits every prop of [Layout](/en/components/layout/index.html) (including the `hidden` three states).
+
+## See also
+
+- The `hidden` three-state semantics of the base class: [Layout](/en/components/layout/index.html)

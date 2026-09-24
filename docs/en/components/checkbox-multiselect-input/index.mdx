@@ -1,0 +1,68 @@
+---
+title: CheckboxMultiselectInput
+description: "Props for the CheckboxMultiselectInput component: the form form of CheckboxMultiselect, where each option's checkbox carries name/value for native submission, with the checked set riding the array value channel."
+---
+
+# CheckboxMultiselectInput
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/CheckboxMultiselectInput) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.CheckboxMultiselectInputWidget.html "OO.ui.CheckboxMultiselectInputWidget")
+
+A checkbox group field: the form form of [CheckboxMultiselect](/en/components/checkbox-multiselect/index.html) — display and interaction unchanged, with each option's checkbox carrying `name` and its own `value`, so the checked ones submit natively as multiple same-name fields.
+
+## Basic usage
+
+The value channels match [CheckboxMultiselect](/en/components/checkbox-multiselect/index.html): array-valued `value` / `defaultValue` / `onChange`.
+
+```tsx preview
+import { useState } from "react";
+import { ButtonInput, CheckboxMultiselectInput, FormLayout } from "ooui-react";
+
+function App() {
+  const [fruits, setFruits] = useState<Array<string | number>>(["apple"]);
+  const [submitted, setSubmitted] = useState("");
+
+  return (
+    <FormLayout
+      onSubmit={(event) => {
+        event.preventDefault();
+        const values: string[] = [];
+        new FormData(event.currentTarget).forEach((value, key) => {
+          if (key === "fruits") {
+            values.push(String(value));
+          }
+        });
+        setSubmitted(values.join(", ") || "(none checked)");
+      }}
+    >
+      <CheckboxMultiselectInput
+        name="fruits"
+        value={fruits}
+        onChange={setFruits}
+        options={[
+          { value: "apple", children: "Apple" },
+          { value: "banana", children: "Banana" },
+          { value: "cherry", children: "Cherry" },
+        ]}
+      />
+      <ButtonInput type="submit">Submit</ButtonInput>
+      <div>Submitted: {submitted}</div>
+    </FormLayout>
+  );
+}
+
+export default App;
+```
+
+## API
+
+Inherits all props of [CheckboxMultiselect](/en/components/checkbox-multiselect/index.html) (`options` / `value` / `defaultValue` / `onChange` / `name` / `disabled`, etc.); no new fields.
+
+:::note
+The options' checkbox `value` is taken over by this component (written with the option's own `value` for submission), so a value passed via `options[].checkboxProps.value` is overridden.
+:::
+
+## See also
+
+- The interactive checkbox group (Shift+click range selection, etc.): [CheckboxMultiselect](/en/components/checkbox-multiselect/index.html)
+- The radio group field: [RadioSelectInput](/en/components/radio-select-input/index.html)
+- The form container: [FormLayout](/en/components/form-layout/index.html)

@@ -1,0 +1,231 @@
+---
+title: ProcessDialog
+description: "Props for the ProcessDialog component: the actions array with safe/primary/other layout, async orchestration via onAction (pending stripes and the error panel), the mode multi-step switch and keyboard shortcuts."
+---
+
+# ProcessDialog
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/dialogs/ProcessDialog) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ProcessDialog.html "OO.ui.ProcessDialog")
+
+A multi-step process dialog with an action area and an error panel, extending the [Dialog](/en/components/dialog/index.html) base class.
+
+## Basic usage
+
+Actions are declared in the `actions` array: **each special-action class takes only the first visible action** — the first visible action with the `safe` flag sits on the left of the header (cancel/close style), the first visible one with `primary` sits on the right (continue/save style), and all the remaining actions (including second and further `safe` / `primary` ones) line up in the footer action area; actions with `close` / `back` flags render as icon-only buttons.
+
+`onAction` receives the action's `action` name; while the returned `Promise` is running, the header shows pending stripes, and the flow ends when it settles.
+
+```tsx preview
+import { useState } from "react";
+import { Button, ProcessDialog } from "ooui-react";
+
+function App() {
+  const [open, setOpen] = useState(false);
+  const [savedAt, setSavedAt] = useState("");
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open process dialog</Button>
+      <ProcessDialog
+        open={open}
+        title="Edit entry"
+        onEscape={() => setOpen(false)}
+        actions={[
+          { action: "cancel", label: "Cancel", flags: "safe" },
+          { action: "save", label: "Save", flags: ["primary", "progressive"] },
+        ]}
+        onAction={(action) => {
+          if (action === "cancel") {
+            setOpen(false);
+            return;
+          }
+          // Returning a Promise: pending stripes show in the header while it runs
+          return new Promise<void>((resolve) => {
+            setTimeout(() => {
+              setSavedAt(new Date().toLocaleTimeString());
+              setOpen(false);
+              resolve();
+            }, 1200);
+          });
+        }}
+      >
+        <div style={{ padding: 12 }}>
+          Put your form or content here. {savedAt && `Last saved at ${savedAt}`}
+        </div>
+      </ProcessDialog>
+    </>
+  );
+}
+
+export default App;
+```
+
+## Multi-step flows
+
+Once `mode` is passed, only actions whose `modes` include the current mode stay visible (actions without `modes` are hidden too); without `mode`, all actions are visible. Switch it with state and you have a wizard.
+
+```tsx preview
+import { useState } from "react";
+import { Button, ProcessDialog } from "ooui-react";
+
+function App() {
+  const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState("edit");
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open wizard dialog</Button>
+      <ProcessDialog
+        open={open}
+        mode={mode}
+        title={mode === "edit" ? "Edit" : "Preview"}
+        onEscape={() => setOpen(false)}
+        actions={[
+          { action: "back", label: "Back", flags: "back", modes: ["preview"] },
+          { action: "cancel", label: "Cancel", flags: "safe", modes: ["edit"] },
+          {
+            action: "next",
+            label: "Next",
+            flags: ["primary", "progressive"],
+            modes: ["edit"],
+          },
+          { action: "save", label: "Save", flags: ["primary", "progressive"], modes: ["preview"] },
+        ]}
+        onAction={(action) => {
+          if (action === "next") {
+            setMode("preview");
+          } else if (action === "back") {
+            setMode("edit");
+          } else if (action === "cancel") {
+            setOpen(false);
+          }
+        }}
+      >
+        <div style={{ padding: 12 }}>
+          {mode === "edit" ? "Step 1: fill in the content" : "Step 2: review and save"}
+        </div>
+      </ProcessDialog>
+    </>
+  );
+}
+
+export default App;
+```
+
+## Error panel
+
+When the `onAction` Promise rejects with an error object (or an array of them), a panel covering the whole dialog opens:
+
+- The error object is `{ message, recoverable?, warning? }` (type `ProcessDialogErrorProps`); `recoverable` defaults to `true` and the panel shows a **Retry** button (re-runs the most recently executed action).
+- Errors with `warning: true` render as warning messages and the button reads Continue.
+- With `recoverable: false`, the triggered action is disabled (until the dialog closes) and the panel can only be left via Dismiss.
+- The error panel collapses automatically before each action runs.
+
+```tsx preview
+import { useState } from "react";
+import { Button, ProcessDialog } from "ooui-react";
+
+function App() {
+  const [open, setOpen] = useState(false);
+  const [failNext, setFailNext] = useState(true);
+
+  return (
+    <>
+      <Button
+        onClick={() => {
+          setFailNext(true);
+          setOpen(true);
+        }}
+      >
+        Open (first save fails)
+      </Button>
+      <ProcessDialog
+        open={open}
+        title="Upload attachment"
+        onEscape={() => setOpen(false)}
+        actions={[
+          { action: "cancel", label: "Cancel", flags: "safe" },
+          { action: "save", label: "Save", flags: ["primary", "progressive"] },
+        ]}
+        onAction={(action) => {
+          if (action === "cancel") {
+            setOpen(false);
+            return;
+          }
+          return new Promise<void>((resolve, reject) => {
+            setTimeout(() => {
+              if (failNext) {
+                setFailNext(false);
+                reject([{ message: "Saving failed: network timeout, please retry", recoverable: true }]);
+              } else {
+                setOpen(false);
+                resolve();
+              }
+            }, 800);
+          });
+        }}
+      >
+        <div style={{ padding: 12 }}>
+          Click "Save" to trigger a failure; one Retry in the panel succeeds.
+        </div>
+      </ProcessDialog>
+    </>
+  );
+}
+
+export default App;
+```
+
+## Keyboard
+
+- `Ctrl` / `Cmd` + `Enter` runs the primary action.
+- `ESC` triggers `onEscape`; closing is wired by the caller.
+
+## API
+
+Inherits `open` / `size` / `escapable` / `onReady` and the rest from [Dialog](/en/components/dialog/index.html); `title` / `head` / `foot` / `bodyFitFoot` are taken over by this component, and `onPrimaryAction` is taken over to run the primary action.
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `open` | Whether the dialog is open (controlled, required) | `boolean` | — |
+| `title` | Dialog title (auto-associated via `aria-labelledby`) | `ReactNode` | — |
+| `actions` | The action set | `ProcessDialogActionProps[]` | `[]` |
+| `mode` | Current mode; when passed, only actions whose `modes` include it are visible | `string` | — |
+| `onAction` | Action handler; pending stripes show in the header while the returned `Promise` runs, and rejecting with error objects opens the error panel | `(action: string) => Promise<void> \| void` | — |
+| `onEscape` | Triggered on `ESC` (the caller closes the dialog) | `() => void` | — |
+| `escapable` | Whether `ESC` may trigger closing | `boolean` | `true` |
+| `children` | Body content | `ReactNode` | — |
+| `...rest` | Remaining `Dialog` props (`size`, `onReady`, etc.) and native `div` props | — | — |
+
+Items of the `actions` array (`ProcessDialogActionProps`):
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `action` | The action name (passed to `onAction`) | `string` | — |
+| `label` | Button text (replaced by an icon when `flags` include `close` / `back`) | `ReactNode` | — |
+| `flags` | Button flags; `safe` / `primary` also decide the special header positions | `ButtonFlag \| ButtonFlag[]` | — |
+| `modes` | Visible modes; once declared, the action shows only when `mode` matches | `string[]` | — |
+| `disabled` | Whether disabled | `boolean` | `false` |
+| `pending` | Whether this action's button is pending (striped overlay) | `boolean` | `false` |
+| `title` | Button tooltip | `string` | — |
+
+The error object (`ProcessDialogErrorProps`):
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `message` | The error message | `ReactNode` | — |
+| `recoverable` | Whether recoverable; `false` disables the triggered action and the panel can only be left via Dismiss | `boolean` | `true` |
+| `warning` | Warning error (renders as a warning message, button reads Continue) | `boolean` | `false` |
+
+## Differences from OOUI
+
+- **Action orchestration collapses into one async `onAction` callback**: the original chains steps via `getActionProcess` returning an `OO.ui.Process`; here you chain the steps inside the callback, and throwing (rejecting) ends the flow into the error panel. {/* deviations: dev-onaction */}
+- **`ActionWidget` / `ActionSet` / `OO.ui.Error` are not provided as standalone classes**: their abilities live in the `actions` array (the `action` / `flags` / `modes` / `pending` fields) and the error object rendered by the error panel. {/* deviations: dev-actionset-inline */}
+- **The "special action" flags are fixed to `safe` / `primary`**: the original lets subclasses extend `ActionSet.static.specialFlags`; there is no class inheritance here — declare those two via `flags` to claim the header positions. {/* deviations: dev-special-flags */}
+- **Passing `mode` filters by `modes` from the first frame** (the original shows all actions until the first `setMode`). {/* deviations: dev-processdialog-mode */}
+
+## See also
+
+- The Dialog base class and MessageDialog: [Dialog](/en/components/dialog/index.html)
+- Messages rendered inside the error panel: [Message](/en/components/message/index.html)
+- Why dialogs are controlled-only: [Controlled and uncontrolled](/en/guide/controlled.html#dialogs-must-be-controlled)

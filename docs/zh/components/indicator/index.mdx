@@ -1,0 +1,62 @@
+---
+title: Indicator 指示器
+description: "Indicator 组件的属性说明：up、down、clear、required 四种指示器，多为其它组件内嵌使用。"
+---
+
+# Indicator 指示器
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Indicator) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.IndicatorWidget.html "OO.ui.IndicatorWidget")
+
+指示器组件，通常在其他组件内渲染表示特定含义。
+
+## 基本用法
+
+四种取值：`up`、`down`、`clear`（关闭叉）、`required`（必填星号）。
+
+```tsx preview
+import { Indicator } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <Indicator indicator="up" title="up" />
+      <Indicator indicator="down" title="down" />
+      <Indicator indicator="clear" title="clear" />
+      <Indicator indicator="required" title="required" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 禁用态
+
+`disabled` 输出 `oo-ui-widget-disabled` 与 `aria-disabled`，主题把指示器调淡。
+
+```tsx preview
+import { Indicator } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <Indicator indicator="down" title="常规" />
+      <Indicator indicator="down" disabled title="禁用" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 结构
+
+组件渲染单个 `<span>`，`ref` 指向它，未声明的属性透传到该元素。指示器本身是无文本的装饰性图形，需要让读屏器读出含义时，请在宿主元素上给出 `aria-label`。
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `indicator` | 指示器种类 | `'up' \| 'down' \| 'clear' \| 'required'` | — |
+| `disabled` | 是否禁用 | `boolean` | `false` |
+| `...rest` | 原生 `span` 属性（`className`、`title`、`aria-*`、事件等）直传根元素 | `HTMLAttributes<HTMLSpanElement>` | — |

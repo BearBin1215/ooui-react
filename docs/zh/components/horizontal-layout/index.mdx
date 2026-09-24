@@ -1,0 +1,35 @@
+---
+title: HorizontalLayout 横向布局
+description: "HorizontalLayout 组件的属性说明：仅输出 oo-ui-horizontalLayout 根类的横向容器，排布交主题 CSS。"
+---
+
+# HorizontalLayout 横向布局
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/HorizontalLayout) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.HorizontalLayout.html "OO.ui.HorizontalLayout")
+
+横向容器：仅输出 `oo-ui-horizontalLayout` 根类，排布交由主题 CSS；需要精确控制间距时自己写样式或换用普通 `div`。
+
+## 基本用法
+
+```tsx preview
+import { Button, HorizontalLayout, TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <HorizontalLayout>
+      <TextInput placeholder="搜索…" />
+      <Button flags="primary">搜索</Button>
+    </HorizontalLayout>
+  );
+}
+
+export default App;
+```
+
+## API
+
+继承 [Layout](/components/layout/index.html) 的全部属性（含 `hidden` 三态）。
+
+## 另见
+
+- 基类的 `hidden` 三态语义：[Layout](/components/layout/index.html)

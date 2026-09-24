@@ -1,0 +1,117 @@
+---
+title: ProgressBar
+description: "Props for the ProgressBar component: a 0–100 progress value, the indeterminate striped form via progress=false, and the role=progressbar semantics with range clamping."
+---
+
+# ProgressBar
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ProgressBar) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ProgressBarWidget.html "OO.ui.ProgressBarWidget")
+
+A progress bar.
+
+## Determinate progress
+
+`progress` takes a 0–100 number; out-of-range values are clamped to `[0, 100]` (the original doesn't clamp — a `NaN` produces an invalid width and attribute value). {/* deviations: dev-progressbar-clamp */}
+
+```tsx preview
+import { useState } from "react";
+import { Button, ProgressBar } from "ooui-react";
+
+function App() {
+  const [progress, setProgress] = useState(40);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <ProgressBar progress={progress} />
+      <div style={{ display: "flex", gap: 8 }}>
+        <Button onClick={() => setProgress((p) => Math.max(0, p - 10))}>-10</Button>
+        <Button onClick={() => setProgress((p) => Math.min(100, p + 10))}>+10</Button>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Indeterminate progress
+
+`progress={false}` (also the default) means "in progress" with an unknown total: the fill indicates activity with a sliding animation and reports no specific value.
+
+```tsx preview
+import { ProgressBar } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 320 }}>
+      <ProgressBar />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Advancing with an async task
+
+A common pattern is to start at indeterminate progress and switch to a determinate value once quantifiable progress is available.
+
+```tsx preview
+import { useEffect, useState } from "react";
+import { Button, ProgressBar } from "ooui-react";
+
+function App() {
+  const [state, setState] = useState<"idle" | "starting" | "running" | "done">("idle");
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (state !== "running") {
+      return;
+    }
+    const timer = setInterval(() => {
+      setProgress((p) => {
+        if (p >= 100) {
+          setState("done");
+          return 100;
+        }
+        return p + 10;
+      });
+    }, 300);
+    return () => clearInterval(timer);
+  }, [state]);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <ProgressBar
+        progress={state === "starting" || state === "idle" ? false : progress}
+      />
+      <Button
+        disabled={state === "starting" || state === "running"}
+        onClick={() => {
+          setProgress(0);
+          setState("starting");
+          setTimeout(() => setState("running"), 800);
+        }}
+      >
+        Start task
+      </Button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `progress` | Progress percentage (0–100, clamped); `false` is indeterminate (sliding animation), and non-finite values (e.g. `NaN`) are treated as indeterminate too | `number \| false` | `false` |
+| `disabled` | Whether disabled | `boolean` | `false` |
+| `...rest` | Native `div` props (`className`, `id`, `aria-label`, etc.) passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
+
+The bar is read-only and not focusable; it announces the value through `aria-valuenow` / `aria-valuemin` / `aria-valuemax`. With determinate progress `aria-valuenow` is the clamped value; with indeterminate progress it is omitted. To give the bar an accessible name, use `aria-label`.
+
+## See also
+
+- Common pass-through and `ref` rules: [Common props](/en/guide/basics.html)

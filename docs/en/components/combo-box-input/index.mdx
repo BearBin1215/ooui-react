@@ -1,0 +1,110 @@
+---
+title: ComboBoxInput
+description: "Props for the ComboBoxInput component: a free-text input plus a dropdown candidate menu; choosing writes text but doesn't constrain the value, and input capabilities (label, icon, soft validation) match TextInput, plus the keyboard open/choose semantics."
+---
+
+# ComboBoxInput
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ComboBoxInput) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ComboBoxInputWidget.html "OO.ui.ComboBoxInputWidget")
+
+A combo box: a freely editable input with a dropdown candidate menu; the text doesn't have to be one of the candidates.
+
+## Basic usage
+
+```tsx preview
+import { useState } from "react";
+import { ComboBoxInput } from "ooui-react";
+
+const options = [
+  { value: "red", children: "Red" },
+  { value: "green", children: "Green" },
+  { value: "blue", children: "Blue" },
+];
+
+function App() {
+  const [text, setText] = useState("");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 260 }}>
+      <ComboBoxInput
+        options={options}
+        value={text}
+        onChange={setText}
+        placeholder="Type or pick from the dropdown"
+      />
+      <div>Current text: {text || "(empty)"}</div>
+      <ComboBoxInput options={options} defaultValue="Green" label="Color" labelPosition="before" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Labels, icons and soft validation
+
+`label` / `labelPosition` / `invisibleLabel`, `icon` / `indicator`, `validate`, `required` and the rest follow [TextInput](/en/components/text-input/index.html); `validate` is soft feedback (marks `aria-invalid`, never rewrites the value).
+
+```tsx preview
+import { ComboBoxInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 260 }}>
+      <ComboBoxInput
+        icon="search"
+        validate={(v) => v.length >= 2}
+        placeholder="At least two characters"
+        options={[{ value: "ab", children: "AB" }, { value: "cd", children: "CD" }]}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Keyboard and choosing
+
+Typing only **opens the menu** and re-anchors the highlight to the option exactly matching the input (no match clears the highlight); the candidate list itself is not filtered by the input — to "filter as you type", narrow `options` yourself. Clicking the input also re-opens the menu. With `readOnly` the component is fully read-only: none of the three open paths (arrow keys, the dropdown button, clicking the input) can expand the menu (the original would still expand a fully disabled menu on click; here read-only means no expansion).{/* deviations: dev-combobox-readonly */}
+
+Choosing (clicking an option, Enter, the dropdown button) writes the option text into the input and the value is always a string: **options with a numeric `value` never show as selected** (matching the original, which compares serialized text — `1` and `'1'` are not equal); use string values when you need the selected state.
+
+| Key | Behavior |
+| --- | --- |
+| ↑ / ↓ | Open the menu and move the highlight (starting from the first / last option when closed) |
+| Enter | Choose the highlighted option (with no highlight, the option exactly matching the input) and close; while the menu is open the default is prevented, so Enter inside a [FormLayout](/en/components/form-layout/index.html) won't submit the form as a side effect |
+| Tab | Taken only while the menu is open: with an unchosen highlight, it commits that option and keeps focus; otherwise it closes the menu and lets focus move on |
+| PageUp / PageDown | Page by ±10 (only while the menu is open) |
+| Home / End / ← / → | Not taken; the caret stays with the input |
+
+The highlight does not wrap at the ends (unlike `SearchWidget`'s wrap-around); Escape or clicking outside closes the menu (handled in the capture phase, so nested in a [Dialog](/en/components/dialog/index.html) it won't close the dialog by mistake). Focus stays on the input and the highlighted option is announced via `aria-activedescendant`; the common model is in [Selection and options](/en/guide/options.html).
+
+## Where props land
+
+Same as [TextInput](/en/components/text-input/index.html): `...rest` lands on the root `<div>`, props for the native `<input>` go through `inputProps`, `inputRef` focuses the input; `tabIndex`, `title`, `dir`, `accessKey` and `name` are taken over and land on the `<input>`.
+
+## API
+
+Only ComboBoxInput-specific props are listed; input props are in [TextInput · API](/en/components/text-input/index.html#api).
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `options` | Candidate option set (**required**); see [Selection and options](/en/guide/options.html) | `DropdownOptionProps[]` | — |
+| `value` | Input text (controlled) | `string` | — |
+| `defaultValue` | Initial value for uncontrolled use | `string` | `''` |
+| `onChange` | Value-change callback (typed and chosen items both fire) | `ChangeHandler<string>` | — |
+| `placeholder` / `name` / `maxLength` / `required` / `readOnly` | Ordinary input props | — | — |
+| `label` / `labelPosition` / `invisibleLabel` | Field label / position / visually hidden | — | — / `'after'` / `false` |
+| `icon` / `indicator` | Icon name / indicator | `string` / `'up' \| 'down' \| 'clear' \| 'required'` | — |
+| `flags` | Extra root flags (invalid overlays it) | `string \| string[]` | — |
+| `validate` | Soft validation, see [Soft validation](/en/components/text-input/index.html#soft-validation) | `RegExp \| ((v: string) => boolean \| Promise<boolean>) \| 'non-empty' \| 'integer'` | — |
+| `inputRef` | Ref to the inner `<input>` | `Ref<HTMLInputElement>` | — |
+| `inputProps` | Extra props for the native `<input>`; events chain after the component's logic | `object` | — |
+| `disabled` | Whether disabled | `boolean` | `false` |
+
+## See also
+
+- The base single-line input: [TextInput](/en/components/text-input/index.html)
+- Pick only from candidates (no free entry): [Dropdown](/en/components/dropdown/index.html)
+- Option data and the keyboard focus model: [Selection and options](/en/guide/options.html)

@@ -1,0 +1,97 @@
+---
+title: DropdownInput 下拉字段
+description: "DropdownInput 组件的属性说明：Dropdown 展示加隐藏 select 承载原生提交，options 分组标题映射 optgroup，值失效回退首个可选值。"
+---
+
+# DropdownInput 下拉字段
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/DropdownInput) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.DropdownInputWidget.html "OO.ui.DropdownInputWidget")
+
+表单下拉选择：Dropdown 负责展示与交互，内嵌的隐藏 `<select>` 承载表单提交（`name` 落在它上面）。
+
+## 基本用法
+
+值走 `value` / `defaultValue` / `onChange` 三条通道。传入的值不在可选项内时回退为第一个可选值，组件始终有有效值。
+
+```tsx preview
+import { useState } from "react";
+import { ButtonInput, DropdownInput, FormLayout } from "ooui-react";
+
+function App() {
+  const [size, setSize] = useState<string | number>("m");
+  const [submitted, setSubmitted] = useState("");
+
+  return (
+    <FormLayout
+      onSubmit={(event) => {
+        event.preventDefault();
+        setSubmitted(new FormData(event.currentTarget).get("size")?.toString() ?? "");
+      }}
+    >
+      <DropdownInput
+        name="size"
+        value={size}
+        onChange={setSize}
+        options={[
+          { value: "s", children: "小" },
+          { value: "m", children: "中" },
+          { value: "l", children: "大" },
+        ]}
+      />
+      <ButtonInput type="submit">提交</ButtonInput>
+      <div>当前值：{String(size)}；已提交：{submitted}</div>
+    </FormLayout>
+  );
+}
+
+export default App;
+```
+
+## 分组选项
+
+不带 `value` 的选项是分组标题，映射为隐藏 `<select>` 的 `<optgroup>`（`disabled` 可禁用整组）。
+
+```tsx preview
+import { DropdownInput } from "ooui-react";
+
+function App() {
+  return (
+    <DropdownInput
+      defaultValue="apple"
+      options={[
+        { children: "水果" },
+        { value: "apple", children: "苹果" },
+        { value: "banana", children: "香蕉" },
+        { children: "蔬菜" },
+        { value: "carrot", children: "胡萝卜" },
+      ]}
+    />
+  );
+}
+
+export default App;
+```
+
+:::note
+移动端形态（[OOUIProvider](/guide/configuration.html#移动端形态) 的 `isMobile`）下主题 CSS 隐藏 Dropdown、改用原生 `<select>` 交互，对齐原版分支。
+:::
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `options` | 选项集：带 `value` 的为可选项（`children` 为显示文本，`disabled` 可禁用），不带的为分组标题 | `DropdownInputOptionProps[]` | — |
+| `value` | 当前选中值（受控，传入即受控模式） | `string \| number` | — |
+| `defaultValue` | 非受控初始选中值 | `string \| number` | — |
+| `onChange` | 选中值变化回调（第二参数为原生 change 事件：移动端原生 `<select>` 路径携带；桌面菜单选定无原生事件，为 `undefined`） | `ChangeHandler<string \| number, HTMLSelectElement>` | — |
+| `name` | 表单字段名（落在隐藏 `<select>` 上） | `string` | — |
+| `required` | 必填（原生 `required`，由隐藏 `<select>` 承载） | `boolean` | `false` |
+| `disabled` | 是否禁用 | `boolean` | `false` |
+| `tabIndex` | 转发给内部 Dropdown 的把手 | `number` | — |
+| `...rest` | 原生 `div` 属性直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+## 另见
+
+- 交互层的下拉选择：[Dropdown](/components/dropdown/index.html)
+- 表单容器：[FormLayout](/components/form-layout/index.html)
+- 单选组字段：[RadioSelectInput](/components/radio-select-input/index.html)

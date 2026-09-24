@@ -1,0 +1,33 @@
+.advsearch {
+  max-width: 50em;
+  box-sizing: border-box;
+  padding: 0.5em 0.75em;
+  border: 1px solid #c8ccd1;
+  background-color: #f8f9fa;
+}
+.advsearch-header {
+  font-size: 1.2em;
+  font-weight: 600;
+}
+.advsearch .advsearch-line {
+  display: flex;
+  gap: 8px;
+  margin-top: 0.4em;
+}
+.advsearch .advsearch-line-pending {
+  opacity: 0.4;
+  transition: opacity ease-out 0.3s;
+}
+.advsearch .advsearch-line-pending:hover {
+  opacity: 1;
+}
+.advsearch .advsearch-line-pending .advsearch-remove {
+  opacity: 0;
+}
+.advsearch .advsearch-code {
+  flex: 0 0 10em;
+}
+.advsearch .advsearch-value {
+  flex: 1 1 40em;
+  max-width: none;
+}

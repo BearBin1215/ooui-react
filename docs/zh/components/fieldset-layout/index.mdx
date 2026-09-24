@@ -1,0 +1,97 @@
+---
+title: FieldsetLayout 字段分组
+description: "FieldsetLayout 组件的属性说明：原生 fieldset 字段分组，label/icon 头部、help 弹出与内联帮助、组级禁用随 fieldset 原生下发。"
+---
+
+# FieldsetLayout 字段分组
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/FieldsetLayout) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.FieldsetLayout.html "OO.ui.FieldsetLayout")
+
+字段集：原生 `<fieldset>` 加 `<legend>` 头部（标题、图标与帮助入口），字段项排在分组容器内。根是原生 `fieldset`，其 `disabled` 会原生地下发禁用组内全部输入控件。
+
+## 基本用法
+
+```tsx preview
+import { FieldLayout, FieldsetLayout, TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <FieldsetLayout label="账户信息" icon="userAvatar">
+      <FieldLayout label="用户名">
+        <TextInput />
+      </FieldLayout>
+      <FieldLayout label="邮箱">
+        <TextInput type="email" />
+      </FieldLayout>
+    </FieldsetLayout>
+  );
+}
+
+export default App;
+```
+
+## 帮助文本
+
+`help` 两种呈现：`helpInline={false}`（缺省）在头部渲染 ⓘ 图标，点击弹出说明；`helpInline={true}` 以内联文本显示在头部之后。
+
+```tsx preview
+import { CheckboxInput, FieldLayout, FieldsetLayout } from "ooui-react";
+
+function App() {
+  return (
+    <FieldsetLayout
+      label="通知偏好"
+      help="关闭后仍会收到系统安全类通知。"
+    >
+      <FieldLayout label="产品动态" align="inline">
+        <CheckboxInput defaultChecked />
+      </FieldLayout>
+      <FieldLayout label="社区活动" align="inline">
+        <CheckboxInput />
+      </FieldLayout>
+    </FieldsetLayout>
+  );
+}
+
+export default App;
+```
+
+## 组级禁用
+
+`disabled` 落在原生 `<fieldset>` 上，组内所有输入控件随浏览器机制一并禁用，无需逐项传递。
+
+```tsx preview
+import { CheckboxInput, FieldLayout, FieldsetLayout, TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <FieldsetLayout label="只读分组" disabled>
+      <FieldLayout label="姓名">
+        <TextInput defaultValue="不可编辑" />
+      </FieldLayout>
+      <FieldLayout label="已启用" align="inline">
+        <CheckboxInput checked />
+      </FieldLayout>
+    </FieldsetLayout>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `label` | 分组标题（legend 头部） | `ReactNode` | — |
+| `icon` | 头部图标 | `string` | — |
+| `help` | 帮助文本 | `ReactNode` | — |
+| `helpInline` | 帮助是否内联（`false` 渲染为 ⓘ 弹出说明） | `boolean` | `false` |
+| `invisibleLabel` | 标题视觉隐藏但保留可访问名称 | `boolean` | `false` |
+| `disabled` | 组级禁用（原生下发到组内全部输入控件） | `boolean` | `false` |
+| `...rest` | 原生 `fieldset` 属性直传根元素 | `HTMLAttributes<HTMLFieldSetElement>` | — |
+
+## 另见
+
+- 单个字段的标签与提示：[FieldLayout](/components/field-layout/index.html)
+- 表单容器：[FormLayout](/components/form-layout/index.html)

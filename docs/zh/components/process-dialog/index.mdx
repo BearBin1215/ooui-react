@@ -1,0 +1,227 @@
+---
+title: ProcessDialog 流程弹窗
+description: "ProcessDialog 组件的属性说明：actions 动作集与 safe/primary/other 布局、onAction 异步编排（pending 条纹与错误面板）、mode 多步模式与键盘快捷键。"
+---
+
+# ProcessDialog 流程弹窗
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/dialogs/ProcessDialog) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ProcessDialog.html "OO.ui.ProcessDialog")
+
+带动作区与错误面板的多步流程弹窗，在 [Dialog](/components/dialog/index.html) 基类之上扩展。
+
+## 基本用法
+
+动作经 `actions` 数组声明：**每类特殊动作只取第一个可见的动作**——`flags` 含 `safe` 的第一个可见动作落在头部左侧（取消/关闭一类），含 `primary` 的第一个可见动作落在头部右侧（继续/保存一类），其余动作（含第二个及以后的 `safe` / `primary`）都排在底部动作区；`flags` 含 `close` / `back` 的动作渲染为纯图标按钮。
+
+`onAction` 收到动作的 `action` 符号名；返回 `Promise` 期间头部显示 pending 条纹，Promise 结束即流程结束。
+
+```tsx preview
+import { useState } from "react";
+import { Button, ProcessDialog } from "ooui-react";
+
+function App() {
+  const [open, setOpen] = useState(false);
+  const [savedAt, setSavedAt] = useState("");
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>打开流程弹窗</Button>
+      <ProcessDialog
+        open={open}
+        title="编辑条目"
+        onEscape={() => setOpen(false)}
+        actions={[
+          { action: "cancel", label: "取消", flags: "safe" },
+          { action: "save", label: "保存", flags: ["primary", "progressive"] },
+        ]}
+        onAction={(action) => {
+          if (action === "cancel") {
+            setOpen(false);
+            return;
+          }
+          // 返回 Promise：执行期间头部显示 pending 条纹
+          return new Promise<void>((resolve) => {
+            setTimeout(() => {
+              setSavedAt(new Date().toLocaleTimeString());
+              setOpen(false);
+              resolve();
+            }, 1200);
+          });
+        }}
+      >
+        <div style={{ padding: 12 }}>正文区放你的表单或内容。{savedAt && `上次保存于 ${savedAt}`}</div>
+      </ProcessDialog>
+    </>
+  );
+}
+
+export default App;
+```
+
+## 多步流程
+
+传 `mode` 后，只有声明了含当前模式的 `modes` 的动作可见（未声明 `modes` 的动作同样隐藏）；不传 `mode` 则全部动作可见。配合状态切换即得向导。
+
+```tsx preview
+import { useState } from "react";
+import { Button, ProcessDialog } from "ooui-react";
+
+function App() {
+  const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState("edit");
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>打开向导弹窗</Button>
+      <ProcessDialog
+        open={open}
+        mode={mode}
+        title={mode === "edit" ? "编辑" : "预览"}
+        onEscape={() => setOpen(false)}
+        actions={[
+          { action: "back", label: "返回", flags: "back", modes: ["preview"] },
+          { action: "cancel", label: "取消", flags: "safe", modes: ["edit"] },
+          {
+            action: "next",
+            label: "下一步",
+            flags: ["primary", "progressive"],
+            modes: ["edit"],
+          },
+          { action: "save", label: "保存", flags: ["primary", "progressive"], modes: ["preview"] },
+        ]}
+        onAction={(action) => {
+          if (action === "next") {
+            setMode("preview");
+          } else if (action === "back") {
+            setMode("edit");
+          } else if (action === "cancel") {
+            setOpen(false);
+          }
+        }}
+      >
+        <div style={{ padding: 12 }}>
+          {mode === "edit" ? "第 1 步：填写内容" : "第 2 步：确认后保存"}
+        </div>
+      </ProcessDialog>
+    </>
+  );
+}
+
+export default App;
+```
+
+## 错误面板
+
+`onAction` 返回的 Promise 以错误对象（或其数组）reject 时，弹出覆盖整个弹窗的错误面板：
+
+- 错误对象为 `{ message, recoverable?, warning? }`（类型 `ProcessDialogErrorProps`）；`recoverable` 缺省 `true`，面板显示**重试**按钮（重跑最近一次执行的动作）。
+- `warning: true` 的错误渲染为警告消息，按钮显示 Continue。
+- `recoverable: false` 时触发的动作被禁用（持续到弹窗关闭），面板只能经 Dismiss 退出。
+- 每次动作执行前错误面板自动收起。
+
+```tsx preview
+import { useState } from "react";
+import { Button, ProcessDialog } from "ooui-react";
+
+function App() {
+  const [open, setOpen] = useState(false);
+  const [failNext, setFailNext] = useState(true);
+
+  return (
+    <>
+      <Button
+        onClick={() => {
+          setFailNext(true);
+          setOpen(true);
+        }}
+      >
+        打开（首次保存会失败）
+      </Button>
+      <ProcessDialog
+        open={open}
+        title="上传附件"
+        onEscape={() => setOpen(false)}
+        actions={[
+          { action: "cancel", label: "取消", flags: "safe" },
+          { action: "save", label: "保存", flags: ["primary", "progressive"] },
+        ]}
+        onAction={(action) => {
+          if (action === "cancel") {
+            setOpen(false);
+            return;
+          }
+          return new Promise<void>((resolve, reject) => {
+            setTimeout(() => {
+              if (failNext) {
+                setFailNext(false);
+                reject([{ message: "保存失败：网络超时，请重试", recoverable: true }]);
+              } else {
+                setOpen(false);
+                resolve();
+              }
+            }, 800);
+          });
+        }}
+      >
+        <div style={{ padding: 12 }}>点「保存」触发一次失败，面板里重试一次即成功。</div>
+      </ProcessDialog>
+    </>
+  );
+}
+
+export default App;
+```
+
+## 键盘
+
+- `Ctrl` / `Cmd` + `Enter` 执行 primary 动作。
+- `ESC` 触发 `onEscape`，关闭由调用方接线。
+
+## API
+
+继承 [Dialog](/components/dialog/index.html) 的 `open` / `size` / `escapable` / `onReady` 等；`title` / `head` / `foot` / `bodyFitFoot` 由本组件接管，`onPrimaryAction` 被接管为「执行 primary 动作」。
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `open` | 是否打开（受控，必填） | `boolean` | — |
+| `title` | 弹窗标题（自动关联 `aria-labelledby`） | `ReactNode` | — |
+| `actions` | 动作集 | `ProcessDialogActionProps[]` | `[]` |
+| `mode` | 当前模式；置位后仅声明了含该模式 `modes` 的动作可见 | `string` | — |
+| `onAction` | 动作执行回调；返回 `Promise` 期间头部显示 pending 条纹，以错误对象 reject 时展示错误面板 | `(action: string) => Promise<void> \| void` | — |
+| `onEscape` | 按 `ESC` 时触发（由调用方负责关闭） | `() => void` | — |
+| `escapable` | 是否允许 `ESC` 触发关闭 | `boolean` | `true` |
+| `children` | 正文区内容 | `ReactNode` | — |
+| `...rest` | 其余 `Dialog` 属性（`size`、`onReady` 等）与原生 `div` 属性 | — | — |
+
+`actions` 数组项（`ProcessDialogActionProps`）：
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `action` | 动作符号名（`onAction` 的入参） | `string` | — |
+| `label` | 按钮文本（`flags` 含 `close` / `back` 时被图标替代） | `ReactNode` | — |
+| `flags` | 按钮标志；`safe` / `primary` 同时决定动作在头部的特殊位置 | `ButtonFlag \| ButtonFlag[]` | — |
+| `modes` | 可见模式集；声明后仅 `mode` 命中时可见 | `string[]` | — |
+| `disabled` | 是否禁用 | `boolean` | `false` |
+| `pending` | 该动作按钮是否处于 pending 态（叠加条纹动画） | `boolean` | `false` |
+| `title` | 按钮 tooltip | `string` | — |
+
+错误对象（`ProcessDialogErrorProps`）：
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `message` | 错误信息 | `ReactNode` | — |
+| `recoverable` | 是否可恢复；`false` 时禁用触发动作，面板仅能 Dismiss 退出 | `boolean` | `true` |
+| `warning` | 警告错误（渲染为警告消息，按钮显示 Continue） | `boolean` | `false` |
+
+## 与原版的差异
+
+- **动作编排收为一个 `onAction` 异步回调**：原版经 `getActionProcess` 串联 `OO.ui.Process` 多步链；本工程在回调内串联流程，步骤内部抛错（reject）即结束并进入错误面板。{/* deviations: dev-onaction */}
+- **`ActionWidget` / `ActionSet` / `OO.ui.Error` 不作为独立类提供**：能力收进 `actions` 数组（`action` / `flags` / `modes` / `pending` 等字段）与错误对象，由错误面板渲染。{/* deviations: dev-actionset-inline */}
+- **「特殊动作」标志固定为 `safe` / `primary`**：原版允许子类扩展 `ActionSet.static.specialFlags`，本工程没有类继承，经 `flags` 声明这两个即可落位头部。{/* deviations: dev-special-flags */}
+- **传 `mode` 即从首帧按 `modes` 过滤**（原版首次 `setMode` 前混显全部动作）。{/* deviations: dev-processdialog-mode */}
+
+## 另见
+
+- 弹窗基类与消息弹窗：[Dialog](/components/dialog/index.html)
+- 错误面板中的消息渲染：[Message](/components/message/index.html)
+- 弹窗为何只能受控：[受控与非受控](/guide/controlled.html#弹窗必须受控)

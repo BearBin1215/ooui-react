@@ -1,0 +1,60 @@
+---
+title: ActionFieldLayout 动作字段
+description: "ActionFieldLayout 组件的属性说明：FieldLayout 加输入区旁的操作按钮，fieldInline 声明内联控件形态，align 继承字段排布。"
+---
+
+# ActionFieldLayout 动作字段
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/ActionFieldLayout) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ActionFieldLayout.html "OO.ui.ActionFieldLayout")
+
+带操作按钮的字段布局：在 [FieldLayout](/components/field-layout/index.html) 的基础上，字段控件旁多一个 `button` 槽位（通常放 [Button](/components/button/index.html) 或 [ButtonInput](/components/button/index.html)）。
+
+## 基本用法
+
+```tsx preview
+import { useState } from "react";
+import { ActionFieldLayout, Button, TextInput } from "ooui-react";
+
+function App() {
+  const [tags, setTags] = useState<string[]>(["ooui"]);
+
+  return (
+    <div style={{ maxWidth: 420 }}>
+      <ActionFieldLayout
+        label="添加标签"
+        button={
+          <Button
+            flags={["primary", "progressive"]}
+            onClick={() => setTags((prev) => [...prev, prev.length.toString()])}
+          >
+            添加
+          </Button>
+        }
+      >
+        <TextInput placeholder="输入后添加" />
+      </ActionFieldLayout>
+      <div style={{ marginTop: 8 }}>已添加：{tags.join("、")}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 内联控件
+
+字段控件是 `span` 根的内联控件（如 `CheckboxInput`、`ButtonInput`）时传 `fieldInline`，输入区包装元素随之用 `span` 渲染。传错无视觉后果（主题 CSS 归一了两种包装的布局），仅影响 DOM 形态与原版一致。{/* deviations: dev-fieldinline */}
+
+## API
+
+继承 [FieldLayout](/components/field-layout/index.html) 全部属性（`label` / `align` / `title` 等），另有：
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `button` | 输入字段旁的按钮控件 | `ReactNode` | — |
+| `fieldInline` | 字段控件是否为 span 根的内联控件（决定输入区包装为 `span` 还是 `div`） | `boolean` | `false` |
+
+## 另见
+
+- 字段排布与标签关联：[FieldLayout](/components/field-layout/index.html)
+- 只读文本框加复制按钮的成品：[CopyTextLayout](/components/copy-text-layout/index.html)

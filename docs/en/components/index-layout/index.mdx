@@ -1,0 +1,71 @@
+---
+title: IndexLayout
+description: "Props for the IndexLayout component: tabs on top with a panel stack below, openMatchedPanels switching tabs when the browser search matches, continuous display and autoFocus."
+---
+
+# IndexLayout
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/IndexLayout) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.IndexLayout.html "OO.ui.IndexLayout")
+
+An index layout: a [tab select](/en/components/tab-select/index.html) on top and a stack of [tab panels](/en/components/tab-panel-layout/index.html) below. Suits settings pages — "top tabs + chunked content"; for the side-outline variant see [BookletLayout](/en/components/booklet-layout/index.html).
+
+## Basic usage
+
+An `options` item is `{ value, label, children }` plus the [TabPanelLayout](/en/components/tab-panel-layout/index.html) panel fields (with `disabled` to disable a tab); the active tab rides the `value` / `defaultValue` / `onChange` channels. Tabs and panels are wired with `aria-controls` / `aria-labelledby` automatically.
+
+```tsx preview
+import { useState } from "react";
+import { IndexLayout } from "ooui-react";
+
+function App() {
+  const [tab, setTab] = useState<string | number>("general");
+
+  return (
+    <div style={{ position: "relative", height: 180 }}>
+      <IndexLayout
+        framed
+        value={tab}
+        onChange={setTab}
+        options={[
+          { value: "general", label: "General", padded: true, children: "General settings" },
+          { value: "appearance", label: "Appearance", padded: true, children: "Appearance settings" },
+          { value: "advanced", label: "Advanced", padded: true, disabled: true, children: "Advanced settings" },
+        ]}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+:::note Form premise
+In the `expanded` form (on by default) the layout fills its parent via absolute positioning, so the parent must be positioned and sized (the demo wrapper above exists for exactly that). The `expanded={false}` static form works only for [MenuLayout](/en/components/menu-layout/index.html)'s own flow content — the panel stacks of this component and BookletLayout are absolutely positioned panels with no content height in static mode, so don't use it here.
+:::
+
+## Browser-search linkage
+
+`openMatchedPanels` (default `true`) hides inactive panels with `hidden="until-found"`: when the browser's in-page search (Ctrl+F) matches content inside a hidden panel, the corresponding tab is activated automatically. **Under `continuous` all panels show at once and `openMatchedPanels` is disabled** — panels are no longer hidden with until-found and the browser-search linkage stops. `autoFocus` (default `true`) focuses the panel's first focusable element after a switch (suppressed in the mobile form).
+
+When the active tab is removed, the first selectable (non-disabled) tab is auto-selected.
+
+## API
+
+Inherits all [MenuLayout](/en/components/menu-layout/index.html) props (except `menu` / `menuPosition` / `children`), plus:
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `options` | The tab set: `value`, `label`, `disabled` plus [TabPanelLayout](/en/components/tab-panel-layout/index.html) fields | `IndexLayoutTabProps[]` | — |
+| `value` | Current active tab (controlled; passing it enables controlled mode) | `string \| number` | — |
+| `defaultValue` | Initial active tab for uncontrolled use | `string \| number` | — |
+| `onChange` | Active-tab change callback | `ChangeHandler<string \| number>` | — |
+| `framed` | Whether the tabs are framed | `boolean` | `true` |
+| `continuous` | Whether all panels show | `boolean` | `false` |
+| `autoFocus` | Focus the panel's first focusable element after switching | `boolean` | `true` |
+| `openMatchedPanels` | Hide inactive panels with `hidden="until-found"` and switch tabs when the browser search matches (disabled under `continuous`) | `boolean` | `true` |
+
+## See also
+
+- The fields of a single tab panel: [TabPanelLayout](/en/components/tab-panel-layout/index.html)
+- The side-outline variant: [BookletLayout](/en/components/booklet-layout/index.html)
+- The `hidden="until-found"` three states: [Layout](/en/components/layout/index.html)

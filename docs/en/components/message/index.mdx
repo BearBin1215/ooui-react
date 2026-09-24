@@ -1,0 +1,103 @@
+---
+title: Message
+description: "Props for the Message component: the notice/error/warning/success types, the inline form, the close button and the onClose contract (the component never hides itself — unmount or hide it in the callback)."
+---
+
+# Message
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Message) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.MessageWidget.html "OO.ui.MessageWidget")
+
+An inline notice, with `notice` / `error` / `warning` / `success` types.
+
+## Basic usage
+
+The type picks the default icon and color scheme; override it with `icon`.
+
+```tsx preview
+import { Message } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <Message>Notice: everything looks fine</Message>
+      <Message type="success">Success: saved</Message>
+      <Message type="warning">Warning: you are about to exceed the quota</Message>
+      <Message type="error">Error: saving failed, please retry</Message>
+      <Message icon="help">Custom icon (overrides the type default)</Message>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Inline form
+
+`inline` renders a borderless inline notice for embedding in running text; the block form (default) has a border and padding. Inline messages never render a close button.
+
+```tsx preview
+import { Message } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <Message inline>Inline: this is an inline notice</Message>
+      <Message inline type="error">
+        Inline error: this is an inline error
+      </Message>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Close button
+
+:::warning Differences from OOUI
+In the original, clicking the close button hides the message itself; here `onClose` only reports the click and the component holds no visibility state — **you must unmount or hide the message in the callback**, otherwise the message cannot be dismissed. {/* deviations: dev-message-onclose */}
+:::
+
+```tsx preview
+import { useState } from "react";
+import { Button, Message } from "ooui-react";
+
+function App() {
+  const [visible, setVisible] = useState(true);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      {visible ? (
+        <Message type="warning" showClose onClose={() => setVisible(false)}>
+          Click the × to close (unmounted by onClose)
+        </Message>
+      ) : (
+        <Button onClick={() => setVisible(true)}>Show again</Button>
+      )}
+    </div>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `children` | The message text | `ReactNode` | — |
+| `type` | Message type (invalid values fall back to `notice`) | `'notice' \| 'error' \| 'warning' \| 'success'` | `'notice'` |
+| `icon` | Custom icon, overrides the type default | `string` | type default |
+| `inline` | Inline display (`false` renders a bordered block message) | `boolean` | `false` |
+| `showClose` | Whether to show the close button (not rendered when `inline`) | `boolean` | `false` |
+| `onClose` | Close-button click handler; the component never hides itself — unmount/hide the message here | `() => void` | — |
+| `invisibleLabel` | Hide the text visually but keep it as the accessible name | `boolean` | `false` |
+| `disabled` | Whether disabled (outputs `aria-disabled`) | `boolean` | `false` |
+| `...rest` | Native `div` props (`className`, `id`, `data-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
+
+Accessibility: `type="error"` renders as `role="alert"` (assertive announcement); the other types use `aria-live="polite"`.
+
+## See also
+
+- Errors rendered inside the error panel: [ProcessDialog](/en/components/process-dialog/index.html)
+- The value-channel contract (`onClose` only reports intent; visibility belongs to the caller): [Controlled and uncontrolled](/en/guide/controlled.html)

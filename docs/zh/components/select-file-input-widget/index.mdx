@@ -1,0 +1,181 @@
+---
+title: SelectFileInputWidget 文件选择
+description: "SelectFileInputWidget 组件的属性说明：文件集走 value/defaultValue/onChange 数组通道，accept 类型过滤，showDropTarget 拖放区形态（含缩略图）与 buttonOnly 仅按钮形态。"
+---
+
+# SelectFileInputWidget 文件选择
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/SelectFileInputWidget) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.SelectFileInputWidget.html "OO.ui.SelectFileInputWidget")
+
+文件选择输入框，提供拖放区、仅按钮等形态。
+
+## 基本用法
+
+文件集是**数组**，走 `value` / `defaultValue` / `onChange` 三条通道；非多选时只保留首个文件。信息框中的**清除指示器是唯一的清除入口**（点击或按 Enter 清空）。
+
+```tsx preview
+import { useState } from "react";
+import { SelectFileInputWidget } from "ooui-react";
+
+function App() {
+  const [files, setFiles] = useState<File[]>([]);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <SelectFileInputWidget onChange={setFiles} />
+      <SelectFileInputWidget defaultValue={[new File(["hello"], "hello.txt")]} />
+      <div style={{ fontSize: 13 }}>
+        {files.length ? `已选：${files.map((file) => file.name).join("、")}` : "未选择文件"}
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 多选与类型过滤
+
+`multiple` 开启多选；`accept` 用 MIME 或 `image/*` 形态限定类型——同时写入 `accept` 属性、过滤系统选择器结果与拖入的文件（系统选择器已限类型，被过滤的多是拖放路径；文件没有 type 信息时放行）。
+
+```tsx preview
+import { SelectFileInputWidget } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <SelectFileInputWidget multiple />
+      <SelectFileInputWidget accept={["image/*"]} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 拖放区形态
+
+`showDropTarget` 把整个组件变成拖放区：空态时整块可点击开选择器，拖入文件时按能否接收给出反馈，落放即选中。单选且选中图片文件时展示**缩略图**——`thumbnailSizeLimit`（MB，缺省 20）以内才加载，超限或解码失败时回退为附件图标。
+
+拖放能力依赖浏览器的 `DataTransfer` 构造器（Safari 14.1+），不支持时拖放自动关闭、选择按钮照常可用；`droppable={false}` 可显式关闭拖放。
+
+```tsx preview
+import { useMemo } from "react";
+import { SelectFileInputWidget } from "ooui-react";
+
+const PNG_1PX =
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+
+function App() {
+  // 1x1 PNG：初始为图片文件时，单选拖放区加载缩略图
+  const imageFile = useMemo(() => {
+    const bytes = Uint8Array.from(atob(PNG_1PX), (char) => char.charCodeAt(0));
+    return new File([bytes], "logo.png", { type: "image/png" });
+  }, []);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 420 }}>
+      <SelectFileInputWidget showDropTarget />
+      <SelectFileInputWidget showDropTarget defaultValue={[imageFile]} />
+      {/* 上限设为 0：缩略图不加载，回退附件图标 */}
+      <SelectFileInputWidget showDropTarget thumbnailSizeLimit={0} defaultValue={[imageFile]} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 仅按钮形态
+
+`buttonOnly` 只渲染选择按钮，不含信息框；需要自己展示文件名时用它。
+
+```tsx preview
+import { useState } from "react";
+import { SelectFileInputWidget } from "ooui-react";
+
+function App() {
+  const [name, setName] = useState("");
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+      <SelectFileInputWidget
+        buttonOnly
+        buttonLabel="浏览…"
+        onChange={(files) => setName(files[0]?.name ?? "")}
+      />
+      <span>{name || "未选择文件"}</span>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 受控与程序化设置
+
+传 `value` 即进入受控模式，文件集完全由调用方驱动——下方演示外置「清空」按钮把文件集置回 `[]`。
+
+:::note 与原版的差异
+原版构造期传入的 `value` 会被静默丢弃（构造时序缺陷），只能构造后再命令式 `setValue`。本工程按受控惯例让 `value` / `defaultValue` 直接生效，并把文件集写回内部 `<input type="file">`，随表单原生提交不受影响。{/* deviations: dev-selectfile-value */}
+:::
+
+```tsx preview
+import { useState } from "react";
+import { Button, SelectFileInputWidget } from "ooui-react";
+
+function App() {
+  const [files, setFiles] = useState<File[]>([]);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 420 }}>
+      <SelectFileInputWidget value={files} onChange={setFiles} />
+      <div>
+        <Button onClick={() => setFiles([])} disabled={files.length === 0}>
+          清空
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 焦点与键盘
+
+- `Tab` 停靠点是**选择按钮**，信息框不进 Tab 序；清除指示器键盘可达（聚焦后按 Enter 清空）。
+- 信息框是只读的 `type="search"` 输入框，手改文件名不会改变文件集——清空一律走清除指示器。
+- `required`、`name` 落在内部文件 `<input>` 上，随 [FormLayout](/components/form-layout/index.html) 原生提交。
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `value` | 当前文件集（受控，传入即受控模式；空数组即未选择），非多选时只保留首个 | `File[]` | — |
+| `defaultValue` | 非受控初始文件集 | `File[]` | `[]` |
+| `onChange` | 文件集变化回调；文件集与原值等价（同名同大小同类型同修改时间）时不触发 | `(files: File[]) => void` | — |
+| `accept` | 接受的文件类型（MIME 或 `image/*` 形态），写入 `accept` 属性并过滤选择结果与拖放 | `string[]` | — |
+| `multiple` | 是否多选 | `boolean` | `false` |
+| `droppable` | 是否可拖放（浏览器不支持 `DataTransfer` 时强制关闭） | `boolean` | `true` |
+| `showDropTarget` | 拖放区形态：整块可拖放与点击（须 `droppable`） | `boolean` | `false` |
+| `buttonOnly` | 只渲染选择按钮（优先级高于 `showDropTarget`） | `boolean` | `false` |
+| `thumbnailSizeLimit` | 缩略图大小上限（MB，超过则不加载） | `number` | `20` |
+| `placeholder` | 信息框占位文案（缺省取内建消息） | `string` | — |
+| `icon` | 信息框图标（缺省无图标） | `string` | — |
+| `required` | 必填（原生 `required`，落在文件 `<input>` 上） | `boolean` | `false` |
+| `name` | 文件字段名（落在文件 `<input>` 上，随表单提交） | `string` | — |
+| `buttonLabel` | 选择按钮文案（缺省按 `multiple` 取内建消息） | `ReactNode` | — |
+| `buttonProps` | 选择按钮属性覆盖（`disabled` / `onClick` 由组件接管） | `Omit<ButtonProps, "children" \| "disabled" \| "onClick" \| "anchorContent" \| "anchorRef">` | — |
+| `inputRef` | 内部文件 `<input>` 的引用 | `Ref<HTMLInputElement>` | — |
+| `accessKey` | 快捷键（落在文件 `<input>` 上） | `string` | — |
+| `disabled` | 是否禁用（按钮、信息框、拖放一并停用） | `boolean` | `false` |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+`title` 落在文件 `<input>` 上，`tabIndex` 落在选择按钮上；组件 `ref` 指向根元素（`buttonOnly` 形态下根元素即按钮）。
+
+## 另见
+
+- 值通道约定：[受控与非受控](/guide/controlled.html)
+- 内建文案的语言包替换：[全局配置](/guide/configuration.html#文案与国际化)
+- 表单提交容器：[FormLayout](/components/form-layout/index.html)

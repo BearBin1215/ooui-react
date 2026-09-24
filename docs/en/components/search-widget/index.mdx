@@ -1,0 +1,79 @@
+---
+title: SearchWidget
+description: "Props for the SearchWidget component: a search box plus a persistent results list; the component doesn't search — query changes fire onQueryChange and you fill results, ↑↓ move the highlight and Enter chooses."
+---
+
+# SearchWidget
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/SearchWidget) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.SearchWidget.html "OO.ui.SearchWidget")
+
+A search widget: a query box with an always-visible results list.
+
+## Basic usage
+
+The component doesn't set a height on its own: query and results are absolutely positioned and the root element carries no height. It's recommended to give the root element a height (a fixed height, `height: 100%`, or `flex: 1` in a flex column all work), otherwise the results list overflows the widget box. The demo also adds `position: relative` to the root so those regions anchor to the widget itself (by default they anchor to the nearest positioned ancestor).
+
+```tsx preview
+import { useState } from "react";
+import { SearchWidget } from "ooui-react";
+
+const data = ["Apple", "Banana", "Orange", "Grape", "Melon"];
+
+function App() {
+  const [query, setQuery] = useState("");
+  const [picked, setPicked] = useState("(nothing chosen)");
+
+  // The caller filters and fills results from the query
+  const results = data
+    .filter((name) => name.toLowerCase().includes(query.toLowerCase()))
+    .map((name) => ({ value: name, children: name }));
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 320 }}>
+      <SearchWidget
+        value={query}
+        onQueryChange={setQuery}
+        onChoose={(v) => setPicked(String(v))}
+        results={results}
+        placeholder="Search fruit…"
+        style={{ height: 280, position: "relative" }}
+      />
+      <div>Chosen: {picked}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Query and choosing
+
+- `value` / `defaultValue` / `onQueryChange` are the query box's controlled/uncontrolled channels (there is no `onChange`; query changes go through `onQueryChange`).
+- Each `results` item is standard [option data](/en/guide/options.html) (with `value` and `children`).
+- `onChoose` fires when a result is chosen (Enter on the highlighted result, or clicking one). The highlight clears whenever the results set or query changes.
+- The component implements no searching; real use is mostly async: fire the request in `onQueryChange`, optionally empty `results` while loading and fill them in when ready — the highlight clears automatically on every results/query change, no manual reset needed.
+- `inputProps` is a **two-layer channel**: SearchInput-level props are passed directly; props meant for the native `<input>` (`aria-*`, `autoComplete`, etc.) go through `inputProps.inputProps` (TextInput's input-element channel). `inputProps.inputRef` is merged — that input doubles as the focus owner for the results list's `aria-activedescendant`.
+
+## Keyboard and focus
+
+Focus always stays in the query box: ↑↓ move the highlight among results (wrapping at the ends), Enter chooses the current highlight. The clear indicator on the query box comes from [SearchInput](/en/components/search-input/index.html) — it appears when there's a value and clears on click.
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `results` | Result option set, filled by the caller from the query | `SelectOptionProps[]` | `[]` |
+| `value` | Query text (controlled) | `string` | — |
+| `defaultValue` | Initial query for uncontrolled use | `string` | `''` |
+| `onQueryChange` | Query-change callback (refill `results` from it) | `ChangeHandler<string>` | — |
+| `onChoose` | Result-chosen callback | `ChangeHandler<string \| number>` | — |
+| `placeholder` | Query box placeholder | `string` | — |
+| `inputProps` | Overrides for the query box (SearchInput); a two-layer channel, see [Query and choosing](#query-and-choosing); `value`/`defaultValue`/`onChange` are taken over | `object` | — |
+| `disabled` | Whether disabled | `boolean` | `false` |
+| `...rest` | Native `div` props passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
+
+## See also
+
+- Lookup with candidates, shown as tags: [MenuTagMultiselect](/en/components/menu-tag-multiselect/index.html)
+- A free-input dropdown of candidates: [ComboBoxInput](/en/components/combo-box-input/index.html)
+- The query box itself: [SearchInput](/en/components/search-input/index.html)

@@ -1,0 +1,79 @@
+---
+title: ButtonMenuSelectWidget 命令菜单
+description: "ButtonMenuSelectWidget 组件的属性说明：由按钮触发的命令菜单（浮层菜单浮于按钮下方），每次选定回调 onChoose 并收起，clearOnSelect 决定是否保留选中态。"
+---
+
+# ButtonMenuSelectWidget 命令菜单
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ButtonMenuSelectWidget) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ButtonMenuSelectWidget.html "OO.ui.ButtonMenuSelectWidget")
+
+按钮触发的命令菜单：选定即执行并收起菜单。与 [Dropdown](/components/dropdown/index.html) 记“当前选中项”不同，适合工具栏里“点了就执行一项命令”的场景。
+
+## 基本用法
+
+```tsx preview
+import { useState } from "react";
+import { ButtonMenuSelectWidget } from "ooui-react";
+
+function App() {
+  const [log, setLog] = useState("尚未选择");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: 8 }}>
+      <ButtonMenuSelectWidget
+        icon="menu"
+        indicator="down"
+        options={[
+          { value: "copy", children: "复制" },
+          { value: "cut", children: "剪切" },
+          { value: "paste", children: "粘贴" },
+          { children: "高级" },
+          { value: "selectall", children: "全选" },
+        ]}
+        onChoose={(v) => setLog(`执行：${String(v)}`)}
+      >
+        操作
+      </ButtonMenuSelectWidget>
+      <div>{log}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 受控开合与保留选中态
+
+- `open` / `defaultOpen` / `onOpenChange` 控制菜单开合（点按钮、点外部、Escape、选定均会触发 `onOpenChange`）。
+- `clearOnSelect` 默认 `true`：菜单为纯命令菜单，选过的项不留选中态；置 `false` 会保留最后选定项。
+- 不带 `value` 的选项渲染为分组标题（见上方“高级”）。选项数据约定见[选择与选项](/guide/options.html)。
+
+## 键盘
+
+焦点在按钮上：Enter / 空格展开菜单；展开后 ↑↓ 移动高亮、Enter / 空格选定，键入字符按前缀跳转；Escape 或点外部收起。注意与 [Dropdown](/components/dropdown/index.html) 不同——本组件收起态聚焦时键入不会直接改选。
+
+与原版有两处差异：
+
+- 键盘展开同样输出按钮按压态——原版经键盘展开时按压类会被复位流清掉。
+- 前缀缓冲活跃时空格属于继续搜索，不会误开合菜单；展开态的空格与 Enter 同分支，直接选定高亮项（与按钮以空格激活的 ARIA 惯例一致）。{/* deviations: dev-bmsw-pressed dev-bmsw-gesture-guard dev-menu-space-select */}
+
+## API
+
+继承 [Button](/components/button/index.html) 的按钮属性（`icon` / `indicator` / `flags` / `framed` / `disabled` 等，`onClick` 为“切换开合前触发”），另有：
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `options` | 菜单选项集（**必填**），书写约定见[选择与选项](/guide/options.html) | `ButtonMenuSelectWidgetOptionProps[]` | — |
+| `open` | 菜单是否打开（受控） | `boolean` | — |
+| `defaultOpen` | 非受控初始打开态 | `boolean` | `false` |
+| `onOpenChange` | 菜单开合回调 | `(open: boolean) => void` | — |
+| `onChoose` | 选定回调（每次选定都触发，含重复） | `ChangeHandler<string \| number>` | — |
+| `clearOnSelect` | 选定后是否清除菜单选中态 | `boolean` | `true` |
+| `menuSpacing` | 菜单与按钮的间距（px） | `number` | `4` |
+| `menuProps` | 菜单属性覆盖（`open`/`container`/`options`/`onChoose` 等由本组件接管） | `object` | — |
+
+## 另见
+
+- 记录当前选中值的下拉：[Dropdown](/components/dropdown/index.html)
+- 触发浮层的通用按钮：[PopupButton](/components/popup-button/index.html)
+- 命令菜单的更多形态：工具栏的 `MenuToolGroup`

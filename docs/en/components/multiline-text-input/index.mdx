@@ -1,0 +1,132 @@
+---
+title: MultilineTextInput
+description: "Props for the MultilineTextInput component: rows/maxRows, autosize height, scrollbar offset, and the TextInput-family label, icon and soft-validation capabilities."
+---
+
+# MultilineTextInput
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/MultilineTextInput) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.MultilineTextInputWidget.html "OO.ui.MultilineTextInputWidget")
+
+A multi-line text input; input capabilities match [TextInput](/en/components/text-input/index.html).
+
+## Basic usage
+
+```tsx preview
+import { useState } from "react";
+import { MultilineTextInput } from "ooui-react";
+
+function App() {
+  const [text, setText] = useState("");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <MultilineTextInput value={text} onChange={setText} placeholder="Controlled multiline input" />
+      <div>Current length: {text.length}</div>
+      <MultilineTextInput defaultValue="Uncontrolled; the component remembers what you type" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Rows and auto height
+
+`rows` is the minimum number of rows (written to the `<textarea>`'s `rows` attribute). With `autosize` on, the height follows the content: it grows until `maxRows` and turns into internal scrolling beyond that; `maxRows` defaults to `max(2 × rows, 10)`.
+
+Without `autosize`, the height stays at `rows` lines and overflowing content scrolls.
+
+Beyond input, the auto-height re-measure has a size-observer fallback: font loading and container or width changes also trigger a re-measure (the original only re-measures on input, so the height can lag behind).{/* deviations: dev-autosize-remeasure */}
+
+```tsx preview
+import { MultilineTextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <MultilineTextInput autosize rows={2} placeholder="autosize: grows with the content" />
+      <MultilineTextInput rows={3} defaultValue={"Line one\nLine two\nLine three\nLine four\nLine five"} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Scrollbar offset
+
+When a vertical scrollbar appears, the indicator and the label placed after the input shift by the scrollbar width to stay clear of it (always enabled for multiline input; nothing to configure). When the input's direction diverges from the page's (e.g. a `dir='rtl'` input on an LTR page), the offset is withdrawn entirely, avoiding the label-stretching distortion the original shows in that case.{/* deviations: dev-scrollbar-offset */}
+
+## Line breaks and Enter
+
+Enter always inserts a line break.
+
+:::note Differences from OOUI
+The original's `allowLinebreaks` option (suppressing line breaks and cleaning them into spaces) and its companion `enter` event (fired on Ctrl/Cmd+Enter) are not provided here — to restrict line breaks, clean the value in `onChange`.{/* deviations: dev-allow-linebreaks */}
+:::
+
+## Capabilities shared with TextInput
+
+The following behave exactly as in TextInput and are not repeated here:
+
+- Label: `label` / `labelPosition` / `invisibleLabel`;
+- Icon and indicator: `icon`, `indicator`; when `indicator` is not given explicitly and `required` is true, it falls back to the required indicator;
+- Soft validation: `validate` (RegExp / function / `'non-empty'` / `'integer'`), flags without rewriting the value;
+- State: `maxLength`, `readOnly` (focusable and copyable), `disabled`.
+
+```tsx preview
+import { MultilineTextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <MultilineTextInput label="Bio" labelPosition="before" placeholder="Up to 20 characters" maxLength={20} />
+      <MultilineTextInput validate="non-empty" placeholder="Clear it and blur to see it flagged" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Where props land
+
+The component root is a non-focusable `<div>` and the input element is a `<textarea>`. The landing rules are the same as [TextInput](/en/components/text-input/index.html):
+
+- `...rest` from props lands on the root div; attributes that must go on the native `<textarea>` (such as `role`, `aria-*`) go through the `inputProps` channel, whose `onChange`/`onBlur`/`onFocus` are chained after the component's own logic.
+- `inputRef` points to the inner `<textarea>` (the component `ref` points to the root div); use `inputRef` to focus the input.
+- `tabIndex`, `title`, `dir`, `accessKey` and `name` are taken over by the component and land directly on the `<textarea>` (matching the original's landing spots), not via `rest`.
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `value` | Input value (controlled; passing it enables controlled mode) | `string` | — |
+| `defaultValue` | Uncontrolled initial value | `string` | — |
+| `onChange` | Value-change handler (value-first, includes the native event) | `ChangeHandler<string, HTMLTextAreaElement>` | — |
+| `rows` | Minimum number of rows | `number` | — |
+| `maxRows` | Height cap for autosize, in rows | `number` | `max(2 × rows, 10)` |
+| `autosize` | Whether the height follows the content | `boolean` | `false` |
+| `placeholder` | Input hint | `string` | — |
+| `maxLength` | Maximum length | `number` | — |
+| `label` / `invisibleLabel` | Field label / label visually hidden (kept as accessible name) | `ReactNode` / `boolean` | — / `false` |
+| `labelPosition` | Label position | `'before' \| 'after'` | `'after'` |
+| `icon` | Icon name | `string` | — |
+| `indicator` | Indicator (falls back to required when `required` and not given explicitly) | `'up' \| 'down' \| 'clear' \| 'required'` | — |
+| `required` | Required (native `required` attribute, part of browser validation) | `boolean` | `false` |
+| `validate` | Soft validation (RegExp / function / symbolic name), see [TextInput's soft validation](/en/components/text-input/index.html#soft-validation) | `RegExp \| ((value: string) => boolean \| Promise<boolean>) \| 'non-empty' \| 'integer'` | — |
+| `readOnly` | Read-only (keeps focus and selection/copying) | `boolean` | `false` |
+| `disabled` | Whether disabled | `boolean` | `false` |
+| `flags` | Extra flags on the root (the invalid flag is layered on top) | `string \| string[]` | — |
+| `name` | Form field name (lands on `<textarea>`) | `string` | — |
+| `accessKey` | Access key (lands on `<textarea>`) | `string` | — |
+| `inputRef` | Ref to the inner `<textarea>` | `Ref<HTMLTextAreaElement>` | — |
+| `inputProps` | Extra-props channel for the native `<textarea>`; `onChange`/`onBlur`/`onFocus` are chained after the component logic | `object` | — |
+| `indicatorProps` | Extra props for the indicator element | `object` | — |
+| `...rest` | Native `div` props (`className`, `id`, `data-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
+
+## See also
+
+- The single-line form and full soft-validation details: [TextInput](/en/components/text-input/index.html)
+- How values flow between the component and your state: [Controlled and uncontrolled](/en/guide/controlled.html)
+- The pass-through and `ref` rules shared by all components: [Common props](/en/guide/basics.html)

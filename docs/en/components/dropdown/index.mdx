@@ -1,0 +1,125 @@
+---
+title: Dropdown
+description: "Props for the Dropdown component: the options list, controlled/uncontrolled selection, placeholder label and icon, and its expand, keyboard navigation and prefix-jump behavior."
+---
+
+# Dropdown
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Dropdown) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.DropdownWidget.html "OO.ui.DropdownWidget")
+
+A dropdown select. The option data contract is in [Selection and options](/en/guide/options.html).
+
+## Basic usage
+
+When `value` is not passed, the component remembers the selection itself, and `label` is the placeholder text shown until something is selected. `onChange` is value-first.
+
+```tsx preview
+import { useState } from "react";
+import { Dropdown } from "ooui-react";
+
+const options = [
+  { value: "apple", children: "Apple" },
+  { value: "orange", children: "Orange" },
+  { value: "banana", children: "Banana" },
+];
+
+function App() {
+  const [value, setValue] = useState<string | number>("apple");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 200 }}>
+      <Dropdown options={options} value={value} onChange={setValue} label="Pick a fruit" />
+      <div>Current value: {String(value)}</div>
+      <Dropdown options={options} defaultValue="orange" label="Uncontrolled" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Icon and label
+
+`icon` renders at the front of the handle. `label` plays two roles: it is the handle's display text when nothing is selected, and it contributes to the combobox's accessible name.
+
+```tsx preview
+import { Dropdown } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 220 }}>
+      <Dropdown
+        icon="attachment"
+        label="Attachment type"
+        options={[
+          { value: "image", children: "Image" },
+          { value: "video", children: "Video" },
+        ]}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Groups and disabled items
+
+Items without a `value` render as group headings; items with `disabled` cannot be selected. For menu-style components, `disabled` disables the **trigger** (the handle won't open, keyboard is off), while each item inside the menu is governed by its own `disabled` — see [Selection and options · Disabled](/en/guide/options.html#disabled).
+
+```tsx preview
+import { Dropdown } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 220 }}>
+      <Dropdown
+        label="Grouped"
+        options={[
+          { children: "Common" },
+          { value: "apple", children: "Apple" },
+          { value: "banana", children: "Banana", disabled: true },
+          { children: "Other" },
+          { value: "durian", children: "Durian" },
+        ]}
+      />
+      <Dropdown label="Fully disabled" disabled options={[{ value: "a", children: "A" }]} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Keyboard and focus
+
+- Tab focuses the handle, Enter / Space opens the menu; when open, ↑↓←→ move the highlight, Enter / Space choose and close, and Escape closes without changing the value.
+- While closed but focused, navigation keys and prefix jump **change the selection directly without opening the menu** (screen-reader friendly, matching the original).
+- Typing characters jumps by option text prefix (1.5 s buffer).
+- Focus always stays on the handle; the highlighted item is linked via `aria-activedescendant`, and the menu itself is not in the Tab order.
+
+:::note Differences from OOUI
+With the menu open, **Space**: the original never feeds Space to the menu — a keypress merely simulates a click that closes it; here Space shares the Enter branch and directly chooses the highlighted item (matching the ARIA convention of activating buttons with Space). While the type-ahead buffer is active, Space still counts as prefix search and does not choose.{/* deviations: dev-menu-space-select */}
+:::
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `options` | The option set; see [Selection and options](/en/guide/options.html) for the contract | `DropdownOptionProps[]` | — |
+| `value` | Current selected value (controlled; passing it enables control) | `string \| number` | — |
+| `defaultValue` | Initial selected value for uncontrolled use | `string \| number` | — |
+| `onChange` | Selection-change callback (fires when the value changes) | `ChangeHandler<string \| number>` | — |
+| `label` | Placeholder text when nothing is selected; also part of the accessible name | `ReactNode` | — |
+| `icon` | Icon name at the front of the handle | `string` | — |
+| `disabled` | Whether the trigger is disabled (won't open, keyboard off) | `boolean` | `false` |
+| `tabIndex` | Tab order; lands on the handle (the root is not focusable) | `number \| null` | `0` |
+| `...rest` | Native `div` props (`className`, `id`, `data-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
+
+There is no `children` slot — the handle and menu are a fixed structure, and the display text comes from the selected option or `label`.
+
+## See also
+
+- Option data and the keyboard focus model: [Selection and options](/en/guide/options.html)
+- The inner list of the menu: [Select](/en/components/select/index.html)
+- How values flow between the component and your state: [Controlled and uncontrolled](/en/guide/controlled.html)

@@ -1,0 +1,83 @@
+/* 视觉对齐 rp-preview 卡片：浅色边框圆角卡片 + 右上角代码开关，下方 tabs 代码区 */
+
+.doc-demo-card {
+  margin: 16px 0;
+  border: 1px solid var(--rp-container-details-border, #e5e7eb);
+  border-radius: var(--rp-radius, 8px);
+  overflow: hidden;
+}
+
+.doc-demo-card__stage {
+  position: relative;
+  padding: 16px;
+}
+
+.doc-demo-card--expanded .doc-demo-card__stage {
+  border-bottom: 1px solid var(--rp-container-details-border, #e5e7eb);
+}
+
+.doc-demo-card__toggle {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 4px;
+  background-color: #e5e6eb;
+  color: inherit;
+  cursor: pointer;
+}
+
+.doc-demo-card__toggle:hover {
+  background-color: var(--rp-preview-button-hover-bg, #d9dadf);
+}
+
+.doc-demo-card__toggle--active {
+  box-shadow: inset 1px 1px 0 1px var(--rp-c-divider-light, #e2e2e2);
+}
+
+.doc-demo-card__tabs {
+  display: flex;
+  gap: 4px;
+  padding: 8px 12px 0;
+  border-bottom: 1px solid var(--rp-container-details-border, #e5e7eb);
+  background-color: var(--rp-c-bg-soft, #f6f7f8);
+}
+
+.doc-demo-card__tab {
+  padding: 6px 12px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  font-size: 13px;
+  color: inherit;
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.doc-demo-card__tab:hover {
+  opacity: 1;
+}
+
+.doc-demo-card__tab--active {
+  border-bottom-color: var(--rp-c-brand, #3457d5);
+  color: var(--rp-c-brand, #3457d5);
+  opacity: 1;
+}
+
+.doc-demo-card__code {
+  max-height: 480px;
+  overflow: auto;
+}
+
+/* 内嵌代码块去掉自身的页边距与圆角，贴合卡片轮廓 */
+.doc-demo-card .rp-codeblock,
+.doc-demo-card pre {
+  margin: 0;
+  border: none;
+  border-radius: 0;
+}

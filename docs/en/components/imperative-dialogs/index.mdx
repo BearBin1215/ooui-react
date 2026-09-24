@@ -1,0 +1,90 @@
+---
+title: Imperative dialogs
+description: "The confirm / alert / prompt imperative dialog functions: Promise-based calls that don't depend on the React tree, with return values, options, provider inheritance and runtime semantics."
+---
+
+# Imperative dialogs
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/dialogs) | [Original API](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.html "OO.ui.confirm / alert / prompt")
+
+`confirm` / `alert` / `prompt` are three standalone functions — import and `await` them from any event callback: no hook, no component to mount, no React tree required. For fully custom dialogs use the [Dialog](/en/components/dialog/index.html) component.
+
+## Basic usage
+
+`confirm` returns a `Promise<boolean>` (OK → `true`, Cancel / ESC → `false`); `alert` returns a `Promise<void>`; `prompt` returns a `Promise<string | null>` (Cancel / ESC → `null`).
+
+```tsx preview
+import { useState } from "react";
+import { Button, alert, confirm, prompt } from "ooui-react";
+
+function App() {
+  const [log, setLog] = useState("No action yet");
+  const note = (s: string) => setLog(s);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <Button onClick={() => alert("Your changes have been saved.", { title: "Done" })}>
+          alert
+        </Button>
+        <Button
+          onClick={() =>
+            confirm("Delete this record?", { title: "Confirm delete" }).then((ok) =>
+              note(ok ? "Confirmed" : "Cancelled"),
+            )
+          }
+        >
+          confirm
+        </Button>
+        <Button
+          onClick={() =>
+            prompt("Enter your name:", { textInput: { defaultValue: "" } }).then((v) =>
+              note(v === null ? "Cancelled" : `Hello, ${v}`),
+            )
+          }
+        >
+          prompt
+        </Button>
+      </div>
+      <div>{log}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Config inheritance
+
+A dialog called inside an `OOUIProvider` subtree inherits that Provider's language, direction and popup container settings; unwrapped, it renders with defaults. For overriding message text, see [OOUIProvider · Imperative dialogs](/en/guide/configuration.html#imperative-dialogs). {/* deviations: dev-imperative-host */}
+
+## Runtime semantics
+
+- **The Promise resolves after the close animation finishes** (plus a ~50ms margin), not at the instant of the button click — code right after `await confirm(...)` that reads the DOM or navigates waits for the animation first.
+- The dialog renders inside the app's React tree and inherits all context of its subtree; **with nested `OOUIProvider`s, the outermost host renders all imperative dialogs** (an imperative call has no position information, so rendering with the app-root config is the most predictable).
+- Repeated calls **stack multiple dialogs**, each independently interactive; the original shares one single-window manager, where a second call while a window is open is rejected and its Promise never settles. {/* deviations: dev-imperative-no-queue */}
+- In `prompt`, pressing Enter in the input equals clicking OK (except during IME composition; `textInput.onKeyDown` can veto with `preventDefault`); the input is focused automatically once ready (`textInput.inputRef` is taken internally and passing it has no effect; `textInput.value` is only the initial value). {/* deviations: dev-prompt-textinput-value */}
+
+## API
+
+| Function | Returns | Notes |
+| --- | --- | --- |
+| `confirm(message, options?)` | `Promise<boolean>` | OK `true`, Cancel / ESC `false` |
+| `alert(message, options?)` | `Promise<void>` | OK button only, resolves on close |
+| `prompt(message, options?)` | `Promise<string \| null>` | OK resolves the input, Cancel / ESC resolves `null` |
+
+`options` (`ConfirmAlertOptions` / `AlertOptions` / `PromptOptions`):
+
+| Prop | Description | Type |
+| --- | --- | --- |
+| `title` | Dialog title | `ReactNode` |
+| `okLabel` | OK button text | `ReactNode` |
+| `cancelLabel` | Cancel button text (`confirm` / `prompt` only) | `ReactNode` |
+| `size` | Dialog size | `DialogProps["size"]` |
+| `textInput` | Input props (`prompt` only); `value` is used only as the initial value | `TextInputProps` |
+
+## See also
+
+- The dialog components themselves (controlled `open`, action areas, multi-dialog isolation): [Dialog](/en/components/dialog/index.html)
+- How imperative dialogs inherit provider config: [OOUIProvider](/en/guide/configuration.html#imperative-dialogs)
+- The multi-step dialog: [ProcessDialog](/en/components/process-dialog/index.html)

@@ -1,0 +1,125 @@
+---
+title: Dropdown 下拉选择
+description: "Dropdown 组件的属性说明：options 选项集、受控/非受控选中值、标签占位与图标，以及展开、键盘导航与前缀跳转行为。"
+---
+
+# Dropdown 下拉选择
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Dropdown) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.DropdownWidget.html "OO.ui.DropdownWidget")
+
+下拉选择框。选项数据的书写约定见[选择与选项](/guide/options.html)。
+
+## 基本用法
+
+不传 `value` 时组件自己记住选中项，`label` 作为尚未选中任何项时的占位文本。`onChange` 为值优先签名。
+
+```tsx preview
+import { useState } from "react";
+import { Dropdown } from "ooui-react";
+
+const options = [
+  { value: "apple", children: "苹果" },
+  { value: "orange", children: "橙子" },
+  { value: "banana", children: "香蕉" },
+];
+
+function App() {
+  const [value, setValue] = useState<string | number>("apple");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 200 }}>
+      <Dropdown options={options} value={value} onChange={setValue} label="选择水果" />
+      <div>当前值：{String(value)}</div>
+      <Dropdown options={options} defaultValue="orange" label="非受控" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 图标与标签
+
+`icon` 渲染在 handle 前端。`label` 有两种作用：无选中项时作为 handle 的显示文本，同时也是组合框可访问名称的一部分。
+
+```tsx preview
+import { Dropdown } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 220 }}>
+      <Dropdown
+        icon="attachment"
+        label="附件类型"
+        options={[
+          { value: "image", children: "图片" },
+          { value: "video", children: "视频" },
+        ]}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 分组与禁用项
+
+选项数组里不带 `value` 的项渲染为分组标题，带 `disabled` 的项不可选。菜单类组件的 `disabled` 禁用的是**触发端**（handle 不可展开、键盘不可用），菜单内各项是否禁用由选项自身的 `disabled` 决定，详见[选择与选项 · 禁用](/guide/options.html#禁用)。
+
+```tsx preview
+import { Dropdown } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 220 }}>
+      <Dropdown
+        label="分组示例"
+        options={[
+          { children: "常见" },
+          { value: "apple", children: "苹果" },
+          { value: "banana", children: "香蕉", disabled: true },
+          { children: "其他" },
+          { value: "durian", children: "榴莲" },
+        ]}
+      />
+      <Dropdown label="整体禁用" disabled options={[{ value: "a", children: "A" }]} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 键盘与焦点
+
+- Tab 聚焦到 handle，Enter / 空格展开菜单；展开时 ↑↓←→ 移动高亮，Enter / 空格选定并收起，Escape 收起不改变选中值。
+- 收起但处于聚焦态时，导航键与前缀跳转**直接改选而不展开菜单**（屏幕阅读器友好，与原版一致）。
+- 直接键入字符按选项文本前缀跳转（1.5 秒缓冲）。
+- 焦点始终停留在 handle 上，高亮项经 `aria-activedescendant` 关联，菜单本身不进 Tab 序。
+
+:::note 与原版的差异
+展开态按**空格**：原版不把空格交给菜单消费，只会经按键模拟点击关闭菜单；本工程空格与 Enter 同分支，直接选定当前高亮项（与按钮以空格激活的 ARIA 惯例一致）。前缀缓冲活跃时空格仍属于前缀搜索，不会选定。{/* deviations: dev-menu-space-select */}
+:::
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `options` | 选项集，书写约定见[选择与选项](/guide/options.html) | `DropdownOptionProps[]` | — |
+| `value` | 当前选中值（受控，传入即受控模式） | `string \| number` | — |
+| `defaultValue` | 非受控初始选中值 | `string \| number` | — |
+| `onChange` | 选中值变更回调（值变化时触发） | `ChangeHandler<string \| number>` | — |
+| `label` | 无选中项时的占位文本，并参与可访问名称 | `ReactNode` | — |
+| `icon` | handle 前端的图标名 | `string` | — |
+| `disabled` | 是否禁用触发端（不可展开、键盘不可用） | `boolean` | `false` |
+| `tabIndex` | Tab 序，落在 handle 上（根元素不可聚焦） | `number \| null` | `0` |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+组件没有 `children` 落点——handle 与菜单是固定结构，显示文本取自选中项或 `label`。
+
+## 另见
+
+- 选项数据与键盘焦点模型：[选择与选项](/guide/options.html)
+- 菜单的内层列表：[Select](/components/select/index.html)
+- 值如何在组件与状态之间流动：[受控与非受控](/guide/controlled.html)

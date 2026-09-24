@@ -1,0 +1,79 @@
+---
+title: SearchInput 搜索输入
+description: "SearchInput 组件的属性说明：搜索用单行输入框，缺省 search 图标、值非空且可编辑时出现可点击的清除指示器，其余能力与 TextInput 同源。"
+---
+
+# SearchInput 搜索输入
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/SearchInput) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.SearchInputWidget.html "OO.ui.SearchInputWidget")
+
+搜索输入框：[TextInput](/components/text-input/index.html) 的搜索形态，值非空时出现清除指示器，点击即清空。
+
+## 基本用法
+
+```tsx preview
+import { useState } from "react";
+import { SearchInput } from "ooui-react";
+
+function App() {
+  const [query, setQuery] = useState("");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <SearchInput value={query} onChange={setQuery} placeholder="搜索条目……" />
+      <div>查询词：{query || "（空）"}</div>
+      <SearchInput defaultValue="OOUI 组件" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+搜索框内已有值时，右侧出现 × 清除指示器；清空后指示器消失。
+
+## 与标签、软校验配合
+
+`label`、`labelPosition`、`invisibleLabel`、`validate` 等属性沿用 TextInput 的语义。
+
+```tsx preview
+import { SearchInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <SearchInput label="关键词" labelPosition="before" validate="non-empty" placeholder="必填示例" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+:::note 若要“输入框 + 常驻结果列表”
+本组件只是带清除能力的搜索框。若需要输入时实时展示下拉结果，请用 `SearchWidget`（搜索框 + 结果列表的组合）。
+:::
+
+## 属性落点
+
+与 TextInput 相同：`...rest` 落在根 `<div>` 上，写到原生 `<input>` 的属性走 `inputProps`，聚焦输入框用 `inputRef`。清除指示器由组件接管，因此**不开放** `type`（恒为 `search`）、`indicator`、`indicatorProps` 三个属性。
+
+## API
+
+只列出与 TextInput 的差异，其余属性见 [TextInput · API](/components/text-input/index.html#api)。
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `value` | 查询文本（受控） | `string` | — |
+| `defaultValue` | 非受控初始值 | `string` | — |
+| `onChange` | 值变化回调（值优先） | `ChangeHandler<string, HTMLInputElement>` | — |
+| `icon` | 左侧图标名 | `string` | `'search'` |
+| `inputRef` | 内部 `<input>` 的引用 | `Ref<HTMLInputElement>` | — |
+
+不支持的属性：`type`（恒 `search`）、`indicator` / `indicatorProps`（指示器槽位由清除逻辑接管）。
+
+## 另见
+
+- 基础单行输入的全部能力（类型、软校验、属性落点）：[TextInput](/components/text-input/index.html)
+- 带结果列表的搜索：`SearchWidget`
+- 值如何在组件与状态之间流动：[受控与非受控](/guide/controlled.html)

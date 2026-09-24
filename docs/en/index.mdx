@@ -1,0 +1,89 @@
+---
+pageType: home
+description: "ooui-react is a React reimplementation of OOUI: it ships no styles, outputs DOM structure, class names and attributes identical to OOUI, and folds OOUI's imperative API into controlled props."
+hero:
+  name: ooui-react
+  tagline: OOUI for React
+  image:
+    src: /logo.svg
+    alt: ooui-react logo
+  actions:
+    - theme: brand
+      text: Get Started
+      # hero.actions links don't get an automatic locale prefix (unlike _nav.json links); non-default locales must include the full prefix
+      link: /en/guide/usage.html
+    - theme: alt
+      text: Components
+      link: /en/components/
+features:
+  - icon: /feature-icons/code-xml.svg
+    title: Structure parity
+    details: Outputs the same DOM structure, class names and attributes as OOUI. Styles are loaded by the consumer from OOUI, making it a natural fit for MediaWiki sites.
+  - icon: /feature-icons/keyboard.svg
+    title: Behavior parity
+    details: Keyboard, focus, a11y and edge cases are checked one by one against OOUI, so interaction semantics match.
+  - icon: /feature-icons/react.svg
+    title: Declarative API
+    details: OOUI's imperative setters and events are folded into controlled props such as value and onChange, matching React conventions.
+  - icon: /feature-icons/typescript.svg
+    title: Type support
+    details: Written entirely in TypeScript, with complete type definitions.
+  - icon: /feature-icons/preact.svg
+    title: Preact compatible
+    details: Runs on the Preact compatibility layer to keep bundles small.
+  - icon: /feature-icons/package.svg
+    title: Tree Shaking
+    details: Import only what you use.
+---
+
+import { PackageManagerTabs } from "@rspress/core/theme";
+import AdvancedSearchDemo from "../demos/en/advanced-search";
+import DemoCard from "../theme/DemoCard";
+
+:::important This library is in active development; a few APIs may still change.
+:::
+
+:::note About this translation
+The English documentation is translated and proofread with AI assistance from the Chinese source, so some wording may lag the original or read imperfectly; please [report any inaccuracies on GitHub](https://github.com/BearBin1215/ooui-react/issues).
+:::
+
+## Try it live
+
+<DemoCard demo={<AdvancedSearchDemo />} names={["advanced-search.tsx", "advanced-search.css"]}>
+
+```tsx file="<root>/demos/en/advanced-search.tsx"
+```
+
+```css file="<root>/demos/en/advanced-search.css"
+```
+
+</DemoCard>
+
+Focus the trailing empty row to append another line, and the minus button at the end of a row removes it.
+
+## Installation
+
+<PackageManagerTabs
+  command={{
+    npm: "npm install ooui-react",
+    yarn: "yarn add ooui-react",
+    pnpm: "pnpm add ooui-react",
+    bun: "bun add ooui-react",
+    deno: "deno add npm:ooui-react",
+  }}
+/>
+
+React ≥ 18 is required; SSR is not supported yet. For loading styles, MediaWiki integration and Preact compatibility, see the [Usage guide](/en/guide/usage.html).
+
+## Why this library?
+
+Back in 2023, while writing [my own Moegirlpedia gadget](https://github.com/BearBin1215/MoegirlPedia), I found that keeping state in a loop with jQuery alone was painful in more complex scenarios, so I wanted to bring in a modern framework. At the time:
+
+- MediaWiki was on 1.31, which shipped neither Vue nor Codex.
+- Bundling Vue myself started at 60 KB, and writing a little more would push the bundle past what could be uploaded to the site without timing out.
+- Most mature component libraries ship their own stylesheets, which also makes for large bundles.
+- I lack the art skills to design the styles myself ~~(important!)~~.
+
+So I went with [Preact](https://preactjs.com/) plus a self-built OOUI component library: a small framework, no stylesheet, rendering only DOM.
+
+As AI-assisted programming took off, this project grew into a proper component library. Moegirlpedia has since upgraded MediaWiki and supports Vue + Codex, but I still think this library earns its place.

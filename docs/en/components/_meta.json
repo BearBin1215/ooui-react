@@ -1,0 +1,355 @@
+[
+  {
+    "type": "file",
+    "name": "index"
+  },
+  {
+    "type": "divider"
+  },
+  {
+    "type": "section-header",
+    "label": "Widgets"
+  },
+  {
+    "type": "dir",
+    "name": "button",
+    "label": "Button",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "toggle-button",
+    "label": "ToggleButton",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "toggle-switch",
+    "label": "ToggleSwitch",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "button-group",
+    "label": "ButtonGroup",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "popup",
+    "label": "Popup",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "popup-button",
+    "label": "PopupButton",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "icon",
+    "label": "Icon",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "indicator",
+    "label": "Indicator",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "label",
+    "label": "Label",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "progress-bar",
+    "label": "ProgressBar",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "message",
+    "label": "Message",
+    "collapsible": false
+  },
+  {
+    "type": "section-header",
+    "label": "Input"
+  },
+  {
+    "type": "dir",
+    "name": "text-input",
+    "label": "TextInput",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "multiline-text-input",
+    "label": "MultilineTextInput",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "number-input",
+    "label": "NumberInput",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "search-input",
+    "label": "SearchInput",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "search-widget",
+    "label": "SearchWidget",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "combo-box-input",
+    "label": "ComboBoxInput",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "checkbox-input",
+    "label": "CheckboxInput",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "radio-input",
+    "label": "RadioInput",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "select-file-input-widget",
+    "label": "SelectFileInputWidget",
+    "collapsible": false
+  },
+  {
+    "type": "section-header",
+    "label": "Selection"
+  },
+  {
+    "type": "dir",
+    "name": "select",
+    "label": "Select",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "dropdown",
+    "label": "Dropdown",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "outline-select",
+    "label": "OutlineSelect",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "tab-select",
+    "label": "TabSelect",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "button-select",
+    "label": "ButtonSelect",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "button-menu-select",
+    "label": "ButtonMenuSelectWidget",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "checkbox-multiselect",
+    "label": "CheckboxMultiselect",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "radio-select",
+    "label": "RadioSelect",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "tag-multiselect",
+    "label": "TagMultiselect",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "menu-tag-multiselect",
+    "label": "MenuTagMultiselect",
+    "collapsible": false
+  },
+  {
+    "type": "section-header",
+    "label": "Form submission"
+  },
+  {
+    "type": "dir",
+    "name": "button-input",
+    "label": "ButtonInput",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "dropdown-input",
+    "label": "DropdownInput",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "checkbox-multiselect-input",
+    "label": "CheckboxMultiselectInput",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "radio-select-input",
+    "label": "RadioSelectInput",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "hidden-input-widget",
+    "label": "HiddenInputWidget",
+    "collapsible": false
+  },
+  {
+    "type": "section-header",
+    "label": "Layouts"
+  },
+  {
+    "type": "dir",
+    "name": "layout",
+    "label": "Layout",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "panel-layout",
+    "label": "PanelLayout",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "page-layout",
+    "label": "PageLayout",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "menu-layout",
+    "label": "MenuLayout",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "stack-layout",
+    "label": "StackLayout",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "booklet-layout",
+    "label": "BookletLayout",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "index-layout",
+    "label": "IndexLayout",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "tab-panel-layout",
+    "label": "TabPanelLayout",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "field-layout",
+    "label": "FieldLayout",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "fieldset-layout",
+    "label": "FieldsetLayout",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "form-layout",
+    "label": "FormLayout",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "action-field-layout",
+    "label": "ActionFieldLayout",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "copy-text-layout",
+    "label": "CopyTextLayout",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "horizontal-layout",
+    "label": "HorizontalLayout",
+    "collapsible": false
+  },
+  {
+    "type": "section-header",
+    "label": "Dialogs"
+  },
+  {
+    "type": "dir",
+    "name": "dialog",
+    "label": "Dialog",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "imperative-dialogs",
+    "label": "Imperative dialogs",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "process-dialog",
+    "label": "ProcessDialog",
+    "collapsible": false
+  },
+  {
+    "type": "section-header",
+    "label": "Toolbars"
+  },
+  {
+    "type": "dir",
+    "name": "toolbar",
+    "label": "Toolbar",
+    "collapsible": false
+  }
+]

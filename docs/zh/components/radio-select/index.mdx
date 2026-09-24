@@ -1,0 +1,117 @@
+---
+title: RadioSelect 单选组
+description: "RadioSelect 组件的属性说明：单选组（role=radiogroup），整组以方向键在选项间环绕移动并直接改选，value/onChange 通道与 options 选项集。"
+---
+
+# RadioSelect 单选组
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/RadioSelect) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.RadioSelectWidget.html "OO.ui.RadioSelectWidget")
+
+单选组：若干单选项排成一组，同组互斥、至多选中一项。
+
+## 基本用法
+
+选中值走 `value` / `defaultValue` / `onChange` 三条通道。取消当前选中不会自动产生新值——`onChange` 的参数始终是新的选中项 `value`。
+
+```tsx preview
+import { useState } from "react";
+import { RadioSelect } from "ooui-react";
+
+const options = [
+  { value: "small", children: "小" },
+  { value: "medium", children: "中" },
+  { value: "large", children: "大" },
+];
+
+function App() {
+  const [size, setSize] = useState<string | number>("medium");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <RadioSelect options={options} value={size} onChange={setSize} name="size" />
+      <div>当前选择：{String(size)}</div>
+      <RadioSelect options={options} defaultValue="large" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 与 FieldLayout 配合
+
+给整组加字段标签时，用 [FieldLayout](/components/field-layout/index.html) 包裹；标签会关联到分组容器，点击标签聚焦整组。
+
+```tsx preview
+import { RadioSelect, FieldLayout } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 320 }}>
+      <FieldLayout label="通知方式">
+        <RadioSelect
+          name="notify"
+          defaultValue="email"
+          options={[
+            { value: "email", children: "邮件" },
+            { value: "sms", children: "短信" },
+            { value: "none", children: "不通知" },
+          ]}
+        />
+      </FieldLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 禁用
+
+- 选项对象自己的 `disabled` 禁用该项（跳过、不可选）。
+- 组件级 `disabled` 会一并禁用组内全部选项，且组禁用优先。详见[选择与选项 · 禁用](/guide/options.html#禁用)。
+
+```tsx preview
+import { RadioSelect } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <RadioSelect
+        defaultValue="a"
+        options={[
+          { value: "a", children: "可用" },
+          { value: "b", children: "被禁用项", disabled: true },
+          { value: "c", children: "也可用" },
+        ]}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 键盘与焦点
+
+- 焦点停在**整组**上（各选项本身不进 Tab 序）。↑↓←→ 在非禁用项间**环绕移动并直接改选**，Enter 重申当前项。
+- 首次以 Tab 聚焦到组、且当前无任何选中项时，自动选中首个非禁用项（与原生单选组行为一致）。
+- `onChange` 的第二个参数是原生 `change` 事件；经键盘方向键改选时不发原生 `change`（对齐原版），因此第二参数可能缺省。
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `options` | 选项集，每项含 `value` 与 `children`（选项文本） | `RadioSelectOptionProps[]` | — |
+| `value` | 当前选中值（受控，传入即受控模式） | `string \| number` | — |
+| `defaultValue` | 非受控初始选中值 | `string \| number` | — |
+| `onChange` | 选中值变更回调（值优先，含原生事件） | `ChangeHandler<string \| number \| undefined, HTMLInputElement>` | — |
+| `name` | 表单提交字段名，透传给每个选项的原生 `radio`（同名即互斥） | `string` | — |
+| `disabled` | 是否禁用（一并禁用组内全部选项） | `boolean` | `false` |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`aria-*` 等）直传分组容器 | `HTMLAttributes<HTMLDivElement>` | — |
+
+## 另见
+
+- 单个单选框：[RadioInput](/components/radio-input/index.html)（本组件由它逐项构成，需要自绘排版时单独使用）
+- 选项数据与键盘焦点模型：[选择与选项](/guide/options.html)
+- 复选版本：[CheckboxMultiselect](/components/checkbox-multiselect/index.html)

@@ -1,0 +1,92 @@
+---
+title: ButtonInput
+description: "Props for the ButtonInput component: a real <button>/<input> form button whose type/name/value/formNoValidate take part in native submission, with useInputTag switching to the input form."
+---
+
+# ButtonInput
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ButtonInput) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ButtonInputWidget.html "OO.ui.ButtonInputWidget")
+
+A form button: renders a real `<button>` / `<input>` element whose `type` / `name` / `value` / `formNoValidate` take part in native form submission. Use [Button](/en/components/button/index.html) when you have no submission needs.
+
+## Basic usage
+
+Drop it into a [FormLayout](/en/components/form-layout/index.html) to trigger native submission; a `type="submit"` button carries its own `name` / `value` — whichever is clicked is the one submitted.
+
+```tsx preview
+import { useState } from "react";
+import { ButtonInput, FormLayout, HiddenInputWidget } from "ooui-react";
+
+function App() {
+  const [submitted, setSubmitted] = useState("");
+
+  return (
+    <FormLayout
+      onSubmit={(event) => {
+        event.preventDefault();
+        const pairs: string[] = [];
+        new FormData(event.currentTarget).forEach((value, key) => {
+          pairs.push(`${key}=${value}`);
+        });
+        setSubmitted(pairs.join(" & "));
+      }}
+    >
+      <HiddenInputWidget name="source" value="demo" />
+      <ButtonInput type="submit" flags={["primary", "progressive"]}>
+        Save
+      </ButtonInput>
+      <ButtonInput type="submit" name="action" value="draft" formNoValidate>
+        Save draft (skip validation)
+      </ButtonInput>
+      {submitted && <div>Submitted: {submitted}</div>}
+    </FormLayout>
+  );
+}
+
+export default App;
+```
+
+## The input form
+
+`useInputTag` renders an `<input>` instead of a `<button>`: the label text doubles as the submitted value; icons, indicators and the `value` prop are not supported (the label must be plain text).
+
+```tsx preview
+import { ButtonInput } from "ooui-react";
+
+function App() {
+  return (
+    <ButtonInput type="submit" useInputTag flags={["primary", "progressive"]}>
+      Save
+    </ButtonInput>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `children` | Button text | `ReactNode` | — |
+| `type` | Native `type` attribute | `'button' \| 'submit' \| 'reset'` | `'button'` |
+| `name` / `value` | Submitted field name and value (ignored with `useInputTag`; the `<input>`'s value is the label) | `string` | — |
+| `formNoValidate` | Skip form validation on submit | `boolean` | `false` |
+| `useInputTag` | Render as `<input>` instead of `<button>` | `boolean` | `false` |
+| `flags` | Extra flags (color and form) | `ButtonFlag \| ButtonFlag[]` | `[]` |
+| `framed` | Whether framed | `boolean` | `true` |
+| `active` | Whether in the active state | `boolean` | `false` |
+| `icon` / `indicator` | Icon / indicator (unsupported with `useInputTag`) | `string` / `'clear' \| 'up' \| 'down' \| 'required'` | — |
+| `invisibleLabel` | Hide the label visually but keep it as the accessible name | `boolean` | `false` |
+| `onClick` | Click handler (Enter/Space on the keyboard fire it too) | `(ev) => void` | — |
+| `accessKey` | Access key (lands on the real `button` / `input`) | `string` | — |
+| `disabled` | Whether disabled | `boolean` | `false` |
+| `...rest` | Native `span` props passed straight to the root | `HTMLAttributes<HTMLSpanElement>` | — |
+
+The pressed-state class (`oo-ui-buttonElement-pressed`) shows while pressed via mouse or keyboard, matching the original.
+
+## See also
+
+- The button without submission semantics: [Button](/en/components/button/index.html)
+- The form container: [FormLayout](/en/components/form-layout/index.html)
+- Select fields that submit natively: [DropdownInput](/en/components/dropdown-input/index.html)

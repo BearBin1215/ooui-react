@@ -1,0 +1,102 @@
+---
+title: CopyTextLayout 复制文本
+description: "CopyTextLayout 组件的属性说明：只读文本框加复制按钮，聚焦自动全选，copyText 待复制文本、multiline 多行形态与 onCopyResult 结果回调。"
+---
+
+# CopyTextLayout 复制文本
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/CopyTextLayout) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.CopyTextLayout.html "OO.ui.CopyTextLayout")
+
+复制文本布局：只读文本框加复制按钮，聚焦文本框或点击按钮时自动全选文本。适合展示链接、引用标识等需要用户复制的只读内容。
+
+## 基本用法
+
+`copyText` 是待复制文本（作为文本框初始值）；`onCopyResult` 在复制结束后触发，入参为是否成功。
+
+```tsx preview
+import { useState } from "react";
+import { CopyTextLayout } from "ooui-react";
+
+function App() {
+  const [result, setResult] = useState("");
+
+  return (
+    <div style={{ maxWidth: 460 }}>
+      <CopyTextLayout
+        label="分享链接"
+        copyText="https://example.com/invite/9f3k"
+        onCopyResult={(copied) => setResult(copied ? "已复制" : "复制失败")}
+      />
+      <div style={{ marginTop: 8 }}>{result}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 动态文本
+
+`copyText` 只作为文本框**初始值**，复制时复制的也是文本框当前值。分享链接随用户选择变化这类场景，把受控值经 `textInputProps={{ value }}` 传入（优先于 `copyText`）——只改 `copyText` 不会更新文本框。
+
+```tsx preview
+import { useState } from "react";
+import { Button, CopyTextLayout } from "ooui-react";
+
+function App() {
+  const [id, setId] = useState("9f3k");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 460 }}>
+      <CopyTextLayout label="分享链接" textInputProps={{ value: `https://example.com/invite/${id}` }} />
+      <Button onClick={() => setId(Math.random().toString(36).slice(2, 6))}>换一个链接</Button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 多行
+
+`multiline` 把文本框换成多行形态，复制按钮移到下方右侧。
+
+```tsx preview
+import { CopyTextLayout } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 460 }}>
+      <CopyTextLayout
+        label="嵌入代码"
+        multiline
+        copyText={"<script src=\"https://example.com/widget.js\"></script>"}
+        textInputProps={{ rows: 3 }}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+:::note 与原版的差异
+复制优先走 `navigator.clipboard`，不可用或被权限拒绝时回落到 `document.execCommand('copy')`（原版只用后者，该 API 已废弃、失败时无从感知）。{/* deviations: dev-copy-clipboard */}
+:::
+
+## API
+
+继承 [FieldLayout](/components/field-layout/index.html) 全部属性（`label` / `align` / `title` 等），另有：
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `copyText` | 待复制文本（作为文本框初始值；`textInputProps.value` 给定时以后者为准） | `string` | — |
+| `multiline` | 是否多行（文本框换用 MultilineTextInput，按钮移到下方右侧） | `boolean` | `false` |
+| `textInputProps` | 文本框属性覆盖：`value` 为受控值、`readOnly` 缺省 `true`，其余透传（`inputRef` 由布局占用） | `CopyTextLayoutTextInputProps` | — |
+| `buttonProps` | 复制按钮属性覆盖（`children` 为按钮文本，`icon` 缺省 `'copy'`） | `Partial<ButtonProps>` | — |
+| `onCopyResult` | 复制结束回调，入参为是否成功 | `(copied: boolean) => void` | — |
+
+## 另见
+
+- 字段排布与标签关联：[FieldLayout](/components/field-layout/index.html)
+- 输入字段旁挂普通操作按钮：[ActionFieldLayout](/components/action-field-layout/index.html)

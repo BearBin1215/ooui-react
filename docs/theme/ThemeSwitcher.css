@@ -1,0 +1,17 @@
+/* 导航栏「示例主题」切换器：结构与类名复用 rspress 导航菜单（rp-nav-menu__item 触发器 +
+   rp-hover-group 面板），主题样式由 rspress 提供，此处仅重置 button 的 UA 样式，
+   贴齐原版 div/Link 分支的观感；padding 等盒模型仍由原版类承担 */
+.doc-theme-switcher .rp-nav-menu__item__container,
+.doc-theme-switcher .doc-theme-switcher__option {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* button 的 UA 样式自带 font-family，须继承宿主字体；字号/字重交由原版容器类
+   （14px/500）承担——此处勿写 font 简写或 font-size：本选择器特异度更高，会压过
+   容器类与 :hover 规则的 14px，悬浮前后字号跳变并推移相邻导航项 */
+.doc-theme-switcher .rp-nav-menu__item__container {
+  font-family: inherit;
+}

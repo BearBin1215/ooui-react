@@ -1,0 +1,216 @@
+---
+title: Toolbar 工具栏
+description: "Toolbar 组件的属性说明：横栏容器承载若干工具组（Bar/List/Menu），工具以声明式 tools 数组传入、激活态由调用方受控，窄栏自动压缩。"
+---
+
+# Toolbar 工具栏
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/toolbars) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.Toolbar.html "OO.ui.Toolbar")
+
+工具栏：一条横栏容器，内部排列若干工具组，工具由工具组承载：
+
+- `BarToolGroup`：工具以图标按钮横向平铺（最常用）。
+- `ListToolGroup` / `MenuToolGroup`：工具收进下拉面板，点把手展开。
+- `LabelToolGroup`：工具栏内的一段静态标签，不可交互、可带图标与指示器。
+
+## 基本用法
+
+```tsx preview
+import { useState } from "react";
+import { Toolbar, BarToolGroup } from "ooui-react";
+
+function App() {
+  const [marks, setMarks] = useState<string[]>([]);
+  const toggle = (name: string) =>
+    setMarks((prev) =>
+      prev.includes(name) ? prev.filter((x) => x !== name) : [...prev, name],
+    );
+
+  return (
+    <Toolbar>
+      <BarToolGroup
+        tools={[
+          {
+            name: "bold",
+            icon: "bold",
+            label: "加粗",
+            title: "加粗",
+            active: marks.includes("bold"),
+            onSelect: () => toggle("bold"),
+          },
+          {
+            name: "italic",
+            icon: "italic",
+            label: "斜体",
+            title: "斜体",
+            active: marks.includes("italic"),
+            onSelect: () => toggle("italic"),
+          },
+          {
+            name: "link",
+            icon: "link",
+            label: "插入链接",
+            title: "插入链接",
+            onSelect: () => setMarks((p) => [...p, "link"]),
+          },
+        ]}
+      />
+    </Toolbar>
+  );
+}
+
+export default App;
+```
+
+## 工具组分区与动作区
+
+工具组按自身 `align` 排到左侧（`before`，缺省）或右侧（`after`）；`actions` 渲染在最右侧的独立动作区。
+
+```tsx preview
+import { Toolbar, BarToolGroup, Button } from "ooui-react";
+
+function App() {
+  return (
+    <Toolbar
+      actions={
+        <Button icon="share" framed={false}>
+          分享
+        </Button>
+      }
+    >
+      <BarToolGroup
+        tools={[
+          { name: "undo", icon: "undo", label: "撤销", onSelect: () => {} },
+          { name: "redo", icon: "redo", label: "重做", onSelect: () => {} },
+        ]}
+      />
+      <BarToolGroup
+        align="after"
+        tools={[
+          { name: "settings", icon: "settings", label: "设置", onSelect: () => {} },
+        ]}
+      />
+    </Toolbar>
+  );
+}
+
+export default App;
+```
+
+## 弹出工具
+
+工具带 `popup` 配置时成为“弹出工具”：点击工具即开合浮层，浮层展开期间工具呈激活态。浮层内容由 `popup.popupContent` 给出，显隐可用 `open` / `defaultOpen` / `onOpenChange` 受控。`onSelect` 仍在每次选中时触发（与开合独立，不会因配了 `popup` 而失效）；浮层方位锁定在工具下方（bottom 工具栏为上方），`autoFlip` 缺省关闭、可显式开启；`container` / `autoClose` / `position` 由工具自身接管，不可覆盖。
+
+:::warning 与原版的差异
+弹出工具不要放进 `ListToolGroup` / `MenuToolGroup` 组内：选中工具会先收起组面板，浮层锚点随之失效——原版表现为浮层不显示，本工程浮层仍会渲染但错位到视口左上角。弹出工具请放 Bar 组。{/* deviations: dev-popup-tool-in-list */}
+:::
+
+```tsx preview
+import { Toolbar, BarToolGroup } from "ooui-react";
+
+function App() {
+  return (
+    <Toolbar>
+      <BarToolGroup
+        tools={[
+          {
+            name: "color",
+            icon: "palette",
+            label: "颜色",
+            popup: {
+              popupContent: (
+                <div style={{ padding: 12 }}>在这里放颜色选择面板</div>
+              ),
+            },
+          },
+        ]}
+      />
+    </Toolbar>
+  );
+}
+
+export default App;
+```
+
+## List 与 Menu 工具组
+
+两者都由一个把手加下拉面板构成（把手图标/标签/指示器可配，指示器缺省随 `position` 翻转：bottom 时朝上），面板顶部可放 `header` 说明文字。
+
+**ListToolGroup** 以标签文本纵向列表承载工具，支持折叠体系：`allowCollapse` 名单内的工具默认折叠（展开面板后才可见），面板尾部自动出现 More / Fewer 切换项（选中它不收起面板，文案与图标随状态切换）；`forceExpand` 反向声明——列出的工具恒可见、其余均可折叠。名单与实际 `tools` 取交集，无效名不产生切换项。展开态经 `expanded`（受控）/ `defaultExpanded`（非受控初值，缺省折叠）管理。
+
+**MenuToolGroup** 以标签横向列表承载工具，把手标签按**激活工具**（`active: true`）的可见文本以「, 」间插合成，无激活工具时回落 `label`——适合段落格式、对齐方式一类「显示当前选择」的互斥菜单。
+
+两个组的共享契约：面板开合走统一的 `open` / `defaultOpen` / `onOpenChange` 受控通道（把手切换、选中收起、点外部、Escape 均回调）；`onToolSelect` 在任意工具被选中时收到该工具定义，可统一分发；选中工具后面板自动收起。组级 `disabled` 禁用全部工具；**全部工具禁用时组自动禁用**、`tools` 为空的组整体隐藏——按权限动态清空 `tools` 的场景无需额外处理。Escape 在捕获阶段收面板，工具栏嵌在 Dialog 里不会误关弹窗。
+
+```tsx preview
+import { useState } from "react";
+import { ListToolGroup, Toolbar } from "ooui-react";
+
+function App() {
+  const [active, setActive] = useState("p");
+
+  return (
+    <Toolbar>
+      <ListToolGroup
+        label="段落"
+        allowCollapse={["pre", "blockquote"]}
+        tools={[
+          { name: "p", label: "正文", active: active === "p", onSelect: () => setActive("p") },
+          { name: "h", label: "标题", active: active === "h", onSelect: () => setActive("h") },
+          { name: "pre", label: "预格式", onSelect: () => {} },
+          { name: "blockquote", label: "引用", onSelect: () => {} },
+        ]}
+      />
+    </Toolbar>
+  );
+}
+
+export default App;
+```
+
+## 窄栏与位置
+
+工具栏宽度不足以平铺全部内容时自动进入**窄栏**：平铺的工具切换为更紧凑的图标形态（工具可按 `narrowConfig` 定制窄栏表现），收进下拉面板的工具组其把手也随之压缩。`position` 取 `top`（缺省）或 `bottom`，决定弹出面板朝下还是朝上展开。
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `children` | 工具组（`BarToolGroup`、`ListToolGroup`、`MenuToolGroup` 等） | `ReactNode` | — |
+| `position` | 工具栏位置，影响弹出面板展开方向与类名 | `'top' \| 'bottom'` | `'top'` |
+| `actions` | 右侧独立动作区内容 | `ReactNode` | — |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+工具项（`tools` 数组元素）的常用字段：
+
+- `name`（符号名，必填）：生成 `oo-ui-tool-name-{name}` 类（路径形式 `'a/b/c'` 取前两段），可作样式与测试钩子。
+- `label`（可见文本）与 `icon`：Bar 组缺省仅显示图标（无图标才显示标签），`displayBothIconAndLabel: true` 同时显示两者；List / Menu 组恒显示标签。`title` 恒为 tooltip（Bar 组把 `title` 与 `accelerator` 拼进链接 title；List / Menu 组只渲染 accelerator 槽位、不拼 tooltip）。
+- `active`（受控激活态）、`onSelect`（点击或键盘 Enter / 空格触发）、`disabled`。
+- `narrowConfig`：窄栏时以其**已定义**字段替换该工具的图标 / 标签形态，退出窄栏还原。
+- `popup`：弹出工具（见上节）。
+- `group`：内嵌工具组——工具位渲染为整个工具组而非工具链接（做「嵌套下拉」），把手与选中态都由内嵌组承担，`title` / `icon` / `active` / `onSelect` 对本工具不生效；与 `popup` 同给时 `group` 优先。
+
+完整契约见各工具组与 `ToolProps` 类型。
+
+## 与原版的差异
+
+- **工具不再经 `ToolFactory` 注册**：工具直接以声明式 `tools` 数组交给工具组，激活态由调用方持有。{/* deviations: dev-tool-factory */}
+- **工具栏与工具组无事件面**：工具激活态与弹出工具浮层开合都是受控 props 与回调（`active` / `onSelect`、`popup.open` / `popup.onOpenChange`，面板 `open` / `defaultOpen` / `onOpenChange`）；原版监听 `Toolbar.active` 事件的等价物是按 `active` 声明重渲染 `tools` 数组。{/* deviations: dev-toolbar-events */}
+- **工具下拉面板支持按 Escape 收起**（原版没有该键）。{/* deviations: dev-toolbar-panel-escape */}
+- **弹出工具的 `onSelect` 仍会触发**：原版它被浮层开合占用、调用方收不到选中通知；本工程选中回调与开合独立，显隐变化另经 `popup.onOpenChange` 通知。{/* deviations: dev-popup-tool-onselect */}
+- **弹出工具的 `autoFlip` 可配置**：原版构造期强制关闭、传了也不生效；本工程缺省同为关闭，可显式开启。{/* deviations: dev-popup-tool-autoflip */}
+- **工具的可见文本与 tooltip 从一键 `title` 拆为 `label` + `title`**：`label` 是可见文本、`title` 恒为 tooltip；迁移时原 `narrowConfig.title` 的值应改传 `label`。{/* deviations: dev-tool-label-title */}
+- **内嵌工具组以 React 元素给出**（`group` 字段，如 `<ListToolGroup />`），不再经工厂创建；`title` / `icon` / `active` / `onSelect` 对该工具位不生效，只有 `disabled` 同步为禁用态。{/* deviations: dev-toolgroup-tool-element */}
+- **工具快捷键文案经 `accelerator` 字段声明**，写入 `oo-ui-tool-accel` 槽位（Bar 组拼进 tooltip，其余组只渲染槽位）；原版由宿主覆写 `getToolAccelerator` 提供。{/* deviations: dev-tool-accelerator */}
+- **窄栏下把手 tooltip 按生效的 `label` 兜底**：原版的 title 兜底只在构造期求值，窄栏才引入不可见标签时把手没有 tooltip。{/* deviations: dev-popuptoolgroup-title */}
+- **面板铺满容器宽时纵向仍按可视区钳高并内部滚动**（原版撤掉纵向裁剪，面板可能超出视口、工具不可达）。{/* deviations: dev-panel-maxheight */}
+- **工具组增减后窄栏判定基准会重测**（原版永久缓存首次测量值，之后增减工具组不感知）。{/* deviations: dev-narrow-threshold-reset */}
+- **工具栏置于底部（`position="bottom"`）时 More / Fewer 的箭头方向与原版相反**，功能不受影响。{/* deviations: dev-listtoolgroup-icons */}
+- **`MenuToolGroup` 无激活工具时把手回落到 `label` prop**（原版回落到字面量空格，把手空白）。{/* deviations: dev-menutoolgroup-label */}
+
+## 另见
+
+- 平铺图标按钮的工具组：`BarToolGroup`
+- 收进下拉面板的工具组：`ListToolGroup`、`MenuToolGroup`
+- 静态标签工具组：`LabelToolGroup`
+- 通用透传与 `ref` 规则：[通用属性](/guide/basics.html)

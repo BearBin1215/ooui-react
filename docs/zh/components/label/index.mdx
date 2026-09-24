@@ -1,0 +1,96 @@
+---
+title: Label 标签
+description: "Label 组件的属性说明：独立摆放的表单标签、htmlFor 关联原生控件、视觉隐藏与禁用态。"
+---
+
+# Label 标签
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Label) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.LabelWidget.html "OO.ui.LabelWidget")
+
+独立的表单标签，需要单独摆放一个标签时使用。
+
+## 关联表单控件
+
+点击标签聚焦/激活控件依赖原生 `<label>` 的 `htmlFor` 关联。关联通道按组件分派，`id` 写错落点会静默失效：{/* deviations: dev-label-input */}
+
+- **TextInput 系**（含 MultilineTextInput、NumberInput、ComboBoxInput 等）：`id` 落在根 div 上，要落到原生输入元素须经 `inputProps={{ id }}` 写入。
+- **CheckboxInput / RadioInput**：没有 `inputProps` 通道，用专用的 `inputId` prop——它直接落在原生 `<input>` 上。
+
+表单里这类关联由 [FieldLayout](/components/field-layout/index.html) 自动接线，无需手写。
+
+:::note 表单里更推荐用 FieldLayout
+表单中「标签 + 控件」的布局、对齐与关联激活通常交给 [FieldLayout](/components/field-layout/index.html) 统一处理，标签与控件各自单独书写 `htmlFor`/`id` 适合自由拼装的场景。
+:::
+
+```tsx preview
+import { CheckboxInput, Label, TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <Label htmlFor="label-demo-username">用户名</Label>
+      <TextInput inputProps={{ id: "label-demo-username" }} placeholder="点上方标签聚焦这里" />
+      <Label htmlFor="label-demo-agree">同意条款</Label>
+      <CheckboxInput inputId="label-demo-agree" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 视觉隐藏与标题
+
+`invisibleLabel` 把标签内容视觉隐藏（裁剪而非移除，读屏器仍可读）。`title` 未显式给出时以标签文本兜底。
+
+```tsx preview
+import { Label } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <Label>常规标签</Label>
+      <Label invisibleLabel>仅读屏可见的标签</Label>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 禁用态
+
+`disabled` 输出 `oo-ui-widget-disabled` 与 `aria-disabled`，主题把标签调淡。
+
+```tsx preview
+import { Label } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <Label>常规标签</Label>
+      <Label disabled>禁用标签</Label>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 结构
+
+组件渲染单个 `<label>`，`ref` 指向它，未声明的属性（`htmlFor`、`title`、事件等）直传该元素。
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `children` | 标签内容 | `ReactNode` | — |
+| `invisibleLabel` | 视觉隐藏标签（保留可访问名称） | `boolean` | `false` |
+| `disabled` | 是否禁用 | `boolean` | `false` |
+| `...rest` | 原生 `label` 属性（`htmlFor`、`title`、`className`、事件等）直传根元素 | `HTMLAttributes<HTMLLabelElement>` | — |
+
+## 另见
+
+- 表单字段的标签布局与关联：[FieldLayout](/components/field-layout/index.html)
+- 输入组件自带的内嵌标签：[TextInput](/components/text-input/index.html) 的「标签」一节

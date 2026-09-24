@@ -1,0 +1,87 @@
+---
+title: ButtonGroup 按钮组
+description: "ButtonGroup 组件的属性说明：把若干按钮并排成一组，视觉上连为一体，组级 disabled 一并下发到组内按钮。"
+---
+
+# ButtonGroup 按钮组
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ButtonGroup) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ButtonGroupWidget.html "OO.ui.ButtonGroupWidget")
+
+按钮组：把若干 [Button](/components/button/index.html) 排在一起，相邻按钮首尾相连成一块。
+
+## 基本用法
+
+```tsx preview
+import { Button, ButtonGroup } from "ooui-react";
+
+function App() {
+  return (
+    <ButtonGroup>
+      <Button icon="bold">加粗</Button>
+      <Button icon="italic">斜体</Button>
+      <Button icon="link">链接</Button>
+    </ButtonGroup>
+  );
+}
+
+export default App;
+```
+
+## 组内混用切换按钮
+
+组里可以同时放普通按钮与 [ToggleButton](/components/toggle-button/index.html)，常用于编辑器工具条。
+
+```tsx preview
+import { Button, ButtonGroup, ToggleButton } from "ooui-react";
+
+function App() {
+  return (
+    <ButtonGroup>
+      <ToggleButton icon="bold">加粗</ToggleButton>
+      <ToggleButton icon="italic">斜体</ToggleButton>
+      <Button icon="highlight" flags="destructive">
+        清除格式
+      </Button>
+    </ButtonGroup>
+  );
+}
+
+export default App;
+```
+
+## 组级禁用
+
+给组设 `disabled`，会**一并下发**给组内的每个按钮，无需逐个设置。
+
+```tsx preview
+import { Button, ButtonGroup } from "ooui-react";
+
+function App() {
+  return (
+    <ButtonGroup disabled>
+      <Button>复制</Button>
+      <Button>剪切</Button>
+      <Button>粘贴</Button>
+    </ButtonGroup>
+  );
+}
+
+export default App;
+```
+
+:::note 与原版的差异
+原版的组禁用靠命令式逐个更新子按钮；本工程用 React 上下文把 `disabled` 下发到组内按钮，这是同等的声明式便捷行为——组内按钮的 `disabled` 取“自身或所属组禁用”之或。{/* deviations: dev-buttongroup-disabled */}
+:::
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `children` | 组内按钮（[Button](/components/button/index.html) / [ToggleButton](/components/toggle-button/index.html) 等） | `ReactNode` | — |
+| `disabled` | 组级禁用，一并下发到组内按钮 | `boolean` | `false` |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+## 另见
+
+- 组内按钮：[Button](/components/button/index.html)、[ToggleButton](/components/toggle-button/index.html)
+- 通用透传与 `ref` 规则：[通用属性](/guide/basics.html)

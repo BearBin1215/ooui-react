@@ -1,0 +1,50 @@
+---
+title: PanelLayout
+description: "Props for the PanelLayout component: the padded/scrollable/expanded/framed switches, the base container for other layouts and hand-rolled panels."
+---
+
+# PanelLayout
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/PanelLayout) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.PanelLayout.html "OO.ui.PanelLayout")
+
+A panel: a content container with a set of form switches (padding, scrolling, expansion, border), also the base of layout components such as [StackLayout](/en/components/stack-layout/index.html).
+
+## Basic usage
+
+```tsx preview
+import { PanelLayout } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ position: "relative", height: 120 }}>
+      <PanelLayout padded scrollable framed>
+        <p>A padded, framed panel; a scrollbar appears when content overflows.</p>
+        <p>Second paragraph.</p>
+        <p>Third paragraph.</p>
+        <p>Fourth paragraph.</p>
+        <p>Fifth paragraph.</p>
+      </PanelLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+In the `expanded` form (on by default) the panel fills its parent via absolute positioning, so the parent must be positioned and sized — the outer `div` above (its `position: relative` and `height`) exists for exactly that; with an unpositioned or unsized parent, the panel expands against a further positioned ancestor (or the viewport) and looks like it "vanished". `expanded={false}` is the static form, shrinking to fit the content. Layouts built on this component, such as [StackLayout](/en/components/stack-layout/index.html), inherit the same premise.
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `padded` | Whether to leave padding | `boolean` | `false` |
+| `scrollable` | Whether scrollable | `boolean` | `false` |
+| `expanded` | Whether to fill the parent element | `boolean` | `true` |
+| `framed` | Whether framed | `boolean` | `false` |
+| `hidden` | Whether hidden (three-state semantics in [Layout](/en/components/layout/index.html)) | `boolean \| 'until-found'` | — |
+| `...rest` | Native `div` props (`className`, `id`, `data-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
+
+## See also
+
+- The `hidden` three-state semantics of the base class: [Layout](/en/components/layout/index.html)
+- The paged container built on it: [StackLayout](/en/components/stack-layout/index.html)

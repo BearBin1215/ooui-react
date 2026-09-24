@@ -1,0 +1,121 @@
+---
+title: Component overview
+description: "All components exported by ooui-react, grouped into the widget, layout, dialog and toolbar families with a one-line purpose each; components ship no styles and output DOM identical to OOUI."
+---
+
+# Component overview
+
+This library reimplements OOUI in React. Components follow the original class hierarchy and fall into four families — **widgets, layouts, dialogs and toolbars** — 60+ in total.
+
+Components **ship no styles**: they only output DOM and `oo-ui-*` class names identical to the original. Load the OOUI stylesheets first, as described in [Usage](/en/guide/usage.html); the props shared by every component are covered in [Common props](/en/guide/basics.html).
+
+## Widgets
+
+<div className="doc-component-grid">
+
+- [Button](/en/components/button/index.html) icons, indicators, labels and link forms
+- [ToggleButton](/en/components/toggle-button/index.html) a button that toggles between pressed and unpressed
+- [ToggleSwitch](/en/components/toggle-switch/index.html) switch
+- [ButtonGroup](/en/components/button-group/index.html) groups several buttons; can be disabled as a whole
+- [PopupButton](/en/components/popup-button/index.html) a button that opens a popup on click
+- [Popup](/en/components/popup/index.html) the popup layer itself
+- [Label](/en/components/label/index.html) standalone text label
+- [Icon](/en/components/icon/index.html) icon
+- [Indicator](/en/components/indicator/index.html) indicator (an "expand" or "required"-style marker)
+- [ProgressBar](/en/components/progress-bar/index.html) progress bar
+- [Message](/en/components/message/index.html) inline message notice (with a close button)
+
+</div>
+
+### Input
+
+<div className="doc-component-grid">
+
+- [TextInput](/en/components/text-input/index.html) single-line text input
+- [MultilineTextInput](/en/components/multiline-text-input/index.html) multi-line text input
+- [NumberInput](/en/components/number-input/index.html) number input (with step buttons)
+- [SearchInput](/en/components/search-input/index.html) search input (with a clear indicator)
+- [SearchWidget](/en/components/search-widget/index.html) a search input with a persistent results list
+- [ComboBoxInput](/en/components/combo-box-input/index.html) combo box — type to filter or pick from a dropdown
+- [CheckboxInput](/en/components/checkbox-input/index.html) a single checkbox
+- [RadioInput](/en/components/radio-input/index.html) a single radio button
+- [SelectFileInputWidget](/en/components/select-file-input-widget/index.html) file picker (including a drop-zone form)
+
+</div>
+
+### Selection
+
+For the option data contract (`value`, group headings, and the tag inputs' `label`/`labelText`/`data`), see [Selection and options](/en/guide/options.html).
+
+<div className="doc-component-grid">
+
+- [Select](/en/components/select/index.html) select list (the inner layer of a dropdown or menu)
+- [Dropdown](/en/components/dropdown/index.html) dropdown select
+- [OutlineSelect](/en/components/outline-select/index.html) select list with hierarchical indentation
+- [TabSelect](/en/components/tab-select/index.html) tab-style select
+- [ButtonSelect](/en/components/button-select/index.html) button-style select
+- [ButtonMenuSelectWidget](/en/components/button-menu-select/index.html) command menu triggered by a button
+- [CheckboxMultiselect](/en/components/checkbox-multiselect/index.html) checkbox group
+- [RadioSelect](/en/components/radio-select/index.html) radio group
+- [TagMultiselect](/en/components/tag-multiselect/index.html) tag input (free entry)
+- [MenuTagMultiselect](/en/components/menu-tag-multiselect/index.html) tag input (with a candidate menu)
+
+</div>
+
+### Form submission
+
+A set of field widgets that submit natively with a `<form>`, used together with `FormLayout`.
+
+<div className="doc-component-grid">
+
+- [ButtonInput](/en/components/button-input/index.html) submit button
+- [DropdownInput](/en/components/dropdown-input/index.html) dropdown select field
+- [CheckboxMultiselectInput](/en/components/checkbox-multiselect-input/index.html) checkbox group field
+- [RadioSelectInput](/en/components/radio-select-input/index.html) radio group field
+- [HiddenInputWidget](/en/components/hidden-input-widget/index.html) a field submitted with the form but never shown
+
+</div>
+
+## Layouts
+
+<div className="doc-component-grid">
+
+- [Layout](/en/components/layout/index.html) layout base class
+- [PanelLayout](/en/components/panel-layout/index.html) panel with padding
+- [PageLayout](/en/components/page-layout/index.html) overall page layout
+- [StackLayout](/en/components/stack-layout/index.html) stacks panels, showing one at a time
+- [BookletLayout](/en/components/booklet-layout/index.html) multiple panels with tabs (booklet-style)
+- [IndexLayout](/en/components/index-layout/index.html) multiple panels with an index area and search
+- [TabPanelLayout](/en/components/tab-panel-layout/index.html) a single tab panel
+- [FieldLayout](/en/components/field-layout/index.html) field wrapper with a label and help text
+- [FieldsetLayout](/en/components/fieldset-layout/index.html) field grouping (can be disabled as a whole)
+- [ActionFieldLayout](/en/components/action-field-layout/index.html) a field with an accompanying inline action button
+- [FormLayout](/en/components/form-layout/index.html) form container
+- [HorizontalLayout](/en/components/horizontal-layout/index.html) arranges several items horizontally
+- [MenuLayout](/en/components/menu-layout/index.html) overall menu layout
+- [CopyTextLayout](/en/components/copy-text-layout/index.html) read-only text field with a copy button
+
+</div>
+
+## Dialogs
+
+<div className="doc-component-grid">
+
+- [Dialog](/en/components/dialog/index.html) dialog base class (controlled `open`)
+- [MessageDialog](/en/components/dialog/index.html) message dialog (OK / Cancel)
+- [ProcessDialog](/en/components/process-dialog/index.html) dialog with a multi-step flow and an error panel
+- [`confirm` / `alert` / `prompt`](/en/components/imperative-dialogs/index.html) imperative dialogs (no React tree needed)
+
+</div>
+
+## Toolbars
+
+<div className="doc-component-grid">
+
+- [Toolbar](/en/components/toolbar/index.html) toolbar container
+- [BarToolGroup](/en/components/toolbar/index.html) button-style tool group
+- [ListToolGroup](/en/components/toolbar/index.html) list-style tool group
+- [MenuToolGroup](/en/components/toolbar/index.html) menu-style tool group
+- [LabelToolGroup](/en/components/toolbar/index.html) static label group within a toolbar
+
+</div>

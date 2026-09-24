@@ -1,0 +1,101 @@
+---
+title: StackLayout 堆叠面板
+description: "StackLayout 组件的属性说明：按 options 渲染分页、value/defaultValue/onChange 激活页通道、continuous 连续模式与 onPageFocus 焦点联动。"
+---
+
+# StackLayout 堆叠面板
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/StackLayout) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.StackLayout.html "OO.ui.StackLayout")
+
+堆叠布局：按 `options` 渲染一组[分页](/components/page-layout/index.html)，同一时间只显示激活页；`continuous` 开启后全部可见、整体滚动。也是 [BookletLayout](/components/booklet-layout/index.html) 的内层面板栈。
+
+## 基本用法
+
+激活页走 `value` / `defaultValue` / `onChange` 三条通道；选项即 [PageLayout](/components/page-layout/index.html) 的字段加 `value`（兼作激活匹配与列表 key）。
+
+```tsx preview
+import { useState } from "react";
+import { Button, StackLayout } from "ooui-react";
+
+const options = [
+  { value: "a", label: "第一页", padded: true, children: "第一页内容" },
+  { value: "b", label: "第二页", padded: true, children: "第二页内容" },
+];
+
+function App() {
+  const [page, setPage] = useState<string | number>("a");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <div style={{ display: "flex", gap: 8 }}>
+        <Button onClick={() => setPage("a")}>第一页</Button>
+        <Button onClick={() => setPage("b")}>第二页</Button>
+      </div>
+      <div style={{ position: "relative", height: 120 }}>
+        <StackLayout value={page} onChange={setPage} options={options} framed />
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+:::note 形态前提
+`expanded`（缺省开启）形态按绝对定位铺满父元素，父元素需已定位并给定尺寸（上面的示例容器即为此而设）；`continuous` 的整体滚动同样依赖该前提。`expanded={false}` 的 static 形态只有 [MenuLayout](/components/menu-layout/index.html) 自身的流式内容可用——本组件的分页都是绝对定位面板，static 下没有内容高度，不要使用。
+:::
+
+激活值缺失或失效（如页被移除）时自动补选：取下一个未被移除的页，末页被移除则取新末页；从未给值或值不在选项内时取首个可用页。
+
+## 连续模式
+
+`continuous` 使所有页同时可见、容器整体滚动；`onPageFocus` 在焦点进入某页时触发（不改激活值），可据此做滚动联动选页。
+
+```tsx preview
+import { useState } from "react";
+import { StackLayout } from "ooui-react";
+
+function App() {
+  const [focused, setFocused] = useState("");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <div style={{ height: 140 }}>
+        <StackLayout
+          continuous
+          framed
+          onPageFocus={(value) => setFocused(String(value))}
+          options={[
+            { value: "a", label: "第一页", padded: true, children: "第一页内容" },
+            { value: "b", label: "第二页", padded: true, children: "第二页内容" },
+            { value: "c", label: "第三页", padded: true, children: "第三页内容" },
+          ]}
+        />
+      </div>
+      <div>最后聚焦的页：{focused || "（点击页面内容试试）"}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## API
+
+继承 [PanelLayout](/components/panel-layout/index.html) 全部属性，另有：
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `options` | 页集，[PageLayout](/components/page-layout/index.html) 字段加 `value` | `(PageLayoutProps & { value: string \| number })[]` | — |
+| `value` | 当前激活页（受控，传入即受控模式） | `string \| number` | — |
+| `defaultValue` | 非受控初始激活页 | `string \| number` | — |
+| `onChange` | 激活页变化回调 | `ChangeHandler<string \| number>` | — |
+| `onPageFocus` | 焦点进入某页时触发（携带页 value；焦点联动用，不改激活值） | `(value: string \| number, event: FocusEvent<HTMLDivElement>) => void` | — |
+| `continuous` | 是否全显示（`true` 时忽略 `value`，所有页同时可见） | `boolean` | `false` |
+| `scrollable` | 是否可滚动（缺省随 `continuous`：连续模式容器整体滚动，非连续由页面自行滚动） | `boolean` | `continuous` |
+
+## 另见
+
+- 单个分页的字段：[PageLayout](/components/page-layout/index.html)
+- 带大纲菜单的封装：[BookletLayout](/components/booklet-layout/index.html)
+- 值通道约定：[受控与非受控](/guide/controlled.html)

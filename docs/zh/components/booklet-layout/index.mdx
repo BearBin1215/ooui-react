@@ -1,0 +1,141 @@
+---
+title: BookletLayout 手册布局
+description: "BookletLayout 组件的属性说明：左侧大纲加右侧页面栈的手册式布局，outlined 大纲开关、editable 大纲编辑、continuous 连续滚动与 autoFocus 自动聚焦。"
+---
+
+# BookletLayout 手册布局
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/BookletLayout) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.BookletLayout.html "OO.ui.BookletLayout")
+
+手册式布局：`outlined` 时左侧是[大纲选择](/components/outline-select/index.html)、右侧是[页面栈](/components/stack-layout/index.html)；不开大纲时就是纯堆叠面板。适合设置页、多节向导等内容分节的场景。
+
+## 基本用法
+
+`options` 数组项为 `{ value, label, children }` 加 [PageLayout](/components/page-layout/index.html) 的面板字段；激活页走 `value` / `defaultValue` / `onChange` 三条通道。
+
+```tsx preview
+import { useState } from "react";
+import { BookletLayout } from "ooui-react";
+
+function App() {
+  const [page, setPage] = useState<string | number>("intro");
+
+  return (
+    <div style={{ position: "relative", height: 180 }}>
+      <BookletLayout
+        outlined
+        value={page}
+        onChange={setPage}
+        options={[
+          { value: "intro", label: "简介", padded: true, children: "这是「简介」页。" },
+          { value: "usage", label: "用法", padded: true, children: "这是「用法」页。" },
+          { value: "faq", label: "常见问题", padded: true, children: "这是「常见问题」页。" },
+        ]}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+:::note 形态前提
+`expanded`（缺省开启）形态按绝对定位铺满父元素，父元素需已定位并给定尺寸（上面的示例容器即为此而设）。`expanded={false}` 的 static 形态只有 [MenuLayout](/components/menu-layout/index.html) 自身的流式内容可用——页面栈里的面板都是绝对定位面板，static 下没有内容高度，不要使用。`editable` 大纲的选择器与控制区在主题 CSS 中为绝对定位设计，同样只在 expanded 形态下可用。
+:::
+
+## 可编辑大纲
+
+`editable` 在大纲底部显示上移/下移/移除控件：选项按 `movable` / `removable` 逐项声明可用性，操作结果经 `onMoveOption` / `onRemoveOption` 交回调用方更新 `options`；`outlineControlsExtra` 可在大纲控件旁追加按钮（如「添加」）。{/* deviations: dev-outlinecontrols-inline dev-booklet-move-remove */}
+
+```tsx preview
+import { useState } from "react";
+import { BookletLayout, Button } from "ooui-react";
+
+function App() {
+  const [pages, setPages] = useState([
+    { value: "a", label: "第一节", movable: true, removable: true, padded: true, children: "第一节内容" },
+    { value: "b", label: "第二节", movable: true, removable: true, padded: true, children: "第二节内容" },
+    { value: "c", label: "第三节", movable: true, removable: true, padded: true, children: "第三节内容" },
+  ]);
+
+  const move = (value: string | number, direction: -1 | 1) => {
+    setPages((prev) => {
+      const index = prev.findIndex((item) => item.value === value);
+      const target = index + direction;
+      if (target < 0 || target >= prev.length) {
+        return prev;
+      }
+      const next = [...prev];
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
+    });
+  };
+
+  return (
+    <div style={{ position: "relative", height: 220 }}>
+      <BookletLayout
+        outlined
+        editable
+        defaultValue="a"
+        options={pages}
+        onMoveOption={move}
+        onRemoveOption={(value) =>
+          setPages((prev) => prev.filter((item) => item.value !== value))
+        }
+        outlineControlsExtra={
+          <Button
+            framed={false}
+            icon="add"
+            title="添加节"
+            onClick={() =>
+              setPages((prev) => [
+                ...prev,
+                {
+                  value: `page-${prev.length + 1}`,
+                  label: `新增节 ${prev.length + 1}`,
+                  movable: true,
+                  removable: true,
+                  padded: true,
+                  children: "新节内容",
+                },
+              ])
+            }
+          />
+        }
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 连续模式与自动聚焦
+
+`continuous` 使所有页同时可见、切页时平滑滚动到目标页；连续模式下焦点进入某页（Tab 或点击页内可聚焦元素）会反向把该页选为激活页。`autoFocus`（缺省 `true`）在每次切页后聚焦页内第一个可聚焦元素（首帧不聚焦；焦点已在页内时不重复聚焦，移动端形态下抑制）。两者均可关。
+
+激活页被移除时自动补选：取下一个未被移除的页，末页被移除则取新末页——大纲与页面栈保持同步。
+
+## API
+
+继承 [MenuLayout](/components/menu-layout/index.html) 全部属性（`menu` / `children` 除外），另有：
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `options` | 页集：`value`、`label`、`movable`、`removable` 加 [PageLayout](/components/page-layout/index.html) 字段 | 数组 | — |
+| `value` | 当前激活页（受控，传入即受控模式） | `string \| number` | — |
+| `defaultValue` | 非受控初始激活页 | `string \| number` | — |
+| `onChange` | 激活页变化回调 | `ChangeHandler<string \| number>` | — |
+| `outlined` | 是否显示大纲（`false` 为纯堆叠模式） | `boolean` | `false` |
+| `continuous` | 是否连续显示所有页面，切页时滚动至目标页 | `boolean` | `false` |
+| `autoFocus` | 切页后自动聚焦页内第一个可聚焦元素（首帧不聚焦） | `boolean` | `true` |
+| `editable` | 是否在大纲底部显示操作控件（须 `outlined`） | `boolean` | `false` |
+| `onMoveOption` | editable 下点击上移/下移时触发，`direction` 为 `-1`（上移）或 `1`（下移） | `(value: string \| number, direction: -1 \| 1) => void` | — |
+| `onRemoveOption` | editable 下点击移除时触发 | `(value: string \| number) => void` | — |
+| `outlineControlsExtra` | editable 下大纲控件左侧的额外按钮区 | `ReactNode` | — |
+
+## 另见
+
+- 右侧的页面栈：[StackLayout](/components/stack-layout/index.html)
+- 左侧的大纲选择：[OutlineSelect](/components/outline-select/index.html)
+- 顶部页签的变体：[IndexLayout](/components/index-layout/index.html)

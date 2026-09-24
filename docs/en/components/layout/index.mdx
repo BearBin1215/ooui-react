@@ -1,0 +1,58 @@
+---
+title: Layout
+description: "Props for the Layout component: the layout base class, outputting the oo-ui-layout root class with the unified hidden three-state (true / 'until-found') and aria-hidden handling."
+---
+
+# Layout
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/Layout) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.Layout.html "OO.ui.Layout")
+
+The layout base class: the common root of the other layout components. Used alone it only provides the `oo-ui-layout` root class and the `hidden` three-state control.
+
+## The hidden three states
+
+`hidden` has three states: `true` hides fully (`hidden` attribute + `aria-hidden`); `'until-found'` hides visually but stays reachable by the browser's in-page search (Ctrl+F) — when matched, the browser reveals the element itself and fires the `beforematch` event, which you can listen for on the element for custom reactions ([IndexLayout](/en/components/index-layout/index.html)'s `openMatchedPanels` is exactly this); omitting it leaves the element visible.
+
+```tsx preview
+import { useState } from "react";
+import { Button, Layout } from "ooui-react";
+
+function App() {
+  const [hidden, setHidden] = useState<boolean | "until-found">(false);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <Layout hidden={hidden}>
+        <p>
+          {hidden === "until-found"
+            ? "Reachable by search: find this text with the browser's Ctrl+F and it is revealed"
+            : "Currently visible"}
+        </p>
+      </Layout>
+      <div style={{ display: "flex", gap: 8 }}>
+        <Button onClick={() => setHidden(true)}>hidden</Button>
+        <Button onClick={() => setHidden("until-found")}>until-found</Button>
+        <Button onClick={() => setHidden(false)}>Unhide</Button>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+:::note
+React 18 writes any truthy `hidden` as the boolean attribute, so the component rewrites the attribute after commit to make `'until-found'` take effect; once React 19 types support it natively this workaround can go.
+:::
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `hidden` | Whether hidden: `true` hides fully; `'until-found'` hides visually but stays reachable by in-page search | `boolean \| 'until-found'` | — |
+| `...rest` | Native `div` props (`className`, `id`, `data-*`, etc.) passed straight to the root; to listen for `beforematch`, attach a native listener via a ref (React 18's types do not include the event yet) | `HTMLAttributes<HTMLDivElement>` | — |
+
+## See also
+
+- The form switches built on it: [PanelLayout](/en/components/panel-layout/index.html)
+- The full application of `until-found`: [IndexLayout](/en/components/index-layout/index.html)'s `openMatchedPanels`

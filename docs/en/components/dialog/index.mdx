@@ -1,0 +1,148 @@
+---
+title: Dialog
+description: "Overview of the dialog family: the declarative MessageDialog and the Dialog base class, the controlled-only open channel, sizes, action areas and background isolation; imperative confirm / alert / prompt live on their own page."
+---
+
+# Dialog
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/dialogs) | [Original components](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.Dialog.html "OO.ui.Dialog") · [OO.ui.MessageDialog](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.MessageDialog.html "OO.ui.MessageDialog")
+
+The dialog component, with variants such as `MessageDialog` and `ProcessDialog`.
+
+Imperative `confirm` / `alert` / `prompt` that don't depend on the React tree are covered in [Imperative dialogs](/en/components/imperative-dialogs/index.html).
+
+## MessageDialog
+
+A message (`children`) plus an OK / Cancel pair at the bottom. You control `open` and close it in `onOk` / `onCancel`. `cancelLabel={null}` hides the cancel button (so you can roll your own controlled `alert`).
+
+```tsx preview
+import { useState } from "react";
+import { Button, MessageDialog } from "ooui-react";
+
+function App() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button flags="destructive" onClick={() => setOpen(true)}>
+        Delete
+      </Button>
+      <MessageDialog
+        open={open}
+        title="Delete page"
+        size="small"
+        okLabel="Delete"
+        cancelLabel="Keep"
+        onOk={() => setOpen(false)}
+        onCancel={() => setOpen(false)}
+      >
+        Deletion cannot be undone. Continue?
+      </MessageDialog>
+    </>
+  );
+}
+
+export default App;
+```
+
+`MessageDialog` focuses the OK button once ready; Ctrl / Cmd + Enter is equivalent to clicking OK.
+
+**ESC fires `onEscape`, not `onCancel`** (`escapable` on by default): with only `onOk` / `onCancel` wired, pressing ESC won't close the dialog — wire the close in `onEscape` yourself (the imperative `confirm` internally bridges `onEscape` to "cancel").
+
+When you need three or more actions (e.g. "OK / Cancel / Remind me later"), pass `foot` to replace the default action area entirely: you own the action layout and the close wiring; the OK button is then no longer focused automatically — focus it yourself in `onReady`.
+
+## The Dialog base class
+
+Use `Dialog` when you need full control over the content: `children` is the body and `foot` is the bottom action area (`head` is mainly for subclasses that carry a layout class; a bare base dialog's body starts at the top and doesn't make room for `head` automatically). It presumes no buttons — you wire the close timing and callbacks yourself; when there are bottom actions, use `bodyFitFoot` so the body yields height to `foot`.
+
+:::warning Differences from OOUI
+A bare `Dialog` has no built-in title slot: render the title yourself and associate it with the dialog via `aria-labelledby` — omitting it yields an unnamed `role="dialog"` (the original base class establishes this association automatically). {/* deviations: dev-dialog-aria-labelledby */}
+:::
+
+```tsx preview
+import { useState } from "react";
+import { Button, Dialog, FieldLayout, TextInput } from "ooui-react";
+
+function App() {
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open custom dialog</Button>
+      <Dialog
+        open={open}
+        size="medium"
+        bodyFitFoot
+        onEscape={() => setOpen(false)}
+        foot={
+          <div style={{ display: "flex", gap: 8 }}>
+            <Button onClick={() => setOpen(false)}>Cancel</Button>
+            <Button flags="primary" onClick={() => setOpen(false)}>
+              Done
+            </Button>
+          </div>
+        }
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <strong>Rename entry</strong>
+          <FieldLayout label="New name">
+            <TextInput value={name} onChange={setName} />
+          </FieldLayout>
+        </div>
+      </Dialog>
+    </>
+  );
+}
+
+export default App;
+```
+
+## Sizes
+
+`size` is `small` / `medium` / `large` / `larger` / `full` (`Dialog` defaults to `medium`, `MessageDialog` to `small`). Non-`full` dialogs grow with their content and center vertically; when the chosen width doesn't fit the viewport, they become fullscreen automatically. `full` is always fullscreen.
+
+## Multiple dialogs and background isolation
+
+Opening several dialogs at once has **no open queue**: each dialog carries its own manager container, stacking follows DOM order (later ones on top), and which one closes is decided by its own `open` state — stacking a confirm above a process dialog is legitimate.
+
+While a dialog is open, sibling nodes off the path to the topmost dialog get `aria-hidden="true"` and `inert`, keeping screen readers and pointer / focus inside the dialog; this is undone on close. **Do not declare React's `inert` prop on background nodes you render yourself** (supported as a prop since React 19): isolation removal strips the DOM attribute directly, which desynchronizes React's DOM. Floating layers opened inside a dialog (`Popup`, toolbar panels) portal into the owning dialog's container at the same level, so stacking is correct by construction. {/* deviations: dev-isolation-portal dev-isolation-registry */}
+
+## API
+
+### MessageDialog
+
+Inherits `Dialog`'s `open` / `size` / `escapable` / `onEscape` / `onReady`, and adds:
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `children` | The body message | `ReactNode` | — |
+| `title` | Title | `ReactNode` | — |
+| `okLabel` / `cancelLabel` | OK / Cancel button text (`cancelLabel={null}` hides Cancel) | `ReactNode` | localized defaults |
+| `foot` | Custom bottom action area, replacing the default OK / Cancel buttons entirely (the OK button is no longer focused automatically when given) | `ReactNode` | — |
+| `onOk` / `onCancel` | Fired on OK (or Ctrl/Cmd+Enter) / Cancel | `() => void` | — |
+| `size` | Dialog size | `DialogProps["size"]` | `'small'` |
+
+### Dialog
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `open` | Whether open (controlled, required) | `boolean` | — |
+| `size` | Dialog size | `'small' \| 'medium' \| 'large' \| 'larger' \| 'full'` | `'medium'` |
+| `children` | Body-area content | `ReactNode` | — |
+| `head` / `foot` | Head / bottom action area | `ReactNode` | — |
+| `overlay` | Overlay content covering the whole dialog (e.g. an error panel) | `ReactNode` | — |
+| `escapable` | Whether ESC can trigger close | `boolean` | `true` |
+| `onEscape` | Fired on ESC (the caller is responsible for closing) | `() => void` | — |
+| `onPrimaryAction` | Fired on Ctrl / Cmd + Enter | `() => void` | — |
+| `onReady` | Fired after the opening animation ends (to focus, etc.) | `() => void` | — |
+| `...rest` | Native `div` props passed straight to the dialog root | `HTMLAttributes<HTMLDivElement>` | — |
+
+`ProcessDialog` (multi-step flow, error panel and custom action buttons) extends `Dialog`; see its component page.
+
+## See also
+
+- Function-style calls without the React tree: [Imperative dialogs](/en/components/imperative-dialogs/index.html)
+- Why dialogs must be controlled and the callback division of labor: [Controlled and uncontrolled](/en/guide/controlled.html#dialogs-must-be-controlled)
+- The multi-step dialog: [ProcessDialog](/en/components/process-dialog/index.html)
+- Global config (language, direction, popup container): [OOUIProvider](/en/guide/configuration.html)

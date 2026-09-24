@@ -1,0 +1,135 @@
+---
+title: MultilineTextInput 多行输入
+description: "MultilineTextInput 组件的属性说明：rows/maxRows 行数、autosize 自动高度、滚动条让位，以及与 TextInput 同源的标签、图标与软校验能力。"
+---
+
+# MultilineTextInput 多行输入
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/MultilineTextInput) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.MultilineTextInputWidget.html "OO.ui.MultilineTextInputWidget")
+
+多行文本输入框，输入能力与 [TextInput](/components/text-input/index.html) 一致。
+
+## 基本用法
+
+```tsx preview
+import { useState } from "react";
+import { MultilineTextInput } from "ooui-react";
+
+function App() {
+  const [text, setText] = useState("");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <MultilineTextInput value={text} onChange={setText} placeholder="受控多行输入" />
+      <div>当前 {text.length} 个字符</div>
+      <MultilineTextInput defaultValue="非受控，组件自己记住输入" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 行数与自动高度
+
+`rows` 是最小行数（写入 `<textarea>` 的 `rows` 属性）。开启 `autosize` 后高度随内容自适应：到 `maxRows` 行封顶，超出转为内部滚动；`maxRows` 缺省为 `max(2 × rows, 10)`。
+
+不开 `autosize` 时高度固定为 `rows` 行，内容超出直接出现滚动条。
+
+自动高度的重测另有尺寸观察兜底：字体加载、容器或宽度变化后也会重算高度（原版只在输入时重测，高度会滞留）。{/* deviations: dev-autosize-remeasure */}
+
+```tsx preview
+import { MultilineTextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <MultilineTextInput autosize rows={2} placeholder="autosize：随内容长高" />
+      <MultilineTextInput
+        rows={3}
+        defaultValue={"第一行\n第二行\n第三行\n第四行\n第五行"}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 滚动条让位
+
+出现垂直滚动条时，指示器与位于输入框之后的标签会自动偏移滚动条宽度让位，避免压在滚动条上（多行输入恒启用，无需配置）。当输入方向与页面方向分叉时（如 LTR 页面配 `dir='rtl'` 输入），让位会整体撤回，避免原版在该场景下出现的标签拉伸变形。{/* deviations: dev-scrollbar-offset */}
+
+## 换行与 Enter
+
+Enter 恒插入换行。
+
+:::note 与原版的差异
+原版的 `allowLinebreaks` 配置（阻止换行、把换行清洗为空格）与配套的 `enter` 事件（Ctrl/Cmd+Enter 触发）在本工程不提供——需要限制换行时，在 `onChange` 里清洗值即可。{/* deviations: dev-allow-linebreaks */}
+:::
+
+## 与 TextInput 同源的能力
+
+以下行为与 TextInput 完全一致，不再重复展开：
+
+- 标签：`label` / `labelPosition` / `invisibleLabel`；
+- 图标与指示器：`icon`、`indicator`，未显式给 `indicator` 且 `required` 为真时自动回退 required 指示器；
+- 软校验：`validate`（正则 / 函数 / `'non-empty'` / `'integer'`），标红不改值；
+- 状态：`maxLength`、`readOnly`（可聚焦可复制）、`disabled`。
+
+```tsx preview
+import { MultilineTextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <MultilineTextInput label="简介" labelPosition="before" placeholder="最多 20 字" maxLength={20} />
+      <MultilineTextInput validate="non-empty" placeholder="清空后失焦会标红" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 属性落点
+
+组件根是不可聚焦的 `<div>`，输入元素是 `<textarea>`。落点规则与 [TextInput](/components/text-input/index.html) 相同：
+
+- props 的 `...rest` 落在根 div 上；要写到原生 `<textarea>` 的属性（如 `role`、`aria-*`）走 `inputProps` 通道，其 `onChange`/`onBlur`/`onFocus` 串联在组件自身逻辑之后。
+- `inputRef` 指向内部 `<textarea>`（组件 `ref` 指向根 div），聚焦输入框用 `inputRef`。
+- `tabIndex`、`title`、`dir`、`accessKey`、`name` 由组件接管，直接落在 `<textarea>` 上（对齐原版落点），不走 `rest`。
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `value` | 输入值（受控，传入即受控模式） | `string` | — |
+| `defaultValue` | 非受控初始值 | `string` | — |
+| `onChange` | 值变化回调（值优先，含原生事件） | `ChangeHandler<string, HTMLTextAreaElement>` | — |
+| `rows` | 最小行数 | `number` | — |
+| `maxRows` | autosize 的高度上限（行） | `number` | `max(2 × rows, 10)` |
+| `autosize` | 是否随内容自动调高 | `boolean` | `false` |
+| `placeholder` | 输入提示 | `string` | — |
+| `maxLength` | 最大长度 | `number` | — |
+| `label` / `invisibleLabel` | 字段标签 / 标签视觉隐藏（保留可访问名称） | `ReactNode` / `boolean` | — / `false` |
+| `labelPosition` | 标签位置 | `'before' \| 'after'` | `'after'` |
+| `icon` | 图标名 | `string` | — |
+| `indicator` | 指示器（`required` 且未显式给时回退为 required） | `'up' \| 'down' \| 'clear' \| 'required'` | — |
+| `required` | 必填（原生 `required` 属性，参与浏览器校验） | `boolean` | `false` |
+| `validate` | 软校验（正则 / 函数 / 符号名），见 [TextInput 的软校验](/components/text-input/index.html#软校验) | `RegExp \| ((value: string) => boolean \| Promise<boolean>) \| 'non-empty' \| 'integer'` | — |
+| `readOnly` | 只读（保留聚焦与可选中复制） | `boolean` | `false` |
+| `disabled` | 是否禁用 | `boolean` | `false` |
+| `flags` | 根元素附加标志（invalid 标志叠加其上） | `string \| string[]` | — |
+| `name` | 表单提交字段名（落在 `<textarea>`） | `string` | — |
+| `accessKey` | 快捷键（落在 `<textarea>`） | `string` | — |
+| `inputRef` | 内部 `<textarea>` 的引用 | `Ref<HTMLTextAreaElement>` | — |
+| `inputProps` | 原生 `<textarea>` 的附加属性通道；`onChange`/`onBlur`/`onFocus` 串联在组件逻辑之后 | `object` | — |
+| `indicatorProps` | 指示器元素的附加属性 | `object` | — |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+## 另见
+
+- 单行形态与软校验的完整说明：[TextInput](/components/text-input/index.html)
+- 值如何在组件与状态之间流动：[受控与非受控](/guide/controlled.html)
+- 所有组件共有的透传与 `ref` 规则：[通用属性](/guide/basics.html)

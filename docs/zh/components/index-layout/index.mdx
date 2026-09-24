@@ -1,0 +1,71 @@
+---
+title: IndexLayout 索引布局
+description: "IndexLayout 组件的属性说明：顶部页签加下方面板栈，openMatchedPanels 浏览器查找命中自动切页、continuous 连续显示与 autoFocus 自动聚焦。"
+---
+
+# IndexLayout 索引布局
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/IndexLayout) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.IndexLayout.html "OO.ui.IndexLayout")
+
+页签布局：顶部是[页签选择](/components/tab-select/index.html)，下方是[页签面板](/components/tab-panel-layout/index.html)栈。适合设置页这类「顶部页签 + 分块内容」的场景；侧边大纲的变体见 [BookletLayout](/components/booklet-layout/index.html)。
+
+## 基本用法
+
+`options` 数组项为 `{ value, label, children }` 加 [TabPanelLayout](/components/tab-panel-layout/index.html) 的面板字段（可带 `disabled` 禁用页签）；激活页走 `value` / `defaultValue` / `onChange` 三条通道。页签与面板自动建立 `aria-controls` / `aria-labelledby` 关联。
+
+```tsx preview
+import { useState } from "react";
+import { IndexLayout } from "ooui-react";
+
+function App() {
+  const [tab, setTab] = useState<string | number>("general");
+
+  return (
+    <div style={{ position: "relative", height: 180 }}>
+      <IndexLayout
+        framed
+        value={tab}
+        onChange={setTab}
+        options={[
+          { value: "general", label: "常规", padded: true, children: "常规设置内容" },
+          { value: "appearance", label: "外观", padded: true, children: "外观设置内容" },
+          { value: "advanced", label: "高级", padded: true, disabled: true, children: "高级设置内容" },
+        ]}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+:::note 形态前提
+`expanded`（缺省开启）形态按绝对定位铺满父元素，父元素需已定位并给定尺寸（上面的示例容器即为此而设）。`expanded={false}` 的 static 形态只有 [MenuLayout](/components/menu-layout/index.html) 自身的流式内容可用——本组件与 BookletLayout 的页面栈都是绝对定位面板，static 下没有内容高度，不要使用。
+:::
+
+## 浏览器查找联动
+
+`openMatchedPanels`（缺省 `true`）让未激活面板以 `hidden="until-found"` 隐藏：用浏览器页内查找（Ctrl+F）命中隐藏面板的内容时，自动切换到对应页签。**`continuous` 使所有面板同时可见，该模式下 `openMatchedPanels` 停用**——面板不再以 until-found 隐藏，查找联动随之失效。`autoFocus`（缺省 `true`）切页后聚焦面板内第一个可聚焦元素（移动端形态下抑制）。
+
+激活页签被移除时自动选中首个可用（非禁用）页签。
+
+## API
+
+继承 [MenuLayout](/components/menu-layout/index.html) 全部属性（`menu` / `menuPosition` / `children` 除外），另有：
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `options` | 页签集：`value`、`label`、`disabled` 加 [TabPanelLayout](/components/tab-panel-layout/index.html) 字段 | `IndexLayoutTabProps[]` | — |
+| `value` | 当前激活页签（受控，传入即受控模式） | `string \| number` | — |
+| `defaultValue` | 非受控初始激活页签 | `string \| number` | — |
+| `onChange` | 激活页签变化回调 | `ChangeHandler<string \| number>` | — |
+| `framed` | 页签是否有边框 | `boolean` | `true` |
+| `continuous` | 是否显示全部面板 | `boolean` | `false` |
+| `autoFocus` | 切换面板后自动聚焦面板内第一个可聚焦元素 | `boolean` | `true` |
+| `openMatchedPanels` | 未激活面板以 `hidden="until-found"` 隐藏，浏览器查找命中后自动切换页签（`continuous` 下停用） | `boolean` | `true` |
+
+## 另见
+
+- 单个页签面板的字段：[TabPanelLayout](/components/tab-panel-layout/index.html)
+- 侧边大纲的变体：[BookletLayout](/components/booklet-layout/index.html)
+- `hidden="until-found"` 三态：[Layout](/components/layout/index.html)

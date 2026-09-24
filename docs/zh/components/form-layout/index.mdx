@@ -1,0 +1,91 @@
+---
+title: FormLayout 表单容器
+description: "FormLayout 组件的属性说明：包裹字段集的原生 <form> 容器，配合带 name 的输入控件做浏览器原生提交，含 method、action、enctype 与 onSubmit。"
+---
+
+# FormLayout 表单容器
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/FormLayout) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.FormLayout.html "OO.ui.FormLayout")
+
+表单容器：渲染一个 `<form>`，把若干 [FieldLayout](/components/field-layout/index.html) 包起来。它本身不做数据管理，带 `name` 的输入控件随原生 `<form>` 一起提交。不需要原生提交语义时，直接把控件摆在自己的容器里即可，不必套这层。
+
+## 基本用法
+
+`onSubmit` 里按 React 惯例调用 `event.preventDefault()` 阻止真实跳转（原版是事件监听器返回 `false` 时阻止默认提交）。提交动作由 `type="submit"` 的 `ButtonInput` 触发。
+
+```tsx preview
+import { useState } from "react";
+import {
+  ButtonInput,
+  CheckboxInput,
+  FieldLayout,
+  FormLayout,
+  TextInput,
+} from "ooui-react";
+
+function App() {
+  const [submitted, setSubmitted] = useState(false);
+
+  return (
+    <FormLayout
+      method="post"
+      onSubmit={(event) => {
+        event.preventDefault();
+        setSubmitted(true);
+      }}
+    >
+      <FieldLayout label="用户名">
+        <TextInput name="username" placeholder="必填" required />
+      </FieldLayout>
+      <FieldLayout label="同意条款" align="inline">
+        <CheckboxInput name="agree" value="yes" required />
+      </FieldLayout>
+      <FieldLayout label=" " invisibleLabel>
+        <ButtonInput type="submit" flags={["primary", "progressive"]}>
+          提交
+        </ButtonInput>
+      </FieldLayout>
+      {submitted && <div style={{ marginTop: 8 }}>已提交（已阻止页面跳转）</div>}
+    </FormLayout>
+  );
+}
+
+export default App;
+```
+
+## 提交属性
+
+`method`、`action`、`enctype` 直通原生 `<form>` 的同名属性：
+
+| 属性 | 说明 |
+| --- | --- |
+| `method` | 提交方法，原生 `method`（缺省 GET） |
+| `action` | 提交地址，原生 `action` |
+| `enctype` | 编码类型，原生 `enctype`（缺省 `application/x-www-form-urlencoded`） |
+
+:::warning 安全提示
+本组件不对 `action` 做 URL 净化（越过原版的 `OO.ui.isSafeUrl`）。`<form action="javascript:...">` 会在提交时执行脚本，浏览器与 React 运行期都不拦截。来源不可信的 `action`（如由用户输入拼接）必须先自行校验协议，否则构成 XSS；需要组件层净化时可用导出的方法 `sanitizeUrl`。{/* deviations: dev-safe-url */}
+:::
+
+## 随表单提交的控件
+
+原生提交只携带**真实表单控件**的值：输入框系（`TextInput`、`MultilineTextInput`、`NumberInput`、`ComboBoxInput`、`SearchInput`）、勾选系（`CheckboxInput`、`RadioInput`）与 `SelectFileInputWidget`、`HiddenInputWidget` 渲染真实控件，带 `name` 即随表单提交。
+
+选择类的展示形态（`Select`、`Dropdown`、`RadioSelect`、`CheckboxMultiselect`、`TagMultiselect`、`TabSelect` 等）不渲染真实表单控件，放进 `FormLayout` 会在提交时**静默丢值**——要提交选择值，改用对应的表单字段形态 [DropdownInput](/components/dropdown-input/index.html)、[RadioSelectInput](/components/radio-select-input/index.html)、[CheckboxMultiselectInput](/components/checkbox-multiselect-input/index.html)，或用 [HiddenInputWidget](/components/hidden-input-widget/index.html) 携带任意自定义值。
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `children` | 字段集（通常为若干 `FieldLayout`） | `ReactNode` | — |
+| `method` | 提交方法（原生 `method`） | `string` | — |
+| `action` | 提交地址（原生 `action`，不做净化） | `string` | — |
+| `enctype` | 编码类型（原生 `enctype`） | `string` | — |
+| `onSubmit` | 提交回调；需阻止默认跳转时在回调内 `event.preventDefault()` | `FormEventHandler<HTMLFormElement>` | — |
+| `...rest` | 原生 `form` 属性（`className`、`id`、`name`、`aria-*` 等）直传根元素 | `HTMLAttributes<HTMLFormElement>` | — |
+
+## 另见
+
+- 字段与标签的排版：[FieldLayout](/components/field-layout/index.html)
+- 随表单提交的输入控件：[TextInput](/components/text-input/index.html)、[CheckboxInput](/components/checkbox-input/index.html)
+- 组件的产物形态与 SSR 限制：见[使用方式](/guide/usage.html)

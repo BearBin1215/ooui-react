@@ -1,0 +1,123 @@
+---
+title: FieldLayout 字段布局
+description: "FieldLayout 组件的属性说明：给字段控件配标签的对齐方向、标签与控件的点击/聚焦联动、title 落点，以及 disabled 的样式语义。"
+---
+
+# FieldLayout 字段布局
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/FieldLayout) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.FieldLayout.html "OO.ui.FieldLayout")
+
+字段布局：把一个字段控件与它的标签排在一起，是 [FormLayout](/components/form-layout/index.html) 里的基本单元。
+
+## 基本用法
+
+标签与控件的关联由组件自动完成：放进 `FieldLayout` 的输入类控件会认领一个 `id`，标签的 `htmlFor` 指向它，支持点击标签聚焦控件，和读屏器。字段控件自身不需要再写 `label`。
+
+```tsx preview
+import { TextInput, FieldLayout } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 360 }}>
+      <FieldLayout label="用户名">
+        <TextInput placeholder="点击左侧标签会聚焦到这里" />
+      </FieldLayout>
+      <FieldLayout label="邮箱">
+        <TextInput type="email" placeholder="you@example.com" />
+      </FieldLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 对齐方向
+
+`align` 决定标签与控件的排布：`left`（默认，标签在左）、`right`（标签在右）、`top`（标签在上）、`inline`（标签与控件同行，常用于复选框、单选框）。传 `inline` 不会自动降级（原版在字段根元素非 span 时会降级为 `top`），传入前保证字段根元素为内联形态。{/* deviations: dev-fieldlayout-inline */}
+
+```tsx preview
+import { CheckboxInput, FieldLayout, TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 360 }}>
+      <FieldLayout label="标签在左" align="left">
+        <TextInput />
+      </FieldLayout>
+      <FieldLayout label="标签在上" align="top">
+        <TextInput />
+      </FieldLayout>
+      <FieldLayout label="同行（复选框）" align="inline">
+        <CheckboxInput defaultChecked />
+      </FieldLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 标签与提示
+
+- `label` 是标签内容（`ReactNode`）。
+- `invisibleLabel` 把标签视觉隐藏，但保留可访问名称；此时 `title` 未显式给出会以标签文本兜底。
+- `title` 落在标签元素上（对齐原版 `$titled = $label`），而不是布局根。
+- 字段控件登记了自己的 `accessKey` 时，标签提示末尾附上键位（组合键文案可经 [OOUIProvider](/guide/configuration.html) 本地化）。
+
+```tsx preview
+import { FieldLayout, TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 360 }}>
+      <FieldLayout label="带提示" title="这一项会被保留">
+        <TextInput defaultValue="悬停标签查看提示" />
+      </FieldLayout>
+      <FieldLayout label="隐藏标签" invisibleLabel>
+        <TextInput placeholder="视觉无标签，读屏器仍可读" />
+      </FieldLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 禁用
+
+`FieldLayout` 的 `disabled` 只给布局根加 `oo-ui-fieldLayout-disabled` 样式类，让字段区域呈禁用态外观，不会替你禁用 `children` 里的控件。要真正禁用，请在控件自身设置 `disabled`；需要整组一起禁用时改用走原生 `<fieldset disabled>` 的 `FieldsetLayout`。
+
+```tsx preview
+import { FieldLayout, TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 360 }}>
+      <FieldLayout label="字段名" disabled>
+        <TextInput disabled defaultValue="控件需自行禁用" />
+      </FieldLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `children` | 字段控件 | `ReactNode` | — |
+| `label` | 标签内容 | `ReactNode` | — |
+| `invisibleLabel` | 标签视觉隐藏（保留可访问名称） | `boolean` | `false` |
+| `align` | 标签对齐方向 | `'left' \| 'right' \| 'top' \| 'inline'` | `'left'` |
+| `title` | 标签的提示文本（落在标签元素上） | `string` | — |
+| `disabled` | 给布局加禁用样式类（不下发给控件） | `boolean` | `false` |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+## 另见
+
+- 包裹多个 `FieldLayout` 的表单容器：[FormLayout](/components/form-layout/index.html)
+- 各控件的属性与落点：[TextInput](/components/text-input/index.html)、[CheckboxInput](/components/checkbox-input/index.html)
+- 所有组件共有的 `disabled`、`title`、`accessKey` 语义：[通用属性](/guide/basics.html)

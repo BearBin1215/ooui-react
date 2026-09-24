@@ -1,0 +1,111 @@
+---
+title: 受控与非受控
+description: "ooui-react 的值契约：value、open、checked 三条通道，受控判定与回调签名，以及弹窗为受控 only 的约定。"
+---
+
+# 受控与非受控
+
+多数组件的“当前值”可以由你持有（受控），也可以交给组件自己维护（非受控）。
+
+## 三条通道
+
+| 通道 | 属性 | 用于 |
+| --- | --- | --- |
+| 值 | `value` / `defaultValue` / `onChange` | 输入框、选择框、标签输入、文件选择、布局的激活项 |
+| 打开态 | `open` / `defaultOpen` / `onOpenChange` | `Popup`、`PopupButton`、`ButtonMenuSelectWidget`、工具栏的弹出面板与工具的 `popup` 配置 |
+| 勾选 | `checked` / `defaultChecked` / `onChange` | `CheckboxInput`、`RadioInput`、`ToggleButton`、`ToggleSwitch` |
+
+选择系组件共用的选项数据书写约定（`value`、分组、`labelText`、禁用下发等）见[选择与选项](/guide/options.html)。{/* deviations: dev-layout-controlled-api */}
+
+## 判定规则
+
+**传入 `value`（或 `checked`）即为受控**，组件只按传入的值渲染；不传则由组件维护内部状态，`defaultValue` 仅作为初始值。
+
+```tsx preview
+import { useState } from "react";
+import { Button, ToggleSwitch } from "ooui-react";
+
+function App() {
+  const [on, setOn] = useState(false);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 12 }}>
+      {/* 受控：值由外部持有 */}
+      <ToggleSwitch checked={on} onChange={(checked) => setOn(checked)} />
+      {/* 非受控：组件自己记住状态 */}
+      <ToggleSwitch defaultChecked />
+      <Button disabled={!on} onClick={() => setOn(false)}>
+        重置
+      </Button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+不要把 `value` 在值与 `undefined` 之间来回切换——那是模式变更，不受支持。
+
+## 回调签名
+
+值类回调统一为**值优先**：
+
+```ts
+type ChangeHandler<T, P extends EventTarget = HTMLElement> = (
+  value: T,
+  event?: ChangeEvent<P>,
+) => void;
+```
+
+多数场景只用到第一个参数（`onChange={setValue}` 即可）。第二参数是触发变更的原生事件，**仅输入框类组件提供**。
+
+不遵循该签名的回调：
+
+| 组件 | 回调 | 签名 |
+| --- | --- | --- |
+| `ToggleSwitch`、`ToggleButton` | `onChange` | `(checked: boolean) => void` |
+| `SelectFileInputWidget` | `onChange` | `(files: File[]) => void` |
+| `SearchWidget` | `onQueryChange` / `onChoose` | 查询值 / 选定的结果 |
+| `Message` | `onClose` | `() => void`，点击关闭按钮时触发 |
+
+两处容易混淆的“选定”回调：
+
+- `Select` 系列同时提供 `onChange`（选中值变化，重复选同一项不触发）与 `onChoose`（每次选定都触发，含重复）。`clearOnChoose` 为真时只触发 `onChoose`、不改变选中值，适合做命令菜单。
+- `SearchWidget` 不提供 `onChange`，查询变化走 `onQueryChange`。
+
+## 弹窗必须受控
+
+`Dialog`、`MessageDialog`、`ProcessDialog` 只有 `open`（必填），没有 `defaultOpen`：开与关由你的状态决定，关闭动作经回调通知你。{/* deviations: dev-dialog-controlled */}
+
+| 回调 | 触发时机 |
+| --- | --- |
+| `onEscape` | 按下 ESC（`escapable` 为真时） |
+| `onPrimaryAction` | 按下 Ctrl / Cmd + Enter |
+| `onReady` | 打开动画结束，可执行聚焦等操作 |
+
+`MessageDialog` 另有 `onOk` / `onCancel`，`ProcessDialog` 另有 `onAction`，见各自组件页。
+
+## 受控值不在备选项内时
+
+你传给组件的 `value`，有时在 `options` 里找不到对应项，比如某个选项被移除了、初始值写错，或选项是异步加载、首帧还没到位。这时组件的表现分两类：
+
+| 组件 | 找不到对应项时 | 会回写 `onChange` 吗 |
+| --- | --- | --- |
+| `IndexLayout`、`BookletLayout`、`StackLayout`、`DropdownInput`、`RadioSelectInput` | 自动显示一个兜底项（通常是首个可选项），不留空档 | 会：把兜底值经 `onChange` 交回给你，让你的 state 跟上界面 |
+| `Select`、`Dropdown`、`TagMultiselect`、`MenuTagMultiselect` | 不选中任何项，按你传入的值原样渲染 | 不会 |
+
+第一类中，假设 `options` 是 `a`、`b`，而你传了 `value="c"`：
+
+```tsx
+const options = [
+  { value: "a", label: "A", children: "面板 A" },
+  { value: "b", label: "B", children: "面板 B" },
+];
+
+// 传入的 `c` 不在 options 里
+<IndexLayout value="c" onChange={setTab} options={options} />
+```
+
+组件会显示 `a`（兜底项），并调用 `onChange("a")` 告诉你“实际生效的是 a”。父级据此把 state 更新为 `a`，`value` 与界面就重新对齐了。同一个非法值只回写一次，父级若不采纳也不会反复触发。{/* deviations: dev-layout-autoselect dev-controlled-writeback */}
+
+第二类完全以你的 `value` 为准：找不到匹配就是不选，界面如实呈现“当前值无匹配”，要不要纠正由你在外部处理。

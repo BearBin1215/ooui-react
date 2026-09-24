@@ -1,0 +1,355 @@
+[
+  {
+    "type": "file",
+    "name": "index"
+  },
+  {
+    "type": "divider"
+  },
+  {
+    "type": "section-header",
+    "label": "控件"
+  },
+  {
+    "type": "dir",
+    "name": "button",
+    "label": "Button 按钮",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "toggle-button",
+    "label": "ToggleButton 切换按钮",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "toggle-switch",
+    "label": "ToggleSwitch 开关",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "button-group",
+    "label": "ButtonGroup 按钮组",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "popup",
+    "label": "Popup 浮层",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "popup-button",
+    "label": "PopupButton 浮层按钮",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "icon",
+    "label": "Icon 图标",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "indicator",
+    "label": "Indicator 指示器",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "label",
+    "label": "Label 标签",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "progress-bar",
+    "label": "ProgressBar 进度条",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "message",
+    "label": "Message 消息",
+    "collapsible": false
+  },
+  {
+    "type": "section-header",
+    "label": "输入"
+  },
+  {
+    "type": "dir",
+    "name": "text-input",
+    "label": "TextInput 文本输入",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "multiline-text-input",
+    "label": "MultilineTextInput 多行输入",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "number-input",
+    "label": "NumberInput 数字输入",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "search-input",
+    "label": "SearchInput 搜索输入",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "search-widget",
+    "label": "SearchWidget 搜索组件",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "combo-box-input",
+    "label": "ComboBoxInput 组合框",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "checkbox-input",
+    "label": "CheckboxInput 复选框",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "radio-input",
+    "label": "RadioInput 单选框",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "select-file-input-widget",
+    "label": "SelectFileInputWidget 文件选择",
+    "collapsible": false
+  },
+  {
+    "type": "section-header",
+    "label": "选择"
+  },
+  {
+    "type": "dir",
+    "name": "select",
+    "label": "Select 选择列表",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "dropdown",
+    "label": "Dropdown 下拉选择",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "outline-select",
+    "label": "OutlineSelect 大纲选择",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "tab-select",
+    "label": "TabSelect 页签选择",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "button-select",
+    "label": "ButtonSelect 按钮选择",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "button-menu-select",
+    "label": "ButtonMenuSelectWidget 命令菜单",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "checkbox-multiselect",
+    "label": "CheckboxMultiselect 复选组",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "radio-select",
+    "label": "RadioSelect 单选组",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "tag-multiselect",
+    "label": "TagMultiselect 标签输入",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "menu-tag-multiselect",
+    "label": "MenuTagMultiselect 菜单标签输入",
+    "collapsible": false
+  },
+  {
+    "type": "section-header",
+    "label": "表单提交"
+  },
+  {
+    "type": "dir",
+    "name": "button-input",
+    "label": "ButtonInput 提交按钮",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "dropdown-input",
+    "label": "DropdownInput 下拉字段",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "checkbox-multiselect-input",
+    "label": "CheckboxMultiselectInput 复选组字段",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "radio-select-input",
+    "label": "RadioSelectInput 单选组字段",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "hidden-input-widget",
+    "label": "HiddenInputWidget 隐藏字段",
+    "collapsible": false
+  },
+  {
+    "type": "section-header",
+    "label": "布局"
+  },
+  {
+    "type": "dir",
+    "name": "layout",
+    "label": "Layout 布局基类",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "panel-layout",
+    "label": "PanelLayout 面板",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "page-layout",
+    "label": "PageLayout 页面布局",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "menu-layout",
+    "label": "MenuLayout 菜单布局",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "stack-layout",
+    "label": "StackLayout 堆叠面板",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "booklet-layout",
+    "label": "BookletLayout 手册布局",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "index-layout",
+    "label": "IndexLayout 索引布局",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "tab-panel-layout",
+    "label": "TabPanelLayout 页签面板",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "field-layout",
+    "label": "FieldLayout 字段布局",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "fieldset-layout",
+    "label": "FieldsetLayout 字段分组",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "form-layout",
+    "label": "FormLayout 表单容器",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "action-field-layout",
+    "label": "ActionFieldLayout 动作字段",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "copy-text-layout",
+    "label": "CopyTextLayout 复制文本",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "horizontal-layout",
+    "label": "HorizontalLayout 横向布局",
+    "collapsible": false
+  },
+  {
+    "type": "section-header",
+    "label": "弹窗"
+  },
+  {
+    "type": "dir",
+    "name": "dialog",
+    "label": "Dialog 弹窗",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "imperative-dialogs",
+    "label": "命令式弹窗",
+    "collapsible": false
+  },
+  {
+    "type": "dir",
+    "name": "process-dialog",
+    "label": "ProcessDialog 流程弹窗",
+    "collapsible": false
+  },
+  {
+    "type": "section-header",
+    "label": "工具栏"
+  },
+  {
+    "type": "dir",
+    "name": "toolbar",
+    "label": "Toolbar 工具栏",
+    "collapsible": false
+  }
+]

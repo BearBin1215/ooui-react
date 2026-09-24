@@ -1,0 +1,79 @@
+---
+title: SearchInput
+description: "Props for the SearchInput component: a single-line search input with a default search icon and a clickable clear indicator when the value is non-empty and editable; otherwise shares TextInput's capabilities."
+---
+
+# SearchInput
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/SearchInput) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.SearchInputWidget.html "OO.ui.SearchInputWidget")
+
+A search input: the search form of [TextInput](/en/components/text-input/index.html), with a clear indicator appearing when the value is non-empty — click it to clear.
+
+## Basic usage
+
+```tsx preview
+import { useState } from "react";
+import { SearchInput } from "ooui-react";
+
+function App() {
+  const [query, setQuery] = useState("");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <SearchInput value={query} onChange={setQuery} placeholder="Search entries…" />
+      <div>Query: {query || "(empty)"}</div>
+      <SearchInput defaultValue="OOUI widgets" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+Because the field already holds a value, a × clear indicator shows on the right; clearing the value removes it again.
+
+## With labels and soft validation
+
+`label`, `labelPosition`, `invisibleLabel`, `validate` and the rest follow TextInput's semantics.
+
+```tsx preview
+import { SearchInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <SearchInput label="Keyword" labelPosition="before" validate="non-empty" placeholder="Required example" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+:::note Want an input with a persistent results list?
+This component is just a search box with clear capability. To show dropdown results live as you type, use `SearchWidget` (a search box combined with a results list).
+:::
+
+## Where props land
+
+Same as TextInput: `...rest` lands on the root `<div>`, props for the native `<input>` go through `inputProps`, and `inputRef` focuses the input. The clear indicator is taken over by the component, so `type` (always `search`), `indicator` and `indicatorProps` are **not exposed**.
+
+## API
+
+Only the differences from TextInput are listed; the rest are in [TextInput · API](/en/components/text-input/index.html#api).
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `value` | Query text (controlled) | `string` | — |
+| `defaultValue` | Initial value for uncontrolled use | `string` | — |
+| `onChange` | Value-change callback (value-first) | `ChangeHandler<string, HTMLInputElement>` | — |
+| `icon` | Left icon name | `string` | `'search'` |
+| `inputRef` | Ref to the inner `<input>` | `Ref<HTMLInputElement>` | — |
+
+Unsupported props: `type` (always `search`), `indicator` / `indicatorProps` (the indicator slot is taken over by the clear logic).
+
+## See also
+
+- The base single-line input's full capabilities (types, soft validation, prop placement): [TextInput](/en/components/text-input/index.html)
+- Search with a results list: `SearchWidget`
+- How values flow between the component and your state: [Controlled and uncontrolled](/en/guide/controlled.html)

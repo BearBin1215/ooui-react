@@ -1,0 +1,164 @@
+---
+title: Button 按钮
+description: "Button 组件的属性说明：标签、图标、指示器、标志与边框形态、链接用法，以及点击、键盘与按压行为。"
+---
+
+# Button 按钮
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Button) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ButtonWidget.html "OO.ui.ButtonWidget")
+
+基础按钮组件，同时也是 [ToggleButton](/components/toggle-button/index.html)、[PopupButton](/components/popup-button/index.html)、[ButtonMenuSelectWidget](/components/button-menu-select/index.html) 等组件的按钮基座。
+
+## 基本用法
+
+```tsx preview
+import { useState } from "react";
+import { Button } from "ooui-react";
+
+function App() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <Button onClick={() => setCount((n) => n + 1)}>点我</Button>
+      <span>已点击 {count} 次</span>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 图标与指示器
+
+`icon` 取图标名（见 [Icon](/components/icon/index.html)），`indicator` 取四种指示器之一（见 [Indicator](/components/indicator/index.html)）。二者分别渲染在标签两端。
+
+标签只用图标时把 `invisibleLabel` 打开：标签视觉隐藏但仍保留可访问名称，`title` 未显式给出时以标签文本兜底。
+
+```tsx preview
+import { Button } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <Button icon="check">完成</Button>
+      <Button icon="trash" flags="destructive">
+        删除
+      </Button>
+      <Button indicator="down">展开</Button>
+      <Button icon="search" invisibleLabel>
+        搜索
+      </Button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 标志与形态
+
+`flags` 影响配色与图标着色，`framed={false}` 切换为无边框形态，`active` 表示已选中/已激活。
+
+```tsx preview
+import { Button } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+      <Button>默认</Button>
+      <Button flags="progressive">继续</Button>
+      <Button flags={["primary", "progressive"]}>保存</Button>
+      <Button flags="destructive">删除</Button>
+      <Button framed={false} flags="destructive">
+        无边框删除
+      </Button>
+      <Button active>已选中</Button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+带边框的按钮在 `primary`、激活或禁用时整体反色，此时图标与指示器也随之反色；其余情形按 `flags` 里的色彩标志着色。可用的色彩标志为 `progressive`、`destructive`、`invert`、`error`、`warning`、`success`。
+
+## 链接用法
+
+给出 `href` 后内部 `<a>` 即成为可跳转链接，`target` 指定打开位置。`rel` 默认为 `nofollow`；带 `target="_blank"` 时应自行补上 `noopener`。
+
+```tsx preview
+import { Button } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <Button href="https://www.mediawiki.org">MediaWiki</Button>
+      <Button href="https://www.mediawiki.org" target="_blank" rel={["nofollow", "noopener"]}>
+        新窗口打开
+      </Button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+:::warning 安全提示
+本组件不对 `href` 做 URL 净化（越过原版的 `OO.ui.isSafeUrl`），React 在运行期也不拦截 `javascript:` 一类危险协议。来源不可信的链接（如由用户输入拼接）必须先自行校验协议，否则构成 XSS；需要组件层净化时可用导出的方法 `sanitizeUrl`。{/* deviations: dev-safe-url */}
+:::
+
+## 禁用
+
+`disabled` 输出 `oo-ui-widget-disabled` 与 `aria-disabled`（不用原生 `disabled`），此时按钮不响应点击、`tabindex` 转为 `-1`、`href` 也不再生效。放进 `ButtonGroup` 时，组级禁用会一并下发给组内按钮。
+
+```tsx preview
+import { Button } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <Button disabled>禁用</Button>
+      <Button icon="check" disabled>
+        禁用（带图标）
+      </Button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 焦点与键盘
+
+- 可聚焦的是内部 `<a>`，根元素是不可聚焦的 `<span>`：要手动聚焦按钮请用 `anchorRef`（组件 `ref` 指向外层 `<span>`）。
+- Enter / 空格触发 `onClick`，`onKeyPress` 将在存在点击回调时阻止空格滚动页面。
+- 按压态（`oo-ui-buttonElement-pressed`）由组件用 JS 维护：CSS 没有键盘按压的伪类，键盘按压与松开因此由显式事件处理。`pressed` 属性可与之外取或，用于“关联菜单打开期间按钮保持按压”的场景。
+- `title`、`accessKey` 落在内部 `<a>` 上；未显式给 `title` 且标签隐藏时以标签文本兜底，`accessKey` 存在时 `title` 末尾附键位提示（组合键文案可经 [OOUIProvider](/guide/configuration.html#快捷键文案) 本地化）。
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `children` | 按钮标签 | `ReactNode` | — |
+| `icon` | 前置图标名 | `string` | — |
+| `indicator` | 后置指示器 | `'up' \| 'down' \| 'clear' \| 'required'` | — |
+| `flags` | 附加标志（色彩与按钮专属形态） | `ButtonFlag \| ButtonFlag[]` | `[]` |
+| `framed` | 是否带边框 | `boolean` | `true` |
+| `active` | 是否为激活状态 | `boolean` | `false` |
+| `invisibleLabel` | 标签视觉隐藏（保留可访问名称） | `boolean` | `false` |
+| `disabled` | 是否禁用（含所属 `ButtonGroup` 的组禁用） | `boolean` | `false` |
+| `href` | 链接地址（写在内部 `<a>` 上） | `string` | — |
+| `target` | 链接打开位置 | `string` | — |
+| `rel` | 内部 `<a>` 的 `rel`（数组以空格拼接） | `string \| string[]` | `['nofollow']` |
+| `title` | 内部 `<a>` 的提示文本 | `string` | — |
+| `accessKey` | 快捷键 | `string` | — |
+| `tabIndex` | Tab 序；传 `null` 表示不输出该属性 | `number \| null` | `0` |
+| `pressed` | 受控按压态（与内部按压流取或） | `boolean` | — |
+| `onClick` | 点击回调（Enter / 空格同样触发） | `(ev: ButtonClickEvent) => void` | — |
+| `anchorRef` | 内部 `<a>` 元素的引用 | `Ref<HTMLAnchorElement>` | — |
+| `anchorProps` | 内部 `<a>` 的附加属性；`role`、`tabIndex`、`aria-disabled` 等由组件接管、优先 | `HTMLAttributes<HTMLAnchorElement>` | — |
+| `iconProps` / `indicatorProps` | 图标 / 指示器元素的附加属性 | `object` | — |
+| `...rest` | 原生 `span` 属性（`className`、`id`、`data-*`、`aria-*` 等）直传根元素 | `HTMLAttributes<HTMLSpanElement>` | — |
+
+`ButtonFlag` 为 `'progressive' | 'destructive' | 'invert' | 'error' | 'warning' | 'success' | 'primary' | 'safe' | 'back' | 'close'`，其中前六个决定着色，后四个是按钮专属的形态标志。

@@ -1,0 +1,91 @@
+---
+title: FormLayout
+description: "Props for the FormLayout component: a native <form> container wrapping a set of fields, for browser-native submission with name-bearing input controls, incl. method, action, enctype and onSubmit."
+---
+
+# FormLayout
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/FormLayout) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.FormLayout.html "OO.ui.FormLayout")
+
+Form container: it renders a `<form>` wrapping several [FieldLayout](/en/components/field-layout/index.html)s. It does no data management itself — input controls with a `name` (`TextInput`, `CheckboxInput`, `ButtonInput`, etc.) submit natively with the `<form>`. When you don't need native submission semantics, just place the controls in your own container; you don't have to add this layer.
+
+## Basic usage
+
+Call `event.preventDefault()` inside `onSubmit` following React convention to stop the real navigation (the original blocks the default submit when the event listener returns `false`). The submit action is triggered by a `ButtonInput` with `type="submit"`.
+
+```tsx preview
+import { useState } from "react";
+import {
+  ButtonInput,
+  CheckboxInput,
+  FieldLayout,
+  FormLayout,
+  TextInput,
+} from "ooui-react";
+
+function App() {
+  const [submitted, setSubmitted] = useState(false);
+
+  return (
+    <FormLayout
+      method="post"
+      onSubmit={(event) => {
+        event.preventDefault();
+        setSubmitted(true);
+      }}
+    >
+      <FieldLayout label="Username">
+        <TextInput name="username" placeholder="Required" required />
+      </FieldLayout>
+      <FieldLayout label="I agree to the terms" align="inline">
+        <CheckboxInput name="agree" value="yes" required />
+      </FieldLayout>
+      <FieldLayout label=" " invisibleLabel>
+        <ButtonInput type="submit" flags={["primary", "progressive"]}>
+          Submit
+        </ButtonInput>
+      </FieldLayout>
+      {submitted && <div style={{ marginTop: 8 }}>Submitted (page navigation prevented)</div>}
+    </FormLayout>
+  );
+}
+
+export default App;
+```
+
+## Submission attributes
+
+`method`, `action` and `enctype` pass straight through to the native `<form>`'s attributes of the same names:
+
+| Attribute | Description |
+| --- | --- |
+| `method` | Submission method, native `method` (defaults to GET) |
+| `action` | Submission URL, native `action` |
+| `enctype` | Encoding type, native `enctype` (defaults to `application/x-www-form-urlencoded`) |
+
+:::warning Security note
+This component does not sanitize `action` (it bypasses the original `OO.ui.isSafeUrl`). `<form action="javascript:...">` runs a script on submit, and neither the browser nor React blocks it at runtime. An `action` of **untrusted origin (e.g. concatenated from user input) must have its protocol validated by you or the backend first**, otherwise this is an XSS; when you want component-level sanitizing, use the exported `sanitizeUrl`. {/* deviations: dev-safe-url */}
+:::
+
+## Controls that submit with the form
+
+Native submission only carries the values of **real form controls**: the input family (`TextInput`, `MultilineTextInput`, `NumberInput`, `ComboBoxInput`, `SearchInput`), the check family (`CheckboxInput`, `RadioInput`), and `SelectFileInputWidget` / `HiddenInputWidget` render real controls — with a `name`, they submit with the form.
+
+The display forms of the select family (`Select`, `Dropdown`, `RadioSelect`, `CheckboxMultiselect`, `TagMultiselect`, `TabSelect`, etc.) render no real form control; placed in a `FormLayout` they **silently drop their values on submit** — to submit a selection, switch to the matching form-field forms [DropdownInput](/en/components/dropdown-input/index.html), [RadioSelectInput](/en/components/radio-select-input/index.html) and [CheckboxMultiselectInput](/en/components/checkbox-multiselect-input/index.html), or carry arbitrary custom values with [HiddenInputWidget](/en/components/hidden-input-widget/index.html).
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `children` | The field set (usually several `FieldLayout`s) | `ReactNode` | — |
+| `method` | Submission method (native `method`) | `string` | — |
+| `action` | Submission URL (native `action`, not sanitized) | `string` | — |
+| `enctype` | Encoding type (native `enctype`) | `string` | — |
+| `onSubmit` | Submit handler; call `event.preventDefault()` inside it to stop the default navigation | `FormEventHandler<HTMLFormElement>` | — |
+| `...rest` | Native `form` props (`className`, `id`, `name`, `aria-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLFormElement>` | — |
+
+## See also
+
+- Layout for fields and labels: [FieldLayout](/en/components/field-layout/index.html)
+- Input controls that submit with the form: [TextInput](/en/components/text-input/index.html), [CheckboxInput](/en/components/checkbox-input/index.html)
+- Bundle output and SSR limits: see [Usage](/en/guide/usage.html)

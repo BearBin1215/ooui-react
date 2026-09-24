@@ -1,0 +1,69 @@
+---
+title: HiddenInputWidget 隐藏字段
+description: "HiddenInputWidget 组件的属性说明：以原生 <input type=hidden> 为根，承载随表单提交但不显示的值；disabled 使其退出提交。"
+---
+
+# HiddenInputWidget 隐藏字段
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/HiddenInputWidget) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.HiddenInputWidget.html "OO.ui.HiddenInputWidget")
+
+隐藏输入：不显示、只在 `<form>` 提交时携带固定值的字段。
+
+## 基本用法
+
+`value` 是受控值（随 props 更新），`name` 是提交时的字段名。下面的演示把表单提交拦截下来打印字段，可以看到禁用的隐藏字段不随提交输出。
+
+```tsx preview
+import { useState } from "react";
+import { ButtonInput, FieldLayout, FormLayout, HiddenInputWidget } from "ooui-react";
+
+function App() {
+  const [submitted, setSubmitted] = useState("");
+
+  return (
+    <div style={{ maxWidth: 420 }}>
+      <FormLayout
+        onSubmit={(event) => {
+          event.preventDefault();
+          const pairs: string[] = [];
+          new FormData(event.currentTarget).forEach((value, key) => {
+            pairs.push(`${key}=${value}`);
+          });
+          setSubmitted(pairs.join(" & "));
+        }}
+      >
+        <HiddenInputWidget name="pageId" value="4711" />
+        <HiddenInputWidget name="traceId" value="keep-me" />
+        {/* 禁用的隐藏字段不随表单提交 */}
+        <HiddenInputWidget name="draft" value="ignored" disabled />
+        <FieldLayout label=" ">
+          <ButtonInput type="submit">提交</ButtonInput>
+        </FieldLayout>
+        {submitted && <div>提交内容：{submitted}</div>}
+      </FormLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 禁用
+
+与原版不同：原版的「禁用」只切换样式类，隐藏字段**仍会**随表单提交；本工程把 `disabled` 落到原生属性上，禁用后该字段退出提交（如上方演示）。没有需要屏蔽的提交场景时，不必传 `disabled`。{/* deviations: dev-hidden-input-disabled */}
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `value` | 隐藏输入的值（受控，随 props 更新） | `string` | `''` |
+| `name` | 提交时的字段名 | `string` | — |
+| `disabled` | 是否禁用（禁用后退出表单提交） | `boolean` | `false` |
+| `...rest` | 原生 `<input>` 属性（`id`、`className`、`data-*` 等）直传根元素 | `InputHTMLAttributes<HTMLInputElement>` | — |
+
+本组件没有包裹元素：组件 `ref` 与属性都落在 `<input type="hidden">` 本身。
+
+## 另见
+
+- 表单容器：[FormLayout](/components/form-layout/index.html)
+- 值通道约定：[受控与非受控](/guide/controlled.html)

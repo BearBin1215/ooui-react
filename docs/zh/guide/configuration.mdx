@@ -1,0 +1,226 @@
+---
+title: 全局配置
+description: "OOUIProvider 的全局配置：消息与国际化、浮层容器、移动端形态、文本方向、视口留白、快捷键文案，以及命令式弹窗的双通道。"
+---
+
+# 全局配置
+
+`OOUIProvider` 承载跨组件的全局设定：文案、浮层去向、移动端形态、快捷键显示等。包一层即可，未包裹时组件按缺省值工作。组件文案的语言包与站点消息接入见[文案与国际化](#文案与国际化)。
+
+## 用法
+
+```jsx
+import { OOUIProvider } from "ooui-react";
+import zhHans from "ooui-react/locales/zh-hans";
+
+root.render(
+  <OOUIProvider messages={zhHans}>{app}</OOUIProvider>,
+);
+```
+
+不包裹也能正常使用：英文文案、浮层挂到 `document.body`、非移动端形态、文本方向按锚点元素自动解析、视口留白为 0。
+
+## 配置项
+
+| 配置 | 说明 | 类型 | 缺省 |
+| --- | --- | --- | --- |
+| `messages` | 消息覆盖表，见[文案与国际化](#文案与国际化) | `Partial<Record<MessageKey, MessageValue>>` | 英文 |
+| `getPortalContainer` | 浮层的挂载容器，入参为浮层锚点元素 | `(trigger: HTMLElement) => HTMLElement` | `document.body` |
+| `isMobile` | 移动端形态开关 | `boolean` | `false` |
+| `dir` | 浮层的文本方向 | `'ltr' \| 'rtl'` | 按锚点自动解析 |
+| `viewportSpacing` | 浮层贴边与钳高时计入的视口留白 | `number` 或逐边对象 | 各边 0 |
+| `getAccessKeyLabel` | 快捷键的显示文案 | `(accessKey: string) => string \| undefined` | 原键值 |
+
+## 浮层挂载位置
+
+`getPortalContainer` 决定浮层（下拉菜单、弹出面板、`Popup`）挂到哪。默认挂到 `document.body`；**弹窗内的浮层**挂到该弹窗的容器，随弹窗一起层叠与隔离。
+
+给了本配置后恒以它为准——包括弹窗内的浮层，此时浮层不再随弹窗被隔离，层叠交给容器自行承担。容器不应建立新的定位上下文（浮层按页面坐标绝对定位）。{/* deviations: dev-float-portal */}
+
+## 移动端形态
+
+`isMobile` 开启后部分组件切换为移动端形态：`TabSelect` 的选中项居中滚动，`IndexLayout` / `BookletLayout` 不再自动聚焦，弹窗与下拉按移动端排布。缺省 `false`，宿主可接 `matchMedia` 自行判定后传入。{/* deviations: dev-is-mobile */}
+
+## 文本方向
+
+缺省按锚点元素的文本方向解析，因此**把 `dir="rtl"` 设在页面或容器即可**，多数场景无需配置本项。
+
+只有浮层挂出内容区、锚点方向不代表浮层方向时（例如浮层要挂到站点内容区之外的容器里）才需要显式指定 `dir`。
+
+## 视口留白
+
+`viewportSpacing` 是浮层贴边、钳高与翻转判定计入的四周留白。站点有固定头栏一类悬浮元素时可用它避开，例如 `viewportSpacing={{ top: 48 }}`。缺省各边 0。
+
+## 快捷键文案
+
+`getAccessKeyLabel` 给出快捷键在 `title` 里的显示文案。未配置时显示为 `保存 [s]`，配置后可显示为站点本地的组合键：{/* deviations: dev-accesskey-label */}
+
+```tsx preview
+import { Button, OOUIProvider } from "ooui-react";
+
+function App() {
+  return (
+    <OOUIProvider getAccessKeyLabel={(key) => `Alt+Shift+${key}`}>
+      <Button accessKey="s" title="保存">
+        保存
+      </Button>
+    </OOUIProvider>
+  );
+}
+
+export default App;
+```
+
+## 文案与国际化
+
+消息提示弹窗、文件选择组件等部分位置有文案，默认为英文。`messages` 传入语言包即可切换，`messages` 变化即时生效。{/* deviations: dev-locales */}
+
+```tsx preview
+import { useState } from "react";
+import type { MessageKey, MessageValue } from "ooui-react";
+import { Button, OOUIProvider, SelectFileInputWidget } from "ooui-react";
+import ja from "ooui-react/locales/ja";
+import ru from "ooui-react/locales/ru";
+import zhHans from "ooui-react/locales/zh-hans";
+
+type Locale = "zh-hans" | "en" | "ja" | "ru";
+
+const LOCALES: Array<{
+  value: Locale;
+  label: string;
+  messages?: Partial<Record<MessageKey, MessageValue>>;
+}> = [
+  { value: "zh-hans", label: "简体中文", messages: zhHans },
+  { value: "en", label: "English" },
+  { value: "ja", label: "日本語", messages: ja },
+  { value: "ru", label: "Русский", messages: ru },
+];
+
+function App() {
+  const [locale, setLocale] = useState<Locale>("zh-hans");
+  const pack = LOCALES.find((item) => item.value === locale);
+
+  return (
+    <OOUIProvider messages={pack?.messages}>
+      <div style={{ display: "grid", gap: 16, justifyItems: "start" }}>
+        <div style={{ display: "flex", gap: 8 }}>
+          {LOCALES.map((item) => (
+            <Button
+              key={item.value}
+              active={item.value === locale}
+              onClick={() => setLocale(item.value)}
+            >
+              {item.label}
+            </Button>
+          ))}
+        </div>
+        <SelectFileInputWidget />
+      </div>
+    </OOUIProvider>
+  );
+}
+
+export default App;
+```
+
+### 支持的语言
+
+共 25 种，按语言代码引入（`ooui-react/locales/<代码>`），语言包按需引入、互不牵连产物体积。`en` 是内建默认基线、始终随主产物，不需要引入；语言包缺的键逐键回落英文默认。
+
+:::details 全部语言
+
+- `zh-hans` 简体中文
+- `zh-hant` 繁体中文
+- `yue-hant` 粤语
+- `ja` 日语
+- `ko` 韩语
+- `ru` 俄语
+- `uk` 乌克兰语
+- `de` 德语
+- `fr` 法语
+- `es` 西班牙语
+- `pt-br` 巴西葡萄牙语
+- `it` 意大利语
+- `nl` 荷兰语
+- `pl` 波兰语
+- `cs` 捷克语
+- `sv` 瑞典语
+- `tr` 土耳其语
+- `vi` 越南语
+- `id` 印度尼西亚语
+- `th` 泰语
+- `hi` 印地语
+- `bn` 孟加拉语
+- `ar` 阿拉伯语
+- `he` 希伯来语
+- `fa` 波斯语
+
+:::
+
+其中阿拉伯语、希伯来语、波斯语等从右到左的语言，页面或容器的文本方向另见[文本方向](#文本方向)。
+
+### 修改个别文案
+
+`messages` 是逐键合并的，只传要改的键，其余保持原有文案：
+
+```jsx
+<OOUIProvider messages={{ "ooui-dialog-message-accept": "好嘞" }}>
+```
+
+键名沿用 OOUI 的消息名，完整键名可查看内建语言包（见 `src/locales/en.ts`）。嵌套 `OOUIProvider` 时内层优先，可以外层挂语言包、内层只改个别文案。
+
+### 在 MediaWiki 站点使用
+
+MediaWiki 自带 OOUI 的消息，键名与本库一致，因此不必引入语言包——把站点的 `mw.msg` 接进来即可跟随站点语言。值写成函数，取值时才解析：
+
+```jsx
+<OOUIProvider
+  messages={{
+    "ooui-dialog-message-accept": () => mw.msg("ooui-dialog-message-accept"),
+    "ooui-dialog-message-reject": () => mw.msg("ooui-dialog-message-reject"),
+  }}
+>
+```
+
+只有给出的键走站点消息，其余回落英文，所以按界面上实际用到的文案接即可。命令式弹窗（`confirm` / `alert` / `prompt`）由 `OOUIProvider` 的宿主渲染，同样继承这份映射，无需另行注册。
+
+## 命令式弹窗
+
+`confirm` / `alert` / `prompt` 是独立函数，import 后从任意事件回调里 `await` 即可，无需 hook 或额外挂载：
+
+```tsx
+const ok = await confirm("确定要删除吗？", { title: "删除" });
+```
+
+只要调用处在 `OOUIProvider` 之下，弹窗就**自动继承它的配置**（文案、`isMobile`、`dir` 及你自己的 Provider），无需手动注入；嵌套多个 Provider 时用最外层那份。{/* deviations: dev-imperative-host */}
+
+未包 `OOUIProvider` 时按英文缺省渲染，此时改文案用模块级 `registerMessages`：
+
+```js
+import { registerMessages } from "ooui-react";
+
+registerMessages({ "ooui-dialog-message-accept": "确定" });
+```
+
+返回值、options 与运行时语义见[命令式弹窗](/components/imperative-dialogs/index.html)。
+
+## 读取配置
+
+组件之外也能读到生效的配置：
+
+| Hook | 返回 |
+| --- | --- |
+| `useOOUIConfig` | 合并后的完整配置对象 |
+| `useMessage(key, ...params)` | 一条消息的当前文案（`OOUIProvider` > `registerMessages` > 英文默认） |
+| `useIsMobile` / `useDir` / `useViewportSpacing` | 对应配置项的生效值 |
+| `useAccessKeyLabel(accessKey)` | 快捷键的显示文案 |
+
+## 嵌套
+
+内层覆盖外层，`messages` 逐键合并：可以外层挂语言包、内层只改个别文案。
+
+## 常见问题
+
+**命令式弹窗的文案没变？** 确认 `confirm` / `alert` / `prompt` 的调用处于某个 `OOUIProvider` 之下——弹窗由该 Provider 的宿主渲染并继承其 `messages`。完全不包 `OOUIProvider` 时才需用 `registerMessages` 注册，见[命令式弹窗](#命令式弹窗)。
+
+**切换语言后整棵树重渲染？** `messages` 应传稳定引用（如从 `ooui-react/locales/*` 引入的模块级常量），内联的对象字面量会让每次渲染都产生新对象。

@@ -1,0 +1,133 @@
+---
+title: RadioInput 单选框
+description: "RadioInput 组件的属性说明：勾选态走 checked/defaultChecked/onChange，value 是表单提交值，同 name 的单选框天然互斥；无 indeterminate。"
+---
+
+# RadioInput 单选框
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/RadioInput) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.RadioInputWidget.html "OO.ui.RadioInputWidget")
+
+单个单选框。本组件不自带文字标签，需要标签时交给 [FieldLayout](/components/field-layout/index.html) 包裹。
+
+## 基本用法
+
+勾选状态用 `checked` / `defaultChecked` / `onChange` 三条通道控制，`onChange` 的第一个参数是新的勾选布尔值。注意单选框选中后不能靠再次点击取消——互斥组的取消需要额外手段（如「清除」按钮重设状态）。
+
+```tsx preview
+import { useState } from "react";
+import { Button, RadioInput } from "ooui-react";
+
+function App() {
+  const [checked, setChecked] = useState(true);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "flex-start" }}>
+      <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <RadioInput checked={checked} onChange={setChecked} />
+        已勾选：{String(checked)}
+      </label>
+      <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <RadioInput defaultChecked />
+        非受控，初始已勾选
+      </label>
+      <Button onClick={() => setChecked(false)}>清除勾选</Button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 同名互斥与表单提交值
+
+多个 `RadioInput` 写同一个 `name`，浏览器原生机制即保证同组互斥、至多一项随表单提交。`value` 是**表单提交值**（写入原生 `<input>` 的 `value` 属性，缺省空串），**不影响勾选状态**。
+
+```tsx preview
+import { useState } from "react";
+import { RadioInput } from "ooui-react";
+
+function App() {
+  const [size, setSize] = useState("medium");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "flex-start" }}>
+      {["small", "medium", "large"].map((item) => (
+        <label key={item} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <RadioInput
+            name="size"
+            value={item}
+            checked={size === item}
+            onChange={(next) => next && setSize(item)}
+          />
+          {item}
+        </label>
+      ))}
+      <div>当前选择：{size}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 与 FieldLayout 配合
+
+字段文字标签通常交给 [FieldLayout](/components/field-layout/index.html)。它会自动把标签与该单选框的原生 `<input>` 关联（点标签即选中）；需要手动指定关联目标时，用 `inputId` 给出输入元素的 id。
+
+```tsx preview
+import { FieldLayout, RadioInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 320 }}>
+      <FieldLayout label="默认项" align="inline">
+        <RadioInput defaultChecked />
+      </FieldLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 禁用
+
+`disabled` 输出 `aria-disabled` 并禁用原生 `<input>`，单选框不可再选中。放进 `FieldsetLayout` 等原生 `<fieldset>` 时，组级禁用会一并下发。
+
+```tsx preview
+import { RadioInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <RadioInput disabled />
+      <RadioInput disabled defaultChecked />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `checked` | 勾选状态（受控，传入即受控模式） | `boolean` | — |
+| `defaultChecked` | 非受控初始勾选态 | `boolean` | — |
+| `onChange` | 勾选变化回调（新状态优先，含原生事件） | `ChangeHandler<boolean, HTMLInputElement>` | — |
+| `value` | 表单提交值（写入 `<input>` 的 `value`，不影响勾选态） | `string \| number` | `''` |
+| `name` | 表单字段名（落在 `<input>`；同名即同组互斥） | `string` | — |
+| `inputId` | 内部 `<input>` 的 id（配合标签 `htmlFor`） | `string` | — |
+| `required` | 必填（原生 `required`） | `boolean` | `false` |
+| `disabled` | 是否禁用 | `boolean` | `false` |
+| `accessKey` | 快捷键（落在 `<input>`） | `string` | — |
+| `...rest` | 原生 `span` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLSpanElement>` | — |
+
+`title`、`dir`、`tabIndex` 由组件接管、落在内部 `<input>` 上；组件 `ref` 指向外层 `<span>`。
+
+## 另见
+
+- 勾选通道在三条值通道中的位置：[受控与非受控](/guide/controlled.html)
+- 带标签字段的排版：[FieldLayout](/components/field-layout/index.html)
+- 单选组（互斥项排成一组、方向键直接改选）：[RadioSelect](/components/radio-select/index.html)

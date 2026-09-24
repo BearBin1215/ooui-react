@@ -1,0 +1,121 @@
+---
+title: 组件总览
+description: "ooui-react 的全部导出组件按控件、布局、弹窗、工具栏四族列出，附一句话用途；组件不自带样式，DOM 与原版 OOUI 一致。"
+---
+
+# 组件总览
+
+本组件库以 React 重实现 OOUI，组件按原版类层级分为**控件、布局、弹窗、工具栏**四族，合计 60 余个。
+
+组件**不自带样式**，只输出与原版一致的 DOM 与 `oo-ui-*` 类名，使用前请先按[使用方式](/guide/usage.html)引入 OOUI 样式表；所有组件共有的属性规则见[通用属性与 ref](/guide/basics.html)。
+
+## 控件
+
+<div className="doc-component-grid">
+
+- [Button](/components/button/index.html) 支持图标、指示器、标签与链接形态
+- [ToggleButton](/components/toggle-button/index.html) 可切换的按钮（按下/弹起）
+- [ToggleSwitch](/components/toggle-switch/index.html) 开关
+- [ButtonGroup](/components/button-group/index.html) 把若干按钮排成一组，可统一禁用
+- [PopupButton](/components/popup-button/index.html) 点击弹出浮层的按钮
+- [Popup](/components/popup/index.html) 弹出浮层本身
+- [Label](/components/label/index.html) 独立文本标签
+- [Icon](/components/icon/index.html) 图标
+- [Indicator](/components/indicator/index.html) 指示器（“展开”“必填”一类标记）
+- [ProgressBar](/components/progress-bar/index.html) 进度条
+- [Message](/components/message/index.html) 行内消息提示（含关闭按钮）
+
+</div>
+
+### 输入
+
+<div className="doc-component-grid">
+
+- [TextInput](/components/text-input/index.html) 单行文本输入框
+- [MultilineTextInput](/components/multiline-text-input/index.html) 多行文本输入框
+- [NumberInput](/components/number-input/index.html) 数字输入框（带步进按钮）
+- [SearchInput](/components/search-input/index.html) 搜索输入框（带清空指示器）
+- [SearchWidget](/components/search-widget/index.html) 查询输入框加常驻结果列表
+- [ComboBoxInput](/components/combo-box-input/index.html) 可输入过滤也可下拉选择的组合框
+- [CheckboxInput](/components/checkbox-input/index.html) 单个复选框
+- [RadioInput](/components/radio-input/index.html) 单个单选框
+- [SelectFileInputWidget](/components/select-file-input-widget/index.html) 文件选择（含拖放区形态）
+
+</div>
+
+### 选择
+
+选项数据的书写约定（`value`、分组标题、标签多选的 `label`/`labelText`/`data`）见[选择与选项](/guide/options.html)。
+
+<div className="doc-component-grid">
+
+- [Select](/components/select/index.html) 选择列表（下拉/菜单的内层）
+- [Dropdown](/components/dropdown/index.html) 下拉选择
+- [OutlineSelect](/components/outline-select/index.html) 带层级缩进的选择列表
+- [TabSelect](/components/tab-select/index.html) 页签式选择
+- [ButtonSelect](/components/button-select/index.html) 按钮式选择
+- [ButtonMenuSelectWidget](/components/button-menu-select/index.html) 按钮触发的命令菜单
+- [CheckboxMultiselect](/components/checkbox-multiselect/index.html) 复选组
+- [RadioSelect](/components/radio-select/index.html) 单选组
+- [TagMultiselect](/components/tag-multiselect/index.html) 标签输入（自由输入）
+- [MenuTagMultiselect](/components/menu-tag-multiselect/index.html) 标签输入（带候选菜单）
+
+</div>
+
+### 表单提交
+
+随 `<form>` 原生提交的一组字段控件，配合 `FormLayout` 使用。
+
+<div className="doc-component-grid">
+
+- [ButtonInput](/components/button-input/index.html) 提交按钮
+- [DropdownInput](/components/dropdown-input/index.html) 下拉选择字段
+- [CheckboxMultiselectInput](/components/checkbox-multiselect-input/index.html) 复选组字段
+- [RadioSelectInput](/components/radio-select-input/index.html) 单选组字段
+- [HiddenInputWidget](/components/hidden-input-widget/index.html) 随表单提交但不显示的字段
+
+</div>
+
+## 布局
+
+<div className="doc-component-grid">
+
+- [Layout](/components/layout/index.html) 布局基类
+- [PanelLayout](/components/panel-layout/index.html) 带内边距的面板
+- [PageLayout](/components/page-layout/index.html) 页面整体布局
+- [StackLayout](/components/stack-layout/index.html) 堆叠面板，一次显示一个
+- [BookletLayout](/components/booklet-layout/index.html) 带页签的多面板（手册式）
+- [IndexLayout](/components/index-layout/index.html) 带索引区与搜索的多面板
+- [TabPanelLayout](/components/tab-panel-layout/index.html) 单个页签面板
+- [FieldLayout](/components/field-layout/index.html) 带标签与提示的字段包装
+- [FieldsetLayout](/components/fieldset-layout/index.html) 字段分组（可统一禁用）
+- [ActionFieldLayout](/components/action-field-layout/index.html) 字段加随行按钮
+- [FormLayout](/components/form-layout/index.html) 表单容器
+- [HorizontalLayout](/components/horizontal-layout/index.html) 横向排列若干元素
+- [MenuLayout](/components/menu-layout/index.html) 菜单整体布局
+- [CopyTextLayout](/components/copy-text-layout/index.html) 只读文本框加复制按钮
+
+</div>
+
+## 弹窗
+
+<div className="doc-component-grid">
+
+- [Dialog](/components/dialog/index.html) 弹窗基类（受控 open）
+- [MessageDialog](/components/dialog/index.html) 消息弹窗（确定/取消）
+- [ProcessDialog](/components/process-dialog/index.html) 带多步流程与错误面板的弹窗
+- [`confirm` / `alert` / `prompt`](/components/imperative-dialogs/index.html) 命令式弹窗（不依赖 React 树）
+
+</div>
+
+## 工具栏
+
+<div className="doc-component-grid">
+
+- [Toolbar](/components/toolbar/index.html) 工具栏容器
+- [BarToolGroup](/components/toolbar/index.html) 按钮式工具组
+- [ListToolGroup](/components/toolbar/index.html) 列表式工具组
+- [MenuToolGroup](/components/toolbar/index.html) 菜单式工具组
+- [LabelToolGroup](/components/toolbar/index.html) 工具栏内的静态标签组
+
+</div>

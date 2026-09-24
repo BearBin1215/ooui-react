@@ -1,0 +1,92 @@
+---
+title: ToggleButton 切换按钮
+description: "ToggleButton 组件的属性说明：在 Button 形态上叠加开/关状态，checked/defaultChecked/onChange 通道，aria-pressed 随状态输出，不支持链接形态。"
+---
+
+# ToggleButton 切换按钮
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ToggleButton) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ToggleButtonWidget.html "OO.ui.ToggleButtonWidget")
+
+切换按钮：能“按下 / 弹起”的 [Button](/components/button/index.html)。
+
+## 基本用法
+
+开/关状态走 `checked` / `defaultChecked` / `onChange` 三条通道，`onChange` 的第一个参数是新的开关布尔值。按下时按钮呈激活（高亮）外观。
+
+```tsx preview
+import { useState } from "react";
+import { ToggleButton } from "ooui-react";
+
+function App() {
+  const [highlight, setHighlight] = useState(false);
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+      <ToggleButton icon="highlight" checked={highlight} onChange={setHighlight}>
+        高亮
+      </ToggleButton>
+      <ToggleButton icon="star" defaultChecked>
+        收藏（非受控，初始按下）
+      </ToggleButton>
+      <span>高亮：{String(highlight)}</span>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 无边框形态
+
+与 Button 一样支持 `framed={false}` 与各类 `flags`，常用于工具条里的成组切换。
+
+```tsx preview
+import { ToggleButton } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <ToggleButton icon="bold" defaultChecked>
+        加粗
+      </ToggleButton>
+      <ToggleButton icon="italic">
+        斜体
+      </ToggleButton>
+      <ToggleButton framed={false} icon="link" defaultChecked>
+        无边框
+      </ToggleButton>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 与 Button 的区别
+
+ToggleButton 继承 Button 的外观，但**没有链接能力**：`href` / `target` / `rel` / `anchorRef` 不接受；`active`、`onClick`、`aria-pressed` 由开关状态驱动，不外露。要“点击执行一次动作”请用 [Button](/components/button/index.html)，要“表达一个持续的开/关状态”才用本组件。
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `children` | 按钮标签 | `ReactNode` | — |
+| `checked` | 是否按下（受控，传入即受控模式） | `boolean` | — |
+| `defaultChecked` | 非受控初始开关态 | `boolean` | `false` |
+| `onChange` | 开关状态变更回调（仅回传新状态） | `(checked: boolean) => void` | — |
+| `icon` | 前置图标名 | `string` | — |
+| `indicator` | 后置指示器 | `'up' \| 'down' \| 'clear' \| 'required'` | — |
+| `flags` | 附加标志（色彩与按钮专属形态） | `ButtonFlag \| ButtonFlag[]` | `[]` |
+| `framed` | 是否带边框 | `boolean` | `true` |
+| `invisibleLabel` | 标签视觉隐藏（保留可访问名称） | `boolean` | `false` |
+| `disabled` | 是否禁用（含所属 `ButtonGroup` 的组禁用） | `boolean` | `false` |
+| `tabIndex` | Tab 序 | `number \| null` | `0` |
+| `...rest` | Button 的其余非链接属性，直传按钮元素 | `object` | — |
+
+`onChange` 是切换回调，不遵循值优先的 `ChangeHandler` 签名（见[受控与非受控 · 回调签名](/guide/controlled.html#回调签名)）。
+
+## 另见
+
+- 按钮的基础能力与图标 / 指示器：[Button](/components/button/index.html)
+- 拨动开关形态：[ToggleSwitch](/components/toggle-switch/index.html)
+- 把多个按钮排成一组：[ButtonGroup](/components/button-group/index.html)

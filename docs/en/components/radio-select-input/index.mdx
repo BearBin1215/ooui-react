@@ -1,0 +1,69 @@
+---
+title: RadioSelectInput
+description: "Props for the RadioSelectInput component: a RadioSelect for display with a hidden input carrying native submission, always one selected (invalid values fall back to the first selectable), name only on the hidden input."
+---
+
+# RadioSelectInput
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/RadioSelectInput) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.RadioSelectInputWidget.html "OO.ui.RadioSelectInputWidget")
+
+A radio group field: a [RadioSelect](/en/components/radio-select/index.html) handles display and keyboard interaction while an embedded hidden `<input>` carries the form submission.
+
+## Basic usage
+
+Compared with [RadioSelect](/en/components/radio-select/index.html): `name` is not written on each `radio` (exclusivity is guaranteed by the controlled state), and the component **always has a selection** — a value not among the selectable options falls back to the first selectable one, matching the "always one selected" semantics of HTML radio forms.
+
+```tsx preview
+import { useState } from "react";
+import { ButtonInput, FormLayout, RadioSelectInput } from "ooui-react";
+
+function App() {
+  const [notify, setNotify] = useState<string | number>("email");
+  const [submitted, setSubmitted] = useState("");
+
+  return (
+    <FormLayout
+      onSubmit={(event) => {
+        event.preventDefault();
+        setSubmitted(new FormData(event.currentTarget).get("notify")?.toString() ?? "");
+      }}
+    >
+      <RadioSelectInput
+        name="notify"
+        value={notify}
+        onChange={setNotify}
+        options={[
+          { value: "email", children: "Email" },
+          { value: "sms", children: "SMS" },
+          { value: "none", children: "No notifications" },
+        ]}
+      />
+      <ButtonInput type="submit">Submit</ButtonInput>
+      <div>Current: {String(notify)}; submitted: {submitted}</div>
+    </FormLayout>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `options` | The option set; each item has `value` and `children` (the option text), `disabled` supported | `RadioSelectInputOptionProps[]` | — |
+| `value` | Current value (controlled; passing it enables controlled mode) | `string \| number` | — |
+| `defaultValue` | Initial value for uncontrolled use | `string \| number` | — |
+| `onChange` | Value change callback (the second argument is the radio's native change event, carried on click reselection; keyboard reselection and the focus auto-select update silently, matching the original, with no event) | `ChangeHandler<string \| number, HTMLInputElement>` | — |
+| `name` | Form field name (lands on the hidden `input` only) | `string` | — |
+| `disabled` | Whether disabled (the hidden `input` is disabled too, dropping out of submission) | `boolean` | `false` |
+| `tabIndex` | Forwarded to the inner RadioSelect's root | `number` | — |
+| `...rest` | Native `div` props passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
+
+The original forwards only `data` and `label` when building options, silently dropping `options[].disabled`; this implementation honors `disabled` as declared, matching [CheckboxMultiselectInput](/en/components/checkbox-multiselect-input/index.html) and [DropdownInput](/en/components/dropdown-input/index.html).{/* deviations: dev-radioselectinput-disabled */}
+
+## See also
+
+- The interactive radio group: [RadioSelect](/en/components/radio-select/index.html)
+- The dropdown field form: [DropdownInput](/en/components/dropdown-input/index.html)
+- The checkbox group field: [CheckboxMultiselectInput](/en/components/checkbox-multiselect-input/index.html)

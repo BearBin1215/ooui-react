@@ -1,0 +1,147 @@
+---
+title: CheckboxMultiselect
+description: "Props for the CheckboxMultiselect component: the value/defaultValue/onChange array channels of a checkbox group, Shift+click range selection, arrow-key focus navigation and disabled propagation."
+---
+
+# CheckboxMultiselect
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/CheckboxMultiselect) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.CheckboxMultiselectWidget.html "OO.ui.CheckboxMultiselectWidget")
+
+A checkbox group: several checkbox items in one group, multiple selections allowed.
+
+## Basic usage
+
+The selected value is an **array**, driven by the `value` / `defaultValue` / `onChange` channels; `onChange` carries the full value array. With `name`, every option's checkbox shares it and the checked ones submit as multiple same-name fields.
+
+```tsx preview
+import { useState } from "react";
+import { CheckboxMultiselect } from "ooui-react";
+
+const options = [
+  { value: "apple", children: "Apple" },
+  { value: "banana", children: "Banana" },
+  { value: "cherry", children: "Cherry" },
+];
+
+function App() {
+  const [value, setValue] = useState<Array<string | number>>(["banana"]);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <CheckboxMultiselect options={options} value={value} onChange={setValue} name="fruits" />
+      <div>Current selection: {value.join(", ") || "(none)"}</div>
+      <CheckboxMultiselect options={options} defaultValue={["apple", "cherry"]} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Shift+click range selection
+
+Click one item, then click another with `Shift` held: the range between the two clicks (both ends included) is set to the state the **second** item just flipped to; disabled items in the range keep their state. This mirrors bulk-checking in list tables.
+
+```tsx preview
+import { useState } from "react";
+import { CheckboxMultiselect } from "ooui-react";
+
+const options = [1, 2, 3, 4, 5].map((number) => ({
+  value: number,
+  children: `Item ${number}`,
+}));
+
+function App() {
+  const [value, setValue] = useState<Array<string | number>>([]);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <CheckboxMultiselect options={options} value={value} onChange={setValue} />
+      <div style={{ fontSize: 13 }}>
+        Current selection: {value.join(", ") || "(none)"}
+      </div>
+      <div style={{ color: "#54595d", fontSize: 13 }}>
+        Click one item, then Shift+click another to see range selection
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Using it with FieldLayout
+
+To give the whole group a field label, wrap it with [FieldLayout](/en/components/field-layout/index.html). Clicking the field label moves focus to the first enabled option's checkbox (it does not toggle anything — a group has no "one value for the whole group" semantics like a single checkbox does).
+
+```tsx preview
+import { CheckboxMultiselect, FieldLayout } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 320 }}>
+      <FieldLayout label="Subscribed sections">
+        <CheckboxMultiselect
+          defaultValue={["news"]}
+          options={[
+            { value: "news", children: "News" },
+            { value: "sports", children: "Sports" },
+            { value: "tech", children: "Tech" },
+          ]}
+        />
+      </FieldLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Disabled
+
+- An option's own `disabled` skips that item (not checkable).
+- Component-level `disabled` disables every option in the group, and the group state wins. See [Selection and options · Disabled](/en/guide/options.html#disabled).
+
+```tsx preview
+import { CheckboxMultiselect } from "ooui-react";
+
+function App() {
+  return (
+    <CheckboxMultiselect
+      defaultValue={["a"]}
+      options={[
+        { value: "a", children: "Enabled" },
+        { value: "b", children: "Disabled item", disabled: true },
+        { value: "c", children: "Also enabled" },
+      ]}
+    />
+  );
+}
+
+export default App;
+```
+
+## Keyboard and focus
+
+- Every option's native `<input type="checkbox">` is in the Tab order; ↑↓←→ are an in-group shortcut — they move focus **cyclically between non-disabled items** (unlike `RadioSelect`, they only move focus and **do not select directly**), and Space toggles the current item.
+- A Shift+click range starts from the item last clicked (or last toggled with Space).
+- `onChange`'s second argument is the native `change` event that triggered this change.
+- Option roots carry `role='checkbox'` and `aria-checked` (the original's option roots have no role and express selection only via a class), so screen readers can read each option's state directly. {/* deviations: dev-multioption-role */}
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `options` | The option set, rendered in display order; each item has `value` and `children` (the option text) and supports option fields such as `disabled` | `CheckboxMultiselectOptionProps[]` | — |
+| `value` | Current selected values (controlled; passing it enables controlled mode) | `(string \| number)[]` | — |
+| `defaultValue` | Initial selected values for uncontrolled use | `(string \| number)[]` | `[]` |
+| `onChange` | Selected-values change callback with the full value array and the native event | `ChangeHandler<(string \| number)[], HTMLInputElement>` | — |
+| `name` | Form field name, passed to every option's `checkbox` | `string` | — |
+| `disabled` | Whether disabled (also disables every option in the group) | `boolean` | `false` |
+| `...rest` | Native `div` props (`className`, `id`, `aria-*`, etc.) passed straight to the group container | `HTMLAttributes<HTMLDivElement>` | — |
+
+## See also
+
+- Option data and the keyboard focus model: [Selection and options](/en/guide/options.html)
+- A single checkbox: [CheckboxInput](/en/components/checkbox-input/index.html)
+- The checkbox group field that submits with a form: `CheckboxMultiselectInput`

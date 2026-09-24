@@ -1,0 +1,104 @@
+---
+title: 选择与选项
+description: "Select 系组件共用的选项数据约定：value 与分组标题、children/label 文本、标签多选的 labelText 与 data、禁用下发、图标标志与键盘焦点模型。"
+---
+
+# 选择与选项
+
+[受控与非受控](/guide/controlled.html)讲了值如何在组件与你的状态之间流动，本页讲值的两端怎么写——Select 系组件共用的选项数据约定。适用于：
+
+- 选择列表：`Select`、`OutlineSelect`、`TabSelect`、`ButtonSelect`、`ButtonMenuSelectWidget`
+- 标签输入：`TagMultiselect`、`MenuTagMultiselect`
+- 表单字段：`DropdownInput`、`RadioSelectInput`、`CheckboxMultiselectInput`
+- 带候选的输入：`ComboBoxInput`、`SearchWidget`（结果集）
+
+各组件只在此约定上增补自己的属性（如 `OutlineSelect` 的层级、标签的固定），具体见组件页。
+
+## 选项数据
+
+`options` 是一个选项对象数组：
+
+- **带 `value` 的项是可选项**。`value` 恒为 `string | number`，同时是选中态的匹配依据与列表 key。
+- **不带 `value` 的项渲染为分组标题**（不可选中、不参与键盘导航），只有分组形态的组件支持（`Select`、`OutlineSelect`、`Dropdown`、`ButtonMenuSelectWidget` 等）。
+- 选项文本写在 `children` 上；标签多选写在 `label` 上，见下文。
+- **选中态不用在选项里声明**——组件按 `value` 与当前值派生，选项数据保持为纯数据。
+
+```tsx preview
+import { Select } from "ooui-react";
+
+function App() {
+  return (
+    <Select
+      defaultValue="orange"
+      aria-label="水果"
+      options={[
+        { value: "apple", children: "苹果" },
+        { value: "orange", children: "橙子" },
+        { value: "banana", children: "香蕉", disabled: true },
+        { children: "浆果" },
+        { value: "grape", children: "葡萄" },
+        { value: "melon", children: "西瓜" },
+      ]}
+    />
+  );
+}
+
+export default App;
+```
+
+上面的 `浆果` 一项没有 `value`，渲染为分组标题。
+
+## 标签多选的选项
+
+`TagMultiselect` / `MenuTagMultiselect` 的选项同时充当**标签本体**与**菜单候选**，约定与前文一致，另有三处专属字段：
+
+```tsx
+import { Icon, MenuTagMultiselect } from "ooui-react";
+
+<MenuTagMultiselect
+  options={[
+    { value: "bold", label: "加粗", icon: "bold" },
+    // label 为富内容时，前缀过滤与回填需要纯文本形态 labelText
+    {
+      value: "code",
+      label: (
+        <>
+          <Icon icon="code" /> 代码
+        </>
+      ),
+      labelText: "代码",
+    },
+    // data 携带任意负载，与身份 value 相互独立
+    { value: "link", label: "链接", data: { openInNewTab: true } },
+    { value: "lock", label: "锁定", fixed: true },
+  ]}
+/>
+```
+
+- **`label` 收 `ReactNode`**（对齐原版接受富内容），缺省显示 `value`。标签多选的选项文本用 `label` 而非 `children`。
+- **`labelText` 是 `label` 的纯文本形态**，用于按输入前缀过滤菜单候选、选中/编辑标签时回填输入框。`label` 为字符串时缺省取自身；为富内容时必须显式给出——未给出时该选项**不参与前缀过滤**（回填以 `String(value)` 兜底），开发期会告警一次。{/* deviations: dev-tag-label-labeltext */}
+- **`data` 携带任意负载**。标签的身份恒为标量 `value`（受控数组可序列化、可比对），`onChange` 回传的也是标量数组；需要随标签携带对象时放在 `data` 里，按 `value` 在自己的 `options` 数组里反查取回。{/* deviations: dev-tag-value-data */}{/* deviations: dev-tag-value-data */}
+- `fixed: true` 的标签固定（不渲染关闭按钮、不可移除），拖拽排序也不会把它移到固定项之前。{/* deviations: dev-tag-fixed */}
+
+## 禁用
+
+- 选项对象自己的 `disabled` 禁用该项。
+- 组件级 `disabled` 的落点分两类：**列表/组形态**（`Select`、`TabSelect`、`ButtonSelect`、`RadioSelect`、`CheckboxMultiselect`）会一并禁用组内全部选项，且组禁用优先——被禁用组内的选项无法单独启用；**浮层触发形态**（`Dropdown`、`ComboBoxInput`、`ButtonMenuSelectWidget`）禁用的是触发端（不可展开、键盘不可用），菜单里各项是否禁用由选项自身的 `disabled` 决定。
+
+## 图标与标志
+
+带图标槽位的选项形态（菜单/大纲/按钮选项及分组标题）支持 `icon` 与 `flags`：`icon` 取图标名（见 [Icon](/components/icon/index.html)），`flags` 给图标着色（`progressive`、`destructive` 等变体）。纯文本选项（`TabSelect`、`RadioSelect`、`CheckboxMultiselect` 的项）没有图标槽位，不支持这两个字段。{/* deviations: dev-option-flags-scope */}
+
+## 键盘与焦点
+
+- **方向键**在选项间移动：直选类（`TabSelect`、`ButtonSelect`、`RadioSelect`）按键即改选；菜单类（`Dropdown` 等的菜单）移动高亮，Enter / 空格选定。
+- **Home / End / PageUp / PageDown** 跳至首尾项或翻页：菜单类默认支持，独立 `Select` 可经 `handleNavigationKeys` 打开；`listWrapsAround` 控制到端点后是否环绕。
+- **前缀跳转**：直接键入字符，按选项文本的前缀跳转（1.5 秒缓冲）；标签多选按前缀过滤候选。
+- **焦点不进列表**：焦点保持在控件（或触发元素）上，高亮项经 `aria-activedescendant` 关联，列表根缺省不进 Tab 序——这是与原版一致的 listbox 模式。**例外**：直选类（`TabSelect`、`ButtonSelect`）的组根在 Tab 序内（焦点停在整组），且点击选项后焦点自动收进组根（原版点击后焦点留在原处、方向键不响应，此处对齐 ARIA APG 略作改良）。{/* deviations: dev-directselect-focus */}
+- 直选类（`TabSelect`、`ButtonSelect`）带初始选中值时，`aria-activedescendant` 首帧即指向选中项（原版要等首次改选才写入该属性）。{/* deviations: dev-directselect-activedescendant */}
+- 输入法**合成期间**的确认 Enter 与选词方向键不会误触发选择、开合或提交。{/* deviations: dev-ime-guard */}
+
+## 另见
+
+- 受控值不在备选项内时各组件的行为：[受控与非受控](/guide/controlled.html#受控值不在备选项内时)
+- `onChange` 与 `onChoose`（每次选定都触发）的分工：[受控与非受控](/guide/controlled.html#回调签名)

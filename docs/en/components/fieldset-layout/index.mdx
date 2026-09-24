@@ -1,0 +1,97 @@
+---
+title: FieldsetLayout
+description: "Props for the FieldsetLayout component: a native fieldset group with a label/icon header, popup or inline help, and group-level disable propagated natively by the fieldset."
+---
+
+# FieldsetLayout
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/FieldsetLayout) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.FieldsetLayout.html "OO.ui.FieldsetLayout")
+
+A field set: a native `<fieldset>` with a `<legend>` header (title, icon and help entry), with the field items inside the group container. The root is a native `fieldset`, so its `disabled` natively disables every input control inside the group.
+
+## Basic usage
+
+```tsx preview
+import { FieldLayout, FieldsetLayout, TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <FieldsetLayout label="Account details" icon="userAvatar">
+      <FieldLayout label="Username">
+        <TextInput />
+      </FieldLayout>
+      <FieldLayout label="Email">
+        <TextInput type="email" />
+      </FieldLayout>
+    </FieldsetLayout>
+  );
+}
+
+export default App;
+```
+
+## Help text
+
+`help` has two presentations: `helpInline={false}` (default) renders an ⓘ icon in the header that opens a popup on click; `helpInline={true}` shows the help as inline text after the header.
+
+```tsx preview
+import { CheckboxInput, FieldLayout, FieldsetLayout } from "ooui-react";
+
+function App() {
+  return (
+    <FieldsetLayout
+      label="Notification preferences"
+      help="Security notices are still sent when these are off."
+    >
+      <FieldLayout label="Product updates" align="inline">
+        <CheckboxInput defaultChecked />
+      </FieldLayout>
+      <FieldLayout label="Community events" align="inline">
+        <CheckboxInput />
+      </FieldLayout>
+    </FieldsetLayout>
+  );
+}
+
+export default App;
+```
+
+## Group-level disable
+
+`disabled` lands on the native `<fieldset>`, so every input control inside the group is disabled by the browser's own mechanism — no per-item passing needed.
+
+```tsx preview
+import { CheckboxInput, FieldLayout, FieldsetLayout, TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <FieldsetLayout label="Read-only group" disabled>
+      <FieldLayout label="Name">
+        <TextInput defaultValue="Not editable" />
+      </FieldLayout>
+      <FieldLayout label="Enabled" align="inline">
+        <CheckboxInput checked />
+      </FieldLayout>
+    </FieldsetLayout>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `label` | The group title (legend header) | `ReactNode` | — |
+| `icon` | Header icon | `string` | — |
+| `help` | Help text | `ReactNode` | — |
+| `helpInline` | Whether help is inline (`false` renders the ⓘ popup) | `boolean` | `false` |
+| `invisibleLabel` | Hide the title visually but keep it as the accessible name | `boolean` | `false` |
+| `disabled` | Group-level disable (propagated natively to every input inside) | `boolean` | `false` |
+| `...rest` | Native `fieldset` props passed straight to the root | `HTMLAttributes<HTMLFieldSetElement>` | — |
+
+## See also
+
+- Label and help for a single field: [FieldLayout](/en/components/field-layout/index.html)
+- The form container: [FormLayout](/en/components/form-layout/index.html)

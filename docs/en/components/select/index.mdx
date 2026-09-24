@@ -1,0 +1,145 @@
+---
+title: Select
+description: "Props for the Select component: the listbox that powers dropdowns and menus, a selectable option set, the onChange/onChoose division of labor, the clearOnChoose command-menu form, and keyboard navigation switches."
+---
+
+# Select
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Select) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.SelectWidget.html "OO.ui.SelectWidget")
+
+A selection list: a clickable set of options — the inner list of floating components like [Dropdown](/en/components/dropdown/index.html), and usable on its own. The option data contract is in [Selection and options](/en/guide/options.html).
+
+:::note How to interact with it standalone
+Matching the original `SelectWidget`, this component's root is **not focusable by default** (it is not in the Tab order), so it is best suited to mouse selection. For keyboard-reachable single or multiple selection, prefer components that handle focus for you — [Dropdown](/en/components/dropdown/index.html), [RadioSelect](/en/components/radio-select/index.html), `ButtonSelect` — all of which use `Select` as their inner list. As a menu's inner layer, keyboard navigation is handled by the outer trigger for you, so you don't have to manage it. {/* deviations: dev-select-tabindex */}
+:::
+
+## Basic usage
+
+```tsx preview
+import { useState } from "react";
+import { Select } from "ooui-react";
+
+const options = [
+  { value: "apple", children: "Apple" },
+  { value: "orange", children: "Orange" },
+  { value: "banana", children: "Banana", disabled: true },
+  { value: "grape", children: "Grape" },
+];
+
+function App() {
+  const [value, setValue] = useState<string | number>("apple");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 200 }}>
+      <Select options={options} value={value} onChange={setValue} aria-label="Fruit" />
+      <div>Current value: {String(value)}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## onChange and onChoose
+
+The two "choose" callbacks have different roles:
+
+- `onChange`: fires when the **selected value changes**; re-clicking the current item doesn't fire it.
+- `onChoose`: fires on **every choice** (click / drag / Enter), including repeats. Floating components use it to "close on choose".
+
+```tsx
+<Select options={options} onChange={setValue} onChoose={() => setOpen(false)} />
+```
+
+## Command-menu form
+
+When `clearOnChoose` is true, a choice only fires `onChoose` and doesn't change the selected value — a "selected" state never appears, which suits command menus that run an action and keep no selection.
+
+```tsx preview
+import { useState } from "react";
+import { Select } from "ooui-react";
+
+function App() {
+  const [log, setLog] = useState<string[]>([]);
+
+  return (
+    <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+      <Select
+        aria-label="Commands"
+        clearOnChoose
+        options={[
+          { value: "copy", children: "Copy" },
+          { value: "cut", children: "Cut" },
+          { value: "paste", children: "Paste" },
+        ]}
+        onChoose={(v) => setLog((prev) => [...prev, `ran ${String(v)}`])}
+      />
+      <div style={{ fontSize: 14 }}>{log.length ? log.join(" → ") : "Click any command (no selection appears)"}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Group headings
+
+Items in the `options` array without a `value` render as group headings — not selectable and skipped by keyboard navigation.
+
+```tsx preview
+import { Select } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 200 }}>
+      <Select
+        aria-label="Grouped"
+        defaultValue="cat"
+        options={[
+          { children: "Felines" },
+          { value: "cat", children: "Cat" },
+          { value: "lion", children: "Lion" },
+          { children: "Canines" },
+          { value: "dog", children: "Dog" },
+        ]}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Keyboard navigation switches
+
+As a menu's inner layer, keyboard navigation is driven by the outer component. For the standalone case where the list has focus:
+
+- `handleNavigationKeys`: whether Home / End / PageUp / PageDown are handled (matching the original, only `MenuSelectWidget` enables it).
+- `listWrapsAround`: whether arrow navigation wraps at the ends (default `true`).
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `options` | The option set; see [Selection and options](/en/guide/options.html) for the contract | `SelectOptionProps[]` | — |
+| `value` | Current selected value (controlled; passing it enables control) | `string \| number` | — |
+| `defaultValue` | Initial selected value for uncontrolled use | `string \| number` | — |
+| `onChange` | Selected-value change callback (value-first, fires only on change) | `ChangeHandler<string \| number>` | — |
+| `onChoose` | Choose callback (fires on every choice, incl. repeats) | `ChangeHandler<string \| number>` | — |
+| `clearOnChoose` | Command-menu form: a choice only fires `onChoose` and leaves the value unchanged | `boolean` | `false` |
+| `outline` | Render options as hierarchy-indented `OutlineOption`s | `boolean` | `false` |
+| `highlightedValue` | Keyboard-highlighted value (controlled; pass it to manage from above — internally maintained when used standalone) | `string \| number` | — |
+| `onHighlightedChange` | Highlight-change callback; write back through it when `highlightedValue` is controlled | `ChangeHandler<string \| number \| undefined>` | — |
+| `selectedValues` | A set of selected values for multi-select display (used by tag inputs etc.) | `(string \| number)[]` | — |
+| `handleNavigationKeys` | Whether Home/End/PageUp/PageDown are handled | `boolean` | `false` |
+| `listWrapsAround` | Whether keyboard navigation wraps at the ends | `boolean` | `true` |
+| `disabled` | Whether disabled (also disables every option in the group) | `boolean` | `false` |
+| `...rest` | Native `div` props (`className`, `id`, `aria-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
+
+There is no `children` slot; every option is declared through `options`.
+
+## See also
+
+- Option data and the keyboard focus model: [Selection and options](/en/guide/options.html)
+- Floating components that use Select as their inner list: [Dropdown](/en/components/dropdown/index.html)
+- The division of labor between `onChange` and `onChoose`: [Controlled and uncontrolled](/en/guide/controlled.html#callback-signatures)

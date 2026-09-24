@@ -1,0 +1,113 @@
+---
+title: Usage
+description: "Installing ooui-react, its runtime environment, loading the OOUI stylesheets, and using the library on MediaWiki sites or on the Preact compatibility layer."
+---
+
+import { PackageManagerTabs, Steps, Tab, Tabs } from "@rspress/core/theme";
+
+# Usage
+
+## Installation
+
+<PackageManagerTabs
+  command={{
+    npm: "npm install ooui-react",
+    yarn: "yarn add ooui-react",
+    pnpm: "pnpm add ooui-react",
+    bun: "bun add ooui-react",
+    deno: "deno add npm:ooui-react",
+  }}
+/>
+
+React ≥ 18 is required.
+
+## Runtime environment
+
+- **Browser-oriented; server-side rendering (SSR) is not supported**: floating components (`Popup`, dropdown menus, toolbar popup panels) resolve their portal container and call `createPortal` during render, which throws immediately on the server where `document` doesn't exist. With isomorphic frameworks such as Next.js, keep these components out of the server render tree, or render them only after mounting on the client.
+- **Both ESM and CJS builds are shipped, and they are separate module instances**: when a Node process loads the package through both `import` and `require`, the message registry and the `OOUIProvider` context are not shared; bundling for browsers is unaffected.
+
+Outside MediaWiki sites ~~(does anyone actually do that?)~~, you have to load OOUI's theme CSS and the Codex design tokens yourself — as of oojs-ui 0.54, the token stylesheet must be loaded alongside it. Pick one theme stylesheet: wikimediaui is the current default, while apex is the legacy theme (some states look different between the two; the class names emitted by this library are valid under both):
+
+```js
+import "@wikimedia/codex-design-tokens/dist/theme-wikimedia-ui.css";
+// Pick one of the themes:
+import "oojs-ui/dist/oojs-ui-wikimediaui.css";
+import "oojs-ui/dist/oojs-ui-apex.css";
+```
+
+The OOUI theme is sized against MediaWiki's body font size of 14px; keep your host page consistent with it.
+
+:::tip
+The navbar of this site offers a "Preview theme" switcher to view all live demos under either wikimediaui or apex. The library itself ships no styles — whatever theme you switch to is exactly how the demos will look under it.
+:::
+
+## Using it on a MediaWiki site
+
+This library was built first and foremost for user gadgets on MediaWiki sites. If bundle size matters to you, use the [Preact compatibility layer](#preact-compatibility) instead of full React.
+
+For working examples, see [my Moegirlpedia gadgets repository](https://github.com/BearBin1215/MoegirlPedia):
+
+- [`src/gadgets/AdvancedSearch`](https://github.com/BearBin1215/MoegirlPedia/tree/master/src/gadgets/AdvancedSearch)
+- [`src/gadgets/DynamicRecentChanges`](https://github.com/BearBin1215/MoegirlPedia/tree/master/src/gadgets/DynamicRecentChanges)
+- [`src/gadgets/FileInspector`](https://github.com/BearBin1215/MoegirlPedia/tree/master/src/gadgets/FileInspector)
+
+<Steps>
+
+### Declaring dependencies
+
+On a MediaWiki site the OOUI styles are served by its built-in `oojs-ui` resource modules. Load them at runtime with `mw.loader.using` or in your gadget's ResourceLoader definition:
+
+```ts
+mw.loader.using([
+  "oojs-ui", // base OOUI styles
+  "oojs-ui.styles.icons-media", // CSS of the matching OOUI icon pack
+]);
+```
+
+The icon pack names are listed by group on the [Icon component page](/en/components/icon/index.html#all-icons).
+
+### Mounting
+
+We recommend rendering into a `div` or a `DocumentFragment`, then inserting it before or after an anchor:
+
+<Tabs>
+  <Tab label="index.tsx">
+
+  ```tsx
+  import React from "react";
+  import { createRoot } from "react-dom/client";
+  import App from "./App";
+
+  $(async () => {
+    await mw.loader.using(["oojs-ui"]);
+    const fragment = document.createDocumentFragment();
+    createRoot(fragment).render(<App />);
+    // e.g. insert before the Recent Changes list
+    document.querySelector(".mw-changeslist")!.before(fragment);
+  });
+  ```
+
+  </Tab>
+  <Tab label="App.tsx">
+
+  ```tsx
+  import { Button } from "ooui-react";
+
+  function App() {
+    return <Button onClick={() => alert("Hello ooui-react!")}>Click me</Button>;
+  }
+
+  export default App;
+  ```
+
+  </Tab>
+</Tabs>
+
+</Steps>
+
+## Preact compatibility
+
+This library runs on the Preact compatibility layer (`preact/compat`); see the [official guide](https://preactjs.com/guide/getting-started/#aliasing-react-to-preact) for aliasing.
+
+- Requires Preact ≥ 10.18.
+- `react-dom/client` must be aliased to `preact/compat/client`; without it the imperative APIs (`confirm` / `alert` / `prompt`) fail because `createRoot` is not available.

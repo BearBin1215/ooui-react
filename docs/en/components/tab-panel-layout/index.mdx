@@ -1,0 +1,48 @@
+---
+title: TabPanelLayout
+description: "Props for the TabPanelLayout component: a single tab panel of IndexLayout (role=tabpanel), its active state and swallowed tab fields; usually used indirectly via IndexLayout options."
+---
+
+# TabPanelLayout
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/TabPanelLayout) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.TabPanelLayout.html "OO.ui.TabPanelLayout")
+
+A tab panel: an item of [IndexLayout](/en/components/index-layout/index.html)'s `options` array, with `role="tabpanel"` on the root. You rarely render it directly.
+
+## Standalone use
+
+`active` declares the active state (outputs the `oo-ui-tabPanelLayout-active` class). `label` / `value` / `disabled` are fields carried along with the tab-set object — the component swallows them so they never land as DOM attributes. The panel defaults to `expanded` (fills its parent via absolute positioning), so when placed on its own it needs a positioned, sized parent.
+
+```tsx preview
+import { IndexLayout } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ position: "relative", height: 180 }}>
+      <IndexLayout
+        defaultValue="general"
+        options={[
+          { value: "general", label: "General", padded: true, children: "General settings" },
+          { value: "advanced", label: "Advanced", padded: true, children: "Advanced settings" },
+        ]}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## API
+
+Inherits all [PanelLayout](/en/components/panel-layout/index.html) props, plus:
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `active` | Whether this is the active panel | `boolean` | `false` |
+| `scrollable` | Whether scrollable (panels scroll by default) | `boolean` | `true` |
+| `label` / `value` / `disabled` | Carried with the tab-set object, swallowed by the component | `ReactNode` / `string \| number` / `boolean` | — |
+
+## See also
+
+- The tab container (with the tabpanel wiring): [IndexLayout](/en/components/index-layout/index.html)

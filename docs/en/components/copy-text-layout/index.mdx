@@ -1,0 +1,102 @@
+---
+title: CopyTextLayout
+description: "Props for the CopyTextLayout component: a read-only field with a copy button that selects all on focus, the copyText source, the multiline form and the onCopyResult callback."
+---
+
+# CopyTextLayout
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/CopyTextLayout) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.CopyTextLayout.html "OO.ui.CopyTextLayout")
+
+A copy-text layout: a read-only field with a copy button; the text is selected automatically when the field gains focus or the button is clicked. Suits read-only content the user needs to copy — links, embed codes and the like.
+
+## Basic usage
+
+`copyText` is the text to copy (the field's initial value); `onCopyResult` fires when the copy attempt ends, with whether it succeeded.
+
+```tsx preview
+import { useState } from "react";
+import { CopyTextLayout } from "ooui-react";
+
+function App() {
+  const [result, setResult] = useState("");
+
+  return (
+    <div style={{ maxWidth: 460 }}>
+      <CopyTextLayout
+        label="Invite link"
+        copyText="https://example.com/invite/9f3k"
+        onCopyResult={(copied) => setResult(copied ? "Copied" : "Copy failed")}
+      />
+      <div style={{ marginTop: 8 }}>{result}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Dynamic text
+
+`copyText` serves only as the field's **initial value**, and what gets copied is the field's current value. For share links that change with the user's choices, pass the controlled value via `textInputProps={{ value }}` (it wins over `copyText`) — updating `copyText` alone won't refresh the field.
+
+```tsx preview
+import { useState } from "react";
+import { Button, CopyTextLayout } from "ooui-react";
+
+function App() {
+  const [id, setId] = useState("9f3k");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 460 }}>
+      <CopyTextLayout label="Invite link" textInputProps={{ value: `https://example.com/invite/${id}` }} />
+      <Button onClick={() => setId(Math.random().toString(36).slice(2, 6))}>New link</Button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Multiline
+
+`multiline` switches the field to the multi-line form and moves the copy button below, aligned right.
+
+```tsx preview
+import { CopyTextLayout } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 460 }}>
+      <CopyTextLayout
+        label="Embed code"
+        multiline
+        copyText={"<script src=\"https://example.com/widget.js\"></script>"}
+        textInputProps={{ rows: 3 }}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+:::note Differences from OOUI
+Copying prefers `navigator.clipboard`, falling back to `document.execCommand('copy')` when unavailable or permission-denied (the original uses only the latter, a deprecated API that fails silently). {/* deviations: dev-copy-clipboard */}
+:::
+
+## API
+
+Inherits all [FieldLayout](/en/components/field-layout/index.html) props (`label` / `align` / `title`, etc.), plus:
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `copyText` | The text to copy (the field's initial value; `textInputProps.value` wins when given) | `string` | — |
+| `multiline` | Whether multi-line (uses MultilineTextInput, button moves below-right) | `boolean` | `false` |
+| `textInputProps` | Field props override: `value` is the controlled value, `readOnly` defaults to `true`, the rest pass through (`inputRef` is taken by the layout) | `CopyTextLayoutTextInputProps` | — |
+| `buttonProps` | Copy-button props override (`children` is the button text, `icon` defaults to `'copy'`) | `Partial<ButtonProps>` | — |
+| `onCopyResult` | Copy-finished callback with whether it succeeded | `(copied: boolean) => void` | — |
+
+## See also
+
+- Field arrangement and label wiring: [FieldLayout](/en/components/field-layout/index.html)
+- A plain action button beside an input field: [ActionFieldLayout](/en/components/action-field-layout/index.html)

@@ -1,0 +1,182 @@
+---
+title: CheckboxInput 复选框
+description: "CheckboxInput 组件的属性说明：勾选态走 checked/defaultChecked/onChange，value 是表单提交值，含半选 indeterminate 与 inputId/inputRef 通道。"
+---
+
+# CheckboxInput 复选框
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/CheckboxInput) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.CheckboxInputWidget.html "OO.ui.CheckboxInputWidget")
+
+单个复选框。本组件不自带文字标签，需要标签时交给 [FieldLayout](/components/field-layout/index.html) 包裹。
+
+## 基本用法
+
+勾选状态用 `checked` / `defaultChecked` / `onChange` 三条通道控制，`onChange` 的第一个参数是新的勾选布尔值。
+
+```tsx preview
+import { useState } from "react";
+import { CheckboxInput } from "ooui-react";
+
+function App() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <CheckboxInput checked={checked} onChange={setChecked} />
+        已勾选：{String(checked)}
+      </label>
+      <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <CheckboxInput defaultChecked />
+        非受控，初始已勾选
+      </label>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 半选状态
+
+`indeterminate` 表示「半选」（部分选中），视觉上是一条横线而非对勾。它与勾选状态相互独立，常用于「全选」框表示子项部分选中。
+
+```tsx preview
+import { CheckboxInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <CheckboxInput indeterminate />
+      <CheckboxInput checked indeterminate />
+    </div>
+  );
+}
+
+export default App;
+```
+
+「全选」框的标准接线：全选框的勾选态与半选态都从子项集合**派生**（全不选未勾选、全选勾选、其余半选），点击时把子项统一置为全选或全不选：
+
+```tsx preview
+import { useState } from "react";
+import { CheckboxInput } from "ooui-react";
+
+const ITEMS = ["苹果", "香蕉", "橙子"];
+
+function App() {
+  const [picked, setPicked] = useState<string[]>(["苹果"]);
+  const allChecked = picked.length === ITEMS.length;
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <CheckboxInput
+          checked={allChecked}
+          indeterminate={picked.length > 0 && !allChecked}
+          onChange={() => setPicked(allChecked ? [] : ITEMS)}
+        />
+        全选
+      </label>
+      {ITEMS.map((item) => (
+        <label key={item} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <CheckboxInput
+            checked={picked.includes(item)}
+            onChange={() =>
+              setPicked((prev) =>
+                prev.includes(item) ? prev.filter((x) => x !== item) : [...prev, item],
+              )
+            }
+          />
+          {item}
+        </label>
+      ))}
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 表单提交值
+
+`value` 是**表单提交值**（写入原生 `<input>` 的 `value` 属性，缺省空串），**不影响勾选状态**——勾选状态只由 `checked` 系通道决定。配合 `name`，勾选时该 `value` 随表单提交。
+
+```tsx preview
+import { CheckboxInput } from "ooui-react";
+
+function App() {
+  return (
+    <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <CheckboxInput name="agree" value="yes" defaultChecked />
+      同意条款（提交时字段 agree=yes）
+    </label>
+  );
+}
+
+export default App;
+```
+
+## 与 FieldLayout 配合
+
+字段文字标签通常交给 [FieldLayout](/components/field-layout/index.html)。它会自动把标签与该复选框的原生 `<input>` 关联（点标签即切换勾选）；需要手动指定关联目标时，用 `inputId` 给出输入元素的 id。
+
+```tsx preview
+import { CheckboxInput, FieldLayout } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 320 }}>
+      <FieldLayout label="开启通知" align="inline">
+        <CheckboxInput defaultChecked />
+      </FieldLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 禁用
+
+`disabled` 输出 `aria-disabled` 并禁用原生 `<input>`，复选框不可再切换。放进 `FieldsetLayout` 等原生 `<fieldset>` 时，组级禁用会一并下发。
+
+```tsx preview
+import { CheckboxInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <CheckboxInput disabled />
+      <CheckboxInput disabled defaultChecked />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `checked` | 勾选状态（受控，传入即受控模式） | `boolean` | — |
+| `defaultChecked` | 非受控初始勾选态 | `boolean` | — |
+| `onChange` | 勾选变化回调（新状态优先，含原生事件） | `ChangeHandler<boolean, HTMLInputElement>` | — |
+| `value` | 表单提交值（写入 `<input>` 的 `value`，不影响勾选态） | `string \| number` | `''` |
+| `indeterminate` | 半选状态 | `boolean` | `false` |
+| `required` | 必填（原生 `required`） | `boolean` | `false` |
+| `name` | 表单字段名（落在 `<input>`） | `string` | — |
+| `inputId` | 内部 `<input>` 的 id（配合标签 `htmlFor`） | `string` | — |
+| `inputRef` | 内部 `<input>` 的引用（组件 `ref` 指向外层 `<span>`） | `Ref<HTMLInputElement>` | — |
+| `disabled` | 是否禁用 | `boolean` | `false` |
+| `accessKey` | 快捷键（落在 `<input>`） | `string` | — |
+| `...rest` | 原生 `span` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLSpanElement>` | — |
+
+`title`、`dir`、`tabIndex` 由组件接管、落在内部 `<input>` 上。
+
+## 另见
+
+- 勾选通道在三条值通道中的位置：[受控与非受控](/guide/controlled.html)
+- 带标签字段的排版：[FieldLayout](/components/field-layout/index.html)
+- 单选场景：[RadioInput](/components/radio-input/index.html)（参数与本组件一致，无 `indeterminate`）

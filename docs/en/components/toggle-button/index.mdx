@@ -1,0 +1,92 @@
+---
+title: ToggleButton
+description: "Props for the ToggleButton component: a Button with an on/off state, the checked/defaultChecked/onChange channels, aria-pressed driven by state, and no link capability."
+---
+
+# ToggleButton
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ToggleButton) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ToggleButtonWidget.html "OO.ui.ToggleButtonWidget")
+
+A toggle button: a [Button](/en/components/button/index.html) that can be "pressed / unpressed".
+
+## Basic usage
+
+The on/off state uses the `checked` / `defaultChecked` / `onChange` channels, and `onChange`'s first argument is the new boolean state. A pressed button shows the active (highlighted) look.
+
+```tsx preview
+import { useState } from "react";
+import { ToggleButton } from "ooui-react";
+
+function App() {
+  const [highlight, setHighlight] = useState(false);
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+      <ToggleButton icon="highlight" checked={highlight} onChange={setHighlight}>
+        Highlight
+      </ToggleButton>
+      <ToggleButton icon="star" defaultChecked>
+        Favorite (uncontrolled, pressed initially)
+      </ToggleButton>
+      <span>Highlight: {String(highlight)}</span>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Unframed form
+
+Like Button it supports `framed={false}` and the various `flags`, commonly used for grouped toggles in a toolbar.
+
+```tsx preview
+import { ToggleButton } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <ToggleButton icon="bold" defaultChecked>
+        Bold
+      </ToggleButton>
+      <ToggleButton icon="italic">
+        Italic
+      </ToggleButton>
+      <ToggleButton framed={false} icon="link" defaultChecked>
+        Unframed
+      </ToggleButton>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## How it differs from Button
+
+ToggleButton borrows Button's appearance but has **no link capability**: `href` / `target` / `rel` / `anchorRef` are not accepted, and `active`, `onClick` and `aria-pressed` are driven by the toggle state and not exposed. Use [Button](/en/components/button/index.html) to "run an action once on click", and this component to "express a persistent on/off state".
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `children` | Button label | `ReactNode` | — |
+| `checked` | Whether pressed (controlled; passing it enables control) | `boolean` | — |
+| `defaultChecked` | Initial toggle state for uncontrolled use | `boolean` | `false` |
+| `onChange` | Toggle-state change callback (returns only the new state) | `(checked: boolean) => void` | — |
+| `icon` | Leading icon name | `string` | — |
+| `indicator` | Trailing indicator | `'up' \| 'down' \| 'clear' \| 'required'` | — |
+| `flags` | Extra flags (color and button-specific form) | `ButtonFlag \| ButtonFlag[]` | `[]` |
+| `framed` | Whether it has a border | `boolean` | `true` |
+| `invisibleLabel` | Label visually hidden (kept as accessible name) | `boolean` | `false` |
+| `disabled` | Whether disabled (incl. the owning `ButtonGroup`'s group disable) | `boolean` | `false` |
+| `tabIndex` | Tab order | `number \| null` | `0` |
+| `...rest` | Button's remaining non-link props, passed straight to the button element | `object` | — |
+
+`onChange` is a toggle callback and does not follow the value-first `ChangeHandler` signature (see [Controlled and uncontrolled · Callback signatures](/en/guide/controlled.html#callback-signatures)).
+
+## See also
+
+- Button's base capabilities and icon / indicator: [Button](/en/components/button/index.html)
+- The switch form: [ToggleSwitch](/en/components/toggle-switch/index.html)
+- Arranging buttons into a group: [ButtonGroup](/en/components/button-group/index.html)

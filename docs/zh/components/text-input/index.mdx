@@ -1,0 +1,202 @@
+---
+title: TextInput 文本输入
+description: "TextInput 组件的属性说明：受控/非受控、类型白名单、标签与图标指示器、软校验，以及属性落点与 inputProps/inputRef 通道。"
+---
+
+# TextInput 文本输入
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/TextInput) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.TextInputWidget.html "OO.ui.TextInputWidget")
+
+单行文本输入框，同时也是 [MultilineTextInput](/components/multiline-text-input/index.html)、[NumberInput](/components/number-input/index.html)、[SearchInput](/components/search-input/index.html) 等输入组件的基础。
+
+## 基本用法
+
+传入 `value` 即受控，否则组件自行维护输入状态，`defaultValue` 只作初始值。`onChange` 为值优先签名，第一个参数就是新的字符串值。
+
+```tsx preview
+import { useState } from "react";
+import { TextInput } from "ooui-react";
+
+function App() {
+  const [text, setText] = useState("");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <TextInput value={text} onChange={setText} placeholder="受控输入" />
+      <div>当前值：{text || "（空）"}</div>
+      <TextInput defaultValue="非受控，组件自己记住输入" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 类型
+
+`type` 同时决定 `<input>` 的 `type` 属性与根元素的 `oo-ui-textInputWidget-type-{type}` 类，取值限定在主题有样式的白名单 `text`、`password`、`email`、`url`、`number`、`search`，非法值回退为 `text`。
+
+```tsx preview
+import { TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <TextInput type="password" defaultValue="secret" labelPosition="before" label="密码" />
+      <TextInput type="email" placeholder="you@example.com" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 标签
+
+`label` 是字段标签文本，`labelPosition` 控制在输入框前（`before`）还是后（`after`，默认）。标签视觉隐藏时打开 `invisibleLabel`：保留可访问名称，`title` 未显式给出时以标签文本兜底。
+
+:::note 带标签的表单字段更推荐用 FieldLayout
+把标签写在输入框自身上适合独立摆放的场景；在表单里，标签、对齐与「点标签聚焦输入框」的联动通常交给 [FieldLayout](/components/field-layout/index.html)，字段控件本身不写 `label`。
+:::
+
+```tsx preview
+import { TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <TextInput label="用户名" labelPosition="before" defaultValue="alice" />
+      <TextInput label="仅图标可读的标签" invisibleLabel icon="user" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 图标与指示器
+
+`icon` 渲染在输入框一侧（见 [Icon](/components/icon/index.html)），`indicator` 渲染在另一侧（见 [Indicator](/components/indicator/index.html)）。未显式给 `indicator` 且 `required` 为真时，自动回退为 `required` 指示器。
+
+```tsx preview
+import { TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <TextInput icon="search" placeholder="带图标" />
+      <TextInput indicator="down" readOnly defaultValue="带指示器（只读）" />
+      <TextInput required placeholder="必填，自动显示 required 指示器" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 软校验
+
+`validate` 是软反馈：值不满足时输入元素输出 `aria-invalid`、根元素叠加 invalid 标志类，**但不改写值**。缺省只有浏览器原生约束（如 `required`）参与提交校验。触发时机为值变更（防抖 250ms）、失焦即校验、聚焦时清除。
+
+`validate` 接受三种形态：正则（`test` 判定）、函数（返回布尔或 `Promise<boolean>`）、或符号名 `'non-empty'`（非空）、`'integer'`（纯数字）。
+
+```tsx preview
+import { TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <TextInput validate="non-empty" placeholder="清空后失焦会标红" />
+      <TextInput validate="integer" placeholder="只接受纯数字" />
+      <TextInput validate={(v) => v.length >= 6} placeholder="至少 6 个字符" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 禁用与只读
+
+`disabled` 输出 `oo-ui-widget-disabled` 与 `aria-disabled`（不写原生 `disabled`），输入框不可聚焦、不可输入。`readOnly` 保留聚焦与可选中复制，仅禁止修改。
+
+```tsx preview
+import { TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <TextInput disabled defaultValue="禁用" />
+      <TextInput readOnly defaultValue="只读，可选中复制" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 属性落点
+
+组件根是 `<div>`、输入元素是 `<input>`，三条落点规则（输入类组件通用）：
+
+- props 的 `...rest`（`id`、`className`、`data-*` 等未声明属性）落在根 div 上；要写到原生 `<input>` 上的属性（如 `role`、`aria-*`、`autoComplete`）必须走 `inputProps` 通道。
+- `inputRef` 指向内部 `<input>`（组件 `ref` 指向根 div），聚焦输入框用 `inputRef`。
+- `tabIndex`、`title`、`dir`、`accessKey` 由组件接管，直接落在 `<input>` 上（对齐原版落点），不走 `rest`。
+
+`inputProps` 里的 `onChange` / `onBlur` / `onFocus` 会串联在组件自身逻辑之后，不会截断值管线与软校验。
+
+```tsx preview
+import { useRef } from "react";
+import { Button, TextInput } from "ooui-react";
+
+function App() {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <TextInput
+        inputRef={inputRef}
+        inputProps={{ autoComplete: "off", "aria-label": "自定义标签" }}
+        placeholder="autoComplete 走 inputProps"
+      />
+      <Button onClick={() => inputRef.current?.focus()}>聚焦</Button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `value` | 输入值（受控，传入即受控模式） | `string` | — |
+| `defaultValue` | 非受控初始值 | `string` | — |
+| `onChange` | 值变化回调（值优先，含原生事件） | `ChangeHandler<string, HTMLInputElement>` | — |
+| `type` | 输入类型，见[类型](#类型)白名单，非法值回退 `text` | `string` | `'text'` |
+| `placeholder` | 输入提示 | `string` | — |
+| `maxLength` | 最大长度 | `number` | — |
+| `label` / `invisibleLabel` | 字段标签 / 标签视觉隐藏（保留可访问名称） | `ReactNode` / `boolean` | — / `false` |
+| `labelPosition` | 标签位置 | `'before' \| 'after'` | `'after'` |
+| `icon` | 图标名 | `string` | — |
+| `indicator` | 指示器（`required` 且未显式给时回退为 required） | `'up' \| 'down' \| 'clear' \| 'required'` | — |
+| `required` | 必填（原生 `required` 属性，参与浏览器校验；同时输出 `aria-required`） | `boolean` | `false` |
+| `validate` | 软校验，见[软校验](#软校验) | `RegExp \| ((value: string) => boolean \| Promise<boolean>) \| 'non-empty' \| 'integer'` | — |
+| `readOnly` | 只读 | `boolean` | `false` |
+| `disabled` | 是否禁用 | `boolean` | `false` |
+| `flags` | 根元素附加标志（软校验的 invalid 标志叠加其上） | `string \| string[]` | — |
+| `name` | 表单提交字段名（落在 `<input>`） | `string` | — |
+| `accessKey` | 快捷键（落在 `<input>`） | `string` | — |
+| `inputRef` | 内部 `<input>` 的引用 | `Ref<HTMLInputElement>` | — |
+| `inputProps` | 原生 `<input>` 的附加属性通道；`onChange`/`onBlur`/`onFocus` 串联在组件逻辑之后 | `object` | — |
+| `indicatorProps` | 指示器元素的附加属性 | `object` | — |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+`required` 为真时，本组件在原生 `<input>` 上同时输出 `aria-required`（原版只写原生 `required` 属性）。该行为覆盖 TextInput 继承线（MultilineTextInput、NumberInput、ComboBoxInput 同）；非文本形态（Dropdown、Checkbox、Radio、SelectFile）不输出。{/* deviations: dev-aria-required */}
+
+## 另见
+
+- 值如何在组件与状态之间流动：[受控与非受控](/guide/controlled.html)
+- 所有组件共有的透传与 `ref` 规则：[通用属性](/guide/basics.html)
+- 多行、数字、搜索等形态：[MultilineTextInput](/components/multiline-text-input/index.html)、[NumberInput](/components/number-input/index.html)、`SearchInput`

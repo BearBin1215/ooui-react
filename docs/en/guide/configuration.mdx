@@ -1,0 +1,226 @@
+---
+title: Global configuration
+description: "Global settings on OOUIProvider: messages and i18n, the popup container, mobile mode, text direction, viewport spacing, access-key labels, and the two channels for imperative dialogs."
+---
+
+# Global configuration
+
+`OOUIProvider` carries the cross-component global settings: copy, where popups mount, mobile mode, access-key display and so on. Just wrap a layer around your app; without it, components work with their defaults. For wiring up component copy and site messages, see [Messages and i18n](#messages-and-i18n).
+
+## Usage
+
+```jsx
+import { OOUIProvider } from "ooui-react";
+import zhHans from "ooui-react/locales/zh-hans";
+
+root.render(
+  <OOUIProvider messages={zhHans}>{app}</OOUIProvider>,
+);
+```
+
+It also works without a wrapper: English copy, popups mounted to `document.body`, non-mobile mode, text direction resolved from the anchor element, and viewport spacing of 0.
+
+## Options
+
+| Option | Description | Type | Default |
+| --- | --- | --- | --- |
+| `messages` | Message override map; see [Messages and i18n](#messages-and-i18n) | `Partial<Record<MessageKey, MessageValue>>` | English |
+| `getPortalContainer` | The container popups mount into; takes the popup's anchor element | `(trigger: HTMLElement) => HTMLElement` | `document.body` |
+| `isMobile` | Mobile-mode switch | `boolean` | `false` |
+| `dir` | Text direction of popups | `'ltr' \| 'rtl'` | Resolved from the anchor |
+| `viewportSpacing` | Viewport spacing counted when a popup hugs the edge or clamps its height | `number` or a per-edge object | 0 on each edge |
+| `getAccessKeyLabel` | Display text for access keys | `(accessKey: string) => string \| undefined` | The raw key |
+
+## Popup container
+
+`getPortalContainer` decides where popups (dropdown menus, popup panels, `Popup`) mount. By default they mount to `document.body`; **popups inside a dialog** mount to that dialog's container, so they stack and are isolated along with the dialog.
+
+Once this option is set, it always wins — including popups inside a dialog, in which case those popups are no longer isolated with the dialog and stacking is left to the container. The container should not establish a new positioning context (popups are absolutely positioned against page coordinates). {/* deviations: dev-float-portal */}
+
+## Mobile mode
+
+When `isMobile` is on, some components switch to a mobile form: `TabSelect` scrolls the selected item to the center, `IndexLayout` / `BookletLayout` stop auto-focusing, and dialogs and dropdowns use the mobile layout. It defaults to `false`; the host can wire up `matchMedia` and decide for itself before passing it in. {/* deviations: dev-is-mobile */}
+
+## Text direction
+
+By default it resolves from the anchor element's text direction, so **setting `dir="rtl"` on the page or a container is enough**; most cases need no configuration here.
+
+You only need to set `dir` explicitly when a popup mounts outside the content area and the anchor's direction doesn't represent the popup's (for example, when the popup mounts into a container outside the site's content area).
+
+## Viewport spacing
+
+`viewportSpacing` is the spacing on all four sides counted when a popup hugs the edge, clamps its height or flips. When the site has a fixed header or similar floating element, use it to avoid overlap, e.g. `viewportSpacing={{ top: 48 }}`. It defaults to 0 on each edge.
+
+## Access-key label
+
+`getAccessKeyLabel` gives the display text for an access key in `title`. Unset, it shows as `Save [s]`; once set, it can show a site-local chord: {/* deviations: dev-accesskey-label */}
+
+```tsx preview
+import { Button, OOUIProvider } from "ooui-react";
+
+function App() {
+  return (
+    <OOUIProvider getAccessKeyLabel={(key) => `Alt+Shift+${key}`}>
+      <Button accessKey="s" title="Save">
+        Save
+      </Button>
+    </OOUIProvider>
+  );
+}
+
+export default App;
+```
+
+## Messages and i18n
+
+Some places — message dialogs, the file picker and so on — have copy, in English by default. Pass a language pack via `messages` to switch, and changes to `messages` take effect immediately. {/* deviations: dev-locales */}
+
+```tsx preview
+import { useState } from "react";
+import type { MessageKey, MessageValue } from "ooui-react";
+import { Button, OOUIProvider, SelectFileInputWidget } from "ooui-react";
+import ja from "ooui-react/locales/ja";
+import ru from "ooui-react/locales/ru";
+import zhHans from "ooui-react/locales/zh-hans";
+
+type Locale = "zh-hans" | "en" | "ja" | "ru";
+
+const LOCALES: Array<{
+  value: Locale;
+  label: string;
+  messages?: Partial<Record<MessageKey, MessageValue>>;
+}> = [
+  { value: "zh-hans", label: "简体中文", messages: zhHans },
+  { value: "en", label: "English" },
+  { value: "ja", label: "日本語", messages: ja },
+  { value: "ru", label: "Русский", messages: ru },
+];
+
+function App() {
+  const [locale, setLocale] = useState<Locale>("en");
+  const pack = LOCALES.find((item) => item.value === locale);
+
+  return (
+    <OOUIProvider messages={pack?.messages}>
+      <div style={{ display: "grid", gap: 16, justifyItems: "start" }}>
+        <div style={{ display: "flex", gap: 8 }}>
+          {LOCALES.map((item) => (
+            <Button
+              key={item.value}
+              active={item.value === locale}
+              onClick={() => setLocale(item.value)}
+            >
+              {item.label}
+            </Button>
+          ))}
+        </div>
+        <SelectFileInputWidget />
+      </div>
+    </OOUIProvider>
+  );
+}
+
+export default App;
+```
+
+### Supported languages
+
+25 in total, imported by language code (`ooui-react/locales/<code>`); language packs are loaded on demand and don't affect each other's bundle size. `en` is the built-in default baseline, always part of the main bundle, and doesn't need importing; any key missing from a pack falls back to its English default, key by key.
+
+:::details All languages
+
+- `zh-hans` Simplified Chinese
+- `zh-hant` Traditional Chinese
+- `yue-hant` Cantonese
+- `ja` Japanese
+- `ko` Korean
+- `ru` Russian
+- `uk` Ukrainian
+- `de` German
+- `fr` French
+- `es` Spanish
+- `pt-br` Brazilian Portuguese
+- `it` Italian
+- `nl` Dutch
+- `pl` Polish
+- `cs` Czech
+- `sv` Swedish
+- `tr` Turkish
+- `vi` Vietnamese
+- `id` Indonesian
+- `th` Thai
+- `hi` Hindi
+- `bn` Bengali
+- `ar` Arabic
+- `he` Hebrew
+- `fa` Persian
+
+:::
+
+For right-to-left languages such as Arabic, Hebrew and Persian, the page or container text direction is covered in [Text direction](#text-direction).
+
+### Overriding individual messages
+
+`messages` is merged key by key, so pass only the keys you want to change and the rest keep their original copy:
+
+```jsx
+<OOUIProvider messages={{ "ooui-dialog-message-accept": "Got it" }}>
+```
+
+Key names follow OOUI's message names; the full list is in the built-in language pack (see `src/locales/en.ts`). With nested `OOUIProvider`s the inner one wins, so you can mount a language pack on the outer layer and override just a few messages on the inner one.
+
+### Using it on a MediaWiki site
+
+MediaWiki ships OOUI's own messages under the same key names as this library, so you don't need a language pack — just wire up the site's `mw.msg` to follow the site language. Write values as functions so they resolve only when read:
+
+```jsx
+<OOUIProvider
+  messages={{
+    "ooui-dialog-message-accept": () => mw.msg("ooui-dialog-message-accept"),
+    "ooui-dialog-message-reject": () => mw.msg("ooui-dialog-message-reject"),
+  }}
+>
+```
+
+Only the keys you provide go through site messages; the rest fall back to English, so wire up just the copy actually used in the UI. Imperative dialogs (`confirm` / `alert` / `prompt`) are rendered by `OOUIProvider`'s host and inherit this same mapping — no separate registration needed.
+
+## Imperative dialogs
+
+`confirm` / `alert` / `prompt` are standalone functions — import them and `await` from any event handler, with no hook or extra mounting:
+
+```tsx
+const ok = await confirm("Delete this?", { title: "Delete" });
+```
+
+As long as the call sits under an `OOUIProvider`, the dialog **inherits its config automatically** (copy, `isMobile`, `dir`, and your own Providers), with no manual injection; with nested Providers it uses the outermost one. {/* deviations: dev-imperative-host */}
+
+Without an `OOUIProvider` it renders with English defaults; to change copy in that case use the module-level `registerMessages`:
+
+```js
+import { registerMessages } from "ooui-react";
+
+registerMessages({ "ooui-dialog-message-accept": "OK" });
+```
+
+For return values, options and runtime semantics, see [Imperative dialogs](/en/components/imperative-dialogs/index.html).
+
+## Reading the config
+
+The effective config can be read outside components too:
+
+| Hook | Returns |
+| --- | --- |
+| `useOOUIConfig` | The full merged config object |
+| `useMessage(key, ...params)` | The current text of one message (`OOUIProvider` > `registerMessages` > English default) |
+| `useIsMobile` / `useDir` / `useViewportSpacing` | The effective value of the matching option |
+| `useAccessKeyLabel(accessKey)` | The display text for an access key |
+
+## Nesting
+
+Inner overrides outer, and `messages` is merged key by key: mount a language pack on the outer layer and override just a few messages on the inner one.
+
+## FAQ
+
+**The imperative dialog's copy didn't change?** Make sure the `confirm` / `alert` / `prompt` call sits under an `OOUIProvider` — the dialog is rendered by that Provider's host and inherits its `messages`. Only when there's no `OOUIProvider` at all do you need `registerMessages` — see [Imperative dialogs](#imperative-dialogs).
+
+**The whole tree re-renders after switching language?** Pass a stable reference for `messages` (such as a module-level constant imported from `ooui-react/locales/*`); an inline object literal creates a new object on every render.

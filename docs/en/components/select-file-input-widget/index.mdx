@@ -1,0 +1,181 @@
+---
+title: SelectFileInputWidget
+description: "Props for the SelectFileInputWidget component: the file set rides the value/defaultValue/onChange array channels, with accept type filtering, the showDropTarget drop-zone form (with thumbnail) and the buttonOnly form."
+---
+
+# SelectFileInputWidget
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/SelectFileInputWidget) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.SelectFileInputWidget.html "OO.ui.SelectFileInputWidget")
+
+A file-picker input, with drop-zone and button-only forms.
+
+## Basic usage
+
+The file set is an **array** driven by the `value` / `defaultValue` / `onChange` channels; when not multiple, only the first file is kept. The **clear indicator in the info field is the only way to clear** (click it or press Enter).
+
+```tsx preview
+import { useState } from "react";
+import { SelectFileInputWidget } from "ooui-react";
+
+function App() {
+  const [files, setFiles] = useState<File[]>([]);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <SelectFileInputWidget onChange={setFiles} />
+      <SelectFileInputWidget defaultValue={[new File(["hello"], "hello.txt")]} />
+      <div style={{ fontSize: 13 }}>
+        {files.length ? `Selected: ${files.map((file) => file.name).join(", ")}` : "No file selected"}
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Multiple selection and type filtering
+
+`multiple` enables multi-select; `accept` restricts types with MIME or `image/*` patterns — it is written to the `accept` attribute and filters both the picker results and dropped files (the picker is already restricted, so most filtering happens on the drop path; files without a type are let through).
+
+```tsx preview
+import { SelectFileInputWidget } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <SelectFileInputWidget multiple />
+      <SelectFileInputWidget accept={["image/*"]} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Drop-zone form
+
+`showDropTarget` turns the whole component into a drop zone: when empty the whole block opens the picker on click, dragged-in files get accepted/rejected feedback, and dropping selects them. In single-select mode with an image file, a **thumbnail** is shown — loaded only for images within `thumbnailSizeLimit` (MB, default 20), falling back to an attachment icon when oversized or undecodable.
+
+Dragging relies on the browser's `DataTransfer` constructor (Safari 14.1+); when unavailable, dragging turns off automatically and the select button keeps working. Pass `droppable={false}` to switch dragging off explicitly.
+
+```tsx preview
+import { useMemo } from "react";
+import { SelectFileInputWidget } from "ooui-react";
+
+const PNG_1PX =
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+
+function App() {
+  // A 1x1 PNG: with an initial image file, the single-select drop zone loads a thumbnail
+  const imageFile = useMemo(() => {
+    const bytes = Uint8Array.from(atob(PNG_1PX), (char) => char.charCodeAt(0));
+    return new File([bytes], "logo.png", { type: "image/png" });
+  }, []);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 420 }}>
+      <SelectFileInputWidget showDropTarget />
+      <SelectFileInputWidget showDropTarget defaultValue={[imageFile]} />
+      {/* Limit set to 0: no thumbnail, falls back to the attachment icon */}
+      <SelectFileInputWidget showDropTarget thumbnailSizeLimit={0} defaultValue={[imageFile]} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Button-only form
+
+`buttonOnly` renders just the select button, without the info field; use it when you display the file name yourself.
+
+```tsx preview
+import { useState } from "react";
+import { SelectFileInputWidget } from "ooui-react";
+
+function App() {
+  const [name, setName] = useState("");
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+      <SelectFileInputWidget
+        buttonOnly
+        buttonLabel="Browse…"
+        onChange={(files) => setName(files[0]?.name ?? "")}
+      />
+      <span>{name || "No file selected"}</span>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Controlled use and programmatic changes
+
+Passing `value` enables controlled mode — the file set is fully caller-driven. The demo wires an external "Clear" button that resets the set to `[]`.
+
+:::note Differences from OOUI
+A `value` passed at construction is silently dropped by the original (a construction-order defect) and can only be applied afterwards with an imperative `setValue`. Following the controlled convention, this implementation applies `value` / `defaultValue` directly and writes the set back to the inner `<input type="file">`, so native form submission keeps working.{/* deviations: dev-selectfile-value */}
+:::
+
+```tsx preview
+import { useState } from "react";
+import { Button, SelectFileInputWidget } from "ooui-react";
+
+function App() {
+  const [files, setFiles] = useState<File[]>([]);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 420 }}>
+      <SelectFileInputWidget value={files} onChange={setFiles} />
+      <div>
+        <Button onClick={() => setFiles([])} disabled={files.length === 0}>
+          Clear
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Focus and keyboard
+
+- The **select button** is the `Tab` stop; the info field is out of the Tab order. The clear indicator is keyboard-reachable (focus it and press Enter to clear).
+- The info field is a read-only `type="search"` input — typing in it never changes the file set; clearing always goes through the clear indicator.
+- `required` and `name` land on the inner file `<input>` and submit natively with [FormLayout](/en/components/form-layout/index.html).
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `value` | Current file set (controlled; passing it enables controlled mode; empty array = no selection), first file only when not multiple | `File[]` | — |
+| `defaultValue` | Initial file set for uncontrolled use | `File[]` | `[]` |
+| `onChange` | File-set change callback; not fired when the new set is equivalent to the old one (same name, size, type and last-modified) | `(files: File[]) => void` | — |
+| `accept` | Accepted file types (MIME or `image/*` patterns), written to the `accept` attribute and filtering both picker results and drops | `string[]` | — |
+| `multiple` | Whether multiple files can be selected | `boolean` | `false` |
+| `droppable` | Whether dropping is allowed (forced off when the browser lacks `DataTransfer`) | `boolean` | `true` |
+| `showDropTarget` | Drop-zone form: the whole block is droppable and clickable (requires `droppable`) | `boolean` | `false` |
+| `buttonOnly` | Render only the select button (takes priority over `showDropTarget`) | `boolean` | `false` |
+| `thumbnailSizeLimit` | Thumbnail size limit in MB (no thumbnail beyond it) | `number` | `20` |
+| `placeholder` | Info-field placeholder (defaults to the built-in message) | `string` | — |
+| `icon` | Info-field icon (none by default) | `string` | — |
+| `required` | Required (native `required`, on the file `<input>`) | `boolean` | `false` |
+| `name` | File field name (on the file `<input>`, submitted with the form) | `string` | — |
+| `buttonLabel` | Select-button text (defaults to the built-in message depending on `multiple`) | `ReactNode` | — |
+| `buttonProps` | Select-button props override (`disabled` / `onClick` are taken over by the component) | `Omit<ButtonProps, "children" \| "disabled" \| "onClick" \| "anchorContent" \| "anchorRef">` | — |
+| `inputRef` | Ref to the inner file `<input>` | `Ref<HTMLInputElement>` | — |
+| `accessKey` | Access key (lands on the file `<input>`) | `string` | — |
+| `disabled` | Whether disabled (button, info field and dragging all off) | `boolean` | `false` |
+| `...rest` | Native `div` props (`className`, `id`, `data-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
+
+`title` lands on the file `<input>` and `tabIndex` on the select button; the component `ref` points to the root element (the button itself in the `buttonOnly` form).
+
+## See also
+
+- The value-channel contract: [Controlled and uncontrolled](/en/guide/controlled.html)
+- Replacing built-in messages with a language pack: [Global configuration](/en/guide/configuration.html#messages-and-i18n)
+- The form submission container: [FormLayout](/en/components/form-layout/index.html)

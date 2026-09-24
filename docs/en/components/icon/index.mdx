@@ -1,0 +1,94 @@
+---
+title: Icon
+description: "Props for the Icon component and an index of the theme icon set: all available icons grouped as in the original, click to copy an icon name."
+---
+
+import { IconGallery } from "../../../zh/components/icon/_IconGallery";
+
+# Icon
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Icon) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.IconWidget.html "OO.ui.IconWidget")
+
+The basic icon component.
+
+## Basic usage
+
+```tsx preview
+import { Icon } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <Icon icon="image" title="image" />
+      <Icon icon="alert" title="alert" />
+      <Icon icon="add" title="add" />
+      <Icon icon="arrowDown" title="arrowDown" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+Icon names come from the OOUI theme's icon set; the full list and grouping are in ["All icons"](#all-icons) at the end of the page, and the upstream reference is the [icons page of the OOUI demos](https://doc.wikimedia.org/oojs-ui/master/demos/?page=icons).
+
+## Variants
+
+`flags` hit the theme's image-variant classes (`oo-ui-image-{flag}`) to tint the icon. `invert` targets dark backgrounds and requires you to supply a dark backdrop.
+
+```tsx preview
+import { Icon } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <Icon icon="alert" flags="progressive" title="progressive" />
+      <Icon icon="alert" flags="destructive" title="destructive" />
+      <span style={{ display: "inline-block", background: "#222", padding: "4px 8px" }}>
+        <Icon icon="alert" flags="invert" title="invert" />
+      </span>
+      <Icon icon="alert" flags="error" title="error" />
+      <Icon icon="alert" flags="warning" title="warning" />
+      <Icon icon="alert" flags="success" title="success" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Disabled state
+
+`disabled` outputs `oo-ui-widget-disabled` and `aria-disabled`, and emits the `oo-ui-widget` class chain per the original `Widget`.
+
+```tsx preview
+import { Icon } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <Icon icon="image" title="Normal" />
+      <Icon icon="image" disabled title="Disabled" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `icon` | Icon name, taken from the theme icon set | `string` | — |
+| `flags` | Extra flags, output via `oo-ui-flaggedElement-{flag}` and `oo-ui-image-{flag}` | `IconFlag \| IconFlag[]` | `[]` |
+| `disabled` | Whether disabled | `boolean` | `false` |
+| `...rest` | Native `span` props (`className`, `title`, `aria-*`, events, etc.) passed straight to the root | `HTMLAttributes<HTMLSpanElement>` | — |
+
+`IconFlag` is `'progressive' | 'destructive' | 'invert' | 'error' | 'warning' | 'success'`.
+
+## All icons
+
+Click an icon to copy its name.
+
+<IconGallery locale="en" />

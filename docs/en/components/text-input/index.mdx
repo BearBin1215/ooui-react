@@ -1,0 +1,202 @@
+---
+title: TextInput
+description: "Props for the TextInput component: controlled/uncontrolled, the type whitelist, label and icon/indicator, soft validation, and where props land via the inputProps/inputRef channels."
+---
+
+# TextInput
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/TextInput) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.TextInputWidget.html "OO.ui.TextInputWidget")
+
+A single-line text input, and also the base for input components such as [MultilineTextInput](/en/components/multiline-text-input/index.html), [NumberInput](/en/components/number-input/index.html) and [SearchInput](/en/components/search-input/index.html).
+
+## Basic usage
+
+Passing `value` makes it controlled; otherwise the component maintains its own input state and `defaultValue` is only the initial value. `onChange` uses the value-first signature — the first argument is the new string value.
+
+```tsx preview
+import { useState } from "react";
+import { TextInput } from "ooui-react";
+
+function App() {
+  const [text, setText] = useState("");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <TextInput value={text} onChange={setText} placeholder="Controlled input" />
+      <div>Current value: {text || "(empty)"}</div>
+      <TextInput defaultValue="Uncontrolled; the component remembers what you type" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Type
+
+`type` decides both the `<input>`'s `type` attribute and the root's `oo-ui-textInputWidget-type-{type}` class. It is limited to the theme-styled whitelist `text`, `password`, `email`, `url`, `number`, `search`; an invalid value falls back to `text`.
+
+```tsx preview
+import { TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <TextInput type="password" defaultValue="secret" labelPosition="before" label="Password" />
+      <TextInput type="email" placeholder="you@example.com" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Label
+
+`label` is the field label text; `labelPosition` puts it before (`before`) or after (`after`, the default) the input. To hide the label visually, turn on `invisibleLabel`: the accessible name is kept, and `title` falls back to the label text when not given explicitly.
+
+:::note Prefer FieldLayout for labeled form fields
+Writing the label on the input itself suits standalone placement; in a form, the label, alignment and "click label to focus the input" linkage are usually delegated to [FieldLayout](/en/components/field-layout/index.html), and the field control itself does not set `label`.
+:::
+
+```tsx preview
+import { TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <TextInput label="Username" labelPosition="before" defaultValue="alice" />
+      <TextInput label="Screen-reader-only label" invisibleLabel icon="user" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Icons and indicators
+
+`icon` renders on one side of the input (see [Icon](/en/components/icon/index.html)), `indicator` on the other (see [Indicator](/en/components/indicator/index.html)). When `indicator` is not given explicitly and `required` is true, it falls back to the `required` indicator.
+
+```tsx preview
+import { TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <TextInput icon="search" placeholder="With an icon" />
+      <TextInput indicator="down" readOnly defaultValue="With an indicator (read-only)" />
+      <TextInput required placeholder="Required; shows the required indicator automatically" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Soft validation
+
+`validate` is soft feedback: when the value fails, the input element gets `aria-invalid` and the root gets an invalid flag class, **but the value is not rewritten**. By default only native browser constraints (e.g. `required`) take part in submit validation. It fires on value change (debounced 250ms), on blur, and clears on focus.
+
+`validate` accepts three forms: a regular expression (tested with `test`), a function (returning a boolean or `Promise<boolean>`), or the symbolic names `'non-empty'` (non-empty) and `'integer'` (digits only).
+
+```tsx preview
+import { TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <TextInput validate="non-empty" placeholder="Clear it and blur to see it flagged" />
+      <TextInput validate="integer" placeholder="Digits only" />
+      <TextInput validate={(v) => v.length >= 6} placeholder="At least 6 characters" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Disabled and read-only
+
+`disabled` outputs `oo-ui-widget-disabled` and `aria-disabled` (not the native `disabled`); the input can't be focused or typed into. `readOnly` keeps focus and text selection/copying, and only forbids edits.
+
+```tsx preview
+import { TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <TextInput disabled defaultValue="Disabled" />
+      <TextInput readOnly defaultValue="Read-only; selectable and copyable" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Where props land
+
+The root is a `<div>` and the input element is an `<input>`. Three landing rules (common to all input components):
+
+- `...rest` from props (undeclared attributes like `id`, `className`, `data-*`) lands on the root div; attributes that must go on the native `<input>` (such as `role`, `aria-*`, `autoComplete`) must go through the `inputProps` channel.
+- `inputRef` points to the inner `<input>` (the component `ref` points to the root div); use `inputRef` to focus the input.
+- `tabIndex`, `title`, `dir` and `accessKey` are taken over by the component and land directly on the `<input>` (matching the original's landing spots), not via `rest`.
+
+`onChange` / `onBlur` / `onFocus` in `inputProps` are **chained after** the component's own logic, so they don't truncate the value pipeline or soft validation.
+
+```tsx preview
+import { useRef } from "react";
+import { Button, TextInput } from "ooui-react";
+
+function App() {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <TextInput
+        inputRef={inputRef}
+        inputProps={{ autoComplete: "off", "aria-label": "Custom label" }}
+        placeholder="autoComplete goes through inputProps"
+      />
+      <Button onClick={() => inputRef.current?.focus()}>Focus</Button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `value` | Input value (controlled; passing it enables controlled mode) | `string` | — |
+| `defaultValue` | Uncontrolled initial value | `string` | — |
+| `onChange` | Value-change handler (value-first, includes the native event) | `ChangeHandler<string, HTMLInputElement>` | — |
+| `type` | Input type, see the [Type](#type) whitelist; invalid values fall back to `text` | `string` | `'text'` |
+| `placeholder` | Input hint | `string` | — |
+| `maxLength` | Maximum length | `number` | — |
+| `label` / `invisibleLabel` | Field label / label visually hidden (kept as accessible name) | `ReactNode` / `boolean` | — / `false` |
+| `labelPosition` | Label position | `'before' \| 'after'` | `'after'` |
+| `icon` | Icon name | `string` | — |
+| `indicator` | Indicator (falls back to required when `required` and not given explicitly) | `'up' \| 'down' \| 'clear' \| 'required'` | — |
+| `required` | Required (native `required` attribute, part of browser validation; also outputs `aria-required`) | `boolean` | `false` |
+| `validate` | Soft validation, see [Soft validation](#soft-validation) | `RegExp \| ((value: string) => boolean \| Promise<boolean>) \| 'non-empty' \| 'integer'` | — |
+| `readOnly` | Read-only | `boolean` | `false` |
+| `disabled` | Whether disabled | `boolean` | `false` |
+| `flags` | Extra flags on the root (the invalid flag from soft validation is layered on top) | `string \| string[]` | — |
+| `name` | Form field name (lands on `<input>`) | `string` | — |
+| `accessKey` | Access key (lands on `<input>`) | `string` | — |
+| `inputRef` | Ref to the inner `<input>` | `Ref<HTMLInputElement>` | — |
+| `inputProps` | Extra-props channel for the native `<input>`; `onChange`/`onBlur`/`onFocus` are chained after the component logic | `object` | — |
+| `indicatorProps` | Extra props for the indicator element | `object` | — |
+| `...rest` | Native `div` props (`className`, `id`, `data-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
+
+When `required` is true, this library also outputs `aria-required` on the native `<input>` (the original only writes the native `required` attribute). This covers the TextInput inheritance line (MultilineTextInput, NumberInput and ComboBoxInput alike); non-text forms (Dropdown, Checkbox, Radio, SelectFile) do not output it.{/* deviations: dev-aria-required */}
+
+## See also
+
+- How values flow between the component and your state: [Controlled and uncontrolled](/en/guide/controlled.html)
+- The pass-through and `ref` rules shared by all components: [Common props](/en/guide/basics.html)
+- The multiline, number and search forms: [MultilineTextInput](/en/components/multiline-text-input/index.html), [NumberInput](/en/components/number-input/index.html), `SearchInput`

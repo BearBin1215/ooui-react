@@ -1,0 +1,89 @@
+---
+title: TabSelect
+description: "Props for the TabSelect component: a tab-style single selection (role=tablist); ←→ cycle through tabs with direct selection, the selected tab scrolls into view, and framed toggles the framed/frameless bar."
+---
+
+# TabSelect
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/TabSelect) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.TabSelectWidget.html "OO.ui.TabSelectWidget")
+
+A tab select: a set of mutually exclusive options shown as a row of tabs.
+
+## Basic usage
+
+```tsx preview
+import { useState } from "react";
+import { TabSelect } from "ooui-react";
+
+const options = [
+  { value: "general", children: "General" },
+  { value: "advanced", children: "Advanced" },
+  { value: "about", children: "About" },
+];
+
+function App() {
+  const [tab, setTab] = useState<string | number>("general");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <TabSelect options={options} value={tab} onChange={setTab} aria-label="View" />
+      <div>Current tab: {String(tab)}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Framed and frameless
+
+`framed` (on by default) gives the tab strip a bordered background; set it to `false` for a lighter frameless form.
+
+```tsx preview
+import { TabSelect } from "ooui-react";
+
+const options = [
+  { value: "a", children: "One" },
+  { value: "b", children: "Two" },
+  { value: "c", children: "Three", disabled: true },
+];
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <TabSelect options={options} defaultValue="a" />
+      <TabSelect options={options} defaultValue="a" framed={false} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Keyboard
+
+After a click, focus moves into the group automatically (slightly better than the original, which leaves focus where it was so the arrow keys stay dead), and ←→ (and ↑↓) then **cycle among non-disabled tabs and select directly**; Enter re-affirms the current tab. Pressing Tab also moves focus into the group. This is the direct-select family model; see [Selection and options · Keyboard and focus](/en/guide/options.html#keyboard-and-focus).
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `options` | Tab set (**required**); each item has `value` and `children` (text), optionally `disabled` | `TabSelectOptionProps[]` | — |
+| `value` | Current selected value (controlled) | `string \| number` | — |
+| `defaultValue` | Initial selected value for uncontrolled use | `string \| number` | — |
+| `onChange` | Selected-value change callback (value-first) | `ChangeHandler<string \| number>` | — |
+| `framed` | Whether the strip has a border | `boolean` | `true` |
+| `disabled` | Whether disabled (also disables every tab) | `boolean` | `false` |
+| `tabIndex` | Tab order (focus rests on the group) | `number \| null` | `0` |
+| `...rest` | Native `div` props (`className`, `id`, `aria-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
+
+## Differences from OOUI
+
+- **`TabOption` does not support `href` links**: the original only used that from PHP; compose link tabs yourself if you need them. {/* deviations: dev-taboption-href */}
+- **A lost mouseup no longer leaves a stale drag state**: in the original, dragging out of the window and releasing left the selecting state behind, so the next click on empty space submitted the stale option; this library resets on mousedown and cleans up on `pointercancel`. {/* deviations: dev-tabselect-drag-fix */}
+
+## See also
+
+- Button-style direct select: [ButtonSelect](/en/components/button-select/index.html)
+- Multiple panels with tabs: `BookletLayout`
+- Option data and the keyboard focus model: [Selection and options](/en/guide/options.html)

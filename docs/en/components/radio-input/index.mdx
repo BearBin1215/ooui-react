@@ -1,0 +1,133 @@
+---
+title: RadioInput
+description: "Props for the RadioInput component: the checked/defaultChecked/onChange channels, value as the form submission value, native mutual exclusivity within the same name; no indeterminate."
+---
+
+# RadioInput
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/RadioInput) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.RadioInputWidget.html "OO.ui.RadioInputWidget")
+
+A single radio button. It has no text label of its own — when you need one, wrap it in [FieldLayout](/en/components/field-layout/index.html).
+
+## Basic usage
+
+The checked state uses the `checked` / `defaultChecked` / `onChange` channels; the first argument of `onChange` is the new checked boolean. Note that a radio cannot be un-checked by clicking it again — clearing an exclusive group needs an extra mechanism (such as a "clear" button that resets the state).
+
+```tsx preview
+import { useState } from "react";
+import { Button, RadioInput } from "ooui-react";
+
+function App() {
+  const [checked, setChecked] = useState(true);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "flex-start" }}>
+      <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <RadioInput checked={checked} onChange={setChecked} />
+        Checked: {String(checked)}
+      </label>
+      <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <RadioInput defaultChecked />
+        Uncontrolled; initially checked
+      </label>
+      <Button onClick={() => setChecked(false)}>Clear</Button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Same-name exclusivity and the form submission value
+
+Give several `RadioInput`s the same `name` and the browser's native mechanism guarantees group exclusivity with at most one item submitted with the form. `value` is the **form submission value** (written to the native `<input>`'s `value` attribute, defaulting to an empty string). It **does not affect the checked state**.
+
+```tsx preview
+import { useState } from "react";
+import { RadioInput } from "ooui-react";
+
+function App() {
+  const [size, setSize] = useState("medium");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "flex-start" }}>
+      {["small", "medium", "large"].map((item) => (
+        <label key={item} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <RadioInput
+            name="size"
+            value={item}
+            checked={size === item}
+            onChange={(next) => next && setSize(item)}
+          />
+          {item}
+        </label>
+      ))}
+      <div>Current selection: {size}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Using it with FieldLayout
+
+The field's text label is usually delegated to [FieldLayout](/en/components/field-layout/index.html). It automatically associates the label with this radio's native `<input>` (clicking the label selects it); to specify the association target manually, give the input element's id via `inputId`.
+
+```tsx preview
+import { FieldLayout, RadioInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 320 }}>
+      <FieldLayout label="Default option" align="inline">
+        <RadioInput defaultChecked />
+      </FieldLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Disabled
+
+`disabled` outputs `aria-disabled` and disables the native `<input>`, so the radio can no longer be selected. Inside a native `<fieldset>` such as `FieldsetLayout`, the group-level disable propagates to it.
+
+```tsx preview
+import { RadioInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <RadioInput disabled />
+      <RadioInput disabled defaultChecked />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `checked` | Checked state (controlled; passing it enables controlled mode) | `boolean` | — |
+| `defaultChecked` | Uncontrolled initial checked state | `boolean` | — |
+| `onChange` | Checked-change handler (new state first, includes the native event) | `ChangeHandler<boolean, HTMLInputElement>` | — |
+| `value` | Form submission value (written to `<input>`'s `value`, does not affect checked state) | `string \| number` | `''` |
+| `name` | Form field name (lands on `<input>`; same name = same exclusive group) | `string` | — |
+| `inputId` | The inner `<input>`'s id (pairs with a label's `htmlFor`) | `string` | — |
+| `required` | Required (native `required`) | `boolean` | `false` |
+| `disabled` | Whether disabled | `boolean` | `false` |
+| `accessKey` | Access key (lands on `<input>`) | `string` | — |
+| `...rest` | Native `span` props (`className`, `id`, `data-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLSpanElement>` | — |
+
+`title`, `dir` and `tabIndex` are taken over by the component and land on the inner `<input>`; the component `ref` points to the outer `<span>`.
+
+## See also
+
+- Where the checked channel sits among the three value channels: [Controlled and uncontrolled](/en/guide/controlled.html)
+- Layout for a labeled field: [FieldLayout](/en/components/field-layout/index.html)
+- The radio group (exclusive items in one group, arrow keys select directly): [RadioSelect](/en/components/radio-select/index.html)

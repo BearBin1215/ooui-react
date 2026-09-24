@@ -1,0 +1,77 @@
+---
+title: ToggleSwitch
+description: "Props for the ToggleSwitch component: a switch (role=switch), the checked/defaultChecked/onChange channels, Space/Enter toggling, and no built-in label — pair it with FieldLayout."
+---
+
+# ToggleSwitch
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ToggleSwitch) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ToggleSwitchWidget.html "OO.ui.ToggleSwitchWidget")
+
+A toggle switch. It has no text label of its own — when you need one, wrap it with [FieldLayout](/en/components/field-layout/index.html).
+
+## Basic usage
+
+The on/off state uses the `checked` / `defaultChecked` / `onChange` channels, and `onChange`'s first argument is the new boolean state.
+
+```tsx preview
+import { useState } from "react";
+import { ToggleSwitch } from "ooui-react";
+
+function App() {
+  const [on, setOn] = useState(true);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 12 }}>
+      <ToggleSwitch checked={on} onChange={setOn} />
+      <div>Current state: {on ? "on" : "off"}</div>
+      <ToggleSwitch defaultChecked />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## With FieldLayout
+
+Give the field its text label through [FieldLayout](/en/components/field-layout/index.html). Clicking the label **flips the switch directly** and focuses it (unlike most fields where clicking the label only focuses the control — this is `ToggleSwitchWidget`'s overridden behavior in the original).
+
+```tsx preview
+import { ToggleSwitch, FieldLayout } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 280 }}>
+      <FieldLayout label="Email notifications" align="inline">
+        <ToggleSwitch defaultChecked />
+      </FieldLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Interaction
+
+- Click (left button only) toggles; after focusing with `Tab`, use **Space / Enter** to toggle.
+- `disabled` outputs `aria-disabled` (not the native `disabled`); the switch then can't be clicked or focused, and clicking the label won't flip it either.
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `checked` | Whether on (controlled; passing it enables control) | `boolean` | — |
+| `defaultChecked` | Initial toggle state for uncontrolled use | `boolean` | `false` |
+| `onChange` | Toggle-state change callback (returns only the new state) | `(checked: boolean) => void` | — |
+| `disabled` | Whether disabled | `boolean` | `false` |
+| `tabIndex` | Tab order | `number \| null` | `0` |
+| `...rest` | Native `div` props (`className`, `id`, `aria-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
+
+There is no `children`, `label` or `icon` slot — the switch is a purely graphical control, and any text goes through [FieldLayout](/en/components/field-layout/index.html). `onClick` / `onKeyDown` are used internally for toggling and cannot be overridden.
+
+## See also
+
+- The button-form toggle: [ToggleButton](/en/components/toggle-button/index.html)
+- Laying out a labeled field: [FieldLayout](/en/components/field-layout/index.html)
+- Where the checked channel sits: [Controlled and uncontrolled](/en/guide/controlled.html)

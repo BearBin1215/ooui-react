@@ -1,0 +1,46 @@
+---
+title: PageLayout 页面布局
+description: "PageLayout 组件的属性说明：堆叠布局的单个分页，active 激活态与 hidden 派生关系；通常经 StackLayout 的 options 间接使用。"
+---
+
+# PageLayout 页面布局
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/PageLayout) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.PageLayout.html "OO.ui.PageLayout")
+
+分页面板：[StackLayout](/components/stack-layout/index.html) 的 `options` 数组项。一般不直接渲染，把它写进 StackLayout 的 `options` 即可。
+
+## 单独使用
+
+单独使用时，激活态由 `active` 声明；未声明 `active` 时按「非 `hidden` 即激活」派生，并输出 `oo-ui-pageLayout-active` 类。`label` / `value` 是随页签集对象透入的字段，组件会吞掉、不落成 DOM 属性。
+
+```tsx preview
+import { PageLayout, StackLayout } from "ooui-react";
+
+function App() {
+  return (
+    <StackLayout
+      value="a"
+      options={[
+        { value: "a", label: "第一页", padded: true, children: "第一页内容" },
+        { value: "b", label: "第二页", padded: true, children: "第二页内容" },
+      ]}
+    />
+  );
+}
+
+export default App;
+```
+
+## API
+
+继承 [PanelLayout](/components/panel-layout/index.html) 全部属性，另有：
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `active` | 是否为激活页；缺省时由 `hidden` 派生（非 `hidden` 即激活） | `boolean` | 由 `hidden` 派生 |
+| `scrollable` | 是否可滚动（分页缺省可滚） | `boolean` | `true` |
+| `label` / `value` | 随页签集对象透入，仅供组件吞掉 | `ReactNode` / `string \| number` | — |
+
+## 另见
+
+- 分页容器：[StackLayout](/components/stack-layout/index.html)

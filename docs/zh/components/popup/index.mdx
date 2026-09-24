@@ -1,0 +1,188 @@
+---
+title: Popup 浮层
+description: "Popup 组件的属性说明：锚定到容器并自动定位/翻转/裁剪的浮动面板，受控 open、点外部与 Escape 自动关闭、头部与底部区域；适合注解、Tooltip 等按需展示，按钮触发可用 PopupButton。"
+---
+
+# Popup 浮层
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Popup) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.PopupWidget.html "OO.ui.PopupWidget")
+
+浮动面板：锚定到某个元素、自动定位与翻转的浮层，适合注解、Tooltip 一类的按需展示内容；按钮触发的场景可直接用 [PopupButton](/components/popup-button/index.html)。
+
+## 基本用法
+
+Popup 自身不会打开，显隐由 `open` 驱动：用一个按钮作为 `container` 锚点，点击切换 `open`。`autoClose` 让点击浮层与触发按钮之外（或按 Escape）自动关闭，`autoCloseIgnore` 把触发按钮排除在“点外部”判定之外。
+
+```tsx preview
+import { useRef, useState } from "react";
+import { Button, Popup } from "ooui-react";
+
+function App() {
+  const anchorRef = useRef<HTMLSpanElement>(null);
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div style={{ padding: 60 }}>
+      <Button ref={anchorRef} indicator="down" onClick={() => setOpen((o) => !o)}>
+        打开浮层
+      </Button>
+      <Popup
+        open={open}
+        onOpenChange={setOpen}
+        container={anchorRef}
+        autoClose
+        autoCloseIgnore={anchorRef}
+        padded
+        width={220}
+        position="below"
+      >
+        这里是浮层内容。点空白处、按 Escape，或 Tab 走出浮层都会关闭它。
+      </Popup>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 定位与翻转
+
+- `position` 取 `below`（缺省）、`above`、`before`（左侧）、`after`（右侧）。
+- `align` 控制在锚点上的对齐：`center`（缺省）、`forwards` / `backwards`（随书写方向/RTL 换物理侧），或 `force-left` / `force-right`（恒为物理左右，不随方向翻转）。
+- `autoFlip`（默认开）在当前方向放不下时翻到对侧；`anchor`（默认开）画指向锚点的箭头。
+- 空间不足时浮层会被裁剪/钳制在可视区（或就近滚动容器）内，`containerPadding` 控制钳制内边距（默认 10px）；`hideWhenOutOfView`（默认开）让锚点滚出可视区时暂时隐藏浮层（不改 `open`）。
+
+:::note 与原版的差异
+滚动引起裁剪变化时会重新判定翻转方向（原版方向冻结到下次打开）；代价是滚动过程中浮层可能跳动，属有意的取舍。{/* deviations: dev-popup-scroll-reflip */}
+:::
+
+最常用的两个调整：`position` 换弹出方位，`anchor={false}` 去掉指向锚点的箭头。
+
+```tsx preview
+import { useRef, useState, type ReactNode } from "react";
+import { Button, Popup } from "ooui-react";
+
+function TriggerPopup({
+  children,
+  buttonLabel,
+  position = "below",
+  anchor = true,
+}: {
+  children: ReactNode;
+  buttonLabel: string;
+  position?: "above" | "below" | "before" | "after";
+  anchor?: boolean;
+}) {
+  const anchorRef = useRef<HTMLSpanElement>(null);
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button ref={anchorRef} onClick={() => setOpen((o) => !o)}>
+        {buttonLabel}
+      </Button>
+      <Popup
+        open={open}
+        onOpenChange={setOpen}
+        container={anchorRef}
+        autoClose
+        autoCloseIgnore={anchorRef}
+        padded
+        width={200}
+        position={position}
+        anchor={anchor}
+      >
+        {children}
+      </Popup>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <div style={{ display: "flex", gap: 32, flexWrap: "wrap", padding: "72px 8px 8px" }}>
+      <TriggerPopup buttonLabel="向上弹" position="above">
+        position="above"
+      </TriggerPopup>
+      <TriggerPopup buttonLabel="向右弹" position="after">
+        position="after"
+      </TriggerPopup>
+      <TriggerPopup buttonLabel="无箭头" anchor={false}>
+        anchor=&#123;false&#125;
+      </TriggerPopup>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 头部与底部
+
+`head` 开启头部区，渲染 `icon` + `label` + 右上角关闭按钮（`hideCloseButton` 可隐藏）；`footer` 是底部区域。点关闭按钮、点外部、Escape 都经 `onOpenChange(false)` 报出关闭意图。
+
+```tsx preview
+import { useRef, useState } from "react";
+import { Button, Popup } from "ooui-react";
+
+function App() {
+  const anchorRef = useRef<HTMLSpanElement>(null);
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div style={{ padding: 60 }}>
+      <Button ref={anchorRef} indicator="down" onClick={() => setOpen((o) => !o)}>
+        带头部
+      </Button>
+      <Popup
+        open={open}
+        onOpenChange={setOpen}
+        container={anchorRef}
+        autoClose
+        autoCloseIgnore={anchorRef}
+        head
+        icon="info"
+        label="提示"
+        padded
+        width={240}
+        footer={<div style={{ padding: 8 }}>底部说明文字</div>}
+      >
+        头部带图标、标题与关闭按钮，底部可放自定义内容。
+      </Popup>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `open` | 是否打开（受控，传入即受控模式；Popup 不自行打开） | `boolean` | — |
+| `defaultOpen` | 非受控初始打开态 | `boolean` | `false` |
+| `onOpenChange` | 开合变化回调（点关闭按钮 / 点外部 / Escape / Tab 越界触发） | `(open: boolean) => void` | — |
+| `container` | 锚定容器（`ref` 或元素）；缺省定位到 body 左上角 | `RefObject<HTMLElement \| null> \| HTMLElement \| null` | — |
+| `position` | 弹出方位 | `'above' \| 'below' \| 'before' \| 'after'` | `'below'` |
+| `align` | 对齐方向（逻辑值随 RTL 换侧，`force-*` 恒为物理侧） | `'center' \| 'forwards' \| 'backwards' \| 'force-left' \| 'force-right'` | `'center'` |
+| `anchor` | 是否画指向锚点的箭头 | `boolean` | `true` |
+| `autoClose` | 点击外部 / Escape 自动关闭 | `boolean` | — |
+| `autoCloseIgnore` | 自动关闭的忽略元素（如触发按钮） | `RefObject<HTMLElement \| null> \| HTMLElement \| null` | — |
+| `autoFlip` | 放不下时翻转到对侧 | `boolean` | `true` |
+| `hideWhenOutOfView` | 锚点滚出可视区时暂时隐藏 | `boolean` | `true` |
+| `containerPadding` | 钳制内边距（px） | `number` | `10` |
+| `head` | 渲染头部（icon + label + 关闭按钮） | `boolean` | `false` |
+| `hideCloseButton` | 配合 `head` 隐藏关闭按钮 | `boolean` | — |
+| `padded` | 内容是否有内边距 | `boolean` | `false` |
+| `icon` / `label` / `invisibleLabel` | 头部图标 / 标题 / 标题视觉隐藏 | — | — |
+| `width` / `height` | 弹层尺寸（px） | `number \| string` | `320` / — |
+| `footer` | 底部区域内容 | `ReactNode` | — |
+| `disabled` | 是否禁用 | `boolean` | `false` |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）落到浮层根 | `HTMLAttributes<HTMLDivElement>` | — |
+
+## 另见
+
+- 更省事的触发式浮层：[PopupButton](/components/popup-button/index.html)
+- 下拉选择（内含浮层菜单）：[Dropdown](/components/dropdown/index.html)
+- 全局配置（浮层 portal 容器、视口留白、方向）：[OOUIProvider](/guide/configuration.html)

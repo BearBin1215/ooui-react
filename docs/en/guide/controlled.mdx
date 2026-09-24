@@ -1,0 +1,111 @@
+---
+title: Controlled and uncontrolled
+description: "ooui-react's value contract: the value, open and checked channels, how control is determined and the callback signatures, and the convention that dialogs are controlled-only."
+---
+
+# Controlled and uncontrolled
+
+Most components' "current value" can be held by you (controlled) or kept by the component itself (uncontrolled).
+
+## Three channels
+
+| Channel | Props | Used by |
+| --- | --- | --- |
+| Value | `value` / `defaultValue` / `onChange` | Inputs, selects, tag inputs, file pickers, and the active item of layouts |
+| Open state | `open` / `defaultOpen` / `onOpenChange` | `Popup`, `PopupButton`, `ButtonMenuSelectWidget`, toolbar popups and a tool's `popup` config |
+| Checked | `checked` / `defaultChecked` / `onChange` | `CheckboxInput`, `RadioInput`, `ToggleButton`, `ToggleSwitch` |
+
+For the option data contract shared by the select family (`value`, group headings, `labelText`, disabled propagation, etc.), see [Selection and options](/en/guide/options.html). {/* deviations: dev-layout-controlled-api */}
+
+## How control is decided
+
+**Passing `value` (or `checked`) makes it controlled**, and the component renders exactly the value you pass; if you don't pass it, the component keeps its own internal state, with `defaultValue` used only as the initial value.
+
+```tsx preview
+import { useState } from "react";
+import { Button, ToggleSwitch } from "ooui-react";
+
+function App() {
+  const [on, setOn] = useState(false);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 12 }}>
+      {/* Controlled: the value lives outside */}
+      <ToggleSwitch checked={on} onChange={(checked) => setOn(checked)} />
+      {/* Uncontrolled: the component remembers its own state */}
+      <ToggleSwitch defaultChecked />
+      <Button disabled={!on} onClick={() => setOn(false)}>
+        Reset
+      </Button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+Don't flip `value` back and forth between a value and `undefined` — that's a mode change, which isn't supported.
+
+## Callback signatures
+
+Value callbacks are uniformly **value-first**:
+
+```ts
+type ChangeHandler<T, P extends EventTarget = HTMLElement> = (
+  value: T,
+  event?: ChangeEvent<P>,
+) => void;
+```
+
+Most cases only use the first argument (`onChange={setValue}` is enough). The second argument is the native event that triggered the change, and **is only provided by the input components**.
+
+Callbacks that don't follow this signature:
+
+| Component | Callback | Signature |
+| --- | --- | --- |
+| `ToggleSwitch`, `ToggleButton` | `onChange` | `(checked: boolean) => void` |
+| `SelectFileInputWidget` | `onChange` | `(files: File[]) => void` |
+| `SearchWidget` | `onQueryChange` / `onChoose` | The query value / the chosen result |
+| `Message` | `onClose` | `() => void`, fired when the close button is clicked |
+
+Two "choose" callbacks that are easy to confuse:
+
+- The `Select` family offers both `onChange` (the selected value changed; re-selecting the same item doesn't fire) and `onChoose` (fires on every choice, including repeats). When `clearOnChoose` is true, only `onChoose` fires and the selected value doesn't change — handy for command menus.
+- `SearchWidget` has no `onChange`; query changes go through `onQueryChange`.
+
+## Dialogs must be controlled
+
+`Dialog`, `MessageDialog` and `ProcessDialog` only have `open` (required), with no `defaultOpen`: opening and closing are driven by your state, and close actions notify you through callbacks. {/* deviations: dev-dialog-controlled */}
+
+| Callback | When it fires |
+| --- | --- |
+| `onEscape` | ESC is pressed (when `escapable` is true) |
+| `onPrimaryAction` | Ctrl / Cmd + Enter is pressed |
+| `onReady` | The opening animation ends, so you can perform actions like focusing |
+
+`MessageDialog` also has `onOk` / `onCancel`, and `ProcessDialog` also has `onAction`; see their component pages.
+
+## When the controlled value isn't among the options
+
+The `value` you pass in sometimes matches no entry in `options`, for example when an option is removed, the initial value is wrong, or the options load asynchronously and aren't there yet on the first render. How components respond falls into two groups:
+
+| Components | When no option matches | Write back via `onChange`? |
+| --- | --- | --- |
+| `IndexLayout`, `BookletLayout`, `StackLayout`, `DropdownInput`, `RadioSelectInput` | Automatically show a fallback item (usually the first selectable one), never a blank | Yes: they hand the fallback value back through `onChange` so your state catches up with the UI |
+| `Select`, `Dropdown`, `TagMultiselect`, `MenuTagMultiselect` | Select nothing and render your value as-is | No |
+
+For the first group, suppose `options` are `a` and `b` but you pass `value="c"`:
+
+```tsx
+const options = [
+  { value: "a", label: "A", children: "Panel A" },
+  { value: "b", label: "B", children: "Panel B" },
+];
+
+// `c` is not among the options
+<IndexLayout value="c" onChange={setTab} options={options} />
+```
+
+The component shows `a` (the fallback) and calls `onChange("a")` to tell you "this is what actually took effect". Update your state to `a` and `value` and the UI line up again. The same invalid value is written back only once, so ignoring the callback won't cause it to fire repeatedly. {/* deviations: dev-layout-autoselect dev-controlled-writeback */}
+
+The second group follows your `value` exactly: no match means nothing is selected, the UI honestly reflects "no match for the current value", and you decide whether to correct it yourself.

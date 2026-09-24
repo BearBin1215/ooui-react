@@ -1,0 +1,69 @@
+---
+title: HiddenInputWidget
+description: "Props for the HiddenInputWidget component: a native <input type=hidden> as the root that carries a value submitted with the form but never shown; disabled excludes it from submission."
+---
+
+# HiddenInputWidget
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/HiddenInputWidget) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.HiddenInputWidget.html "OO.ui.HiddenInputWidget")
+
+A hidden input: never shown, only carries a fixed value with the `<form>` on submit.
+
+## Basic usage
+
+`value` is a controlled value (updated with the props) and `name` is the submitted field name. The demo below intercepts the submission and prints the fields — note that the disabled hidden field is left out.
+
+```tsx preview
+import { useState } from "react";
+import { ButtonInput, FieldLayout, FormLayout, HiddenInputWidget } from "ooui-react";
+
+function App() {
+  const [submitted, setSubmitted] = useState("");
+
+  return (
+    <div style={{ maxWidth: 420 }}>
+      <FormLayout
+        onSubmit={(event) => {
+          event.preventDefault();
+          const pairs: string[] = [];
+          new FormData(event.currentTarget).forEach((value, key) => {
+            pairs.push(`${key}=${value}`);
+          });
+          setSubmitted(pairs.join(" & "));
+        }}
+      >
+        <HiddenInputWidget name="pageId" value="4711" />
+        <HiddenInputWidget name="traceId" value="keep-me" />
+        {/* A disabled hidden field is not submitted with the form */}
+        <HiddenInputWidget name="draft" value="ignored" disabled />
+        <FieldLayout label=" ">
+          <ButtonInput type="submit">Submit</ButtonInput>
+        </FieldLayout>
+        {submitted && <div>Submitted: {submitted}</div>}
+      </FormLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Disabled
+
+Unlike the original: the original's "disable" only toggles style classes and the hidden field is **still** submitted with the form; this implementation lands `disabled` on the native attribute, so a disabled field drops out of submission (as in the demo above). Pass `disabled` only when there is a submission scenario to block.{/* deviations: dev-hidden-input-disabled */}
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `value` | The hidden input's value (controlled, updated with the props) | `string` | `''` |
+| `name` | The field name on submission | `string` | — |
+| `disabled` | Whether disabled (drops out of form submission) | `boolean` | `false` |
+| `...rest` | Native `<input>` props (`id`, `className`, `data-*`, etc.) passed straight to the root | `InputHTMLAttributes<HTMLInputElement>` | — |
+
+This component has no wrapper element: the component `ref` and props all land on the `<input type="hidden">` itself.
+
+## See also
+
+- The form container: [FormLayout](/en/components/form-layout/index.html)
+- The value-channel contract: [Controlled and uncontrolled](/en/guide/controlled.html)

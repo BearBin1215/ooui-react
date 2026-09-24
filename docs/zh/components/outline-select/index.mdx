@@ -1,0 +1,63 @@
+---
+title: OutlineSelect 大纲选择
+description: "OutlineSelect 组件的属性说明：带层级缩进的选择列表（Select 的大纲形态），options 每项以 level 表达缩进层级，整组可聚焦、方向键移动高亮。"
+---
+
+# OutlineSelect 大纲选择
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/OutlineSelect) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.OutlineSelectWidget.html "OO.ui.OutlineSelectWidget")
+
+大纲样式的选择列表：用 `level`（0–2）表达层级缩进，适合目录这类有从属关系的列表。
+
+## 基本用法
+
+```tsx preview
+import { useState } from "react";
+import { OutlineSelect } from "ooui-react";
+
+function App() {
+  const [value, setValue] = useState<string | number>("intro");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 240 }}>
+      <OutlineSelect
+        aria-label="文档大纲"
+        value={value}
+        onChange={setValue}
+        options={[
+          { value: "intro", children: "引言", level: 0 },
+          { value: "background", children: "背景", level: 1 },
+          { value: "prior", children: "相关工作", level: 1 },
+          { value: "method", children: "方法", level: 0 },
+          { value: "dataset", children: "数据集", level: 2 },
+        ]}
+      />
+      <div>当前项：{String(value)}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 层级与分组
+
+- `level` 取 0–2（超出钳制），主题仅提供三级缩进。
+- 不带 `value` 的选项渲染为分组标题，同[选择与选项](/guide/options.html)约定。
+- 键盘：聚焦整组后 ↑↓←→ 移动高亮、Enter 选定；Home/End/PageUp/PageDown 经 `handleNavigationKeys` 打开，`listWrapsAround` 控制是否环绕——与 [Select](/components/select/index.html) 完全一致。
+
+## API
+
+继承 [Select](/components/select/index.html) 的属性（`value` / `defaultValue` / `onChange` / `disabled` / `handleNavigationKeys` / `listWrapsAround` 等），差异在于：
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `options` | 大纲选项集（**必填**），可选项额外支持 `level`（0–2 缩进层级）与 `icon` / `flags` | `OutlineSelectOptionProps[]` | — |
+| `tabIndex` | Tab 序，落在整组（大纲列表可聚焦） | `number \| null` | `0` |
+
+`outline` 由组件固定开启，不可覆盖。
+
+## 另见
+
+- 基础选择列表：[Select](/components/select/index.html)
+- 选项数据与键盘焦点模型：[选择与选项](/guide/options.html)

@@ -1,0 +1,103 @@
+---
+title: Message 消息
+description: "Message 组件的属性说明：notice/error/warning/success 四种类型、内联形态、关闭按钮与 onClose 契约（组件不自隐，须在回调中卸载/隐藏）。"
+---
+
+# Message 消息
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Message) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.MessageWidget.html "OO.ui.MessageWidget")
+
+行内消息提示，提供 `notice` / `error` / `warning` / `success` 四种类型。
+
+## 基本用法
+
+类型决定默认图标与配色，也可用 `icon` 覆盖。
+
+```tsx preview
+import { Message } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <Message>Notice：这是一条说明信息</Message>
+      <Message type="success">Success：保存成功</Message>
+      <Message type="warning">Warning：即将超出配额</Message>
+      <Message type="error">Error：保存失败，请重试</Message>
+      <Message icon="help">自定义图标（覆盖类型默认图标）</Message>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 内联形态
+
+`inline` 渲染为不带边框的内联消息，适合嵌在正文段落中；块级（缺省）带边框与内边距。内联消息不渲染关闭按钮。
+
+```tsx preview
+import { Message } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <Message inline>Inline：这是一条内联说明</Message>
+      <Message inline type="error">
+        Inline error：这是一条内联错误
+      </Message>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 关闭按钮
+
+:::warning 与原版的差异
+原版点击关闭按钮即自行隐藏；本工程 `onClose` 只报出「点击了关闭按钮」，组件不持显隐状态——**必须在回调里把消息卸载或隐藏**，漏接时消息点不掉。{/* deviations: dev-message-onclose */}
+:::
+
+```tsx preview
+import { useState } from "react";
+import { Button, Message } from "ooui-react";
+
+function App() {
+  const [visible, setVisible] = useState(true);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      {visible ? (
+        <Message type="warning" showClose onClose={() => setVisible(false)}>
+          点右侧 × 关闭（由 onClose 卸载）
+        </Message>
+      ) : (
+        <Button onClick={() => setVisible(true)}>重新显示</Button>
+      )}
+    </div>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `children` | 消息正文 | `ReactNode` | — |
+| `type` | 消息类型（非法值回退 `notice`） | `'notice' \| 'error' \| 'warning' \| 'success'` | `'notice'` |
+| `icon` | 自定义图标，覆盖类型默认图标 | `string` | 类型默认 |
+| `inline` | 内联展示（`false` 时为带边框的块级消息） | `boolean` | `false` |
+| `showClose` | 是否显示关闭按钮（`inline` 时不渲染） | `boolean` | `false` |
+| `onClose` | 点击关闭按钮的回调；组件不自行隐藏，须在此卸载/隐藏消息 | `() => void` | — |
+| `invisibleLabel` | 正文视觉隐藏但保留可访问名称 | `boolean` | `false` |
+| `disabled` | 是否禁用（输出 `aria-disabled`） | `boolean` | `false` |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+无障碍：`type="error"` 渲染为 `role="alert"` 打断式播报，其余类型为 `aria-live="polite"`。
+
+## 另见
+
+- 错误面板中的错误渲染：[ProcessDialog](/components/process-dialog/index.html)
+- 值通道约定（`onClose` 只报意图、显隐归调用方）：[受控与非受控](/guide/controlled.html)

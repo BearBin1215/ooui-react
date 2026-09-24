@@ -1,0 +1,91 @@
+---
+title: OOUI 对照
+description: "面向熟悉 OOUI 的使用者：心智模型映射、按原版类名找组件、能力舍弃清单、行为差异速查。"
+---
+
+# OOUI 对照
+
+ooui-react 按 OOUI 的交互语义与 DOM 契约重实现，样式直接复用原版主题 CSS，但 API 是地道的 React 形态。
+
+无论你熟悉 OOUI、想照着原有的使用经验写新脚本，还是要重写旧的复杂脚本，本页都给出两套 API 的对应关系：先看心智模型映射，再按原版类名找到对应组件，最后核对能力舍弃与行为差异。
+
+## 心智模型映射
+
+原版的命令式 API 在本工程统一收为声明式 props，规则详见[受控与非受控](/guide/controlled.html)：
+
+| 原版 | 本工程 |
+| --- | --- |
+| `setValue` / `setDisabled` / `setPage` 等 setter | `value` / `defaultValue` / `onChange` 等受控 props |
+| `WindowManager.openWindow` / `closeWindow` | Dialog 家族只有必填 `open` prop，关闭意图经 `onEscape` 等回调报出，见[弹窗必须受控](/guide/controlled.html#弹窗必须受控) |
+| `updateState` / `choose` / `toggle` 等事件 | `onChange` / `onChoose` / `onOpenChange` 等回调 props |
+| `OO.ui.msg` 全局与 `OO.ui.deferMsg` | `OOUIProvider` 的 `messages` 配置与 `useMessage`，见[全局配置](/guide/configuration.html) |
+| `OO.ui.isMobile()`（恒 `false` 的桩） | `OOUIProvider` 的 `isMobile` 配置 |
+| `OO.ui.HtmlSnippet`（不转义包装类） | 直接写 `ReactNode`；字符串默认转义，原样输出 HTML 没有对应的包装层，须自行经 `dangerouslySetInnerHTML` 且风险自担 |
+| `OO.ui.Theme` 运行时对象（`getElementClasses` 等钩子） | 无。类名由组件按 wikimediaui 语义直接输出，主题样式由站点 CSS 提供；apex 等第三方主题下少数状态类会多出（如选项选中态的 progressive 着色），属已知偏差 |
+| `ToolFactory` / `ToolGroupToolFactory` 等工厂注册 | 声明式数据：工具栏传 `tools` 数组、内嵌工具组直接给 React 元素，见[工具栏](/components/toolbar/index.html) |
+
+{/* deviations: dev-htmlsnippet */}
+{/* deviations: dev-theme-runtime */}
+
+## 组件寻址与类映射
+
+组件名 = 原版类名去掉 `Widget` 后缀（`ButtonWidget` → `Button`、`TextInputWidget` → `TextInput`）。四个组件名不成立、保留原样：`SearchWidget`、`HiddenInputWidget`、`SelectFileInputWidget`、`ButtonMenuSelectWidget`。
+
+原版里一些类不对应独立组件，去向如下：
+
+| 原版类 | 去向 |
+| --- | --- |
+| `OO.ui.WindowManager` | 各 Dialog 组件自持开合（受控 `open`），弹窗内容隔离与层叠随组件内置；命令式 `confirm` / `alert` / `prompt` 不需要管理器 |
+| `OO.ui.ActionWidget` / `ActionSet` / `OO.ui.Error` | 内联进 `ProcessDialog`：动作数组、modes 过滤与错误面板，见[过程弹窗](/components/process-dialog/index.html) |
+| `OO.ui.Process` | `onAction` 异步回调编排，多步 `.next()` 链改写为一个 async 函数 |
+| `OO.ui.OutlineControlsWidget` | 内联进 `BookletLayout` 的大纲面板，见[手册布局](/components/booklet-layout/index.html) |
+| `OO.ui.SelectWidget` | [`Select`](/components/select/index.html) |
+| `OO.ui.PopupTagMultiselectWidget`（原版已废弃） | 不提供，用 [MenuTagMultiselect](/components/menu-tag-multiselect/index.html) |
+| `OO.ui` 宿主环境全局工具（`bind` / `infuse` / `getUserLanguages` / `generateElementId` / `debounce` 等） | 不映射：React 能力、`useId` 与 es-toolkit 已覆盖对应场景 |
+
+{/* deviations: dev-popup-tag-multiselect */}
+{/* deviations: dev-oo-ui-globals */}
+
+## 能力舍弃清单
+
+以下原版能力本工程有意不做，按原版 API 名检索：
+
+| 原版能力 | 替代做法 |
+| --- | --- |
+| `TabOption` 的 `href` 链接 | 不支持（原版仅 PHP 端在用），需要链接页签自行组合实现，见[页签选择](/components/tab-select/index.html) |
+| `MultilineTextInputWidget` 的 `allowLinebreaks` / `enter` | 恒允许换行；禁止换行由调用方清洗输入值，见[多行输入框](/components/multiline-text-input/index.html) |
+| `TagMultiselectWidget` 的 `config.input` / `inputWidget` | 输入框内置，不可替换 |
+| `LabelWidget` 的 `config.input` | 有 id 的字段用 `htmlFor`，其余统一由 FieldLayout 关联，见[标签](/components/label/index.html) |
+| `ActionSet.static.specialFlags` 子类扩展 | 特殊动作固定为 `safe` / `primary`，经 `flags` 声明即可 |
+| `FieldLayout` 的 `align='inline'` 自动降级 | 不做降级校验，传入 `inline` 前保证字段根元素为内联形态 |
+| 纯标签选项（Tab / Radio / CheckboxMultioption）的 `flags` | `flags` 只在带图标槽位的选项形态开放，见[选择与选项](/guide/options.html) |
+| `OO.ui.isSafeUrl` 自动净化 | 组件不改写 `href` / `action`；来源不可信的 URL 用导出的 `sanitizeUrl` 自行净化（安全责任在调用方与后端），见[按钮](/components/button/index.html) |
+
+## 行为差异速查
+
+以下是使用行为会与原版**不同**、且不调整就会出错或与预期相反的差异，按组件速查。各组件页有对应细节：
+
+| 组件 | 差异 | 详见 |
+| --- | --- | --- |
+| `Message` | 关闭按钮只回调 `onClose`、不自行隐藏——漏接回调消息就点不掉 | [消息](/components/message/index.html) |
+| `Dialog`（裸用） | 无内置标题槽位，须自行渲染标题并传 `aria-labelledby`，漏传即无名弹窗 | [对话框](/components/dialog/index.html) |
+| `Dialog` 家族 | 恒受控：只有必填 `open`，无 `defaultOpen` | [受控与非受控](/guide/controlled.html#弹窗必须受控) |
+| `confirm` / `alert` / `prompt` | 原版已有窗口打开时第二层调用静默失效；本工程层叠显示、逐个可交互 | [命令式弹窗](/components/imperative-dialogs/index.html) |
+| `prompt` | `textInput.value` 只作初始值，弹窗存活期间不可从外部修改 | [命令式弹窗](/components/imperative-dialogs/index.html) |
+| `Toolbar` 工具 | 可见文本与 tooltip 从一键 `title` 拆为 `label` + `title`（`narrowConfig.title` 的值应改传 `label`） | [工具栏](/components/toolbar/index.html) |
+| `Toolbar` | 弹出工具不要放进 List / Menu 组内：浮层锚点随面板收起失效，本工程侧会错位到视口左上角 | [工具栏](/components/toolbar/index.html) |
+| `TagMultiselect` | 标签身份收为标量 `value`，对象负载改走 `data` 字段按值反查 | [标签输入](/components/tag-multiselect/index.html) |
+| `Dropdown` / `ButtonMenuSelectWidget` | 展开态按空格直接选定高亮项（原版空格不被菜单消费、只经按键模拟关闭菜单） | [下拉选择](/components/dropdown/index.html) |
+| `Popup` | 滚动引起裁剪变化时会重新判定翻转方向（原版冻结到下次打开），滚动过程中浮层可能跳动 | [浮层](/components/popup/index.html) |
+
+## 命令式弹窗
+
+`confirm` / `alert` / `prompt` 是独立函数，从任意事件回调里 `await` 即可，弹窗自动继承所在 `OOUIProvider` 的配置（文案、`isMobile`、`dir` 及应用自有 Provider）。与原版共用单例管理器不同，本工程重复调用会层叠显示；返回值与运行时语义见[命令式弹窗](/components/imperative-dialogs/index.html)，配置继承见[全局配置](/guide/configuration.html#命令式弹窗)。
+
+## 多语言
+
+`en` 为内建默认基线，另提供 25 种语言包（`ooui-react/locales/<代码>`）按需引入；MediaWiki 站点可直接把 `mw.msg` 接进 `messages` 跟随站点语言。语言清单与接入方式见[文案与国际化](/guide/configuration.html#文案与国际化)。
+
+## 完整差异台账
+
+本页只列影响使用的差异。全部与原版差异（含实现层取舍与论证）见仓库的 [`dev-docs/DEVIATIONS.md`](https://github.com/BearBin1215/ooui-react/blob/main/dev-docs/DEVIATIONS.md)。

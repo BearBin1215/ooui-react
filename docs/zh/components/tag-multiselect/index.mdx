@@ -1,0 +1,113 @@
+---
+title: TagMultiselect 标签输入
+description: "TagMultiselect 组件的属性说明：以标签（chip）呈现多值的输入框，支持自由输入、白名单与数量限制、拖拽重排、点击回填编辑；带候选菜单请用 MenuTagMultiselect。"
+---
+
+# TagMultiselect 标签输入
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/TagMultiselect) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.TagMultiselectWidget.html "OO.ui.TagMultiselectWidget")
+
+标签输入：把值以可移除的标签（chip）呈现。自由输入形态，需要“输入过滤 + 下拉候选”时用 [MenuTagMultiselect](/components/menu-tag-multiselect/index.html)。
+
+## 基本用法
+
+在输入框内输入文本，按 **Enter** 提交为一个标签；标签末尾按 **Backspace**（输入框为空时）移除前一个标签；**点击标签**把它移回输入框编辑。
+
+自由输入需要 `allowArbitrary`：与原版一致，未开启它且没有给出 `allowedValues` 时，输入的任何值都不在合法值域内，Enter 会被拒绝（不报错，但不生成标签）。白名单形态见下一节。
+
+```tsx preview
+import { useState } from "react";
+import { TagMultiselect } from "ooui-react";
+
+function App() {
+  const [tags, setTags] = useState<(string | number)[]>(["React", "TypeScript"]);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 360 }}>
+      <TagMultiselect
+        value={tags}
+        onChange={setTags}
+        allowArbitrary
+        placeholder="回车添加标签"
+      />
+      <div>当前标签：{tags.join("、") || "（空）"}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 键盘编辑
+
+- **Enter** 提交输入文本为标签；**Backspace**（inline 输入框为空时）移除末尾标签并**把其文本回填输入框**以便编辑——按住 Ctrl / Cmd 则只移除、不回填。
+- **← / →**：光标处于输入框两端时转入标签间导航，向前越过末项后焦点交还输入框（RTL 布局方向随之反转）；**Escape** 清空输入框中的未提交文本。
+
+## 白名单与限制
+
+- `allowedValues` 给出合法值域，落在其外的标签被判为非法（除非 `allowArbitrary`）。
+- `allowDuplicates` 允许重复值；`tagLimit` 限制标签数量，达到后输入禁用。
+- `allowDisplayInvalidTags` 让非法值仍以标签呈现并标 invalid，而非直接拒绝添加。
+
+```tsx preview
+import { useState } from "react";
+import { TagMultiselect } from "ooui-react";
+
+function App() {
+  const [tags, setTags] = useState<(string | number)[]>([]);
+
+  return (
+    <div style={{ maxWidth: 360 }}>
+      <TagMultiselect
+        value={tags}
+        onChange={setTags}
+        allowedValues={["红", "绿", "蓝"]}
+        tagLimit={2}
+        placeholder="只能输入 红 / 绿 / 蓝，最多 2 个"
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+注意：组件整体的 invalid 标志（红框）比 `onInvalidTagsChange` 的口径更宽——失焦时输入框里还留着未提交文本也会标红。看到红框却没收到 `onInvalidTagsChange`，先检查输入框是否残留文本。
+
+## 外部值清洗：pickValidTags
+
+导出的纯函数 `pickValidTags(values, { options?, allowedValues?, allowDuplicates? })` 返回传入值集合中**合法的子集**——剔除值域外的值与 `allowDuplicates` 为假时的重复项，与组件用同一套规则（传组件同款 props 即得与 `onInvalidTagsChange` 互补的集合）。外部数据回填 `value` 之前、或提交之前清洗标签时用它。{/* deviations: dev-tag-valid-callback */}
+
+## 输入框位置与重排
+
+`inputPosition` 取 `inline`（缺省，输入框接在标签末尾）、`outline`（输入框在标签区下方）、`none`（无输入，纯展示，配合受控值使用）。`allowReordering`（默认开）允许拖拽调整标签顺序，关闭时新增按 `allowedValues` 的给定顺序插入。原版可经 `config.input` / `inputWidget` 替换内部输入控件，本工程输入框内置、不可替换。{/* deviations: dev-tagmultiselect-input */}
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `value` | 标签值集合（受控，传入即受控模式） | `(string \| number)[]` | — |
+| `defaultValue` | 非受控初始值 | `(string \| number)[]` | — |
+| `onChange` | 标签增删回调（值优先，回传标量数组） | `ChangeHandler<(string \| number)[]>` | — |
+| `allowedValues` | 合法值白名单（无菜单时的取值约束） | `(string \| number)[]` | — |
+| `allowArbitrary` | 允许任意值（跳过值域判定） | `boolean` | `false` |
+| `allowDuplicates` | 允许重复值 | `boolean` | `false` |
+| `allowReordering` | 允许拖拽重排 | `boolean` | `true` |
+| `allowEditTags` | 允许点击标签回填编辑 | `boolean` | `true` |
+| `allowDisplayInvalidTags` | 非法值仍以标签呈现（标 invalid） | `boolean` | `false` |
+| `tagLimit` | 标签数量上限 | `number` | — |
+| `inputPosition` | 输入框位置 | `'inline' \| 'outline' \| 'none'` | `'inline'` |
+| `onInvalidTagsChange` | 非法标签集变化回调（只读派生，不改值） | `(invalidValues: (string \| number)[]) => void` | — |
+| `placeholder` / `name` | 输入框占位符 / `name` | `string` | — |
+| `icon` / `indicator` / `flags` | 图标 / 指示器 / 标志 | — | — |
+| `disabled` | 是否禁用 | `boolean` | `false` |
+| `...rest` | 原生 `div` 属性直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+:::note 与原版的差异
+原版的 `tag.data` 可为任意对象；本工程把标签身份恒为标量 `value`，以便受控数组可序列化、可比对。需要随标签携带对象时，改用 [MenuTagMultiselect](/components/menu-tag-multiselect/index.html) 的选项 `data` 字段，按 `value` 在自己的 `options` 里反查。{/* deviations: dev-tag-value-data */}
+:::
+
+## 另见
+
+- 带候选菜单的标签输入：[MenuTagMultiselect](/components/menu-tag-multiselect/index.html)
+- 选项数据的 `label` / `labelText` / `data` 约定：[选择与选项](/guide/options.html#标签多选的选项)

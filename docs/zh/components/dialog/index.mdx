@@ -1,0 +1,148 @@
+---
+title: Dialog 弹窗
+description: "弹窗族总览：声明式 MessageDialog 与 Dialog 基类，受控 open 通道、尺寸、动作区与背景隔离等行为；命令式 confirm / alert / prompt 另见专页。"
+---
+
+# Dialog 弹窗
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/dialogs) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.Dialog.html "OO.ui.Dialog") · [OO.ui.MessageDialog](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.MessageDialog.html "OO.ui.MessageDialog")
+
+弹窗组件，提供 `MessageDialog`、`ProcessDialog` 等变体。
+
+另有不依赖 React 树的命令式 `confirm` / `alert` / `prompt`，见[命令式弹窗](/components/imperative-dialogs/index.html)。
+
+## MessageDialog
+
+一段消息（`children`）加底部“确定 / 取消”两个按钮。`open` 由你控制，`onOk` / `onCancel` 里负责把它关掉。`cancelLabel={null}` 隐藏取消按钮（即自制一个受控 `alert`）。
+
+```tsx preview
+import { useState } from "react";
+import { Button, MessageDialog } from "ooui-react";
+
+function App() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button flags="destructive" onClick={() => setOpen(true)}>
+        删除
+      </Button>
+      <MessageDialog
+        open={open}
+        title="删除页面"
+        size="small"
+        okLabel="删除"
+        cancelLabel="保留"
+        onOk={() => setOpen(false)}
+        onCancel={() => setOpen(false)}
+      >
+        删除后无法撤销，确定要继续吗？
+      </MessageDialog>
+    </>
+  );
+}
+
+export default App;
+```
+
+`MessageDialog` 就绪后自动聚焦“确定”按钮；按 Ctrl / Cmd + Enter 等效点击“确定”。
+
+**按 ESC 触发的是 `onEscape` 而非 `onCancel`**（`escapable` 默认开启）：只接线 `onOk` / `onCancel` 时按 ESC 不会关闭弹窗，需自行在 `onEscape` 里接线（命令式 `confirm` 内部就是把 `onEscape` 桥接为「取消」）。
+
+需要三个及以上动作（如「确定 / 取消 / 稍后提醒」）时传 `foot` 整体替换默认动作区：动作布局与关闭接线全部自理；此时不再自动聚焦“确定”按钮，可在 `onReady` 里自行聚焦。
+
+## Dialog 基类
+
+需要完全自定义内容时用 `Dialog`：`children` 是正文区、`foot` 是底部动作区（`head` 头部主要供带布局类的子类使用，裸基类的正文从顶部铺起、不会自动为 `head` 让位）。它不预设任何按钮，关闭时机与回调都由你接线；有底部动作时用 `bodyFitFoot` 让正文为 `foot` 让出高度。
+
+:::warning 与原版的差异
+裸 `Dialog` 没有内置标题槽位：自行渲染标题后把它以 `aria-labelledby` 关联到弹窗，漏传即得到无名 `role="dialog"`（原版基类会自动建立该关联）。{/* deviations: dev-dialog-aria-labelledby */}
+:::
+
+```tsx preview
+import { useState } from "react";
+import { Button, Dialog, FieldLayout, TextInput } from "ooui-react";
+
+function App() {
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>打开自定义弹窗</Button>
+      <Dialog
+        open={open}
+        size="medium"
+        bodyFitFoot
+        onEscape={() => setOpen(false)}
+        foot={
+          <div style={{ display: "flex", gap: 8 }}>
+            <Button onClick={() => setOpen(false)}>取消</Button>
+            <Button flags="primary" onClick={() => setOpen(false)}>
+              确定
+            </Button>
+          </div>
+        }
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <strong>重命名条目</strong>
+          <FieldLayout label="新名称">
+            <TextInput value={name} onChange={setName} />
+          </FieldLayout>
+        </div>
+      </Dialog>
+    </>
+  );
+}
+
+export default App;
+```
+
+## 尺寸
+
+`size` 取 `small` / `medium` / `large` / `larger` / `full`（`Dialog` 缺省 `medium`，`MessageDialog` 缺省 `small`）。非 `full` 时弹窗按内容撑高、垂直居中；当设定宽度容不进当前视口时自动满屏。`full` 恒为满屏。
+
+## 多窗与背景隔离
+
+同时打开多个弹窗**没有开窗队列**：每个弹窗自带独立的管理器容器，叠放层次按 DOM 顺序（后开的在上），关谁由各自的 `open` 状态决定——流程弹窗之上再叠一个 confirm 是合法的。
+
+弹窗打开期间，最上层弹窗路径以外的兄弟节点会被加上 `aria-hidden="true"` 与 `inert`，屏幕阅读器与指针 / 焦点都被挡在弹窗内，关闭后撤销。**不要在自己渲染的背景节点上声明 React 的 `inert` prop**（React 19 起支持该 prop）：隔离撤销时按 DOM 属性直接移除，会与 React 的 DOM 失同步。弹窗内打开的浮层（`Popup`、工具栏面板）会 portal 进所属弹窗的容器、与弹窗同层，层级因此天然正确。{/* deviations: dev-isolation-portal dev-isolation-registry */}
+
+## API
+
+### MessageDialog
+
+继承 `Dialog` 的 `open` / `size` / `escapable` / `onEscape` / `onReady` 等，另有：
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `children` | 正文消息 | `ReactNode` | — |
+| `title` | 标题 | `ReactNode` | — |
+| `okLabel` / `cancelLabel` | 确定 / 取消按钮文本（`cancelLabel={null}` 隐藏取消） | `ReactNode` | 本地化缺省文案 |
+| `foot` | 自定义底部动作区，整体替换默认“确定 / 取消”按钮（传入后不再自动聚焦“确定”） | `ReactNode` | — |
+| `onOk` / `onCancel` | 点确定（或 Ctrl/Cmd+Enter）/ 点取消时触发 | `() => void` | — |
+| `size` | 弹窗大小 | `DialogProps["size"]` | `'small'` |
+
+### Dialog
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `open` | 是否打开（受控，必填） | `boolean` | — |
+| `size` | 弹窗大小 | `'small' \| 'medium' \| 'large' \| 'larger' \| 'full'` | `'medium'` |
+| `children` | 正文区内容 | `ReactNode` | — |
+| `head` / `foot` | 头部 / 底部动作区 | `ReactNode` | — |
+| `overlay` | 覆盖整个弹窗的浮层内容（如错误面板） | `ReactNode` | — |
+| `escapable` | 是否允许 ESC 触发关闭 | `boolean` | `true` |
+| `onEscape` | 按下 ESC 时触发（由调用方负责关闭） | `() => void` | — |
+| `onPrimaryAction` | 按下 Ctrl / Cmd + Enter 时触发 | `() => void` | — |
+| `onReady` | 打开动画结束后触发（可执行聚焦等） | `() => void` | — |
+| `...rest` | 原生 `div` 属性直传弹窗根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+`ProcessDialog`（带多步流程、错误面板与自定义动作按钮）在 `Dialog` 之上扩展，见其组件页。
+
+## 另见
+
+- 不依赖 React 树的函数式调用：[命令式弹窗](/components/imperative-dialogs/index.html)
+- 弹窗为何只能受控、回调分工：[受控与非受控](/guide/controlled.html#弹窗必须受控)
+- 多步流程弹窗：[ProcessDialog](/components/process-dialog/index.html)
+- 全局配置（语言、方向、浮层容器）：[OOUIProvider](/guide/configuration.html)

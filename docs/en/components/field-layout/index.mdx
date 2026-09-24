@@ -1,0 +1,123 @@
+---
+title: FieldLayout
+description: "Props for the FieldLayout component: alignment for pairing a label with a field control, the label/control click-and-focus linkage, where title lands, and the styling-only meaning of disabled."
+---
+
+# FieldLayout
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/FieldLayout) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.FieldLayout.html "OO.ui.FieldLayout")
+
+Field layout: a container that places a field control together with its label — the basic unit inside a [FormLayout](/en/components/form-layout/index.html).
+
+## Basic usage
+
+The label/control association is done automatically: an input control placed inside `FieldLayout` claims an `id`, and the label's `htmlFor` points at it, so clicking the label focuses the control and screen readers read the label. The field control itself does **not** need to set `label`.
+
+```tsx preview
+import { TextInput, FieldLayout } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 360 }}>
+      <FieldLayout label="Username">
+        <TextInput placeholder="Clicking the label on the left focuses here" />
+      </FieldLayout>
+      <FieldLayout label="Email">
+        <TextInput type="email" placeholder="you@example.com" />
+      </FieldLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Alignment
+
+`align` decides how the label and control are laid out: `left` (default, label on the left), `right` (label on the right), `top` (label above), and `inline` (label and control on the same line, commonly for checkboxes and radios). Passing `inline` is not auto-downgraded (the original falls back to `top` when the field root element isn't a `span`); make sure the field root element is inline before passing it. {/* deviations: dev-fieldlayout-inline */}
+
+```tsx preview
+import { CheckboxInput, FieldLayout, TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 360 }}>
+      <FieldLayout label="Label on the left" align="left">
+        <TextInput />
+      </FieldLayout>
+      <FieldLayout label="Label on top" align="top">
+        <TextInput />
+      </FieldLayout>
+      <FieldLayout label="Inline (checkbox)" align="inline">
+        <CheckboxInput defaultChecked />
+      </FieldLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Label and tooltip
+
+- `label` is the label content (`ReactNode`).
+- `invisibleLabel` hides the label visually but keeps the accessible name; then `title` falls back to the label text when not given explicitly.
+- `title` lands on the **label element** (matching the original `$titled = $label`), not on the layout root.
+- When the field control registers its own `accessKey`, the label tooltip gets the key appended (the chord text can be localized via [OOUIProvider](/en/guide/configuration.html)).
+
+```tsx preview
+import { FieldLayout, TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 360 }}>
+      <FieldLayout label="With tooltip" title="This value is kept">
+        <TextInput defaultValue="Hover the label to see the tooltip" />
+      </FieldLayout>
+      <FieldLayout label="Hidden label" invisibleLabel>
+        <TextInput placeholder="No visible label, still read by screen readers" />
+      </FieldLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Disabled
+
+`FieldLayout`'s `disabled` only adds the `oo-ui-fieldLayout-disabled` style class to the layout root, giving the field area a disabled look — it **does not disable the control in `children` for you**. To actually disable it, set `disabled` on the control itself; to disable a whole group, use `FieldsetLayout`, which relies on a native `<fieldset disabled>`.
+
+```tsx preview
+import { FieldLayout, TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 360 }}>
+      <FieldLayout label="Field name" disabled>
+        <TextInput disabled defaultValue="The control must be disabled on its own" />
+      </FieldLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `children` | The field control | `ReactNode` | — |
+| `label` | Label content | `ReactNode` | — |
+| `invisibleLabel` | Label visually hidden (kept as accessible name) | `boolean` | `false` |
+| `align` | Label alignment | `'left' \| 'right' \| 'top' \| 'inline'` | `'left'` |
+| `title` | Tooltip text for the label (lands on the label element) | `string` | — |
+| `disabled` | Adds a disabled style class to the layout (not passed to the control) | `boolean` | `false` |
+| `...rest` | Native `div` props (`className`, `id`, `data-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
+
+## See also
+
+- The form container that wraps several `FieldLayout`s: [FormLayout](/en/components/form-layout/index.html)
+- Props and landing spots of the controls: [TextInput](/en/components/text-input/index.html), [CheckboxInput](/en/components/checkbox-input/index.html)
+- The `disabled`, `title` and `accessKey` semantics shared by all components: [Common props](/en/guide/basics.html)

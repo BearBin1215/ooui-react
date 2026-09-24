@@ -1,0 +1,105 @@
+---
+title: Selection and options
+description: "The option data contract shared by the Select family: value and group headings, children/label text, labelText and data for tag inputs, disabled propagation, icon flags, and the keyboard focus model."
+---
+
+# Selection and options
+
+[Controlled and uncontrolled](/en/guide/controlled.html) covers how the value flows between the components and your state; this page covers what sits on both ends of that value — the option data contract shared by the Select family. It applies to:
+
+- Selection lists: `Select`, `OutlineSelect`, `TabSelect`, `ButtonSelect`, `ButtonMenuSelectWidget`
+- Tag inputs: `TagMultiselect`, `MenuTagMultiselect`
+- Form fields: `DropdownInput`, `RadioSelectInput`, `CheckboxMultiselectInput`
+- Inputs with candidates: `ComboBoxInput`, `SearchWidget` (its result set)
+
+Each component only adds its own props on top of this contract (such as `OutlineSelect` levels or tag fixing); see the component pages for specifics.
+
+## Option data
+
+`options` is an array of option objects:
+
+- **Items with a `value` are selectable options.** `value` is always a `string | number`, and doubles as the selected-state match key and the list key.
+- **Items without a `value` render as group headings** (not selectable, skipped by keyboard navigation), supported by the components that have a group form (`Select`, `OutlineSelect`, `Dropdown`, `ButtonMenuSelectWidget`, etc.).
+- Option text goes in `children`; tag inputs use `label`, see below.
+- **The selected state is never declared in the options** — the component derives it from `value` and the current value, keeping the option data pure data.
+
+```tsx preview
+import { Select } from "ooui-react";
+
+function App() {
+  return (
+    <Select
+      defaultValue="orange"
+      aria-label="Fruit"
+      options={[
+        { value: "apple", children: "Apple" },
+        { value: "orange", children: "Orange" },
+        { value: "banana", children: "Banana", disabled: true },
+        { children: "Berries" },
+        { value: "grape", children: "Grape" },
+        { value: "melon", children: "Melon" },
+      ]}
+    />
+  );
+}
+
+export default App;
+```
+
+The `Berries` item above has no `value`, so it renders as a group heading.
+
+## Options of tag inputs
+
+The options of `TagMultiselect` / `MenuTagMultiselect` serve as both **the tag itself** and **the menu candidates**. The contract matches the previous section, plus three dedicated fields:
+
+```tsx
+import { Icon, MenuTagMultiselect } from "ooui-react";
+
+<MenuTagMultiselect
+  options={[
+    { value: "bold", label: "Bold", icon: "bold" },
+    // For rich label content, prefix filtering and backfill need the plain-text form labelText
+    {
+      value: "code",
+      label: (
+        <>
+          <Icon icon="code" /> Code
+        </>
+      ),
+      labelText: "Code",
+    },
+    // data carries an arbitrary payload, independent of the identity value
+    { value: "link", label: "Link", data: { openInNewTab: true } },
+    { value: "lock", label: "Lock", fixed: true },
+  ]}
+/>
+```
+
+- **`label` accepts a `ReactNode`** (matching the original's rich content support), and defaults to displaying `value`. Tag options use `label` rather than `children`.
+- **`labelText` is the plain-text form of `label`**, used for filtering menu candidates by typed prefix and for backfilling the input when a tag is selected or edited. When `label` is a string it defaults to the string itself; for rich content you must provide `labelText` explicitly — without it the option **does not participate in prefix filtering** (backfill falls back to `String(value)`), and a development warning is emitted once. {/* deviations: dev-tag-label-labeltext */} {/* deviations: dev-tag-label-labeltext */}
+- **`data` carries an arbitrary payload.** A tag's identity is always the scalar `value` (keeping the controlled array serializable and diffable), and `onChange` returns scalar values too; when you need an object to travel with a tag, put it in `data` and look it back up by `value` in your own `options` array. {/* deviations: dev-tag-value-data */} {/* deviations: dev-tag-value-data */}
+- Tags with `fixed: true` are fixed (no close button, cannot be removed), and drag-to-reorder never moves them before the fixed block. {/* deviations: dev-tag-fixed */} {/* deviations: dev-tag-fixed */}
+
+## Disabled
+
+- An option's own `disabled` disables that single item.
+- Component-level `disabled` lands in two different places: **list/group forms** (`Select`, `TabSelect`, `ButtonSelect`, `RadioSelect`, `CheckboxMultiselect`) disable every option in the group as well, and the group state wins — an option cannot opt back in inside a disabled group; **popup trigger forms** (`Dropdown`, `ComboBoxInput`, `ButtonMenuSelectWidget`) disable the trigger (nothing opens, keyboard is off), while each item inside the menu is governed by its own `disabled`.
+
+## Icons and flags
+
+Option forms with icon slots (menu/outline/button options and group headings) support `icon` and `flags`: `icon` takes an icon name (see [Icon](/en/components/icon/index.html)), and `flags` tint the icon (`progressive`, `destructive`, etc.). Plain-text options (the items of `TabSelect`, `RadioSelect`, `CheckboxMultiselect`) have no icon slot and do not support these fields. {/* deviations: dev-option-flags-scope */} {/* deviations: dev-option-flags-scope */}
+
+## Keyboard and focus
+
+- **Arrow keys** move between options: direct-select forms (`TabSelect`, `ButtonSelect`, `RadioSelect`) select on keypress; menu forms (the menus of `Dropdown` etc.) move the highlight, and Enter / Space choose.
+- **Home / End / PageUp / PageDown** jump to the ends or page through: enabled by default in menu forms, available on a standalone `Select` via `handleNavigationKeys`; `listWrapsAround` controls whether navigation wraps at the ends.
+- **Prefix jump**: typing characters jumps by option text prefix (1.5 s buffer); tag inputs filter candidates by prefix.
+- **Focus never enters the list**: focus stays on the control (or trigger element), with the highlighted item linked via `aria-activedescendant`; the list root is not in the Tab order by default — the same listbox pattern as the original OOUI. **Exception**: the direct-select forms (`TabSelect`, `ButtonSelect`) keep their group root in the Tab order (focus rests on the whole group), and a click moves focus into the group root automatically (the original leaves focus where it was, leaving the arrow keys dead — this library follows the ARIA APG instead). {/* deviations: dev-directselect-focus */}
+- Direct-select forms (`TabSelect`, `ButtonSelect`) point `aria-activedescendant` at the selected item from the first frame when an initial value is present (the original only writes the attribute on the first re-selection). {/* deviations: dev-directselect-activedescendant */} {/* deviations: dev-directselect-focus */}
+- Direct-select forms (`TabSelect`, `ButtonSelect`) point `aria-activedescendant` at the selected item from the first frame when an initial value is present (the original only writes the attribute on the first re-selection). {/* deviations: dev-directselect-activedescendant */}
+- During input method **composition**, the confirming Enter and arrow keys for candidate selection never trigger selection, opening or submission by mistake. {/* deviations: dev-ime-guard */} {/* deviations: dev-ime-guard */}
+
+## See also
+
+- What happens when the controlled value is not among the options: [Controlled and uncontrolled](/en/guide/controlled.html#when-the-controlled-value-isnt-among-the-options)
+- The division of labor between `onChange` and `onChoose` (fired on every choice): [Controlled and uncontrolled](/en/guide/controlled.html#callback-signatures)

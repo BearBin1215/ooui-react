@@ -1,0 +1,89 @@
+---
+title: TabSelect 页签选择
+description: "TabSelect 组件的属性说明：页签式单选（role=tablist），←→在页签间环绕直选，选中项滚动进视野，framed 控制带框/无框形态。"
+---
+
+# TabSelect 页签选择
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/TabSelect) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.TabSelectWidget.html "OO.ui.TabSelectWidget")
+
+页签式选择：把一组互斥选项呈现为一排页签。
+
+## 基本用法
+
+```tsx preview
+import { useState } from "react";
+import { TabSelect } from "ooui-react";
+
+const options = [
+  { value: "general", children: "常规" },
+  { value: "advanced", children: "高级" },
+  { value: "about", children: "关于" },
+];
+
+function App() {
+  const [tab, setTab] = useState<string | number>("general");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <TabSelect options={options} value={tab} onChange={setTab} aria-label="视图" />
+      <div>当前页签：{String(tab)}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 带框与无框
+
+`framed`（默认开）给页签条加边框底色；置 `false` 为更轻量的无框形态。
+
+```tsx preview
+import { TabSelect } from "ooui-react";
+
+const options = [
+  { value: "a", children: "甲" },
+  { value: "b", children: "乙" },
+  { value: "c", children: "丙", disabled: true },
+];
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <TabSelect options={options} defaultValue="a" />
+      <TabSelect options={options} defaultValue="a" framed={false} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 键盘
+
+点击页签后焦点自动收进整组（略优于原版：原版点击后焦点留在原处，方向键不响应），←→（及 ↑↓）随即在非禁用页签间**环绕移动并直接改选**，Enter 重申当前页签；也可以按 Tab 让焦点进入整组。属于“直选族”键盘模型，详见[选择与选项 · 键盘与焦点](/guide/options.html#键盘与焦点)。
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `options` | 页签集（**必填**），每项含 `value` 与 `children`（文本），可选 `disabled` | `TabSelectOptionProps[]` | — |
+| `value` | 当前选中值（受控） | `string \| number` | — |
+| `defaultValue` | 非受控初始选中值 | `string \| number` | — |
+| `onChange` | 选中值变更回调（值优先） | `ChangeHandler<string \| number>` | — |
+| `framed` | 是否带边框 | `boolean` | `true` |
+| `disabled` | 是否禁用（一并禁用全部页签） | `boolean` | `false` |
+| `tabIndex` | Tab 序（焦点停在整组） | `number \| null` | `0` |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`aria-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+## 与原版的差异
+
+- **`TabOption` 不支持 `href` 链接**：原版该能力仅 PHP 端在用；需要链接页签自行组合实现。{/* deviations: dev-taboption-href */}
+- **拖拽中断即清理选择态**：原版拖出窗口丢失 mouseup 后选择态残留、再点击空白处会误提交旧选项；本工程在 mousedown 重置并监听 `pointercancel` 清理。{/* deviations: dev-tabselect-drag-fix */}
+
+## 另见
+
+- 按钮式直选：[ButtonSelect](/components/button-select/index.html)
+- 带页签的多面板：`BookletLayout`
+- 选项数据与键盘焦点模型：[选择与选项](/guide/options.html)

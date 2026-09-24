@@ -1,0 +1,94 @@
+---
+title: Icon 图标
+description: "Icon 组件的属性说明与主题图标集索引：按原版分组列出全部可用图标，点击可复制图标名。"
+---
+
+import { IconGallery } from "./_IconGallery";
+
+# Icon 图标
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Icon) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.IconWidget.html "OO.ui.IconWidget")
+
+基础图标组件。
+
+## 基本用法
+
+```tsx preview
+import { Icon } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <Icon icon="image" title="image" />
+      <Icon icon="alert" title="alert" />
+      <Icon icon="add" title="add" />
+      <Icon icon="arrowDown" title="arrowDown" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+图标名取自 OOUI 主题的图标集，完整列表与分组见文末[「全部图标」](#全部图标)，上游对照见 [OOUI demos 的 icons 页](https://doc.wikimedia.org/oojs-ui/master/demos/?page=icons)。
+
+## 变体
+
+`flags` 命中主题的 image 变体类（`oo-ui-image-{flag}`）给图标着色。`invert` 面向深色背景，须自备深色底。
+
+```tsx preview
+import { Icon } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <Icon icon="alert" flags="progressive" title="progressive" />
+      <Icon icon="alert" flags="destructive" title="destructive" />
+      <span style={{ display: "inline-block", background: "#222", padding: "4px 8px" }}>
+        <Icon icon="alert" flags="invert" title="invert" />
+      </span>
+      <Icon icon="alert" flags="error" title="error" />
+      <Icon icon="alert" flags="warning" title="warning" />
+      <Icon icon="alert" flags="success" title="success" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 禁用态
+
+`disabled` 输出 `oo-ui-widget-disabled` 与 `aria-disabled`，同时按原版 `Widget` 的口径输出 `oo-ui-widget` 类链。
+
+```tsx preview
+import { Icon } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <Icon icon="image" title="常规" />
+      <Icon icon="image" disabled title="禁用" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `icon` | 图标名，取自主题图标集 | `string` | — |
+| `flags` | 附加标志，经 `oo-ui-flaggedElement-{flag}` 与 `oo-ui-image-{flag}` 输出 | `IconFlag \| IconFlag[]` | `[]` |
+| `disabled` | 是否禁用 | `boolean` | `false` |
+| `...rest` | 原生 `span` 属性（`className`、`title`、`aria-*`、事件等）直传根元素 | `HTMLAttributes<HTMLSpanElement>` | — |
+
+`IconFlag` 为 `'progressive' | 'destructive' | 'invert' | 'error' | 'warning' | 'success'`。
+
+## 全部图标
+
+点击图标可以复制名称。
+
+<IconGallery />

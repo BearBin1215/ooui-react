@@ -1,0 +1,46 @@
+---
+title: PageLayout
+description: "Props for the PageLayout component: a single page of the stack layout, its active state and derivation from hidden; usually used indirectly via StackLayout options."
+---
+
+# PageLayout
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/PageLayout) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.PageLayout.html "OO.ui.PageLayout")
+
+A page panel: an item of [StackLayout](/en/components/stack-layout/index.html)'s `options` array. You rarely render it directly — put it into StackLayout's `options` instead.
+
+## Standalone use
+
+Standalone, the active state is declared via `active`; without `active` it derives from `hidden` (not hidden = active) and outputs the `oo-ui-pageLayout-active` class. `label` / `value` are fields carried along with the page-set object — the component swallows them so they never land as DOM attributes.
+
+```tsx preview
+import { PageLayout, StackLayout } from "ooui-react";
+
+function App() {
+  return (
+    <StackLayout
+      value="a"
+      options={[
+        { value: "a", label: "First page", padded: true, children: "First page content" },
+        { value: "b", label: "Second page", padded: true, children: "Second page content" },
+      ]}
+    />
+  );
+}
+
+export default App;
+```
+
+## API
+
+Inherits all [PanelLayout](/en/components/panel-layout/index.html) props, plus:
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `active` | Whether this is the active page; without it, derived from `hidden` (not hidden = active) | `boolean` | derived from `hidden` |
+| `scrollable` | Whether scrollable (pages scroll by default) | `boolean` | `true` |
+| `label` / `value` | Carried with the page-set object, swallowed by the component | `ReactNode` / `string \| number` | — |
+
+## See also
+
+- The paged container: [StackLayout](/en/components/stack-layout/index.html)

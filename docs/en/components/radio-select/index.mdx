@@ -1,0 +1,117 @@
+---
+title: RadioSelect
+description: "Props for the RadioSelect component: a radio group (role=radiogroup) where arrow keys move between options cyclically and select directly, with the value/onChange channels and an options list."
+---
+
+# RadioSelect
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/RadioSelect) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.RadioSelectWidget.html "OO.ui.RadioSelectWidget")
+
+A radio group: several radio items in one group, mutually exclusive with at most one selected.
+
+## Basic usage
+
+The selected value uses the `value` / `defaultValue` / `onChange` channels. Clearing the current selection never produces a new value — `onChange`'s argument is always the newly selected `value`.
+
+```tsx preview
+import { useState } from "react";
+import { RadioSelect } from "ooui-react";
+
+const options = [
+  { value: "small", children: "Small" },
+  { value: "medium", children: "Medium" },
+  { value: "large", children: "Large" },
+];
+
+function App() {
+  const [size, setSize] = useState<string | number>("medium");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <RadioSelect options={options} value={size} onChange={setSize} name="size" />
+      <div>Current selection: {String(size)}</div>
+      <RadioSelect options={options} defaultValue="large" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## With FieldLayout
+
+To give the whole group a field label, wrap it with [FieldLayout](/en/components/field-layout/index.html); the label is associated with the group container, and clicking it focuses the group.
+
+```tsx preview
+import { RadioSelect, FieldLayout } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 320 }}>
+      <FieldLayout label="Notification method">
+        <RadioSelect
+          name="notify"
+          defaultValue="email"
+          options={[
+            { value: "email", children: "Email" },
+            { value: "sms", children: "SMS" },
+            { value: "none", children: "No notifications" },
+          ]}
+        />
+      </FieldLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Disabled
+
+- An option's own `disabled` skips that item (not selectable).
+- Component-level `disabled` disables every option in the group, and the group state wins. See [Selection and options · Disabled](/en/guide/options.html#disabled).
+
+```tsx preview
+import { RadioSelect } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <RadioSelect
+        defaultValue="a"
+        options={[
+          { value: "a", children: "Enabled" },
+          { value: "b", children: "Disabled item", disabled: true },
+          { value: "c", children: "Also enabled" },
+        ]}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Keyboard and focus
+
+- Focus rests on the **whole group** (individual items are not in the Tab order). ↑↓←→ move **cyclically between non-disabled items and select directly**; Enter re-affirms the current item.
+- On first Tab focus to the group with nothing selected, the first non-disabled item is auto-selected (matching native radio-group behavior).
+- `onChange`'s second argument is the native `change` event; changing selection via arrow keys does not fire a native `change` (matching the original), so the second argument may be absent.
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `options` | The option set; each item has `value` and `children` (the option text) | `RadioSelectOptionProps[]` | — |
+| `value` | Current selected value (controlled; passing it enables control) | `string \| number` | — |
+| `defaultValue` | Initial selected value for uncontrolled use | `string \| number` | — |
+| `onChange` | Selected-value change callback (value-first, incl. native event) | `ChangeHandler<string \| number \| undefined, HTMLInputElement>` | — |
+| `name` | Form field name, passed to each option's native `radio` (same name = mutually exclusive) | `string` | — |
+| `disabled` | Whether disabled (also disables every option in the group) | `boolean` | `false` |
+| `...rest` | Native `div` props (`className`, `id`, `aria-*`, etc.) passed straight to the group container | `HTMLAttributes<HTMLDivElement>` | — |
+
+## See also
+
+- A single radio: [RadioInput](/en/components/radio-input/index.html) (this component is built from it item by item; use it alone for custom layout)
+- Option data and the keyboard focus model: [Selection and options](/en/guide/options.html)
+- The checkbox counterpart: [CheckboxMultiselect](/en/components/checkbox-multiselect/index.html)

@@ -1,0 +1,63 @@
+---
+title: OutlineSelect
+description: "Props for the OutlineSelect component: a selection list with hierarchical indentation (the outline form of Select); each option carries a level for indentation, the group is focusable, and arrow keys move the highlight."
+---
+
+# OutlineSelect
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/OutlineSelect) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.OutlineSelectWidget.html "OO.ui.OutlineSelectWidget")
+
+An outline select: `level` (0–2) expresses hierarchical indentation, suited to tables of contents and similar hierarchical lists.
+
+## Basic usage
+
+```tsx preview
+import { useState } from "react";
+import { OutlineSelect } from "ooui-react";
+
+function App() {
+  const [value, setValue] = useState<string | number>("intro");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 240 }}>
+      <OutlineSelect
+        aria-label="Document outline"
+        value={value}
+        onChange={setValue}
+        options={[
+          { value: "intro", children: "Introduction", level: 0 },
+          { value: "background", children: "Background", level: 1 },
+          { value: "prior", children: "Related work", level: 1 },
+          { value: "method", children: "Method", level: 0 },
+          { value: "dataset", children: "Dataset", level: 2 },
+        ]}
+      />
+      <div>Current item: {String(value)}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Levels and groups
+
+- `level` is 0–2 (out-of-range is clamped); the theme only provides three indentation levels.
+- Options without a `value` render as group headings, per the [Selection and options](/en/guide/options.html) contract.
+- Keyboard: with the group focused, ↑↓←→ move the highlight and Enter chooses; Home/End/PageUp/PageDown are enabled via `handleNavigationKeys`, and `listWrapsAround` controls wrapping — exactly as in [Select](/en/components/select/index.html).
+
+## API
+
+Inherits [Select](/en/components/select/index.html) props (`value` / `defaultValue` / `onChange` / `disabled` / `handleNavigationKeys` / `listWrapsAround`, etc.); the differences are:
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `options` | Outline option set (**required**); selectable items also support `level` (0–2 indentation) and `icon` / `flags` | `OutlineSelectOptionProps[]` | — |
+| `tabIndex` | Tab order, on the whole group (the outline list is focusable) | `number \| null` | `0` |
+
+`outline` is fixed on by the component and cannot be overridden.
+
+## See also
+
+- The base selection list: [Select](/en/components/select/index.html)
+- Option data and the keyboard focus model: [Selection and options](/en/guide/options.html)

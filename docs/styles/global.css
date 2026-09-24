@@ -1,0 +1,180 @@
+/* Codex 设计令牌表：oojs-ui 0.54 起主题 CSS 引用 var(--*) 但不自带令牌，须一并生效。
+   OOUI 主题 CSS 本体不在此打包——两主题规则集不同、并存会互相覆盖出混合态，须单一
+   <link> 生效；由 head 内联脚本按持久化值注入（rspress.config.ts），导航栏可切换
+   （theme/ThemeSwitcher.tsx） */
+@import "@wikimedia/codex-design-tokens/dist/theme-wikimedia-ui.css";
+
+.rp-preview--internal__card__content {
+  font-size: 14px;
+}
+
+/* 组件页标题元数据行（源代码 | 原版组件）：模板约定该引用块紧跟 h1（见 CONTRIBUTING）。
+   不用 h1 + blockquote 相邻选择器——llms UI 的提示容器会插在两者之间；改取「文档容器内
+   首个 blockquote」：全站唯一的 blockquote 就是组件页头部这一行（新写引用块前先核对）。
+   原引用块样式把纯链接渲染成引文（竖线 + 灰底），视觉层级压过紧随其后的功能定位
+   一句话，此处降权为轻量小字行。宽屏绝对定位到标题行右侧成「标题居左、入口居右」；
+   断点取 1280：更窄时正文列被侧栏与大纲挤压，并排会换行错位 */
+.rspress-doc > blockquote:first-of-type {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0 0 20px;
+  font-size: 13px;
+  color: var(--rp-c-text-2);
+}
+
+.rspress-doc > blockquote:first-of-type a {
+  color: var(--rp-c-text-2);
+  text-decoration: none;
+}
+
+.rspress-doc > blockquote:first-of-type a:hover {
+  color: var(--rp-c-brand);
+}
+
+/* 宽屏「标题居左、入口居右」：元数据行绝对定位到文档容器右上角，与 h1 首行对齐——
+   不用负 margin 上浮，h1 与引用块之间隔有 llms 复制按钮容器，间距属主题内部实现。
+   仅在存在元数据行的页面开定位（:has 限定，避免改变其他文档页的包含块）；
+   断点取 1280：更窄时正文列被侧栏与大纲挤压，并排会换行错位 */
+@media (width >= 1280px) {
+  .rspress-doc:has(> blockquote:first-of-type) {
+    position: relative;
+  }
+
+  .rspress-doc > blockquote:first-of-type {
+    position: absolute;
+    top: 1rem;
+    right: 0;
+    margin: 0;
+  }
+}
+
+/* 主题默认 overflow:auto 会让示例内的浮层组件（下拉菜单、Popup 等）把卡片误判为
+   就近滚动容器，钳制到卡片内部余高（菜单只剩几像素、Popup 被裁小）。放开裁剪让浮层
+   以视口为钳制基准；代码块自身有横向滚动容器，不受影响。
+   加 .rp-preview 提升特异度：同名单类规则主题引入更晚，同等特异度会被压掉 */
+.rp-preview .rp-preview--internal__card__content {
+  overflow: visible;
+}
+
+/* 站点 chrome（侧栏 50 / 导航 60 / 移动端菜单 70）都高于 OOUI 弹窗阶梯的原版层值 4，
+   中等宽度下视口居中的弹窗伸进侧栏范围时会被侧栏盖住。宿主管理层叠本就是原版契约
+   （原版 z-index:4 为 MediaWiki 场景而设），这里把弹窗链路整体抬到 chrome 之上；
+   取 80：高于移动端菜单 70，低于搜索面板 1000。
+   第二条覆盖弹窗内浮层：它们 portal 在管理器根下、与对话框为兄弟节点，内联
+   z-index:4（与对话框同层、靠 DOM 序压其上），须与对话框同值抬升，否则会被
+   对话框本体盖住——内联值只能以 !important 覆盖 */
+.oo-ui-windowManager-modal > .oo-ui-dialog {
+  z-index: 80;
+}
+
+.oo-ui-windowManager-modal > :not(.oo-ui-dialog) {
+  z-index: 80 !important;
+}
+
+/* 首页正文（自定义 HomeLayout 挂载于 features 之后）：与 features 区同宽居中 */
+.home-doc {
+  box-sizing: border-box;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* hero 图标：默认铺满侧栏（约 357px）过大，约束为适中尺寸 */
+.rp-home-hero__image img {
+  width: 200px;
+  height: 200px;
+}
+
+/* 内置搜索的快捷键：主题默认把背景加在外层块、两个键无间距，呈连体“CtrlK”；
+   这里把键帽样式移到每个 span，拆成两枚独立键帽（对齐 DocSearch 观感）。
+   外层选择器加 .rp-search-button 提升特异度，确保稳定压过主题的同名单类规则 */
+.rp-search-button .rp-search-button__hotkey {
+  display: flex;
+  gap: 4px;
+  padding: 0;
+  background: none;
+}
+
+.rp-search-button .rp-search-button__hotkey span {
+  background-color: var(--rp-c-bg-soft);
+  border-radius: var(--rp-radius-small);
+  padding: 0 6px;
+}
+
+/* 组件总览页（components/index）的卡片网格：页面主体保持 markdown 列表
+   （站内死链校验、llms 与搜索提取不受影响），这里只把 ul/li 渲染成卡片。
+   颜色取主题变量；站点未启用暗色模式（darkMode: false），变量仍按语义取值。
+   整卡可点：链接的 ::after 铺满卡片（li 为定位祖先），点击区归属 markdown
+   链接本身，不引入 JS、不绕过死链校验 */
+.doc-component-grid ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 10px;
+  margin: 16px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.doc-component-grid li {
+  /* 主题的 li 间距规则以更高特异度漏进网格（8px 顶距破坏同行等高拉伸），
+     枚举不到来源规则，故以 !important 压制 */
+  margin-top: 0 !important;
+  position: relative;
+  padding: 12px 14px;
+  border: 1px solid var(--rp-c-divider-light);
+  border-radius: 8px;
+  background: var(--rp-c-bg-soft);
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--rp-c-text-2);
+  transition:
+    border-color 0.2s,
+    background-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
+}
+
+.doc-component-grid li:hover {
+  border-color: var(--rp-c-brand);
+  background: var(--rp-c-bg);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+/* 组件名一行、描述一行：描述弱化为辅助文本 */
+.doc-component-grid li a {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--rp-c-text-1);
+}
+
+.doc-component-grid li a:hover,
+.doc-component-grid li:hover a {
+  color: var(--rp-c-brand);
+  text-decoration: none;
+}
+
+/* 整卡可点：伪元素铺满卡片 */
+.doc-component-grid li a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+/* 悬浮时在名字行右端浮出指向箭头（绝对定位，不参与换行） */
+.doc-component-grid li a::before {
+  content: "›";
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-weight: 400;
+  color: var(--rp-c-brand);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.doc-component-grid li:hover a::before {
+  opacity: 1;
+}

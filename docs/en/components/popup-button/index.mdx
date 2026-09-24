@@ -1,0 +1,91 @@
+---
+title: PopupButton
+description: "Props for the PopupButton component: a button that toggles a Popup anchored to itself; children is the button label, popupContent the popup body, with built-in outside-click auto-close."
+---
+
+# PopupButton
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/PopupButton) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.PopupButtonWidget.html "OO.ui.PopupButtonWidget")
+
+A popup button: clicking the [Button](/en/components/button/index.html) toggles a [Popup](/en/components/popup/index.html) anchored to it, with built-in close on clicking outside the button and popup. For most "click a button, show a floating panel" cases use this instead of hand-wiring Popup's anchoring and open state.
+
+## Basic usage
+
+```tsx preview
+import { PopupButton } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ padding: 40 }}>
+      <PopupButton
+        icon="language"
+        defaultOpen
+        popupContent={
+          <div style={{ padding: 12 }}>Put anything in the popup, e.g. a note or a group of controls.</div>
+        }
+      >
+        Options
+      </PopupButton>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Controlled open state
+
+To drive visibility from outside, use `open` / `onOpenChange`; the button, outside clicks, the close button and Escape all call `onOpenChange`.
+
+```tsx preview
+import { useState } from "react";
+import { PopupButton } from "ooui-react";
+
+function App() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 12, padding: 40 }}>
+      <PopupButton
+        open={open}
+        onOpenChange={setOpen}
+        head
+        label="Color"
+        padded
+        popupContent={<div style={{ padding: 12 }}>A popup with a titled header and close button.</div>}
+      >
+        Pick color
+      </PopupButton>
+      <span>open is: {String(open)}</span>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Popup positioning
+
+The floating props `position` / `align` / `anchor` / `autoFlip` / `width` / `height` / `padded` / `head` / `footer` / `container` are forwarded to the inner Popup (same meaning as [Popup](/en/components/popup/index.html)). By default the button is the anchor and the popup opens below.
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `children` | Button label | `ReactNode` | — |
+| `popupContent` | Popup body | `ReactNode` | — |
+| `open` | Whether the popup is open (controlled) | `boolean` | — |
+| `defaultOpen` | Initial open state for uncontrolled use | `boolean` | `false` |
+| `onOpenChange` | Open-state change callback (button / outside click / close button / Escape) | `(open: boolean) => void` | — |
+| `onClick` | Button click callback (fires before toggling open state) | `(ev: ButtonClickEvent) => void` | — |
+| `label` | Popup head label, rendered with `head` (`children` is the button label; the two are separate) | `ReactNode` | — |
+| `icon` / `flags` / `framed` / `title` / `accessKey` / `invisibleLabel` / `disabled` | Button-side props, same meaning as [Button](/en/components/button/index.html) | — | — |
+| `position` / `align` / `anchor` / `autoFlip` / `head` / `hideCloseButton` / `padded` / `width` / `height` / `footer` / `container` / `hideWhenOutOfView` / `containerPadding` | Popup-side props forwarded to the inner [Popup](/en/components/popup/index.html) | — | — |
+
+Besides the button border, `framed` also switches the popup's framed / frameless appearance. `label` routes to the popup head and `invisibleLabel` applies to the button side only — in the original `PopupButtonWidget` both belong to the button, with the popup configured independently. `active`, `autoClose` and `autoCloseIgnore` are managed internally and cannot be overridden.
+
+## See also
+
+- The underlying floating layer: [Popup](/en/components/popup/index.html)
+- A button that opens a command menu: `ButtonMenuSelectWidget`
+- Common pass-through and `ref` rules: [Common props](/en/guide/basics.html)

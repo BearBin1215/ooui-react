@@ -1,0 +1,141 @@
+---
+title: BookletLayout
+description: "Props for the BookletLayout component: a booklet layout with an outline menu on the left and a page stack on the right, the outlined switch, editable outline controls, continuous scrolling and autoFocus."
+---
+
+# BookletLayout
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/BookletLayout) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.BookletLayout.html "OO.ui.BookletLayout")
+
+A booklet layout: with `outlined`, an [outline select](/en/components/outline-select/index.html) on the left and a [page stack](/en/components/stack-layout/index.html) on the right; without it, a plain stacked panel. Suits settings pages and multi-section content.
+
+## Basic usage
+
+An `options` item is `{ value, label, children }` plus the [PageLayout](/en/components/page-layout/index.html) panel fields; the active page rides the `value` / `defaultValue` / `onChange` channels.
+
+```tsx preview
+import { useState } from "react";
+import { BookletLayout } from "ooui-react";
+
+function App() {
+  const [page, setPage] = useState<string | number>("intro");
+
+  return (
+    <div style={{ position: "relative", height: 180 }}>
+      <BookletLayout
+        outlined
+        value={page}
+        onChange={setPage}
+        options={[
+          { value: "intro", label: "Intro", padded: true, children: "This is the Intro page." },
+          { value: "usage", label: "Usage", padded: true, children: "This is the Usage page." },
+          { value: "faq", label: "FAQ", padded: true, children: "This is the FAQ page." },
+        ]}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+:::note Form premise
+In the `expanded` form (on by default) the layout fills its parent via absolute positioning, so the parent must be positioned and sized (the demo wrapper above exists for exactly that). The `expanded={false}` static form works only for [MenuLayout](/en/components/menu-layout/index.html)'s own flow content — the panels in the page stack are absolutely positioned panels with no content height in static mode, so don't use it here. The `editable` outline's select widget and controls are absolutely positioned in the theme CSS, likewise usable only in the expanded form.
+:::
+
+## Editable outline
+
+`editable` shows move-up/move-down/remove controls at the bottom of the outline: each option declares its own `movable` / `removable` ability, the operations are handed back via `onMoveOption` / `onRemoveOption` for the caller to update `options`, and `outlineControlsExtra` adds extra buttons beside them (such as "Add"). {/* deviations: dev-outlinecontrols-inline dev-booklet-move-remove */}
+
+```tsx preview
+import { useState } from "react";
+import { BookletLayout, Button } from "ooui-react";
+
+function App() {
+  const [pages, setPages] = useState([
+    { value: "a", label: "Section 1", movable: true, removable: true, padded: true, children: "Section 1 content" },
+    { value: "b", label: "Section 2", movable: true, removable: true, padded: true, children: "Section 2 content" },
+    { value: "c", label: "Section 3", movable: true, removable: true, padded: true, children: "Section 3 content" },
+  ]);
+
+  const move = (value: string | number, direction: -1 | 1) => {
+    setPages((prev) => {
+      const index = prev.findIndex((item) => item.value === value);
+      const target = index + direction;
+      if (target < 0 || target >= prev.length) {
+        return prev;
+      }
+      const next = [...prev];
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
+    });
+  };
+
+  return (
+    <div style={{ position: "relative", height: 220 }}>
+      <BookletLayout
+        outlined
+        editable
+        defaultValue="a"
+        options={pages}
+        onMoveOption={move}
+        onRemoveOption={(value) =>
+          setPages((prev) => prev.filter((item) => item.value !== value))
+        }
+        outlineControlsExtra={
+          <Button
+            framed={false}
+            icon="add"
+            title="Add a section"
+            onClick={() =>
+              setPages((prev) => [
+                ...prev,
+                {
+                  value: `page-${prev.length + 1}`,
+                  label: `New section ${prev.length + 1}`,
+                  movable: true,
+                  removable: true,
+                  padded: true,
+                  children: "New section content",
+                },
+              ])
+            }
+          />
+        }
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Continuous mode and auto-focus
+
+`continuous` makes all pages visible and smooth-scrolls to the target page when switching; in continuous mode, focus entering a page (via Tab or clicking a focusable element inside it) selects that page in reverse. `autoFocus` (default `true`) focuses the first focusable element inside the page after every switch (the first frame does not grab focus; skipped when focus is already inside the page, and suppressed in the mobile form). Both can be turned off.
+
+When the active page is removed, a page is auto-selected: the next surviving page, or the new last page when the last one was removed — the outline and the page stack stay in sync.
+
+## API
+
+Inherits all [MenuLayout](/en/components/menu-layout/index.html) props (except `menu` / `children`), plus:
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `options` | The page set: `value`, `label`, `movable`, `removable` plus [PageLayout](/en/components/page-layout/index.html) fields | array | — |
+| `value` | Current active page (controlled; passing it enables controlled mode) | `string \| number` | — |
+| `defaultValue` | Initial active page for uncontrolled use | `string \| number` | — |
+| `onChange` | Active-page change callback | `ChangeHandler<string \| number>` | — |
+| `outlined` | Whether to show the outline (`false` is the plain stacked mode) | `boolean` | `false` |
+| `continuous` | Whether all pages show continuously, scrolling to the target on switch | `boolean` | `false` |
+| `autoFocus` | Focus the page's first focusable element after switching (not on the first frame) | `boolean` | `true` |
+| `editable` | Whether to show the outline controls (requires `outlined`) | `boolean` | `false` |
+| `onMoveOption` | Move-up/down click handler in editable mode; `direction` is `-1` (up) or `1` (down) | `(value: string \| number, direction: -1 \| 1) => void` | — |
+| `onRemoveOption` | Remove click handler in editable mode | `(value: string \| number) => void` | — |
+| `outlineControlsExtra` | Extra button area left of the outline controls in editable mode | `ReactNode` | — |
+
+## See also
+
+- The page stack on the right: [StackLayout](/en/components/stack-layout/index.html)
+- The outline select on the left: [OutlineSelect](/en/components/outline-select/index.html)
+- The top-tabs variant: [IndexLayout](/en/components/index-layout/index.html)

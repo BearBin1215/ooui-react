@@ -1,0 +1,188 @@
+---
+title: Popup
+description: "Props for the Popup component: a floating panel anchored to a container with automatic positioning, flipping and clipping; controlled open, auto-close on outside click and Escape, head and footer areas; suited to annotations and tooltips, with PopupButton for button-triggered cases."
+---
+
+# Popup
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Popup) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.PopupWidget.html "OO.ui.PopupWidget")
+
+A floating panel anchored to an element, with automatic positioning and flipping — suited to on-demand content such as annotations and tooltips; for button-triggered cases use [PopupButton](/en/components/popup-button/index.html) directly.
+
+## Basic usage
+
+A Popup never opens itself — visibility is driven by `open`: use a button as the `container` anchor and toggle `open` on click. `autoClose` closes on clicks outside the popup and trigger (or Escape), and `autoCloseIgnore` excludes the trigger from the "outside click" test.
+
+```tsx preview
+import { useRef, useState } from "react";
+import { Button, Popup } from "ooui-react";
+
+function App() {
+  const anchorRef = useRef<HTMLSpanElement>(null);
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div style={{ padding: 60 }}>
+      <Button ref={anchorRef} indicator="down" onClick={() => setOpen((o) => !o)}>
+        Open popup
+      </Button>
+      <Popup
+        open={open}
+        onOpenChange={setOpen}
+        container={anchorRef}
+        autoClose
+        autoCloseIgnore={anchorRef}
+        padded
+        width={220}
+        position="below"
+      >
+        Popup content goes here. Clicking blank space, pressing Escape, or tabbing out all close it.
+      </Popup>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Positioning and flipping
+
+- `position` is `below` (default), `above`, `before` (left) or `after` (right).
+- `align` controls alignment on the anchor: `center` (default), `forwards` / `backwards` (logical, switch physical side with writing direction / RTL), or `force-left` / `force-right` (always the physical side, never flipping).
+- `autoFlip` (on by default) flips to the opposite side when there's no room; `anchor` (on by default) draws the arrow pointing at the anchor.
+- When space is tight the popup is clipped/clamped to the visible area (or nearest scroll container); `containerPadding` sets the clamp inset (default 10px), and `hideWhenOutOfView` (on by default) hides the popup while the anchor scrolls out of view (without changing `open`).
+
+:::note Differences from OOUI
+The flip direction is re-evaluated when scrolling changes the clipping (the original freezes it until the popup is reopened); the trade-off is that the popup may jump while scrolling. {/* deviations: dev-popup-scroll-reflip */}
+:::
+
+The two most common tweaks: `position` for the popup direction, and `anchor={false}` to drop the arrow.
+
+```tsx preview
+import { useRef, useState, type ReactNode } from "react";
+import { Button, Popup } from "ooui-react";
+
+function TriggerPopup({
+  children,
+  buttonLabel,
+  position = "below",
+  anchor = true,
+}: {
+  children: ReactNode;
+  buttonLabel: string;
+  position?: "above" | "below" | "before" | "after";
+  anchor?: boolean;
+}) {
+  const anchorRef = useRef<HTMLSpanElement>(null);
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button ref={anchorRef} onClick={() => setOpen((o) => !o)}>
+        {buttonLabel}
+      </Button>
+      <Popup
+        open={open}
+        onOpenChange={setOpen}
+        container={anchorRef}
+        autoClose
+        autoCloseIgnore={anchorRef}
+        padded
+        width={200}
+        position={position}
+        anchor={anchor}
+      >
+        {children}
+      </Popup>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <div style={{ display: "flex", gap: 32, flexWrap: "wrap", padding: "72px 8px 8px" }}>
+      <TriggerPopup buttonLabel="Open above" position="above">
+        position=&quot;above&quot;
+      </TriggerPopup>
+      <TriggerPopup buttonLabel="Open right" position="after">
+        position=&quot;after&quot;
+      </TriggerPopup>
+      <TriggerPopup buttonLabel="No arrow" anchor={false}>
+        anchor=&#123;false&#125;
+      </TriggerPopup>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Head and footer
+
+`head` enables a header with `icon` + `label` + a top-right close button (`hideCloseButton` hides it); `footer` is the bottom area. The close button, outside clicks and Escape all report intent through `onOpenChange(false)`.
+
+```tsx preview
+import { useRef, useState } from "react";
+import { Button, Popup } from "ooui-react";
+
+function App() {
+  const anchorRef = useRef<HTMLSpanElement>(null);
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div style={{ padding: 60 }}>
+      <Button ref={anchorRef} indicator="down" onClick={() => setOpen((o) => !o)}>
+        With header
+      </Button>
+      <Popup
+        open={open}
+        onOpenChange={setOpen}
+        container={anchorRef}
+        autoClose
+        autoCloseIgnore={anchorRef}
+        head
+        icon="info"
+        label="Hint"
+        padded
+        width={240}
+        footer={<div style={{ padding: 8 }}>Footer note text</div>}
+      >
+        A header with icon, title and close button; custom content in the footer.
+      </Popup>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `open` | Whether open (controlled; Popup never opens itself) | `boolean` | — |
+| `defaultOpen` | Initial open state for uncontrolled use | `boolean` | `false` |
+| `onOpenChange` | Open-state change callback (close button / outside click / Escape / tab-out) | `(open: boolean) => void` | — |
+| `container` | Anchor container (`ref` or element); defaults to the body's top-left when omitted | `RefObject<HTMLElement \| null> \| HTMLElement \| null` | — |
+| `position` | Popup direction | `'above' \| 'below' \| 'before' \| 'after'` | `'below'` |
+| `align` | Alignment (logical values flip with RTL; `force-*` stay physical) | `'center' \| 'forwards' \| 'backwards' \| 'force-left' \| 'force-right'` | `'center'` |
+| `anchor` | Whether to draw the arrow pointing at the anchor | `boolean` | `true` |
+| `autoClose` | Auto-close on outside click / Escape | `boolean` | — |
+| `autoCloseIgnore` | Elements ignored by the auto-close test (e.g. the trigger) | `RefObject<HTMLElement \| null> \| HTMLElement \| null` | — |
+| `autoFlip` | Flip to the opposite side when it doesn't fit | `boolean` | `true` |
+| `hideWhenOutOfView` | Temporarily hide while the anchor is scrolled out of view | `boolean` | `true` |
+| `containerPadding` | Clamp inset (px) | `number` | `10` |
+| `head` | Render a head (icon + label + close button) | `boolean` | `false` |
+| `hideCloseButton` | Hide the close button alongside `head` | `boolean` | — |
+| `padded` | Whether the content has padding | `boolean` | `false` |
+| `icon` / `label` / `invisibleLabel` | Head icon / title / visually-hidden title | — | — |
+| `width` / `height` | Popup size (px) | `number \| string` | `320` / — |
+| `footer` | Bottom-area content | `ReactNode` | — |
+| `disabled` | Whether disabled | `boolean` | `false` |
+| `...rest` | Native `div` props (`className`, `id`, `data-*`, etc.) on the popup root | `HTMLAttributes<HTMLDivElement>` | — |
+
+## See also
+
+- The lower-effort trigger: [PopupButton](/en/components/popup-button/index.html)
+- Dropdown select (a floating menu inside): [Dropdown](/en/components/dropdown/index.html)
+- Global config (popup portal container, viewport spacing, direction): [OOUIProvider](/en/guide/configuration.html)

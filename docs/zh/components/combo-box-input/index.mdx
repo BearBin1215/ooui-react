@@ -1,0 +1,110 @@
+---
+title: ComboBoxInput 组合框
+description: "ComboBoxInput 组件的属性说明：可自由输入的文本框 + 下拉候选菜单，选定写入文本但不限定取值；输入能力与 TextInput 同源，含键盘与选定语义、软校验与标签。"
+---
+
+# ComboBoxInput 组合框
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ComboBoxInput) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ComboBoxInputWidget.html "OO.ui.ComboBoxInputWidget")
+
+可输入的下拉候选框：可自由编辑的输入框配下拉候选菜单，不强制输入必须是候选之一。
+
+## 基本用法
+
+```tsx preview
+import { useState } from "react";
+import { ComboBoxInput } from "ooui-react";
+
+const options = [
+  { value: "red", children: "红色" },
+  { value: "green", children: "绿色" },
+  { value: "blue", children: "蓝色" },
+];
+
+function App() {
+  const [text, setText] = useState("");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 260 }}>
+      <ComboBoxInput
+        options={options}
+        value={text}
+        onChange={setText}
+        placeholder="输入或从下拉选择"
+      />
+      <div>当前文本：{text || "（空）"}</div>
+      <ComboBoxInput options={options} defaultValue="绿色" label="颜色" labelPosition="before" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 标签、图标与软校验
+
+`label` / `labelPosition` / `invisibleLabel`、`icon` / `indicator`、`validate`、`required` 等属性沿用 [TextInput](/components/text-input/index.html) 的语义；`validate` 是软反馈（标红 `aria-invalid`，不改写值）。
+
+```tsx preview
+import { ComboBoxInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 260 }}>
+      <ComboBoxInput
+        icon="search"
+        validate={(v) => v.length >= 2}
+        placeholder="至少两个字符"
+        options={[{ value: "ab", children: "AB" }, { value: "cd", children: "CD" }]}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 键盘与选定
+
+键入只**展开菜单**并把高亮重定位到与输入精确匹配的项（无匹配则清高亮），候选列表本身不随输入过滤——要「边输入边筛」需自行收窄 `options`。点击输入框也会重新展开菜单。`readOnly` 时是完全只读：方向键、下拉按钮、点击输入框三条展开通道均不可展开（原版点击输入框仍会展开一个全部禁用的菜单，本工程收窄为不展开）。{/* deviations: dev-combobox-readonly */}
+
+选定（点击选项、Enter、下拉按钮）把选项文本写入输入框，值恒为字符串：**数值型 `value` 的选项不会呈现选中态**（对齐原版按序列化文本比较，`1` 与 `'1'` 不等价），需要选中态时选项值请用字符串。
+
+| 按键 | 行为 |
+| --- | --- |
+| ↑ / ↓ | 展开菜单并移动高亮（未展开时分别自首 / 末项起步） |
+| Enter | 选定高亮项（无高亮时选定与输入精确匹配的选项）并收起；菜单展开时阻止默认行为，处于 [FormLayout](/components/form-layout/index.html) 内回车不会顺带提交表单 |
+| Tab | 仅菜单展开时占用：有未选定的高亮项则提交该高亮项并阻止焦点移出，否则收起菜单、放行焦点移出 |
+| PageUp / PageDown | ±10 翻页（仅菜单展开时占用） |
+| Home / End / ← / → | 不占用，交还输入框光标 |
+
+高亮到端点后不环绕（区别于 `SearchWidget` 的端点环绕）；Escape 或点击外部收起菜单（捕获阶段处理，嵌套于 [Dialog](/components/dialog/index.html) 不误关弹窗）。焦点保持在输入框、高亮项经 `aria-activedescendant` 关联，通用模型见[选择与选项](/guide/options.html)。
+
+## 属性落点
+
+与 [TextInput](/components/text-input/index.html) 一致：`...rest` 落在根 `<div>` 上，写到原生 `<input>` 的属性走 `inputProps`，聚焦输入框用 `inputRef`；`tabIndex`、`title`、`dir`、`accessKey`、`name` 由组件接管落到 `<input>` 上。
+
+## API
+
+只列 ComboBoxInput 特有属性；输入框通用属性见 [TextInput · API](/components/text-input/index.html#api)。
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `options` | 候选选项集（**必填**），书写约定见[选择与选项](/guide/options.html) | `DropdownOptionProps[]` | — |
+| `value` | 输入框文本（受控） | `string` | — |
+| `defaultValue` | 非受控初始值 | `string` | `''` |
+| `onChange` | 值变化回调（键入与选定菜单项均触发） | `ChangeHandler<string>` | — |
+| `placeholder` / `name` / `maxLength` / `required` / `readOnly` | 输入框常规属性 | — | — |
+| `label` / `labelPosition` / `invisibleLabel` | 字段标签 / 位置 / 视觉隐藏 | — | — / `'after'` / `false` |
+| `icon` / `indicator` | 图标名 / 指示器 | `string` / `'up' \| 'down' \| 'clear' \| 'required'` | — |
+| `flags` | 根元素附加标志（invalid 叠加其上） | `string \| string[]` | — |
+| `validate` | 软校验，见[软校验](/components/text-input/index.html#软校验) | `RegExp \| ((v: string) => boolean \| Promise<boolean>) \| 'non-empty' \| 'integer'` | — |
+| `inputRef` | 内部 `<input>` 的引用 | `Ref<HTMLInputElement>` | — |
+| `inputProps` | 原生 `<input>` 附加属性通道；事件串联在组件逻辑之后 | `object` | — |
+| `disabled` | 是否禁用 | `boolean` | `false` |
+
+## 另见
+
+- 单行输入的基础能力：[TextInput](/components/text-input/index.html)
+- 只能从候选里选（不给自由输入）：[Dropdown](/components/dropdown/index.html)
+- 选项数据与键盘焦点模型：[选择与选项](/guide/options.html)

@@ -54,6 +54,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsdown",
+    "docs:dev": "pnpm --filter ooui-react-docs dev",
+    "docs:build": "pnpm --filter ooui-react-docs build",
+    "docs:preview": "pnpm --filter ooui-react-docs preview",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "format": "oxfmt \"**/*.{ts,tsx}\"",

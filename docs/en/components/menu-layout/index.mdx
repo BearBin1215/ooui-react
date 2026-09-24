@@ -1,0 +1,104 @@
+---
+title: MenuLayout
+description: "Props for the MenuLayout component: a menu area and a content area, menuPosition four-way placement, showMenu collapse and expanded fill."
+---
+
+# MenuLayout
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/MenuLayout) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.MenuLayout.html "OO.ui.MenuLayout")
+
+A menu layout: a `menu` area and a content area (`children`), with the menu placed by `menuPosition`. When the menu is collapsed its subtree is not rendered, avoiding invisible focus traps.
+
+## Basic usage
+
+```tsx preview
+import { useState } from "react";
+import { MenuLayout, OutlineSelect } from "ooui-react";
+
+function App() {
+  const [section, setSection] = useState("intro");
+
+  return (
+    <div style={{ height: 200 }}>
+      <MenuLayout
+        menuPosition="before"
+        expanded={false}
+        menu={
+          <OutlineSelect
+            value={section}
+            onChange={(value) => setSection(String(value))}
+            options={[
+              { value: "intro", children: "Intro" },
+              { value: "usage", children: "Usage" },
+            ]}
+          />
+        }
+      >
+        <div style={{ padding: 12 }}>
+          {section === "intro" ? "This is the Intro content." : "This is the Usage content."}
+        </div>
+      </MenuLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Menu position and collapsing
+
+`menuPosition` takes `before` (left, default) / `after` (right) / `top` / `bottom`; `showMenu={false}` collapses the menu. `expanded` decides whether the layout fills the parent (`true`, default) or shrinks to content (`static`).
+
+```tsx preview
+import { useState } from "react";
+import { MenuLayout } from "ooui-react";
+
+const positions = ["before", "after", "top", "bottom"] as const;
+
+function App() {
+  const [position, setPosition] = useState<(typeof positions)[number]>("before");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <div style={{ display: "flex", gap: 8 }}>
+        {positions.map((item) => (
+          <button key={item} onClick={() => setPosition(item)}>
+            {item}
+          </button>
+        ))}
+      </div>
+      <div style={{ height: 160 }}>
+        <MenuLayout
+          menuPosition={position}
+          expanded={false}
+          menu={<div style={{ padding: 12 }}>Menu area</div>}
+        >
+          <div style={{ padding: 12 }}>Content area</div>
+        </MenuLayout>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+:::note
+The `expanded` (default) form fills the parent with absolute positioning — the parent must position and size itself; `expanded={false}` is the static form that shrinks to content (the demos above use it). Menu width and placement details come from the theme CSS. For finished components with full menu interaction, see [BookletLayout](/en/components/booklet-layout/index.html) and [IndexLayout](/en/components/index-layout/index.html).
+:::
+
+## API
+
+Inherits all [Layout](/en/components/layout/index.html) props (including the `hidden` three states), plus:
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `menu` | The menu area content | `ReactNode` | — |
+| `menuPosition` | Menu position (invalid values fall back to `before`) | `'before' \| 'after' \| 'top' \| 'bottom'` | `'before'` |
+| `showMenu` | Whether to show the menu (the subtree is not rendered when collapsed) | `boolean` | `true` |
+| `expanded` | Whether to fill the parent (`false` is the static form) | `boolean` | `true` |
+
+## See also
+
+- Finished components built from it: [BookletLayout](/en/components/booklet-layout/index.html), [IndexLayout](/en/components/index-layout/index.html)
+- The `hidden` three-state semantics: [Layout](/en/components/layout/index.html)

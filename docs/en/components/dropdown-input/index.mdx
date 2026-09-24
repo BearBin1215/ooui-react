@@ -1,0 +1,97 @@
+---
+title: DropdownInput
+description: "Props for the DropdownInput component: a Dropdown for display with a hidden select carrying native submission, options group headings mapped to optgroup, invalid values falling back to the first selectable."
+---
+
+# DropdownInput
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/DropdownInput) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.DropdownInputWidget.html "OO.ui.DropdownInputWidget")
+
+A dropdown select field: a Dropdown handles display and interaction while an embedded hidden `<select>` carries the form submission (`name` lands on it).
+
+## Basic usage
+
+The value rides the `value` / `defaultValue` / `onChange` channels. A value not among the selectable options falls back to the first selectable one, so the component always holds a valid value.
+
+```tsx preview
+import { useState } from "react";
+import { ButtonInput, DropdownInput, FormLayout } from "ooui-react";
+
+function App() {
+  const [size, setSize] = useState<string | number>("m");
+  const [submitted, setSubmitted] = useState("");
+
+  return (
+    <FormLayout
+      onSubmit={(event) => {
+        event.preventDefault();
+        setSubmitted(new FormData(event.currentTarget).get("size")?.toString() ?? "");
+      }}
+    >
+      <DropdownInput
+        name="size"
+        value={size}
+        onChange={setSize}
+        options={[
+          { value: "s", children: "Small" },
+          { value: "m", children: "Medium" },
+          { value: "l", children: "Large" },
+        ]}
+      />
+      <ButtonInput type="submit">Submit</ButtonInput>
+      <div>Current: {String(size)}; submitted: {submitted}</div>
+    </FormLayout>
+  );
+}
+
+export default App;
+```
+
+## Grouped options
+
+Options without `value` are group headings, mapped to `<optgroup>` elements in the hidden `<select>` (`disabled` disables the whole group).
+
+```tsx preview
+import { DropdownInput } from "ooui-react";
+
+function App() {
+  return (
+    <DropdownInput
+      defaultValue="apple"
+      options={[
+        { children: "Fruit" },
+        { value: "apple", children: "Apple" },
+        { value: "banana", children: "Banana" },
+        { children: "Vegetables" },
+        { value: "carrot", children: "Carrot" },
+      ]}
+    />
+  );
+}
+
+export default App;
+```
+
+:::note
+In the mobile form ([OOUIProvider](/en/guide/configuration.html#mobile-mode)'s `isMobile`), the theme CSS hides the Dropdown and switches interaction to the native `<select>`, matching the original's branch.
+:::
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `options` | The option set: items with `value` are selectable (`children` is the display text, `disabled` disables), items without `value` are group headings | `DropdownInputOptionProps[]` | — |
+| `value` | Current value (controlled; passing it enables controlled mode) | `string \| number` | — |
+| `defaultValue` | Initial value for uncontrolled use | `string \| number` | — |
+| `onChange` | Value change callback (the second argument is the native change event: carried on the mobile native `<select>` path; choosing from the desktop menu has no native event and passes `undefined`) | `ChangeHandler<string \| number, HTMLSelectElement>` | — |
+| `name` | Form field name (lands on the hidden `<select>`) | `string` | — |
+| `required` | Required (native `required`, carried by the hidden `<select>`) | `boolean` | `false` |
+| `disabled` | Whether disabled | `boolean` | `false` |
+| `tabIndex` | Forwarded to the inner Dropdown's handle | `number` | — |
+| `...rest` | Native `div` props passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
+
+## See also
+
+- The interactive dropdown itself: [Dropdown](/en/components/dropdown/index.html)
+- The form container: [FormLayout](/en/components/form-layout/index.html)
+- The radio group field: [RadioSelectInput](/en/components/radio-select-input/index.html)

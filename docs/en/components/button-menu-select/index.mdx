@@ -1,0 +1,79 @@
+---
+title: ButtonMenuSelectWidget
+description: "Props for the ButtonMenuSelectWidget component: a command menu opened from a button (a floating menu below the button); each choice fires onChoose and closes the menu, and clearOnSelect decides whether a selection is kept."
+---
+
+# ButtonMenuSelectWidget
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ButtonMenuSelectWidget) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ButtonMenuSelectWidget.html "OO.ui.ButtonMenuSelectWidget")
+
+A button-triggered command menu: choosing an item runs it and closes the menu. Unlike a [Dropdown](/en/components/dropdown/index.html) that tracks a "current selection", it suits toolbar-style "click to run a command" cases.
+
+## Basic usage
+
+```tsx preview
+import { useState } from "react";
+import { ButtonMenuSelectWidget } from "ooui-react";
+
+function App() {
+  const [log, setLog] = useState("Nothing chosen");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: 8 }}>
+      <ButtonMenuSelectWidget
+        icon="menu"
+        indicator="down"
+        options={[
+          { value: "copy", children: "Copy" },
+          { value: "cut", children: "Cut" },
+          { value: "paste", children: "Paste" },
+          { children: "Advanced" },
+          { value: "selectall", children: "Select all" },
+        ]}
+        onChoose={(v) => setLog(`ran: ${String(v)}`)}
+      >
+        Actions
+      </ButtonMenuSelectWidget>
+      <div>{log}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Controlled open state and keeping a selection
+
+- `open` / `defaultOpen` / `onOpenChange` control the menu (the button, outside clicks, Escape and choosing all fire `onOpenChange`).
+- `clearOnSelect` defaults to `true`: the menu is a pure command menu with no lingering selection; set it to `false` to keep the last chosen item.
+- Options without a `value` render as group headings (the "Advanced" item above). The option contract is in [Selection and options](/en/guide/options.html).
+
+## Keyboard
+
+Focus is on the button: Enter / Space opens the menu; with it open, ↑↓ move the highlight, Enter / Space choose, and typed characters jump by prefix; Escape or an outside click closes it. Note that, unlike [Dropdown](/en/components/dropdown/index.html), typing while the menu is closed and focused does not change the selection directly.
+
+Two differences from OOUI:
+
+- Opening with the keyboard also shows the button's pressed state — in the original, keyboard opening gets its pressed class wiped by the reset flow.
+- While the type-ahead buffer is active, Space continues the search and never toggles the menu; with the menu open, Space shares the Enter branch and directly chooses the highlighted item (matching the ARIA convention of activating buttons with Space).{/* deviations: dev-bmsw-pressed dev-bmsw-gesture-guard dev-menu-space-select */}
+
+## API
+
+Inherits [Button](/en/components/button/index.html) props (`icon` / `indicator` / `flags` / `framed` / `disabled`, etc.; `onClick` fires "before toggling the open state"), and adds:
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `options` | Menu option set (**required**); see [Selection and options](/en/guide/options.html) | `ButtonMenuSelectWidgetOptionProps[]` | — |
+| `open` | Whether the menu is open (controlled) | `boolean` | — |
+| `defaultOpen` | Initial open state for uncontrolled use | `boolean` | `false` |
+| `onOpenChange` | Menu open-state callback | `(open: boolean) => void` | — |
+| `onChoose` | Choose callback (fires on every choice, incl. repeats) | `ChangeHandler<string \| number>` | — |
+| `clearOnSelect` | Whether to clear the menu's selection after choosing | `boolean` | `true` |
+| `menuSpacing` | Gap between menu and button (px) | `number` | `4` |
+| `menuProps` | Menu prop overrides (`open`/`container`/`options`/`onChoose` etc. are taken over) | `object` | — |
+
+## See also
+
+- A dropdown that records the current value: [Dropdown](/en/components/dropdown/index.html)
+- A general button that opens a popup: [PopupButton](/en/components/popup-button/index.html)
+- More command-menu forms: the toolbar's `MenuToolGroup`

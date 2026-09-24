@@ -1,0 +1,147 @@
+---
+title: CheckboxMultiselect 复选组
+description: "CheckboxMultiselect 组件的属性说明：复选组的 value/defaultValue/onChange 数组通道、Shift+点击范围选择、方向键焦点导航与禁用下发。"
+---
+
+# CheckboxMultiselect 复选组
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/CheckboxMultiselect) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.CheckboxMultiselectWidget.html "OO.ui.CheckboxMultiselectWidget")
+
+复选组：若干复选项排成一组，可同时选中多项。
+
+## 基本用法
+
+选中值是**数组**，走 `value` / `defaultValue` / `onChange` 三条通道，`onChange` 携带完整的值数组。传 `name` 时每个选项的 checkbox 同名，勾选项随表单以多个同名字段提交。
+
+```tsx preview
+import { useState } from "react";
+import { CheckboxMultiselect } from "ooui-react";
+
+const options = [
+  { value: "apple", children: "苹果" },
+  { value: "banana", children: "香蕉" },
+  { value: "cherry", children: "樱桃" },
+];
+
+function App() {
+  const [value, setValue] = useState<Array<string | number>>(["banana"]);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <CheckboxMultiselect options={options} value={value} onChange={setValue} name="fruits" />
+      <div>当前选中：{value.join("、") || "（无）"}</div>
+      <CheckboxMultiselect options={options} defaultValue={["apple", "cherry"]} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Shift+点击范围选择
+
+先点击一项，再按住 `Shift` 点击另一项：两次点击之间的区间（含两端）统一置为**后一项**翻转后的状态，区间内的禁用项保持原状。这对应表格列表里批量勾选的场景。
+
+```tsx preview
+import { useState } from "react";
+import { CheckboxMultiselect } from "ooui-react";
+
+const options = ["一", "二", "三", "四", "五"].map((text, index) => ({
+  value: index + 1,
+  children: `第 ${text} 项`,
+}));
+
+function App() {
+  const [value, setValue] = useState<Array<string | number>>([]);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <CheckboxMultiselect options={options} value={value} onChange={setValue} />
+      <div style={{ fontSize: 13 }}>
+        当前选中：{value.join("、") || "（无）"}
+      </div>
+      <div style={{ color: "#54595d", fontSize: 13 }}>
+        先点击一项，再按住 Shift 点击另一项，观察范围选择
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 与 FieldLayout 配合
+
+给整组加字段标签时，用 [FieldLayout](/components/field-layout/index.html) 包裹。点击字段标签会把焦点移到首个可用选项的复选框上（不像复选框那样直接切换勾选——组内没有「整组一个值」的语义）。
+
+```tsx preview
+import { CheckboxMultiselect, FieldLayout } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 320 }}>
+      <FieldLayout label="订阅的栏目">
+        <CheckboxMultiselect
+          defaultValue={["news"]}
+          options={[
+            { value: "news", children: "新闻" },
+            { value: "sports", children: "体育" },
+            { value: "tech", children: "科技" },
+          ]}
+        />
+      </FieldLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 禁用
+
+- 选项对象自己的 `disabled` 禁用该项（跳过、不可勾选）。
+- 组件级 `disabled` 会一并禁用组内全部选项，且组禁用优先。详见[选择与选项 · 禁用](/guide/options.html#禁用)。
+
+```tsx preview
+import { CheckboxMultiselect } from "ooui-react";
+
+function App() {
+  return (
+    <CheckboxMultiselect
+      defaultValue={["a"]}
+      options={[
+        { value: "a", children: "可用" },
+        { value: "b", children: "被禁用项", disabled: true },
+        { value: "c", children: "也可用" },
+      ]}
+    />
+  );
+}
+
+export default App;
+```
+
+## 键盘与焦点
+
+- 每个选项的原生 `<input type="checkbox">` 都在 Tab 序中；↑↓←→ 提供组内快捷移动——在**非禁用项**之间环绕移动焦点（与 `RadioSelect` 不同，只移动焦点、**不直接改选**），空格切换当前项勾选。
+- `Shift+点击` 的范围选择以「上一次点击（或空格切换）的项」为起点。
+- `onChange` 的第二个参数是触发本次变化的原生 `change` 事件。
+- 选项根元素带 `role='checkbox'` 与 `aria-checked`（原版选项根无 role、仅以选中类表达），读屏器可直接读到各选项状态。{/* deviations: dev-multioption-role */}
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `options` | 选项集，按展示顺序渲染；每项含 `value` 与 `children`（选项文本），支持 `disabled` 等选项字段 | `CheckboxMultiselectOptionProps[]` | — |
+| `value` | 当前选中值集合（受控，传入即受控模式） | `(string \| number)[]` | — |
+| `defaultValue` | 非受控初始选中值集合 | `(string \| number)[]` | `[]` |
+| `onChange` | 选中值集合变更回调，携带完整的值数组与原生事件 | `ChangeHandler<(string \| number)[], HTMLInputElement>` | — |
+| `name` | 表单字段名，透传给每个选项的 `checkbox` | `string` | — |
+| `disabled` | 是否禁用（一并禁用组内全部选项） | `boolean` | `false` |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`aria-*` 等）直传分组容器 | `HTMLAttributes<HTMLDivElement>` | — |
+
+## 另见
+
+- 选项数据与键盘焦点模型：[选择与选项](/guide/options.html)
+- 单个复选框：[CheckboxInput](/components/checkbox-input/index.html)
+- 随表单提交的复选组字段：`CheckboxMultiselectInput`

@@ -1,0 +1,73 @@
+---
+title: Common props
+description: "Prop rules shared by every ooui-react component: undeclared props pass through to the root element, inner elements go through channels like inputProps, and the common semantics of disabled, flags, title, accessKey and tabIndex."
+---
+
+# Common props
+
+This page is the shared premise for every component page; it covers the prop rules and where they land that **all components have in common**. Component-specific props are documented on each component's own page.
+
+## Prop pass-through
+
+Components forward any prop this library does not declare straight onto the rendered root element, so `className`, `id`, `style`, `data-*`, `aria-*`, `onClick` and the like can be written directly:
+
+```tsx preview
+import { Button } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <Button onClick={() => console.log("clicked")} data-role="demo">Click me</Button>
+      <Button className="my-button" style={{ fontSize: 20 }}>
+        Custom class and style
+      </Button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+- If a component always writes a given prop onto the root element itself, pass-through won't take effect — for example, `aria-disabled` on most components is derived from the `disabled` prop and can't be set by hand.
+- The native `defaultValue` / `defaultChecked` don't reach the DOM through pass-through.
+
+## Refs and inner elements
+
+`ref` points at the root element. To reach an inner element or pass props to it, use the channel the component exposes:
+
+| Channel | Points at / does | Provided by |
+| --- | --- | --- |
+| `inputRef` | The inner `<input>` / `<textarea>` | The input family (`TextInput`, `NumberInput`, `MultilineTextInput`, `ComboBoxInput`, `SearchInput`, `CheckboxInput`) and the file `input` of `SelectFileInputWidget` |
+| `inputProps` | Props for the inner input element | `TextInput`, `NumberInput`, `ComboBoxInput` |
+| `buttonProps` | Props for the inner button | `SelectFileInputWidget` (select button), `CopyTextLayout` (copy button) |
+| `textInputProps` | Props for the text field | `CopyTextLayout` |
+| `menuProps` | Props for the menu | `ButtonMenuSelectWidget` |
+| `iconProps` / `indicatorProps` | Props for the icon / indicator element | `Button`, `TextInput` |
+| `anchorRef` / `anchorProps` | The inner focusable `<a>` (a Button's root is a `<span>`, so focus goes through it) | `Button` |
+
+## Common props
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `disabled` | Whether the component is disabled | `boolean` | `false` |
+| `flags` | Extra flags; allowed values are listed on each component page | `string \| string[]` | — |
+| `className` | Appended to the root element, merged with the component's own class list | `string` | — |
+| `id` | The root element's id | `string` | — |
+| `title` | Tooltip text; falls back to the label text when the label is visually hidden | `string` | — |
+| `accessKey` | Access key; written to the element and appended to `title` as `[key]` | `string` | — |
+| `tabIndex` | Tab order; pass `null` to make the element entirely unfocusable (no `tabindex` attribute is emitted) | `number \| null` | `0` |
+| Everything else | `aria-*`, `data-*`, `style`, event handlers | Native attributes | — |
+
+A few notes:
+
+- **`disabled` emits `aria-disabled`, not the native `disabled`**: a disabled element can still be focused and read out; the native `disabled` is only set on real form controls.
+- **`disabled` means something different on some layout containers**: on `FieldLayout` it applies to the field itself; `FieldsetLayout` uses a native `<fieldset disabled>`, which also disables every control in the group; pure layout containers (`PanelLayout`, `StackLayout`, etc.) have no `disabled`.
+- **Where `title` and `accessKey` land varies by component**: on most they land on the root element, on the Button family on the inner anchor, and on the input family on the inner `<input>`. Before pairing `title` with an `aria-*` attribute, check the landing spot on the component page.
+- **The `title` label fallback follows later label changes**: when the label is visually hidden and `title` is not given, the label text is used as the fallback; this library recomputes that fallback from the current `label` / `invisibleLabel` on every render, so changing the label later updates `title` too (the original evaluates it only once at construction, leaving `title` untouched by later label changes).{/* deviations: dev-resolve-title-rerender */}
+- **`label` accepts any renderable ReactNode**: renderable nodes such as `0` count as having a label, while booleans count as having none (the original only accepts non-empty strings).{/* deviations: dev-label-reactnode */}
+- **`tabIndex={null}` removes the `tabindex` attribute entirely**: the element becomes completely unfocusable, programmatic focus included — unlike `-1`, which stays out of the Tab order but remains programmatically focusable.{/* deviations: dev-tabindex-null */}
+- **Not every component has `flags`**: each accepts different flags depending on its form (e.g. `Button`'s `primary` / `progressive`, `Icon`'s color variants); see the component pages.
+
+## Keyboard and accessibility
+
+Keyboard interaction, focus management and `aria` attributes are implemented one by one against the original OOUI; the specific keys are documented on each component page.

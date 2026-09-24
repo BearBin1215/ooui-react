@@ -1,0 +1,140 @@
+---
+title: NumberInput
+description: "Props for the NumberInput component: the number | '' value shape, stepping via buttons/keyboard/mouse wheel, min/max/step constraints and soft validation, plus the TextInput-family label and icon capabilities."
+---
+
+# NumberInput
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/NumberInput) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.NumberInputWidget.html "OO.ui.NumberInputWidget")
+
+A number input; input capabilities match [TextInput](/en/components/text-input/index.html).
+
+## Basic usage
+
+The value type is `number | ''` — clearing the input or typing non-numeric content means no value.
+
+```tsx preview
+import { useState } from "react";
+import { NumberInput } from "ooui-react";
+
+function App() {
+  const [value, setValue] = useState<number | "">(5);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <NumberInput value={value} onChange={setValue} min={0} max={10} />
+      <div>Current value: {value === "" ? "(empty)" : value}</div>
+      <NumberInput defaultValue={1} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Stepping
+
+Three stepping channels; the everyday step is `buttonStep`:
+
+- **Plus/minus buttons**: `showButtons` (on by default) renders a button on each side. They are purely decorative (`aria-hidden`, outside the tab order), and clicking them never steals focus from the input; they are disabled when `disabled` or `readOnly`.
+- **Keyboard**: ↑/↓ steps by `buttonStep`; PgUp/PgDn steps by `pageStep` (10 × `buttonStep` by default).
+- **Mouse wheel**: only while the input is focused (scroll up to increase, down to decrease), and page scrolling is prevented; hovering without focus never intercepts the wheel, so scrolling the page won't change the value by accident.
+
+Stepping converges the value: the result is clamped into `[min, max]` and snapped to a multiple of `step`; when the current value is empty (`''`), stepping starts from 0. Convergence happens on stepping only — values typed out of range or off-step are kept as typed and flagged by soft validation.
+
+## Range and step
+
+- `min` / `max`: the valid range, also written as the `<input>`'s `min`/`max` attributes.
+- `step`: the validity step — the value must be a multiple of it to count as valid; by default decimals are unrestricted (the attribute outputs `step="any"`).
+- `buttonStep`: the actual step for buttons / arrow keys / wheel, defaulting to `step` (then 1).
+- `pageStep`: the PgUp/PgDn step, defaulting to 10 × `buttonStep`.
+
+## Soft validation
+
+Validity is built in. When the value fails, the input element gets `aria-invalid` and the root gets an invalid flag class, **but the value is not rewritten**:
+
+- Empty value: invalid when `required`, validated right on mount (empty + required is flagged red as soon as it loads);
+- Non-finite numbers, values that are not a multiple of `step`, values outside `[min, max]`.
+
+The timing matches TextInput's soft validation: on value change (debounced), on blur, cleared on focus; changing `min`/`max`/`step`/`required` re-validates immediately.
+
+```tsx preview
+import { NumberInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <NumberInput required placeholder="Required; empty is flagged red on load" />
+      <NumberInput min={0} max={10} step={2} defaultValue={7} placeholder="step=2; 7 is not a multiple of 2" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Label and icons
+
+`label` / `labelPosition` / `invisibleLabel` work exactly as in TextInput; when `indicator` is not given explicitly and `required` is true, it falls back to the required indicator.
+
+```tsx preview
+import { NumberInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <NumberInput label="Quantity" labelPosition="before" defaultValue={1} />
+      <NumberInput required placeholder="Required; shows the required indicator automatically" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Where props land
+
+The component root is a non-focusable `<div>` and the input element is an `<input type="number">` wrapped in an `oo-ui-numberInputWidget-field` container (with buttons on, the root also carries `oo-ui-numberInputWidget-buttoned`). The landing rules are the same as [TextInput](/en/components/text-input/index.html):
+
+- `...rest` from props lands on the root div; attributes that must go on the native `<input>` (such as `role`, `aria-*`, `autoComplete`) go through the `inputProps` channel, whose `onChange`/`onBlur`/`onFocus` are chained after the component's own logic.
+- `inputRef` points to the inner `<input>` (the component `ref` points to the root div); use `inputRef` to focus the input.
+- `tabIndex`, `title`, `dir`, `accessKey` and `name` are taken over by the component and land directly on the `<input>` (matching the original's landing spots), not via `rest`.
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `value` | Input value (controlled; passing it enables controlled mode); `''` means no value | `number \| ''` | — |
+| `defaultValue` | Uncontrolled initial value | `number \| ''` | — |
+| `onChange` | Value-change handler (value-first, includes the native event) | `ChangeHandler<number \| '', HTMLInputElement>` | — |
+| `showButtons` | Whether to show the stepping buttons on both sides | `boolean` | `true` |
+| `min` / `max` | Minimum / maximum (stepping clamp + soft-validation bounds) | `number` | — |
+| `step` | Validity step (the value must be a multiple); decimals unrestricted by default | `number` | — |
+| `buttonStep` | Step for buttons / ↑↓ / wheel | `number` | `step ?? 1` |
+| `pageStep` | Step for PgUp/PgDn | `number` | `buttonStep × 10` |
+| `allowInteger` / `isInteger` | Deprecated compatibility options: integers only (forces `step={1}`); a development warning fires when set | `boolean` | — |
+| `placeholder` | Input hint | `string` | — |
+| `label` / `invisibleLabel` | Field label / label visually hidden (kept as accessible name) | `ReactNode` / `boolean` | — / `false` |
+| `labelPosition` | Label position | `'before' \| 'after'` | `'after'` |
+| `icon` | Icon name | `string` | — |
+| `indicator` | Indicator (falls back to required when `required` and not given explicitly) | `'up' \| 'down' \| 'clear' \| 'required'` | — |
+| `required` | Required (native `required` attribute; empty is invalid, part of browser validation) | `boolean` | `false` |
+| `readOnly` | Read-only (keeps focus; forbids edits and stepping) | `boolean` | `false` |
+| `disabled` | Whether disabled | `boolean` | `false` |
+| `flags` | Extra flags on the root (the invalid flag is layered on top) | `string \| string[]` | — |
+| `name` | Form field name (lands on `<input>`) | `string` | — |
+| `accessKey` | Access key (lands on `<input>`) | `string` | — |
+| `inputRef` | Ref to the inner `<input>` | `Ref<HTMLInputElement>` | — |
+| `inputProps` | Extra-props channel for the native `<input>`; `onChange`/`onBlur`/`onFocus` are chained after the component logic | `object` | — |
+| `...rest` | Native `div` props (`className`, `id`, `data-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
+
+## Differences from OOUI
+
+- Non-positive `step` / `buttonStep` / `pageStep` throws at construction time in the original; here it logs a one-time development warning and renders with the given values.{/* deviations: dev-numberinput-step */}
+- `allowInteger` / `isInteger` are adopted for compatibility: turning them on is equivalent to forcing `step={1}`, with a development warning suggesting migration (the original adopts them silently) — new code should use `step` directly.{/* deviations: dev-allow-integer */}
+
+## See also
+
+- The single-line foundation (type whitelist, `validate` soft validation, etc.): [TextInput](/en/components/text-input/index.html)
+- How values flow between the component and your state: [Controlled and uncontrolled](/en/guide/controlled.html)
+- The pass-through and `ref` rules shared by all components: [Common props](/en/guide/basics.html)

@@ -1,0 +1,60 @@
+---
+title: ActionFieldLayout
+description: "Props for the ActionFieldLayout component: a FieldLayout with an action button beside the field, the fieldInline switch for span-rooted inline controls, align inherited from the field layout."
+---
+
+# ActionFieldLayout
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/ActionFieldLayout) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ActionFieldLayout.html "OO.ui.ActionFieldLayout")
+
+A field layout with an action button: built on [FieldLayout](/en/components/field-layout/index.html) with an extra `button` slot beside the field control (usually a [Button](/en/components/button/index.html) or a `ButtonInput`).
+
+## Basic usage
+
+```tsx preview
+import { useState } from "react";
+import { ActionFieldLayout, Button, TextInput } from "ooui-react";
+
+function App() {
+  const [tags, setTags] = useState<string[]>(["ooui"]);
+
+  return (
+    <div style={{ maxWidth: 420 }}>
+      <ActionFieldLayout
+        label="Add tag"
+        button={
+          <Button
+            flags={["primary", "progressive"]}
+            onClick={() => setTags((prev) => [...prev, prev.length.toString()])}
+          >
+            Add
+          </Button>
+        }
+      >
+        <TextInput placeholder="Type and add" />
+      </ActionFieldLayout>
+      <div style={{ marginTop: 8 }}>Added: {tags.join(", ")}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Inline controls
+
+When the field control is a span-rooted inline control (such as `CheckboxInput` or `ButtonInput`), pass `fieldInline` so the input wrapper renders as a `span`. Passing it wrongly has no visual consequence (the theme CSS normalizes both wrappers' layout); it only keeps the DOM shape aligned with the original. {/* deviations: dev-fieldinline */}
+
+## API
+
+Inherits all [FieldLayout](/en/components/field-layout/index.html) props (`label` / `align` / `title`, etc.), plus:
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `button` | The button control beside the field | `ReactNode` | — |
+| `fieldInline` | Whether the field control is a span-rooted inline control (decides the input wrapper: `span` vs `div`) | `boolean` | `false` |
+
+## See also
+
+- Field arrangement and label wiring: [FieldLayout](/en/components/field-layout/index.html)
+- The finished read-only field with a copy button: [CopyTextLayout](/en/components/copy-text-layout/index.html)

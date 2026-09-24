@@ -1,0 +1,75 @@
+---
+title: 通用属性
+description: "ooui-react 所有组件共有的属性规则：未声明属性透传到根元素、内部元素走 inputProps 一类通道，以及 disabled、flags、title、accessKey、tabIndex 的通用语义。"
+---
+
+# 通用属性
+
+本页是各组件页的公共前提，说明所有组件共有的属性规则与落点。组件特有的属性见对应组件页。
+
+## 属性透传
+
+组件把本库未声明的属性原样透传到渲染出的根元素，`className`、`id`、`style`、`data-*`、`aria-*`、`onClick` 等可以直接写：
+
+```tsx preview
+import { Button } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <Button onClick={() => console.log("clicked")} data-role="demo">点我</Button>
+      <Button className="my-button" style={{ fontSize: 20 }}>
+        自定义类与样式
+      </Button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+- 如果组件本身会往根元素固定写入同名属性，透传会失效，例如绝大多数组件的 `aria-disabled` 由 `disabled` 参数计算，手动指定无效。
+- 原生 `defaultValue` / `defaultChecked` 不随透传落到 DOM。
+
+## ref 与内部元素
+
+`ref` 指向根元素。要拿到内部元素或往内部元素传入属性，走组件提供的通道：
+
+| 通道 | 指向 / 作用 | 提供通道的组件 |
+| --- | --- | --- |
+| `inputRef` | 内部 `<input>` / `<textarea>` | 输入框系（`TextInput`、`NumberInput`、`MultilineTextInput`、`ComboBoxInput`、`SearchInput`、`CheckboxInput`）与 `SelectFileInputWidget` 的文件 `input` |
+| `inputProps` | 内部输入元素的属性 | `TextInput`、`NumberInput`、`ComboBoxInput` |
+| `buttonProps` | 内部按钮的属性 | `SelectFileInputWidget`（选择按钮）、`CopyTextLayout`（复制按钮） |
+| `textInputProps` | 文本框的属性 | `CopyTextLayout` |
+| `menuProps` | 菜单的属性 | `ButtonMenuSelectWidget` |
+| `iconProps` / `indicatorProps` | 图标 / 指示器元素的属性 | `Button`、`TextInput` |
+| `anchorRef` / `anchorProps` | 内部可聚焦的 `<a>`（Button 系的根是 `<span>`，聚焦要经过） | `Button` |
+
+## 通用属性
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `disabled` | 是否禁用 | `boolean` | `false` |
+| `flags` | 附加标志，可选值见组件页 | `string \| string[]` | — |
+| `className` | 追加到根元素，与组件自身的类链合并 | `string` | — |
+| `id` | 根元素 id | `string` | — |
+| `title` | 提示文本；标签视觉隐藏时以标签文本兜底 | `string` | — |
+| `accessKey` | 快捷键，写入元素并在 `title` 末尾附 `[键]` | `string` | — |
+| `tabIndex` | Tab 序；传 `null` 表示彻底不可聚焦（不输出 `tabindex` 属性） | `number \| null` | `0` |
+| 其余 | `aria-*`、`data-*`、`style`、各类事件 | 原生属性 | — |
+
+几点说明：
+
+- **`disabled` 输出 `aria-disabled` 而非原生 `disabled`**：禁用后元素仍可被聚焦与朗读，原生 `disabled` 只写在真实的表单控件上。
+- **部分布局容器的 `disabled` 另有语义**：
+  - `FieldLayout` 只作用于字段本身；`FieldsetLayout` 走原生 `<fieldset disabled>`，会连带禁用整组内的控件；
+  - 纯布局容器（`PanelLayout`、`StackLayout` 等）没有 `disabled`。
+- **`title` 与 `accessKey` 的落点因组件而异**：多数落在根元素，`Button` 系落在内部锚点，输入框系落在内部 `<input>` 上。要给 `title` 配 `aria-*` 时先看组件页的落点说明。
+- **`title` 的标签兜底随标签变化重算**：标签视觉隐藏且未显式给 `title` 时以标签文本兜底；本工程每次渲染按当前 `label` / `invisibleLabel` 重算该兜底，后续改标签会联动更新（原版只在构造期求值一次，之后改标签 `title` 不变）。{/* deviations: dev-resolve-title-rerender */}
+- **`label` 接受任意可渲染的 ReactNode**：`0` 等可渲染节点按有标签处理，布尔值按无标签处理（原版只认非空字符串）。{/* deviations: dev-label-reactnode */}
+- **`tabIndex={null}` 彻底移除 `tabindex` 属性**：元素彻底不可聚焦，连编程聚焦也不成立——区别于 `-1` 的不进 Tab 序但仍可编程聚焦。{/* deviations: dev-tabindex-null */}
+- **`flags` 不是每个组件都有**：各组件按其形态接受不同的标志（如 `Button` 的 `primary` / `progressive`、`Icon` 的色彩变体），具体见组件页。
+
+## 键盘与无障碍
+
+键盘操作、焦点管理与 `aria` 属性按原版 OOUI 逐项对照实现，具体按键见各组件页。

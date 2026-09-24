@@ -1,0 +1,182 @@
+---
+title: CheckboxInput
+description: "Props for the CheckboxInput component: the checked/defaultChecked/onChange channels, value as the form submission value, the indeterminate half-selected state, and the inputId/inputRef channels."
+---
+
+# CheckboxInput
+
+> [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/CheckboxInput) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.CheckboxInputWidget.html "OO.ui.CheckboxInputWidget")
+
+A single checkbox. It has no text label of its own — when you need one, wrap it in [FieldLayout](/en/components/field-layout/index.html).
+
+## Basic usage
+
+The checked state uses the `checked` / `defaultChecked` / `onChange` channels; the first argument of `onChange` is the new checked boolean.
+
+```tsx preview
+import { useState } from "react";
+import { CheckboxInput } from "ooui-react";
+
+function App() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <CheckboxInput checked={checked} onChange={setChecked} />
+        Checked: {String(checked)}
+      </label>
+      <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <CheckboxInput defaultChecked />
+        Uncontrolled; initially checked
+      </label>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Indeterminate state
+
+`indeterminate` means "partially selected" — visually a dash rather than a check. It is independent of the checked state and is commonly used on a "select all" box to show that some, not all, children are selected.
+
+```tsx preview
+import { CheckboxInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <CheckboxInput indeterminate />
+      <CheckboxInput checked indeterminate />
+    </div>
+  );
+}
+
+export default App;
+```
+
+The standard wiring of a "select all" box: its checked and indeterminate states are both **derived** from the children set (none → unchecked, all → checked, otherwise indeterminate), and clicking it sets all children to checked or unchecked:
+
+```tsx preview
+import { useState } from "react";
+import { CheckboxInput } from "ooui-react";
+
+const ITEMS = ["Apple", "Banana", "Orange"];
+
+function App() {
+  const [picked, setPicked] = useState<string[]>(["Apple"]);
+  const allChecked = picked.length === ITEMS.length;
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <CheckboxInput
+          checked={allChecked}
+          indeterminate={picked.length > 0 && !allChecked}
+          onChange={() => setPicked(allChecked ? [] : ITEMS)}
+        />
+        Select all
+      </label>
+      {ITEMS.map((item) => (
+        <label key={item} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <CheckboxInput
+            checked={picked.includes(item)}
+            onChange={() =>
+              setPicked((prev) =>
+                prev.includes(item) ? prev.filter((x) => x !== item) : [...prev, item],
+              )
+            }
+          />
+          {item}
+        </label>
+      ))}
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Form submission value
+
+`value` is the **form submission value** (written to the native `<input>`'s `value` attribute, defaulting to an empty string). It **does not affect the checked state** — that is driven only by the `checked` channels. Combined with `name`, this `value` is submitted with the form when checked.
+
+```tsx preview
+import { CheckboxInput } from "ooui-react";
+
+function App() {
+  return (
+    <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <CheckboxInput name="agree" value="yes" defaultChecked />
+      I agree to the terms (submits as agree=yes)
+    </label>
+  );
+}
+
+export default App;
+```
+
+## Using it with FieldLayout
+
+The field's text label is usually delegated to [FieldLayout](/en/components/field-layout/index.html). It automatically associates the label with this checkbox's native `<input>` (clicking the label toggles the check); to specify the association target manually, give the input element's id via `inputId`.
+
+```tsx preview
+import { CheckboxInput, FieldLayout } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 320 }}>
+      <FieldLayout label="Enable notifications" align="inline">
+        <CheckboxInput defaultChecked />
+      </FieldLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Disabled
+
+`disabled` outputs `aria-disabled` and disables the native `<input>`, so the checkbox can no longer be toggled. Inside a native `<fieldset>` such as `FieldsetLayout`, the group-level disable propagates to it.
+
+```tsx preview
+import { CheckboxInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <CheckboxInput disabled />
+      <CheckboxInput disabled defaultChecked />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| `checked` | Checked state (controlled; passing it enables controlled mode) | `boolean` | — |
+| `defaultChecked` | Uncontrolled initial checked state | `boolean` | — |
+| `onChange` | Checked-change handler (new state first, includes the native event) | `ChangeHandler<boolean, HTMLInputElement>` | — |
+| `value` | Form submission value (written to `<input>`'s `value`, does not affect checked state) | `string \| number` | `''` |
+| `indeterminate` | Half-selected state | `boolean` | `false` |
+| `required` | Required (native `required`) | `boolean` | `false` |
+| `name` | Form field name (lands on `<input>`) | `string` | — |
+| `inputId` | The inner `<input>`'s id (pairs with a label's `htmlFor`) | `string` | — |
+| `inputRef` | Ref to the inner `<input>` (the component `ref` points to the outer `<span>`) | `Ref<HTMLInputElement>` | — |
+| `disabled` | Whether disabled | `boolean` | `false` |
+| `accessKey` | Access key (lands on `<input>`) | `string` | — |
+| `...rest` | Native `span` props (`className`, `id`, `data-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLSpanElement>` | — |
+
+`title`, `dir` and `tabIndex` are taken over by the component and land on the inner `<input>`.
+
+## See also
+
+- Where the checked channel sits among the three value channels: [Controlled and uncontrolled](/en/guide/controlled.html)
+- Layout for a labeled field: [FieldLayout](/en/components/field-layout/index.html)
+- The single-choice case: [RadioInput](/en/components/radio-input/index.html) (same props as this component, without `indeterminate`)

@@ -1,0 +1,92 @@
+---
+title: ButtonInput 提交按钮
+description: "ButtonInput 组件的属性说明：真实 <button>/<input> 元素的表单按钮，type/name/value/formNoValidate 参与原生提交，useInputTag 切换 input 形态。"
+---
+
+# ButtonInput 提交按钮
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ButtonInput) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ButtonInputWidget.html "OO.ui.ButtonInputWidget")
+
+表单按钮：渲染真实的 `<button>` / `<input>` 元素，`type` / `name` / `value` / `formNoValidate` 参与表单原生提交。没有提交需求时用 [Button](/components/button/index.html)。
+
+## 基本用法
+
+放进 [FormLayout](/components/form-layout/index.html) 即可触发原生提交；`type="submit"` 的按钮携带自身的 `name` / `value`，点哪个提交哪个。
+
+```tsx preview
+import { useState } from "react";
+import { ButtonInput, FormLayout, HiddenInputWidget } from "ooui-react";
+
+function App() {
+  const [submitted, setSubmitted] = useState("");
+
+  return (
+    <FormLayout
+      onSubmit={(event) => {
+        event.preventDefault();
+        const pairs: string[] = [];
+        new FormData(event.currentTarget).forEach((value, key) => {
+          pairs.push(`${key}=${value}`);
+        });
+        setSubmitted(pairs.join(" & "));
+      }}
+    >
+      <HiddenInputWidget name="source" value="demo" />
+      <ButtonInput type="submit" flags={["primary", "progressive"]}>
+        保存
+      </ButtonInput>
+      <ButtonInput type="submit" name="action" value="draft" formNoValidate>
+        存草稿（跳过校验）
+      </ButtonInput>
+      {submitted && <div>提交内容：{submitted}</div>}
+    </FormLayout>
+  );
+}
+
+export default App;
+```
+
+## input 形态
+
+`useInputTag` 渲染为 `<input>` 而非 `<button>`：标签文本即提交值，不支持图标、指示器与 `value` 属性（标签仅支持纯文本）。
+
+```tsx preview
+import { ButtonInput } from "ooui-react";
+
+function App() {
+  return (
+    <ButtonInput type="submit" useInputTag flags={["primary", "progressive"]}>
+      保存
+    </ButtonInput>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `children` | 按钮文本 | `ReactNode` | — |
+| `type` | 原生 `type` 属性 | `'button' \| 'submit' \| 'reset'` | `'button'` |
+| `name` / `value` | 提交字段名与值（`useInputTag` 时无效，`<input>` 的值为标签文本） | `string` | — |
+| `formNoValidate` | 提交时跳过表单校验 | `boolean` | `false` |
+| `useInputTag` | 渲染为 `<input>` 而非 `<button>` | `boolean` | `false` |
+| `flags` | 附加标志（色彩与形态） | `ButtonFlag \| ButtonFlag[]` | `[]` |
+| `framed` | 是否带边框 | `boolean` | `true` |
+| `active` | 是否为激活状态 | `boolean` | `false` |
+| `icon` / `indicator` | 图标 / 指示器（`useInputTag` 时不支持） | `string` / `'clear' \| 'up' \| 'down' \| 'required'` | — |
+| `invisibleLabel` | 标签视觉隐藏但保留可访问名称 | `boolean` | `false` |
+| `onClick` | 点击回调（键盘 Enter/空格同样触发） | `(ev) => void` | — |
+| `accessKey` | 快捷键（落在真实 `button` / `input` 上） | `string` | — |
+| `disabled` | 是否禁用 | `boolean` | `false` |
+| `...rest` | 原生 `span` 属性直传根元素 | `HTMLAttributes<HTMLSpanElement>` | — |
+
+键盘与鼠标按压期间输出按压态类（`oo-ui-buttonElement-pressed`），与原版一致。
+
+## 另见
+
+- 无表单提交需求的按钮：[Button](/components/button/index.html)
+- 表单容器：[FormLayout](/components/form-layout/index.html)
+- 随表单提交的选择字段：[DropdownInput](/components/dropdown-input/index.html)

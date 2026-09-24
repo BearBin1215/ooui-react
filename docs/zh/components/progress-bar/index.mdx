@@ -1,0 +1,117 @@
+---
+title: ProgressBar 进度条
+description: "ProgressBar 组件的属性说明：0–100 的进度值、progress=false 的不定进度条纹形态，role=progressbar 的语义与范围钳制。"
+---
+
+# ProgressBar 进度条
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ProgressBar) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ProgressBarWidget.html "OO.ui.ProgressBarWidget")
+
+进度条。
+
+## 确定进度
+
+`progress` 取 0–100 的数值，超出范围会被钳制到 `[0, 100]`（原版不钳制，`NaN` 会直接输出非法的宽度与属性值）。{/* deviations: dev-progressbar-clamp */}
+
+```tsx preview
+import { useState } from "react";
+import { Button, ProgressBar } from "ooui-react";
+
+function App() {
+  const [progress, setProgress] = useState(40);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <ProgressBar progress={progress} />
+      <div style={{ display: "flex", gap: 8 }}>
+        <Button onClick={() => setProgress((p) => Math.max(0, p - 10))}>-10</Button>
+        <Button onClick={() => setProgress((p) => Math.min(100, p + 10))}>+10</Button>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 不定进度
+
+`progress={false}`（也是缺省值）表示总时长未知的“进行中”，填充条以滑动动画示意，不给出具体数值。
+
+```tsx preview
+import { ProgressBar } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 320 }}>
+      <ProgressBar />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 进度随异步任务推进
+
+典型用法是在任务开始时置为不定进度，拿到可量化的进展后切换为确定进度。
+
+```tsx preview
+import { useEffect, useState } from "react";
+import { Button, ProgressBar } from "ooui-react";
+
+function App() {
+  const [state, setState] = useState<"idle" | "starting" | "running" | "done">("idle");
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (state !== "running") {
+      return;
+    }
+    const timer = setInterval(() => {
+      setProgress((p) => {
+        if (p >= 100) {
+          setState("done");
+          return 100;
+        }
+        return p + 10;
+      });
+    }, 300);
+    return () => clearInterval(timer);
+  }, [state]);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <ProgressBar
+        progress={state === "starting" || state === "idle" ? false : progress}
+      />
+      <Button
+        disabled={state === "starting" || state === "running"}
+        onClick={() => {
+          setProgress(0);
+          setState("starting");
+          setTimeout(() => setState("running"), 800);
+        }}
+      >
+        开始任务
+      </Button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `progress` | 进度百分比（0–100，越界钳制）；`false` 为不定进度（滑动动画），非有限值（如 `NaN`）也按不定进度处理 | `number \| false` | `false` |
+| `disabled` | 是否禁用 | `boolean` | `false` |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`aria-label` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+进度条只读、不可聚焦，用 `aria-valuenow` / `aria-valuemin` / `aria-valuemax` 播报数值；确定进度下 `aria-valuenow` 为钳制后的值，不定进度下不输出该属性。要给进度条补充可读名称，用 `aria-label`。
+
+## 另见
+
+- 通用透传与 `ref` 规则：[通用属性](/guide/basics.html)

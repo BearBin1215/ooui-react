@@ -1,0 +1,140 @@
+---
+title: NumberInput 数字输入
+description: "NumberInput 组件的属性说明：number | '' 值形态、按钮/键盘/滚轮步进、min/max/step 约束与软校验，以及与 TextInput 同源的标签、图标能力。"
+---
+
+# NumberInput 数字输入
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/NumberInput) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.NumberInputWidget.html "OO.ui.NumberInputWidget")
+
+数字输入框，输入能力与 [TextInput](/components/text-input/index.html) 一致。
+
+## 基本用法
+
+值类型为 `number | ''`——清空输入或键入非数字内容时即无值。
+
+```tsx preview
+import { useState } from "react";
+import { NumberInput } from "ooui-react";
+
+function App() {
+  const [value, setValue] = useState<number | "">(5);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <NumberInput value={value} onChange={setValue} min={0} max={10} />
+      <div>当前值：{value === "" ? "（空）" : value}</div>
+      <NumberInput defaultValue={1} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 步进
+
+三个步进通道，日常步距都是 `buttonStep`：
+
+- **加减按钮**：`showButtons`（默认开启）渲染两侧按钮，是纯装饰元素（`aria-hidden`、不参与 Tab 序），点击不会抢走输入框焦点；`disabled` 或 `readOnly` 时一并禁用。
+- **键盘**：↑/↓ 按 `buttonStep` 步进，PgUp/PgDn 按 `pageStep`（默认 `buttonStep` 的 10 倍）。
+- **滚轮**：仅输入框聚焦时生效（上滚加、下滚减），并阻止页面滚动；悬停未聚焦时不拦截，避免滚动页面误改数值。
+
+步进时数值会收敛：结果钳制到 `[min, max]` 区间并取 `step` 的倍数；当前无值（`''`）时步进从 0 起步。收敛只发生在步进时——直接键入的越界值或非 `step` 倍数原样保留，由软校验标红。
+
+## 范围与步距
+
+- `min` / `max`：合法区间，同时写成 `<input>` 的 `min`/`max` 属性。
+- `step`：合法性步距——值必须是它的倍数才算合法；缺省不限制小数（属性输出 `step="any"`）。
+- `buttonStep`：按钮 / 方向键 / 滚轮的实际步距，缺省取 `step`（再缺省为 1）。
+- `pageStep`：PgUp/PgDn 的步距，缺省为 `buttonStep` 的 10 倍。
+
+## 软校验
+
+内置合法性判定，值不满足时输入元素输出 `aria-invalid`、根元素叠加 invalid 标志类，**但不改写值**：
+
+- 空值：`required` 时非法，且挂载时即校验（空值 + 必填，加载就标红）；
+- 非有限数值、不是 `step` 的倍数、超出 `[min, max]` 区间。
+
+触发时机与 TextInput 的软校验一致：值变更（防抖）、失焦即校验、聚焦时清除；`min`/`max`/`step`/`required` 变化后立即重新校验。
+
+```tsx preview
+import { NumberInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <NumberInput required placeholder="必填，空值加载即标红" />
+      <NumberInput min={0} max={10} step={2} defaultValue={7} placeholder="step=2，7 不是 2 的倍数" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 标签与图标
+
+`label` / `labelPosition` / `invisibleLabel` 的用法与 TextInput 相同；未显式给 `indicator` 且 `required` 为真时，自动回退为 required 指示器。
+
+```tsx preview
+import { NumberInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 320 }}>
+      <NumberInput label="数量" labelPosition="before" defaultValue={1} />
+      <NumberInput required placeholder="必填，自动显示 required 指示器" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 属性落点
+
+组件根是不可聚焦的 `<div>`，输入元素是 `<input type="number">`（包在 `oo-ui-numberInputWidget-field` 容器里；开启按钮时根元素带 `oo-ui-numberInputWidget-buttoned` 类）。落点规则与 [TextInput](/components/text-input/index.html) 相同：
+
+- props 的 `...rest` 落在根 div 上；要写到原生 `<input>` 的属性（如 `role`、`aria-*`、`autoComplete`）走 `inputProps` 通道，其 `onChange`/`onBlur`/`onFocus` 串联在组件自身逻辑之后。
+- `inputRef` 指向内部 `<input>`（组件 `ref` 指向根 div），聚焦输入框用 `inputRef`。
+- `tabIndex`、`title`、`dir`、`accessKey`、`name` 由组件接管，直接落在 `<input>` 上（对齐原版落点），不走 `rest`。
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `value` | 输入值（受控，传入即受控模式）；`''` 表示无值 | `number \| ''` | — |
+| `defaultValue` | 非受控初始值 | `number \| ''` | — |
+| `onChange` | 值变化回调（值优先，含原生事件） | `ChangeHandler<number \| '', HTMLInputElement>` | — |
+| `showButtons` | 是否显示两侧步进按钮 | `boolean` | `true` |
+| `min` / `max` | 最小值 / 最大值（步进钳制 + 软校验边界） | `number` | — |
+| `step` | 合法性步距（值需为其倍数），缺省不限制小数 | `number` | — |
+| `buttonStep` | 按钮 / ↑↓ / 滚轮的步距 | `number` | `step ?? 1` |
+| `pageStep` | PgUp/PgDn 的步距 | `number` | `buttonStep × 10` |
+| `allowInteger` / `isInteger` | 废弃兼容配置：仅允许整数（强制 `step={1}`），置位有开发期告警 | `boolean` | — |
+| `placeholder` | 输入提示 | `string` | — |
+| `label` / `invisibleLabel` | 字段标签 / 标签视觉隐藏（保留可访问名称） | `ReactNode` / `boolean` | — / `false` |
+| `labelPosition` | 标签位置 | `'before' \| 'after'` | `'after'` |
+| `icon` | 图标名 | `string` | — |
+| `indicator` | 指示器（`required` 且未显式给时回退为 required） | `'up' \| 'down' \| 'clear' \| 'required'` | — |
+| `required` | 必填（原生 `required` 属性，空值即非法，参与浏览器校验） | `boolean` | `false` |
+| `readOnly` | 只读（保留聚焦，禁止修改与步进） | `boolean` | `false` |
+| `disabled` | 是否禁用 | `boolean` | `false` |
+| `flags` | 根元素附加标志（invalid 标志叠加其上） | `string \| string[]` | — |
+| `name` | 表单提交字段名（落在 `<input>`） | `string` | — |
+| `accessKey` | 快捷键（落在 `<input>`） | `string` | — |
+| `inputRef` | 内部 `<input>` 的引用 | `Ref<HTMLInputElement>` | — |
+| `inputProps` | 原生 `<input>` 的附加属性通道；`onChange`/`onBlur`/`onFocus` 串联在组件逻辑之后 | `object` | — |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+## 与原版的差异
+
+- `step` / `buttonStep` / `pageStep` 传非正值时，原版在构造期直接抛错；本工程开发期告警一次，并按给定值照常渲染。{/* deviations: dev-numberinput-step */}
+- `allowInteger` / `isInteger` 兼容收编：置位等价于强制 `step={1}`，开发期告警提示迁移（原版静默采纳），新代码请直接用 `step`。{/* deviations: dev-allow-integer */}
+
+## 另见
+
+- 单行输入的基础能力（类型白名单、`validate` 软校验等）：[TextInput](/components/text-input/index.html)
+- 值如何在组件与状态之间流动：[受控与非受控](/guide/controlled.html)
+- 所有组件共有的透传与 `ref` 规则：[通用属性](/guide/basics.html)

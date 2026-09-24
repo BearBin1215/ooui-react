@@ -1,0 +1,90 @@
+---
+title: 命令式弹窗
+description: "confirm / alert / prompt 三个命令式弹窗函数：不依赖 React 树的 Promise 调用，含返回值、options、Provider 配置继承与运行时语义。"
+---
+
+# 命令式弹窗
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/dialogs) | [原版 API](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.html "OO.ui.confirm / alert / prompt")
+
+`confirm` / `alert` / `prompt` 三个独立函数，import 后从任意事件回调里 `await` 即可——无需 hook、无需挂载组件、不依赖 React 树。需要完整自定义内容的弹窗用 [Dialog](/components/dialog/index.html) 组件。
+
+## 基本用法
+
+`confirm` 返回 `Promise<boolean>`（确定 `true`，取消 / ESC `false`）；`alert` 返回 `Promise<void>`；`prompt` 返回 `Promise<string | null>`（取消 / ESC 为 `null`）。
+
+```tsx preview
+import { useState } from "react";
+import { Button, alert, confirm, prompt } from "ooui-react";
+
+function App() {
+  const [log, setLog] = useState("尚未操作");
+  const note = (s: string) => setLog(s);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <Button onClick={() => alert("已保存你的更改。", { title: "完成" })}>
+          alert
+        </Button>
+        <Button
+          onClick={() =>
+            confirm("确定要删除这条记录吗？", { title: "确认删除" }).then((ok) =>
+              note(ok ? "已确认" : "已取消"),
+            )
+          }
+        >
+          confirm
+        </Button>
+        <Button
+          onClick={() =>
+            prompt("请输入你的名字：", { textInput: { defaultValue: "" } }).then((v) =>
+              note(v === null ? "已取消" : `你好，${v}`),
+            )
+          }
+        >
+          prompt
+        </Button>
+      </div>
+      <div>{log}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 配置继承
+
+弹窗若被包在 `OOUIProvider` 子树内，会继承该 Provider 的语言、方向与浮层容器等配置；未包裹时按缺省值渲染。消息文案的覆盖方式见 [OOUIProvider · 命令式弹窗](/guide/configuration.html#命令式弹窗)。{/* deviations: dev-imperative-host */}
+
+## 运行时语义
+
+- **Promise 在关闭动画播完后才兑现**（另加约 50ms 裕量），不是点击按钮的瞬间——`await confirm(...)` 后立即读 DOM 或跳转，会先等动画播完。
+- 弹窗渲染在应用 React 树内，继承所在子树的全部 context；**嵌套 `OOUIProvider` 时由最外层的宿主统一渲染全部命令式弹窗**（命令式调用没有位置信息，以应用根部的配置渲染最可预期）。
+- 重复调用会**层叠出多个弹窗**、逐个可交互；原版三个 API 共用单窗口管理器，已有窗口打开时第二次调用被拒绝、返回的 Promise 永不兑现。{/* deviations: dev-imperative-no-queue */}
+- `prompt` 的输入框内按 Enter 等同点「确定」（IME 合成期的确认 Enter 除外，`textInput.onKeyDown` 可 `preventDefault` 否决）；弹窗就绪后自动聚焦输入框（`textInput.inputRef` 由内部占用、传入无效，`textInput.value` 只作初始值）。{/* deviations: dev-prompt-textinput-value */}
+
+## API
+
+| 函数 | 返回 | 说明 |
+| --- | --- | --- |
+| `confirm(message, options?)` | `Promise<boolean>` | 确定 `true`，取消 / ESC `false` |
+| `alert(message, options?)` | `Promise<void>` | 仅“确定”按钮，关闭即兑现 |
+| `prompt(message, options?)` | `Promise<string \| null>` | 确定兑现输入值，取消 / ESC 兑现 `null` |
+
+`options`（`ConfirmAlertOptions` / `AlertOptions` / `PromptOptions`）：
+
+| 属性 | 描述 | 类型 |
+| --- | --- | --- |
+| `title` | 弹窗标题 | `ReactNode` |
+| `okLabel` | 确定按钮文本 | `ReactNode` |
+| `cancelLabel` | 取消按钮文本（仅 `confirm` / `prompt`） | `ReactNode` |
+| `size` | 弹窗大小 | `DialogProps["size"]` |
+| `textInput` | 输入框属性（仅 `prompt`），`value` 只作初始值 | `TextInputProps` |
+
+## 另见
+
+- 弹窗组件本身（`open` 受控、动作区、多窗隔离）：[Dialog](/components/dialog/index.html)
+- 命令式弹窗如何继承 Provider 配置：[OOUIProvider](/guide/configuration.html#命令式弹窗)
+- 多步流程弹窗：[ProcessDialog](/components/process-dialog/index.html)

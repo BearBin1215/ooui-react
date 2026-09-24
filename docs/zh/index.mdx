@@ -1,0 +1,84 @@
+---
+pageType: home
+description: "OOUI 的 React 重实现：不自带样式，输出的 DOM 结构、类名、属性与原版一致；命令式 API 收敛为受控 props。"
+hero:
+  name: ooui-react
+  tagline: OOUI 的 React 实现
+  image:
+    src: /logo.svg
+    alt: ooui-react logo
+  actions:
+    - theme: brand
+      text: 快速开始
+      link: /guide/usage.html
+    - theme: alt
+      text: 组件
+      link: /components/
+features:
+  - icon: /feature-icons/code-xml.svg
+    title: 结构匹配
+    details: 输出的 DOM 结构、类名、属性与原版一致，样式由调用方从 OOUI 引入，适配 MediaWiki 站点。
+  - icon: /feature-icons/keyboard.svg
+    title: 行为一致
+    details: 键盘、焦点、a11y 与边界值逐项对照原版，交互语义一致。
+  - icon: /feature-icons/react.svg
+    title: 声明式 API
+    details: 原版的命令式 setter 与事件收敛为 value、onChange 等受控 props，贴合 React 使用习惯。
+  - icon: /feature-icons/typescript.svg
+    title: 类型支持
+    details: 完全使用 TypeScript 开发，类型定义完整。
+  - icon: /feature-icons/preact.svg
+    title: 兼容 Preact
+    details: 可运行在 Preact 兼容层下，有效减小产物体积。
+  - icon: /feature-icons/package.svg
+    title: Tree Shaking
+    details: 支持按需引入。
+---
+
+import { PackageManagerTabs } from "@rspress/core/theme";
+import AdvancedSearchDemo from "../demos/zh/advanced-search";
+import DemoCard from "../theme/DemoCard";
+
+:::important 本组件库处于开发阶段，小部分 API 可能变动。
+:::
+
+## 快速体验
+
+<DemoCard demo={<AdvancedSearchDemo />} names={["advanced-search.tsx", "advanced-search.css"]}>
+
+```tsx file="<root>/demos/zh/advanced-search.tsx"
+```
+
+```css file="<root>/demos/zh/advanced-search.css"
+```
+
+</DemoCard>
+
+聚焦末尾的空行会自动追加一行，行尾的减号移除所在行。
+
+## 安装
+
+<PackageManagerTabs
+  command={{
+    npm: "npm install ooui-react",
+    yarn: "yarn add ooui-react",
+    pnpm: "pnpm add ooui-react",
+    bun: "bun add ooui-react",
+    deno: "deno add npm:ooui-react",
+  }}
+/>
+
+需 React 版本 ≥ 18，暂不支持 SSR。样式引入、在 MediaWiki 站点接入与 Preact 兼容等完整步骤见[使用方式](/guide/usage.html)。
+
+## 为什么会有这个组件库？
+
+2023年，我在编写[自己的萌娘百科小工具](https://github.com/BearBin1215/MoegirlPedia)时，有些较复杂的场景仅靠 JQuery 想要实现状态闭环十分费劲，就想引入一个现代的框架。当时情况是这样：
+
+- MediaWiki 版本为1.31，没有自带 Vue、Codex。
+- 如果自行打包完整的 Vue，构建产物从 60KB 起步，稍微多写一点就会导致产物太大、提交到站内超时。
+- 成熟的组件库多数会引入样式表，产物同样很大。
+- 我美术水平太差不会设计样式~~（重要！）~~。
+
+因此，我选择了 [Preact](https://preactjs.com/) 结合自建 OOUI 组件库的方案，框架体积小、无样式表，只需要渲染 DOM。
+
+随着 AI 编程的兴起，本工程得以较为系统化地开发成一个完整的组件库。虽然如今萌百已经升级了 MediaWiki 版本并且支持了 Vue + Codex 的方案，但我觉得这个组件库应当还是有其意义的。

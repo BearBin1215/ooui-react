@@ -1,0 +1,68 @@
+---
+title: CheckboxMultiselectInput 复选组字段
+description: "CheckboxMultiselectInput 组件的属性说明：CheckboxMultiselect 的表单形态，各选项 checkbox 写入 name/value 承载原生提交，勾选集合走数组值通道。"
+---
+
+# CheckboxMultiselectInput 复选组字段
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/CheckboxMultiselectInput) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.CheckboxMultiselectInputWidget.html "OO.ui.CheckboxMultiselectInputWidget")
+
+表单复选组：[CheckboxMultiselect](/components/checkbox-multiselect/index.html) 的表单形态——展示与交互不变，各选项的 checkbox 写入 `name` 与自身 `value`，勾选项随表单以多个同名字段原生提交。
+
+## 基本用法
+
+值通道与 [CheckboxMultiselect](/components/checkbox-multiselect/index.html) 一致：数组形式的 `value` / `defaultValue` / `onChange`。
+
+```tsx preview
+import { useState } from "react";
+import { ButtonInput, CheckboxMultiselectInput, FormLayout } from "ooui-react";
+
+function App() {
+  const [fruits, setFruits] = useState<Array<string | number>>(["apple"]);
+  const [submitted, setSubmitted] = useState("");
+
+  return (
+    <FormLayout
+      onSubmit={(event) => {
+        event.preventDefault();
+        const values: string[] = [];
+        new FormData(event.currentTarget).forEach((value, key) => {
+          if (key === "fruits") {
+            values.push(String(value));
+          }
+        });
+        setSubmitted(values.join("、") || "（未勾选）");
+      }}
+    >
+      <CheckboxMultiselectInput
+        name="fruits"
+        value={fruits}
+        onChange={setFruits}
+        options={[
+          { value: "apple", children: "苹果" },
+          { value: "banana", children: "香蕉" },
+          { value: "cherry", children: "樱桃" },
+        ]}
+      />
+      <ButtonInput type="submit">提交</ButtonInput>
+      <div>已提交：{submitted}</div>
+    </FormLayout>
+  );
+}
+
+export default App;
+```
+
+## API
+
+继承 [CheckboxMultiselect](/components/checkbox-multiselect/index.html) 的全部属性（`options` / `value` / `defaultValue` / `onChange` / `name` / `disabled` 等），无新增字段。
+
+:::note
+选项 checkbox 的 `value` 由本组件接管（写入选项自身 `value` 供表单提交），调用方经 `options[].checkboxProps.value` 传入的值会被覆盖。
+:::
+
+## 另见
+
+- 交互层的复选组（Shift+点击范围选择等）：[CheckboxMultiselect](/components/checkbox-multiselect/index.html)
+- 单选组字段：[RadioSelectInput](/components/radio-select-input/index.html)
+- 表单容器：[FormLayout](/components/form-layout/index.html)

@@ -1,0 +1,145 @@
+---
+title: Select 选择列表
+description: "Select 组件的属性说明：作为下拉/菜单内层的选择列表（listbox），可选中的选项集、onChange/onChoose 分工、命令菜单形态 clearOnChoose，以及键盘导航开关。"
+---
+
+# Select 选择列表
+
+> [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Select) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.SelectWidget.html "OO.ui.SelectWidget")
+
+选择列表：可点选的选项集合，既是 [Dropdown](/components/dropdown/index.html) 等浮层组件的内层列表，也可单独使用。选项数据约定见[选择与选项](/guide/options.html)。
+
+:::note 单独使用时如何交互
+对齐原版 `SelectWidget`，本组件根元素**缺省不可聚焦**（不进 Tab 序），因此更适合鼠标点选。需要键盘可达的单选/多选，请优先使用 [Dropdown](/components/dropdown/index.html)、[RadioSelect](/components/radio-select/index.html)、`ButtonSelect` 等把焦点管理做好的组件，它们都以 `Select` 为内层。作为浮层内层时，键盘导航由外层触发元素统一管理，无需你操心。{/* deviations: dev-select-tabindex */}
+:::
+
+## 基本用法
+
+```tsx preview
+import { useState } from "react";
+import { Select } from "ooui-react";
+
+const options = [
+  { value: "apple", children: "苹果" },
+  { value: "orange", children: "橙子" },
+  { value: "banana", children: "香蕉", disabled: true },
+  { value: "grape", children: "葡萄" },
+];
+
+function App() {
+  const [value, setValue] = useState<string | number>("apple");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 200 }}>
+      <Select options={options} value={value} onChange={setValue} aria-label="水果" />
+      <div>当前值：{String(value)}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## onChange 与 onChoose
+
+两个“选定”回调分工不同：
+
+- `onChange`：**选中值发生变化**时触发，重复点选当前项不触发。
+- `onChoose`：**每一次选定**（点击 / 拖拽 / Enter）都触发，含重复选定。浮层组件用它来“选定即收起”。
+
+```tsx
+<Select options={options} onChange={setValue} onChoose={() => setOpen(false)} />
+```
+
+## 命令菜单形态
+
+`clearOnChoose` 置真时，选定只触发 `onChoose`、不改变选中值——展示上从不出现“已选中某项”，适合做点了就执行、不保留选中态的命令菜单。
+
+```tsx preview
+import { useState } from "react";
+import { Select } from "ooui-react";
+
+function App() {
+  const [log, setLog] = useState<string[]>([]);
+
+  return (
+    <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+      <Select
+        aria-label="命令"
+        clearOnChoose
+        options={[
+          { value: "copy", children: "复制" },
+          { value: "cut", children: "剪切" },
+          { value: "paste", children: "粘贴" },
+        ]}
+        onChoose={(v) => setLog((prev) => [...prev, `执行 ${String(v)}`])}
+      />
+      <div style={{ fontSize: 14 }}>{log.length ? log.join(" → ") : "点击任意命令（不会有选中态）"}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 分组标题
+
+选项数组里不带 `value` 的项渲染为分组标题，不可选中、不参与键盘导航。
+
+```tsx preview
+import { Select } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ maxWidth: 200 }}>
+      <Select
+        aria-label="带分组"
+        defaultValue="cat"
+        options={[
+          { children: "猫科" },
+          { value: "cat", children: "猫" },
+          { value: "lion", children: "狮子" },
+          { children: "犬科" },
+          { value: "dog", children: "狗" },
+        ]}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 键盘导航开关
+
+作为浮层内层时键盘导航由外层驱动。单独使用且已让列表获得焦点的场景下：
+
+- `handleNavigationKeys`：是否处理 Home / End / PageUp / PageDown（对齐原版，`MenuSelectWidget` 才开启）。
+- `listWrapsAround`：方向键导航到端点后是否环绕（默认 `true`）。
+
+## API
+
+| 属性 | 描述 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `options` | 选项集，书写约定见[选择与选项](/guide/options.html) | `SelectOptionProps[]` | — |
+| `value` | 当前选中值（受控，传入即受控模式） | `string \| number` | — |
+| `defaultValue` | 非受控初始选中值 | `string \| number` | — |
+| `onChange` | 选中值变化回调（值优先，仅变化时触发） | `ChangeHandler<string \| number>` | — |
+| `onChoose` | 选定回调（每次选定都触发，含重复） | `ChangeHandler<string \| number>` | — |
+| `clearOnChoose` | 命令菜单形态：选定只触发 `onChoose`、不改选中值 | `boolean` | `false` |
+| `outline` | 以带层级缩进的 `OutlineOption` 渲染选项 | `boolean` | `false` |
+| `highlightedValue` | 键盘导航高亮值（受控，传入即由上层管理；独立使用时组件内部维护） | `string \| number` | — |
+| `onHighlightedChange` | 高亮变化回调；传入 `highlightedValue` 时须经此回写父级 | `ChangeHandler<string \| number \| undefined>` | — |
+| `selectedValues` | 多选展示的选中值集合（供标签多选等组合使用） | `(string \| number)[]` | — |
+| `handleNavigationKeys` | 是否处理 Home/End/PageUp/PageDown | `boolean` | `false` |
+| `listWrapsAround` | 键盘导航到端点后是否环绕 | `boolean` | `true` |
+| `disabled` | 是否禁用（一并禁用组内全部选项） | `boolean` | `false` |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`aria-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
+
+组件没有 `children` 落点，选项全部由 `options` 声明。
+
+## 另见
+
+- 选项数据与键盘焦点模型：[选择与选项](/guide/options.html)
+- 以 Select 为内层的浮层：[Dropdown](/components/dropdown/index.html)
+- `onChange` 与 `onChoose` 的分工：[受控与非受控](/guide/controlled.html#回调签名)
