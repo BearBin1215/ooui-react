@@ -1,0 +1,42 @@
+name: Publish
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    environment: npm-release
+
+    permissions:
+      contents: write
+      id-token: write # OIDC 凭证
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm typecheck
+
+      # OIDC 发布要求 npm >= 11.5.1，runner 自带的 npm 版本不保证满足
+      - run: npm install -g npm@^11
+
+      - run: npm publish
+
+      - name: Create GitHub Release
+        run: |
+          V=$(node -p "require('./package.json').version")
+          gh release create "v$V" \
+            --title "v$V" \
+            --generate-notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
