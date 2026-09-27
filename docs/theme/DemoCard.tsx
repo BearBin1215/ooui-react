@@ -36,7 +36,7 @@ function DemoCard({ demo, names, children }: DemoCardProps) {
   // llms（SSG_MD）输出只需要代码文本：demo 是组件渲染，markdown 里没有意义，
   // 且示例含 Dropdown 等首帧访问 document 的组件，会在 SSG-MD 渲染期崩溃
   if (import.meta.env.SSG_MD) {
-    return <>{children}</>;
+    return children;
   }
 
   return (
