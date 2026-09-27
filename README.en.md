@@ -42,3 +42,7 @@ Contributions from everyone are welcome. See [CONTRIBUTING.md](https://github.co
 ## License
 
 [MIT](https://github.com/BearBin1215/ooui-react/blob/main/LICENSE) © [BearBin](https://github.com/BearBin1215)
+
+## Acknowledgments
+
+This project is a React implementation of [OOUI](https://github.com/wikimedia/oojs-ui). Portions of its API design, CSS class names and behavior contracts are derived from OOUI, which is licensed under the [MIT License](https://github.com/wikimedia/oojs-ui/blob/master/LICENSE-MIT), Copyright 2011-2025 OOUI Team and other contributors.
