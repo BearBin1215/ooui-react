@@ -17,16 +17,7 @@ import { useLatestRef } from "../../hooks";
 import { acquireScrollLock, releaseScrollLock } from "../scrollLock";
 import { acquireIsolation, releaseIsolation } from "../isolation";
 import { WindowManager } from "../WindowManager";
-
-/**
- * 弹窗开关动画时序（ms），对齐主题CSS的window动画：setupDelay/readyDelay为打开阶段
- * setup/ready两态的延时，closeDuration为关闭缩小淡出时长
- */
-export const DIALOG_ANIMATION = {
-  setupDelay: 60,
-  readyDelay: 120,
-  closeDuration: 250,
-} as const;
+import { DIALOG_ANIMATION } from "../animation";
 
 /**
  * frame过渡时长（与closeDuration同源，单位为s）

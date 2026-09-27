@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { DIALOG_ANIMATION } from "./Dialog";
+import { DIALOG_ANIMATION } from "./animation";
 
 /** 关闭动画结束后到卸载的裕量（ms）：吸收定时器与动画的调度误差，确保淡出播完 */
 const CLOSE_UNMOUNT_MARGIN = 50;
