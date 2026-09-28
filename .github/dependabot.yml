@@ -1,0 +1,19 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directories:
+      - "/"
+      - "/docs"
+    schedule:
+      interval: "weekly"
+    groups:
+      dev-dependencies:
+        dependency-type: "development"
+    ignore:
+      # 对照开发基线，手动控制版本
+      - dependency-name: "oojs"
+      - dependency-name: "jquery"
+      - dependency-name: "@wikimedia/codex-design-tokens"
+      # ts 7 暂不可升级
+      - dependency-name: "typescript"
+        versions: [">=7"]
