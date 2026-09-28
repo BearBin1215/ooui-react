@@ -1,0 +1,32 @@
+name: Component or Feature Request / 组件与功能请求
+description: Request a new component aligned with the original OOUI, or a new capability / 请求实现对齐原版的新组件，或对现有组件的新能力
+labels: [enhancement]
+body:
+  - type: input
+    id: original-class
+    attributes:
+      label: Corresponding OOUI class / 对应原版类名
+      description: e.g. OO.ui.ComboBoxInputWidget; fill "None" for requests not tied to the original / 如 OO.ui.ComboBoxInputWidget；非对齐原版的需求可填「无」
+    validations:
+      required: true
+
+  - type: textarea
+    id: original-capability
+    attributes:
+      label: Original capability / 原版能力概述
+      description: How it behaves in the original / 该组件或能力在原版中的表现
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use case / 使用场景
+      description: Your real-world scenario, helps prioritization / 你的实际使用场景，帮助评估优先级
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional info / 补充信息
+    validations:
+      required: false

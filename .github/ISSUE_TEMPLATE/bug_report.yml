@@ -1,0 +1,71 @@
+name: Bug Report / 行为 Bug
+description: Component behavior or DOM and className contract differs from original OOUI / 组件行为或 DOM、类名契约与原版 OOUI 不符
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. This library treats the original OOUI's DOM structure, class names and interaction behavior as its contract. Please check two things first:
+
+        - The [comparison page](https://bearbin1215.github.io/ooui-react/) on the docs site, to rule out intentional deviations
+        - The [original OOUI demos](https://doc.wikimedia.org/oojs-ui/master/demos/), to see how the original behaves — matching the original is not a bug
+
+        感谢反馈。本库以原版 OOUI 的 DOM 结构、类名与交互行为为契约，请先做两步对照：
+
+        - 到[文档站对照页](https://bearbin1215.github.io/ooui-react/)确认不是已记录的有意差异
+        - 到[原版演示](https://doc.wikimedia.org/oojs-ui/master/demos/)确认原版的表现，原版与原版一致的不算 bug
+
+  - type: input
+    id: component
+    attributes:
+      label: Affected component / 受影响组件
+      description: e.g. Dropdown, MessageDialog
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: ooui-react version / ooui-react 版本
+      placeholder: e.g. 1.0.1
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment / 环境
+      description: React version and environment (MediaWiki version, browser version, etc.) / React 版本、使用环境（MediaWiki 版本、浏览器及版本等）
+    validations:
+      required: true
+
+  - type: textarea
+    id: original-behavior
+    attributes:
+      label: Original OOUI behavior / 原版 OOUI 的表现
+      description: Behavior in the original demos, with a link if possible; fill "N/A" for issues unrelated to the original (build, type errors, etc.) / 在原版演示中的行为，附对应 demo 页链接更佳；与原版无关的问题（构建、类型报错等）可填「不适用」
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual behavior in this library / 本库的实际表现
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction / 最小复现
+      description: Code snippet or steps to reproduce, as short as possible / 代码片段或复现步骤，越短越好
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional info / 补充信息
+      description: Screenshots, recordings, etc. / 截图、录屏等
+    validations:
+      required: false

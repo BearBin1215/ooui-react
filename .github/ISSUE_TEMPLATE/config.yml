@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation / 文档站
+    url: https://bearbin1215.github.io/ooui-react/
+    about: Usage docs and known deviations (OOUI comparison page) — check before filing to rule out intentional differences. 使用说明与已知差异（OOUI 对照页），提问前请先查阅，确认不是有意为之的差异
