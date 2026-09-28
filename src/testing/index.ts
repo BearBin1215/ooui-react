@@ -98,9 +98,10 @@ export const typeValue = async (
 /**
  * 取元素的 `innerHTML` 并把 id 类属性值归一化为 `r#`，供 `toMatchInlineSnapshot` 使用。
  *
- * React `useId` 在同一页面跨 root 累计且为 base32 编码（r0、r1…ro、rp…），取值随用例执行
- * 顺序漂移；归一化后锁定"id 及其引用结构存在"，不锁定计数值。归一化的属性清单为并集
- * （含 `aria-controls`）——浮层类组件随时可能新增引用属性，缺一项就会把真实 id 锁进快照。
+ * React `useId` 在同一页面跨 root 累计且为 base32 编码，取值随用例执行顺序漂移；
+ * 归一化后锁定"id 及其引用结构存在"，不锁定计数值。
+ * React 18 产出 `:r0:`、React 19 起产出 `_r_0_`，`useCleanId` 已统一剥为 `r0` 形态，
+ * 此处再兼容未经理器的 `_r_0_` 原始形态。
  */
 export const snapshotHTML = (el: Element): string =>
   el.innerHTML.replace(
@@ -109,7 +110,7 @@ export const snapshotHTML = (el: Element): string =>
       prefix +
       value
         .split(" ")
-        .map((v) => v.replace(/^r[0-9a-v]+(-\d+)?$/, "r#$1"))
+        .map((v) => v.replace(/^_?r[0-9a-v]+_?(-\d+)?$/, "r#$1"))
         .join(" ") +
       suffix,
   );

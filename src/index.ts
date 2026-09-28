@@ -4,7 +4,7 @@
 // 数组项等紧邻类型（如各Select系的OptionProps、PopupPosition、Indicators）一并导出。
 // 对齐原版类层级的中间件（Widget、Option/MenuOption/DecoratedOption/OutlineOption/
 // MenuSectionOption/TabOption/RadioOption、MenuSelect等）不从此处导出，仅供组件内部
-// 经相对路径引用；目录结构仍按原版类层级组织，以便对照开发（见AGENTS.md）。
+// 经相对路径引用；目录结构按原版类层级组织，以便对照开发。
 
 // #region Widgets
 

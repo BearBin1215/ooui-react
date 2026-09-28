@@ -44,9 +44,12 @@ export function useMergedRefs<T>(
 }
 
 /**
- * 生成不含React `useId`冒号分隔符的id片段：`:`在CSS选择器中非法，
+ * 生成不含分隔符的id片段：
+ * - React 18的useId产出`:r0:`，`:`在CSS选择器中非法
+ * - React 19起产出`_r_0_`；
+ * 两种分隔符一并剥除，输出稳定的`r<base32>`形态，id形态不随React大版本漂移。
  * 元素id与`aria-labelledby`/`aria-controls`等关联属性统一经此生成
  */
 export function useCleanId(): string {
-  return useId().replace(/:/g, "");
+  return useId().replace(/[:_]/g, "");
 }
