@@ -1,25 +1,27 @@
-<div  align="center"><img src="https://bearbin1215.github.io/ooui-react/logo.svg" width="180" alt="ooui-react logo"></div>
+<p align="center"><img src="https://bearbin1215.github.io/ooui-react/logo.svg" width="180" alt="ooui-react logo"></p>
 
 <h1 align="center">ooui-react</h1>
-<p align="center"><a href="https://github.com/wikimedia/oojs-ui">OOUI</a> 组件库的 <a href="https://react.dev/">React</a> 实现。</p>
+<p align="center">A <a href="https://react.dev/">React</a> implementation of the <a href="https://github.com/wikimedia/oojs-ui">OOUI</a> component library.</p>
 <p align="center">
   <a href="https://www.npmjs.com/package/ooui-react" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/ooui-react?style=flat-square" alt="npm" /></a>
   <a href="https://react.dev" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/React-18+-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React" /></a>
   <a href="https://www.typescriptlang.org" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/TypeScript-6-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" /></a>
-  <a href="https://bearbin1215.github.io/ooui-react/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Docs-在线文档-blue?style=flat-square" alt="在线文档" /></a>
+  <a href="https://rspress.rs/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/docs-Rspress-blue?style=flat-square" alt="docs by rspress" /></a>
   <a href="https://github.com/BearBin1215/ooui-react/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/BearBin1215/ooui-react?style=flat-square" alt="License"></a>
 </p>
-<p align="center">简体中文 | <a href="https://github.com/BearBin1215/ooui-react/blob/main/README.en.md">English</a></p>
+<p align="center"><a href="https://github.com/BearBin1215/ooui-react/blob/main/README.zh.md">简体中文</a> | English | <a href="https://bearbin1215.github.io/ooui-react/en/">Document</a></p>
 
-## 特性
+A React implementation of the [OOUI](https://github.com/wikimedia/oojs-ui) component library. Rewritten from scratch, with no runtime dependency on oojs-ui.
 
-- **不自带样式**：输出的 DOM 结构、类名、属性与原版一致，样式由调用方从 OOUI 引入，适配 MediaWiki 站点。
-- **行为与原版一致**：键盘、焦点、a11y 与边界值逐项对照原版验证，交互语义一致。
-- **类型支持**：完全使用 TypeScript 开发，类型定义完整。
-- **兼容 Preact**：有效减小产物体积。
-- **Tree Shaking**：支持按需引入。
+## Features
 
-## 使用
+- **No bundled styles**: Output DOM structure, class names, and attributes match the original; styles are supplied by the consumer from OOUI, fitting MediaWiki sites.
+- **Behavior consistent with the original**: Keyboard, focus, a11y, and edge cases are verified item by item against the original, so interaction semantics stay consistent.
+- **TypeScript support**: Written entirely in TypeScript with complete type definitions.
+- **Preact compatible**: Effectively reduces bundle size.
+- **Tree shaking**: Supports on-demand imports.
+
+## Usage
 
 ```bash
 npm install ooui-react
@@ -28,19 +30,19 @@ npm install ooui-react
 ```tsx
 import { Button } from "ooui-react";
 
-<Button onClick={() => console.log("clicked")}>按钮</Button>
+<Button onClick={() => console.log("clicked")}>Click me</Button>
 ```
 
-样式引入、MediaWiki 站点使用等详见[组件文档](https://bearbin1215.github.io/ooui-react/guide/usage.html)。
+For style imports, MediaWiki integration, and more, see the [Usage guide](https://bearbin1215.github.io/ooui-react/en/guide/usage.html).
 
-## 参与完善
+## Contributing
 
-欢迎各路人士参与本组件库的完善，贡献指南见[CONTRIBUTING.md](https://github.com/BearBin1215/ooui-react/blob/main/CONTRIBUTING.md)
+Contributions from everyone are welcome. See [CONTRIBUTING.md](https://github.com/BearBin1215/ooui-react/blob/main/CONTRIBUTING.md) for the contribution guide.
 
-## 开源协议
+## License
 
 [MIT](https://github.com/BearBin1215/ooui-react/blob/main/LICENSE) © [BearBin](https://github.com/BearBin1215)
 
-## 致谢
+## Acknowledgments
 
-本项目是 [OOUI](https://github.com/wikimedia/oojs-ui) 的 React 实现，其 API 设计、CSS 类名与行为契约部分衍生自 OOUI。OOUI 基于 [MIT 许可证](https://github.com/wikimedia/oojs-ui/blob/master/LICENSE-MIT)授权，Copyright 2011-2025 OOUI Team and other contributors。
+This project is a React implementation of [OOUI](https://github.com/wikimedia/oojs-ui). Portions of its API design, CSS class names and behavior contracts are derived from OOUI, which is licensed under the [MIT License](https://github.com/wikimedia/oojs-ui/blob/master/LICENSE-MIT), Copyright 2011-2025 OOUI Team and other contributors.
