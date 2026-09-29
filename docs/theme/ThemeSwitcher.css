@@ -1,6 +1,5 @@
-/* 导航栏「示例主题」切换器：结构与类名复用 rspress 导航菜单（rp-nav-menu__item 触发器 +
-   rp-hover-group 面板），主题样式由 rspress 提供，此处仅重置 button 的 UA 样式，
-   贴齐原版 div/Link 分支的观感；padding 等盒模型仍由原版类承担 */
+/* 导航栏「示例主题」切换器：类名复用 rspress 导航菜单（触发器 + 悬浮面板），样式由
+   rspress 提供，此处仅重置 button 的 UA 样式，贴齐原版 div/Link 分支的观感 */
 .doc-theme-switcher .rp-nav-menu__item__container,
 .doc-theme-switcher .doc-theme-switcher__option {
   background: none;
@@ -9,9 +8,19 @@
   cursor: pointer;
 }
 
-/* button 的 UA 样式自带 font-family，须继承宿主字体；字号/字重交由原版容器类
-   （14px/500）承担——此处勿写 font 简写或 font-size：本选择器特异度更高，会压过
-   容器类与 :hover 规则的 14px，悬浮前后字号跳变并推移相邻导航项 */
+/* button 的 UA font-family 改回继承；勿写 font 简写或 font-size——本文件特异度更高，
+   会压过原版容器类的字号 */
 .doc-theme-switcher .rp-nav-menu__item__container {
   font-family: inherit;
+}
+
+/* button 按内容收缩，width: 100% 使选项整行可点（对齐原版 <a> 选项）；padding: 0 清 UA 内边距。
+   li 的 padding-left 补齐原版 HoverGroupItem 的内联 8px */
+.doc-theme-switcher .rp-hover-group__item {
+  padding-left: 8px;
+}
+
+.doc-theme-switcher .doc-theme-switcher__option {
+  width: 100%;
+  padding: 0;
 }
