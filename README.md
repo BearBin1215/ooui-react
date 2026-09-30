@@ -9,7 +9,7 @@
   <a href="https://rspress.rs/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/docs-Rspress-blue?style=flat-square" alt="docs by rspress" /></a>
   <a href="https://github.com/BearBin1215/ooui-react/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/BearBin1215/ooui-react?style=flat-square" alt="License"></a>
 </p>
-<p align="center"><a href="https://github.com/BearBin1215/ooui-react/blob/main/README.zh.md">简体中文</a> | English | <a href="https://bearbin1215.github.io/ooui-react/en/">Document</a></p>
+<p align="center"><a href="https://github.com/BearBin1215/ooui-react/blob/main/README.zh.md">中文</a> | English | <a href="https://bearbin1215.github.io/ooui-react/en/">Documentation</a></p>
 
 A React implementation of the [OOUI](https://github.com/wikimedia/oojs-ui) component library. Rewritten from scratch, with no runtime dependency on oojs-ui.
 

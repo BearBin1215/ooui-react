@@ -31,7 +31,7 @@ export default defineConfig({
   locales: [
     {
       lang: "zh",
-      label: "简体中文",
+      label: "中文",
       title: "ooui-react",
       description: "OOUI 的 React 实现",
     },

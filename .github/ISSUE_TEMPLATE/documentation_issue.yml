@@ -1,0 +1,46 @@
+name: Documentation Issue / 文档问题
+description: Docs content errors or omissions, or issues with the docs site itself / 文档内容错漏、或文档站自身问题
+labels: [documentation]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Found an issue on the [docs site](https://bearbin1215.github.io/ooui-react/)? Content not matching the library, missing pages, or the site itself broken — describe it here. If the library itself misbehaves, use the Bug Report template instead.
+
+        在[文档站](https://bearbin1215.github.io/ooui-react/)上发现问题？内容与库不符、页面缺失或站点本身故障，请在此描述。如果是库本身的行为问题，请改用 Bug Report 模板。
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Issue type / 问题类型
+      options:
+        - Content error / 内容错误
+        - Missing content / 内容缺失
+        - Translation error / 翻译错误
+        - Other / 其他
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: Location / 问题位置
+      description: e.g. https://bearbin1215.github.io/ooui-react/components/button
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-actual
+    attributes:
+      label: Expected vs actual / 期望与实际
+      description: What the docs currently say or show, and what it should be; for site issues, the error or broken behavior / 文档当前的说法或展示，以及应当是什么；站点问题则描述报错或异常表现
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional info / 补充信息
+      description: Screenshots, etc. / 截图等
+    validations:
+      required: false

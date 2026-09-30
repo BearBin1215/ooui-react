@@ -9,7 +9,7 @@
   <a href="https://rspress.rs/zh/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/docs-Rspress-blue?style=flat-square" alt="docs by rspress" /></a>
   <a href="https://github.com/BearBin1215/ooui-react/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/BearBin1215/ooui-react?style=flat-square" alt="License"></a>
 </p>
-<p align="center">简体中文 | <a href="https://github.com/BearBin1215/ooui-react/blob/main/README.md">English</a> | <a href="https://bearbin1215.github.io/ooui-react/">组件文档</a></p>
+<p align="center">中文 | <a href="https://github.com/BearBin1215/ooui-react/blob/main/README.md">English</a> | <a href="https://bearbin1215.github.io/ooui-react/">组件文档</a></p>
 
 ## 特性
 
