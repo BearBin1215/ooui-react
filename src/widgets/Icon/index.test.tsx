@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { render } from "vitest-browser-react";
-import { getRoot } from "../../testing";
+import { getRoot, snapshotHTML } from "../../testing";
 import { Icon } from ".";
 
 /**
@@ -53,14 +53,14 @@ describe("HTML快照", () => {
   // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）
   it("快照：常规icon的完整类串与顺序", async () => {
     const screen = await render(<Icon icon="check" />);
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
       `"<span class="oo-ui-iconElement-icon oo-ui-icon-check oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-iconWidget oo-ui-labelElement-invisible"></span>"`,
     );
   });
 
   it("flags变体", async () => {
     const screen = await render(<Icon icon="check" flags="progressive" />);
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
       `"<span class="oo-ui-iconElement-icon oo-ui-icon-check oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-iconWidget oo-ui-labelElement-invisible oo-ui-flaggedElement-progressive oo-ui-image-progressive"></span>"`,
     );
   });

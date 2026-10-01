@@ -1,7 +1,7 @@
 name: Publish
 on:
   push:
-    tags: ["v*"]
+    tags: ["v[0-9]*"]
 
 jobs:
   publish:
@@ -25,7 +25,18 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - run: pnpm lint
+      - run: pnpm format:check
       - run: pnpm typecheck
+      - run: pnpm typecheck:docs
+      - run: pnpm test:node
+
+      - run: pnpm exec playwright install --with-deps chromium
+
+      - run: pnpm test:browser
+
+      # build 内含 publint/attw 校验
+      - run: pnpm build
 
       # OIDC 发布要求 npm >= 11.5.1，runner 自带的 npm 版本不保证满足
       - run: npm install -g npm@^11

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { getRoot } from "../../testing";
+import { getRoot, snapshotHTML } from "../../testing";
 import { RadioInput } from ".";
 
 /**
@@ -61,8 +61,8 @@ describe("HTML快照", () => {
   // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）
   it("单选框", async () => {
     const screen = await render(<RadioInput name="pick" />);
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
-      `"<span class="oo-ui-widget oo-ui-widget-enabled oo-ui-inputWidget oo-ui-radioInputWidget"><input name="pick" tabindex="0" class="oo-ui-inputWidget-input" type="radio" value=""><span></span></span>"`,
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
+      `"<span class="oo-ui-widget oo-ui-widget-enabled oo-ui-inputWidget oo-ui-radioInputWidget"><input class="oo-ui-inputWidget-input" name="pick" tabindex="0" type="radio" value=""><span></span></span>"`,
     );
   });
 });

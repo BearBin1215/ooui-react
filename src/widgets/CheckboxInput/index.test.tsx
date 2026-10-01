@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { getRoot, tick } from "../../testing";
+import { getRoot, snapshotHTML, tick } from "../../testing";
 import { CheckboxInput } from ".";
 
 /**
@@ -75,8 +75,8 @@ describe("HTML快照", () => {
     const screen = await render(
       <CheckboxInput name="agree" value="yes" defaultChecked />,
     );
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
-      `"<span class="oo-ui-widget oo-ui-widget-enabled oo-ui-inputWidget oo-ui-checkboxInputWidget"><input name="agree" tabindex="0" class="oo-ui-inputWidget-input" type="checkbox" value="yes" checked=""><span class="oo-ui-iconElement-icon oo-ui-icon-check oo-ui-checkboxInputWidget-checkIcon oo-ui-image-invert oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-iconWidget oo-ui-labelElement-invisible"></span></span>"`,
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
+      `"<span class="oo-ui-widget oo-ui-widget-enabled oo-ui-inputWidget oo-ui-checkboxInputWidget"><input checked="" class="oo-ui-inputWidget-input" name="agree" tabindex="0" type="checkbox" value="yes"><span class="oo-ui-iconElement-icon oo-ui-icon-check oo-ui-checkboxInputWidget-checkIcon oo-ui-image-invert oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-iconWidget oo-ui-labelElement-invisible"></span></span>"`,
     );
   });
 });

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { MultilineTextInput } from ".";
-import { getRoot, typeValue } from "../../testing";
+import { getRoot, snapshotHTML, typeValue } from "../../testing";
 
 /**
  * MultilineTextInput（对齐原版OO.ui.MultilineTextInputWidget）的浏览器渲染契约：
@@ -49,8 +49,8 @@ describe("HTML快照", () => {
     const screen = await render(
       <MultilineTextInput rows={3} defaultValue={"第一行\n第二行"} />,
     );
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(`
-      "<div class="oo-ui-widget oo-ui-widget-enabled oo-ui-inputWidget oo-ui-textInputWidget oo-ui-textInputWidget-type-text"><textarea tabindex="0" class="oo-ui-inputWidget-input" rows="3">第一行
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(`
+      "<div class="oo-ui-widget oo-ui-widget-enabled oo-ui-inputWidget oo-ui-textInputWidget oo-ui-textInputWidget-type-text"><textarea class="oo-ui-inputWidget-input" rows="3" tabindex="0">第一行
       第二行</textarea><span class="oo-ui-iconElement-icon oo-ui-iconElement-noIcon"></span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator" style="right: 2px;"></span></div>"
     `);
   });

@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { useEffect, useRef, useState } from "react";
 import { render } from "vitest-browser-react";
 import { TextInput } from ".";
-import { getRoot, tick, typeValue } from "../../testing";
+import { getRoot, snapshotHTML, tick, typeValue } from "../../testing";
 
 /**
  * TextInput（对齐原版OO.ui.TextInputWidget）的浏览器渲染契约：
@@ -133,15 +133,15 @@ describe("HTML快照", () => {
   // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）
   it("默认文本框", async () => {
     const screen = await render(<TextInput defaultValue="甲" />);
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
-      `"<div class="oo-ui-widget oo-ui-widget-enabled oo-ui-inputWidget oo-ui-textInputWidget oo-ui-textInputWidget-type-text"><input tabindex="0" class="oo-ui-inputWidget-input" type="text" value="甲"><span class="oo-ui-iconElement-icon oo-ui-iconElement-noIcon"></span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator"></span></div>"`,
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
+      `"<div class="oo-ui-widget oo-ui-widget-enabled oo-ui-inputWidget oo-ui-textInputWidget oo-ui-textInputWidget-type-text"><input class="oo-ui-inputWidget-input" tabindex="0" type="text" value="甲"><span class="oo-ui-iconElement-icon oo-ui-iconElement-noIcon"></span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator"></span></div>"`,
     );
   });
 
   it("search形态+禁用", async () => {
     const screen = await render(<TextInput type="search" placeholder="搜索" disabled />);
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
-      `"<div class="oo-ui-widget oo-ui-widget-disabled oo-ui-inputWidget oo-ui-textInputWidget oo-ui-textInputWidget-type-search" aria-disabled="true"><input tabindex="-1" disabled="" aria-disabled="true" class="oo-ui-inputWidget-input" placeholder="搜索" type="search" value=""><span class="oo-ui-iconElement-icon oo-ui-iconElement-noIcon"></span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator"></span></div>"`,
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
+      `"<div aria-disabled="true" class="oo-ui-widget oo-ui-widget-disabled oo-ui-inputWidget oo-ui-textInputWidget oo-ui-textInputWidget-type-search"><input aria-disabled="true" class="oo-ui-inputWidget-input" disabled="" placeholder="搜索" tabindex="-1" type="search" value=""><span class="oo-ui-iconElement-icon oo-ui-iconElement-noIcon"></span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator"></span></div>"`,
     );
   });
 });

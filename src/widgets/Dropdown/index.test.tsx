@@ -137,7 +137,7 @@ describe("HTML快照", () => {
       />,
     );
     expect(snapshotHTML(getRoot(screen))).toMatchInlineSnapshot(
-      `"<span tabindex="0" aria-haspopup="true" class="oo-ui-dropdownWidget-handle" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-labelledby="r#"><span class="oo-ui-iconElement-icon oo-ui-iconElement-noIcon"></span><span id="r#" role="textbox" aria-readonly="true" class="oo-ui-labelElement-label">甲</span><span class="oo-ui-indicatorElement-indicator oo-ui-indicator-down"></span></span>"`,
+      `"<span aria-autocomplete="list" aria-expanded="false" aria-haspopup="true" aria-labelledby="r#" class="oo-ui-dropdownWidget-handle" role="combobox" tabindex="0"><span class="oo-ui-iconElement-icon oo-ui-iconElement-noIcon"></span><span aria-readonly="true" class="oo-ui-labelElement-label" id="r#" role="textbox">甲</span><span class="oo-ui-indicatorElement-indicator oo-ui-indicator-down"></span></span>"`,
     );
   });
 });

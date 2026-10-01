@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { getRoot } from "../../testing";
+import { getRoot, snapshotHTML } from "../../testing";
 import { Button } from ".";
 
 /**
@@ -112,8 +112,8 @@ describe("HTML快照", () => {
         确定
       </Button>,
     );
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
-      `"<span class="oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-indicatorElement oo-ui-labelElement oo-ui-buttonWidget oo-ui-buttonElement oo-ui-buttonElement-framed"><a class="oo-ui-buttonElement-button" role="button" tabindex="0" rel="nofollow"><span class="oo-ui-iconElement-icon oo-ui-icon-check"></span><span class="oo-ui-labelElement-label">确定</span><span class="oo-ui-indicatorElement-indicator oo-ui-indicator-down"></span></a></span>"`,
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
+      `"<span class="oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-indicatorElement oo-ui-labelElement oo-ui-buttonWidget oo-ui-buttonElement oo-ui-buttonElement-framed"><a class="oo-ui-buttonElement-button" rel="nofollow" role="button" tabindex="0"><span class="oo-ui-iconElement-icon oo-ui-icon-check"></span><span class="oo-ui-labelElement-label">确定</span><span class="oo-ui-indicatorElement-indicator oo-ui-indicator-down"></span></a></span>"`,
     );
   });
 
@@ -123,8 +123,8 @@ describe("HTML快照", () => {
         禁用
       </Button>,
     );
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
-      `"<span class="oo-ui-widget oo-ui-widget-disabled oo-ui-labelElement oo-ui-buttonWidget oo-ui-buttonElement oo-ui-buttonElement-framed oo-ui-flaggedElement-primary oo-ui-flaggedElement-destructive" aria-disabled="true"><a class="oo-ui-buttonElement-button" role="button" tabindex="-1" aria-disabled="true" rel="nofollow"><span class="oo-ui-iconElement-icon oo-ui-iconElement-noIcon oo-ui-image-invert"></span><span class="oo-ui-labelElement-label">禁用</span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator oo-ui-image-invert"></span></a></span>"`,
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
+      `"<span aria-disabled="true" class="oo-ui-widget oo-ui-widget-disabled oo-ui-labelElement oo-ui-buttonWidget oo-ui-buttonElement oo-ui-buttonElement-framed oo-ui-flaggedElement-primary oo-ui-flaggedElement-destructive"><a aria-disabled="true" class="oo-ui-buttonElement-button" rel="nofollow" role="button" tabindex="-1"><span class="oo-ui-iconElement-icon oo-ui-iconElement-noIcon oo-ui-image-invert"></span><span class="oo-ui-labelElement-label">禁用</span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator oo-ui-image-invert"></span></a></span>"`,
     );
   });
 });

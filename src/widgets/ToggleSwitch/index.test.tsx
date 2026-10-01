@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { ToggleSwitch } from ".";
-import { getRoot, pressKey, tick } from "../../testing";
+import { getRoot, pressKey, snapshotHTML, tick } from "../../testing";
 
 /**
  * ToggleSwitch（对齐原版OO.ui.ToggleSwitchWidget）的浏览器渲染契约：
@@ -74,15 +74,15 @@ describe("HTML快照", () => {
   // 根为div对齐原版（ToggleSwitchWidget未覆写getTagName），内层glow/grip仍为span
   it("关", async () => {
     const screen = await render(<ToggleSwitch />);
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
-      `"<div class="oo-ui-widget oo-ui-widget-enabled oo-ui-toggleWidget oo-ui-toggleSwitchWidget oo-ui-toggleWidget-off" role="switch" aria-checked="false" tabindex="0"><span class="oo-ui-toggleSwitchWidget-glow"></span><span class="oo-ui-toggleSwitchWidget-grip"></span></div>"`,
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
+      `"<div aria-checked="false" class="oo-ui-widget oo-ui-widget-enabled oo-ui-toggleWidget oo-ui-toggleSwitchWidget oo-ui-toggleWidget-off" role="switch" tabindex="0"><span class="oo-ui-toggleSwitchWidget-glow"></span><span class="oo-ui-toggleSwitchWidget-grip"></span></div>"`,
     );
   });
 
   it("开", async () => {
     const screen = await render(<ToggleSwitch defaultChecked />);
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
-      `"<div class="oo-ui-widget oo-ui-widget-enabled oo-ui-toggleWidget oo-ui-toggleSwitchWidget oo-ui-toggleWidget-on" role="switch" aria-checked="true" tabindex="0"><span class="oo-ui-toggleSwitchWidget-glow"></span><span class="oo-ui-toggleSwitchWidget-grip"></span></div>"`,
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
+      `"<div aria-checked="true" class="oo-ui-widget oo-ui-widget-enabled oo-ui-toggleWidget oo-ui-toggleSwitchWidget oo-ui-toggleWidget-on" role="switch" tabindex="0"><span class="oo-ui-toggleSwitchWidget-glow"></span><span class="oo-ui-toggleSwitchWidget-grip"></span></div>"`,
     );
   });
 });

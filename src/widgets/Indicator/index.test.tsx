@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { render } from "vitest-browser-react";
-import { getRoot } from "../../testing";
+import { getRoot, snapshotHTML } from "../../testing";
 import { Indicator } from ".";
 
 /**
@@ -46,14 +46,14 @@ describe("HTML快照", () => {
   // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）
   it("快照：常规indicator的完整类串与顺序", async () => {
     const screen = await render(<Indicator indicator="down" />);
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
       `"<span class="oo-ui-indicatorElement-indicator oo-ui-indicator-down oo-ui-widget oo-ui-widget-enabled oo-ui-indicatorElement oo-ui-indicatorWidget oo-ui-labelElement-invisible"></span>"`,
     );
   });
 
   it("无indicator占位", async () => {
     const screen = await render(<Indicator />);
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
       `"<span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator oo-ui-widget oo-ui-widget-enabled oo-ui-indicatorWidget oo-ui-labelElement-invisible"></span>"`,
     );
   });

@@ -126,6 +126,8 @@
   ],
   "ignorePatterns": [
     "**/node_modules/",
-    "dist"
+    "dist",
+    "docs/build",
+    "docs/public/ooui"
   ]
 }

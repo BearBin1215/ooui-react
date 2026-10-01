@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { NumberInput } from ".";
-import { getRoot, pressKey, tick, typeValue } from "../../testing";
+import { getRoot, pressKey, snapshotHTML, tick, typeValue } from "../../testing";
 
 /**
  * NumberInput（对齐原版OO.ui.NumberInputWidget）的浏览器渲染契约：
@@ -200,8 +200,8 @@ describe("HTML快照", () => {
   // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）
   it("带步进按钮", async () => {
     const screen = await render(<NumberInput defaultValue={5} min={0} max={10} />);
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
-      `"<div class="oo-ui-widget oo-ui-widget-enabled oo-ui-inputWidget oo-ui-textInputWidget oo-ui-numberInputWidget oo-ui-textInputWidget-type-number oo-ui-numberInputWidget-buttoned"><span class="oo-ui-iconElement-icon oo-ui-iconElement-noIcon"></span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator"></span><div class="oo-ui-numberInputWidget-field"><span aria-hidden="true" class="oo-ui-numberInputWidget-minusButton oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-buttonWidget oo-ui-buttonElement oo-ui-buttonElement-framed"><a class="oo-ui-buttonElement-button" role="button" tabindex="-1" rel="nofollow"><span class="oo-ui-iconElement-icon oo-ui-icon-subtract"></span><span class="oo-ui-labelElement-label"></span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator"></span></a></span><input tabindex="0" class="oo-ui-inputWidget-input" type="number" min="0" max="10" step="any" value="5"><span aria-hidden="true" class="oo-ui-numberInputWidget-plusButton oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-buttonWidget oo-ui-buttonElement oo-ui-buttonElement-framed"><a class="oo-ui-buttonElement-button" role="button" tabindex="-1" rel="nofollow"><span class="oo-ui-iconElement-icon oo-ui-icon-add"></span><span class="oo-ui-labelElement-label"></span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator"></span></a></span></div></div>"`,
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
+      `"<div class="oo-ui-widget oo-ui-widget-enabled oo-ui-inputWidget oo-ui-textInputWidget oo-ui-numberInputWidget oo-ui-textInputWidget-type-number oo-ui-numberInputWidget-buttoned"><span class="oo-ui-iconElement-icon oo-ui-iconElement-noIcon"></span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator"></span><div class="oo-ui-numberInputWidget-field"><span aria-hidden="true" class="oo-ui-numberInputWidget-minusButton oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-buttonWidget oo-ui-buttonElement oo-ui-buttonElement-framed"><a class="oo-ui-buttonElement-button" rel="nofollow" role="button" tabindex="-1"><span class="oo-ui-iconElement-icon oo-ui-icon-subtract"></span><span class="oo-ui-labelElement-label"></span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator"></span></a></span><input class="oo-ui-inputWidget-input" max="10" min="0" step="any" tabindex="0" type="number" value="5"><span aria-hidden="true" class="oo-ui-numberInputWidget-plusButton oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-buttonWidget oo-ui-buttonElement oo-ui-buttonElement-framed"><a class="oo-ui-buttonElement-button" rel="nofollow" role="button" tabindex="-1"><span class="oo-ui-iconElement-icon oo-ui-icon-add"></span><span class="oo-ui-labelElement-label"></span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator"></span></a></span></div></div>"`,
     );
   });
 });

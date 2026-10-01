@@ -51,6 +51,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - run: pnpm typecheck
+      - run: pnpm typecheck:docs
 
   # Node 测试
   test-node:
@@ -90,6 +91,30 @@ jobs:
       - run: pnpm exec playwright install --with-deps chromium
 
       - run: pnpm test:browser
+
+  # React 19 兼容：同一套用例在 peer 的另一端必须同样全绿
+  test-react19:
+    name: Test (React 19)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm add -D -w react@^19 react-dom@^19 @types/react@^19 @types/react-dom@^19
+
+      - run: pnpm typecheck
+
+      - run: pnpm exec playwright install --with-deps chromium
+
+      - run: pnpm test
 
   # 发布物构建
   build:

@@ -96,23 +96,49 @@ export const typeValue = async (
 };
 
 /**
- * 取元素的 `innerHTML` 并把 id 类属性值归一化为 `r#`，供 `toMatchInlineSnapshot` 使用。
+ * 起始标签的切分：标签名 + 属性串 + 可选自闭合斜杠。属性值由浏览器序列化保证不含裸
+ * `"`、`<`、`>`（分别转义为 `&quot;` `&lt;` `&gt;`），故按 `[^"]*` 取值不会截断。
+ */
+const START_TAG_PATTERN = /<([a-zA-Z][\w:-]*)((?:\s+[\w:.-]+="[^"]*")*)\s*(\/?)>/g;
+
+/**
+ * 把每个起始标签的属性按名排序。属性顺序不属于 DOM 契约，却随 React 版本变化
+ * （React 19 起 `<input>` 的 `name`、`type` 等落在属性串末尾），不归一化会让快照
+ * 锁死 React 版本而非锁住结构。
+ */
+const sortTagAttributes = (html: string): string =>
+  html.replace(
+    START_TAG_PATTERN,
+    (_match, tag: string, attrs: string, selfClosing: string) => {
+      const sorted = (attrs.match(/[\w:.-]+="[^"]*"/g) ?? []).sort();
+      return `<${tag}${sorted.map((attr) => ` ${attr}`).join("")}${selfClosing ? "/" : ""}>`;
+    },
+  );
+
+/**
+ * 取元素的 `innerHTML` 归一化后供 `toMatchInlineSnapshot` 使用。
  *
- * React `useId` 在同一页面跨 root 累计且为 base32 编码，取值随用例执行顺序漂移；
- * 归一化后锁定"id 及其引用结构存在"，不锁定计数值。
- * React 18 产出 `:r0:`、React 19 起产出 `_r_0_`，`useCleanId` 已统一剥为 `r0` 形态，
- * 此处再兼容未经理器的 `_r_0_` 原始形态。
+ * **HTML 快照一律经本函数，不得直接对 `innerHTML` 断言**：裸 `innerHTML` 会把 React 版本
+ * 决定的 id 取值与属性顺序一并锁进契约，换 React 版本即整批失败。归一化两项：
+ *
+ * - **id 类属性值**：React `useId` 在同一页面跨 root 累计且为 base32 编码，取值随用例执行
+ *   顺序漂移；归一化为 `r#` 后只锁"id 及其引用结构存在"，不锁计数值。React 18 产出 `:r0:`、
+ *   React 19 起产出 `_r_0_`，`useCleanId` 已统一剥为 `r0` 形态，此处再兼容未经理器的
+ *   `_r_0_` 原始形态。
+ * - **属性顺序**：见 {@link sortTagAttributes}。
  */
 export const snapshotHTML = (el: Element): string =>
-  el.innerHTML.replace(
-    /((?:id|aria-labelledby|aria-describedby|aria-activedescendant|aria-owns|aria-controls)=")([^"]*)(")/g,
-    (_match, prefix: string, value: string, suffix: string) =>
-      prefix +
-      value
-        .split(" ")
-        .map((v) => v.replace(/^_?r[0-9a-v]+_?(-\d+)?$/, "r#$1"))
-        .join(" ") +
-      suffix,
+  sortTagAttributes(
+    el.innerHTML.replace(
+      /((?:id|aria-labelledby|aria-describedby|aria-activedescendant|aria-owns|aria-controls)=")([^"]*)(")/g,
+      (_match, prefix: string, value: string, suffix: string) =>
+        prefix +
+        value
+          .split(" ")
+          .map((v) => v.replace(/^_?r[0-9a-v]+_?(-\d+)?$/, "r#$1"))
+          .join(" ") +
+        suffix,
+    ),
   );
 
 /**

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { render } from "vitest-browser-react";
-import { getRoot } from "../../testing";
+import { getRoot, snapshotHTML } from "../../testing";
 import { ProgressBar } from ".";
 
 /**
@@ -53,15 +53,15 @@ describe("HTML快照", () => {
   // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）
   it("不定进度", async () => {
     const screen = await render(<ProgressBar />);
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
-      `"<div class="oo-ui-widget oo-ui-widget-enabled oo-ui-progressBarWidget oo-ui-progressBarWidget-indeterminate" role="progressbar" aria-valuemin="0" aria-valuemax="100"><div class="oo-ui-progressBarWidget-bar"></div></div>"`,
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
+      `"<div aria-valuemax="100" aria-valuemin="0" class="oo-ui-widget oo-ui-widget-enabled oo-ui-progressBarWidget oo-ui-progressBarWidget-indeterminate" role="progressbar"><div class="oo-ui-progressBarWidget-bar"></div></div>"`,
     );
   });
 
   it("数值进度", async () => {
     const screen = await render(<ProgressBar progress={40} />);
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
-      `"<div class="oo-ui-widget oo-ui-widget-enabled oo-ui-progressBarWidget" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40"><div class="oo-ui-progressBarWidget-bar" style="width: 40%;"></div></div>"`,
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
+      `"<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" class="oo-ui-widget oo-ui-widget-enabled oo-ui-progressBarWidget" role="progressbar"><div class="oo-ui-progressBarWidget-bar" style="width: 40%;"></div></div>"`,
     );
   });
 });

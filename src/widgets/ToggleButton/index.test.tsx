@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { getRoot, tick } from "../../testing";
+import { getRoot, snapshotHTML, tick } from "../../testing";
 import { FieldLayout } from "../../layouts/FieldLayout";
 import { ToggleButton } from ".";
 
@@ -91,8 +91,8 @@ describe("HTML快照", () => {
   // 根为span对齐原版（ToggleButtonWidget继承ButtonWidget故沿用ButtonElement的标签名）
   it("关", async () => {
     const screen = await render(<ToggleButton>开关</ToggleButton>);
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
-      `"<span class="oo-ui-toggleWidget-off oo-ui-widget oo-ui-widget-enabled oo-ui-labelElement oo-ui-toggleWidget oo-ui-toggleButtonWidget oo-ui-buttonElement oo-ui-buttonElement-framed"><a class="oo-ui-buttonElement-button" role="button" tabindex="0" rel="nofollow" aria-pressed="false"><span class="oo-ui-iconElement-icon oo-ui-iconElement-noIcon"></span><span class="oo-ui-labelElement-label">开关</span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator"></span></a></span>"`,
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
+      `"<span class="oo-ui-toggleWidget-off oo-ui-widget oo-ui-widget-enabled oo-ui-labelElement oo-ui-toggleWidget oo-ui-toggleButtonWidget oo-ui-buttonElement oo-ui-buttonElement-framed"><a aria-pressed="false" class="oo-ui-buttonElement-button" rel="nofollow" role="button" tabindex="0"><span class="oo-ui-iconElement-icon oo-ui-iconElement-noIcon"></span><span class="oo-ui-labelElement-label">开关</span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator"></span></a></span>"`,
     );
   });
 
@@ -102,8 +102,8 @@ describe("HTML快照", () => {
         开关
       </ToggleButton>,
     );
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
-      `"<span class="oo-ui-toggleWidget-on oo-ui-widget oo-ui-widget-disabled oo-ui-labelElement oo-ui-toggleWidget oo-ui-toggleButtonWidget oo-ui-buttonElement oo-ui-buttonElement-framed oo-ui-buttonElement-active" aria-disabled="true"><a class="oo-ui-buttonElement-button" role="button" tabindex="-1" aria-disabled="true" rel="nofollow" aria-pressed="true"><span class="oo-ui-iconElement-icon oo-ui-iconElement-noIcon oo-ui-image-invert"></span><span class="oo-ui-labelElement-label">开关</span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator oo-ui-image-invert"></span></a></span>"`,
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
+      `"<span aria-disabled="true" class="oo-ui-toggleWidget-on oo-ui-widget oo-ui-widget-disabled oo-ui-labelElement oo-ui-toggleWidget oo-ui-toggleButtonWidget oo-ui-buttonElement oo-ui-buttonElement-framed oo-ui-buttonElement-active"><a aria-disabled="true" aria-pressed="true" class="oo-ui-buttonElement-button" rel="nofollow" role="button" tabindex="-1"><span class="oo-ui-iconElement-icon oo-ui-iconElement-noIcon oo-ui-image-invert"></span><span class="oo-ui-labelElement-label">开关</span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator oo-ui-image-invert"></span></a></span>"`,
     );
   });
 });

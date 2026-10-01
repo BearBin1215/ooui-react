@@ -33,7 +33,7 @@ ooui-react/
 ├─ vite.config.ts           # 开发服务器配置（root指向playground，ooui-react别名指向src）
 ├─ vitest.config.ts         # 测试配置
 ├─ vitest.browser-setup.ts  # browser测试组全局设置
-├─ tsdown.config.ts         # 组件库构建配置（产物到dist）
+├─ tsdown.config.ts         # 组件库构建配置
 └─ pnpm-workspace.yaml      # workspace成员声明（根包与docs）
 ```
 
@@ -46,9 +46,10 @@ pnpm docs:dev   # 启动文档站开发服务器
 pnpm docs:build # 构建文档站产物（输出到 docs/build）
 pnpm build      # 构建组件库产物（tsdown → dist）
 pnpm test       # 单元测试（分 node / browser 两组）
-pnpm typecheck  # 类型检查
-pnpm lint       # oxlint 静态检查
-pnpm format     # oxfmt 格式化
+pnpm typecheck  # 类型检查（src 与 playground）
+pnpm typecheck:docs # 类型检查（docs 文档站）
+pnpm lint       # oxlint 静态检查（warn 级同样判为失败）
+pnpm format     # oxfmt 格式化（当前仅覆盖 ts/tsx，json/css/mdx 刻意不在其列）
 ```
 
 ## 注释和文档
@@ -65,6 +66,7 @@ docs/ 目录为本工程的文档工程，基于 Rspress 构建，托管到 GitH
   - 文档侧差异内容行尾加 `{/* deviations: <id> */}` 标记，与台账元数据经 `src/docs-contract.node.test.ts` 双向校验。
 - **中英双语**：同步修改两种语言。
 - **组件序言**：以一两句功能定位与适用场景为度，变体多的组件可列举变体与关键差异（参考 Dialog 页），非显而易见的使用前提与契约可保留。不写实现原理、不复述 API。
+- **新增组件页**：若该页预览含「首帧即访问 `document`」的组件（浮层 / portal / ResizeObserver 测量），须把路由加进 `docs/rspress.config.ts` 的 `ssg.experimentalExcludeRoutePaths` 白名单，否则 SSG 阶段构建失败。
 
 ## 测试
 
@@ -79,7 +81,9 @@ docs/ 目录为本工程的文档工程，基于 Rspress 构建，托管到 GitH
 
 通过 `pnpm test:node` 或 `pnpm test:browser` 跑单组测试。
 
-`src/testing` 提供复用工具工具函数，封装取根元素、模拟点击 / 按键等常用操作。
+`src/testing` 提供复用工具工具函数，封装取根元素、模拟点击 / 按键等常用操作。HTML 快照一律经 `snapshotHTML` 取，不要直接对 `innerHTML` 断言。
+
+组件库支持 React 18 与 19，CI 有独立的 React 19 job 兜底。本地复验：`pnpm add -D -w react@^19 react-dom@^19 @types/react@^19 @types/react-dom@^19` 后跑 `pnpm test`，验证通过后用 `git checkout package.json pnpm-lock.yaml && pnpm install` 还原。
 
 ## 发布
 

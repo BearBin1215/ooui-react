@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { getRoot } from "../../testing";
+import { getRoot, snapshotHTML } from "../../testing";
 import { Message } from ".";
 
 /**
@@ -84,8 +84,8 @@ describe("HTML快照", () => {
   // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）
   it("warning块级消息", async () => {
     const screen = await render(<Message type="warning">注意</Message>);
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
-      `"<div class="oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-labelElement oo-ui-messageWidget oo-ui-messageWidget-block oo-ui-flaggedElement-warning" aria-live="polite"><span class="oo-ui-iconElement-icon oo-ui-icon-alert oo-ui-image-warning"></span><span class="oo-ui-labelElement-label">注意</span></div>"`,
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
+      `"<div aria-live="polite" class="oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-labelElement oo-ui-messageWidget oo-ui-messageWidget-block oo-ui-flaggedElement-warning"><span class="oo-ui-iconElement-icon oo-ui-icon-alert oo-ui-image-warning"></span><span class="oo-ui-labelElement-label">注意</span></div>"`,
     );
   });
 
@@ -95,8 +95,8 @@ describe("HTML快照", () => {
         出错
       </Message>,
     );
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
-      `"<div class="oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-labelElement oo-ui-messageWidget oo-ui-messageWidget-block oo-ui-messageWidget-showClose oo-ui-flaggedElement-error" role="alert"><span class="oo-ui-iconElement-icon oo-ui-icon-error oo-ui-image-error"></span><span class="oo-ui-labelElement-label">出错</span><span class="oo-ui-messageWidget-close oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-buttonWidget oo-ui-buttonElement oo-ui-buttonElement-frameless"><a class="oo-ui-buttonElement-button" role="button" tabindex="0" rel="nofollow" title="Close"><span class="oo-ui-iconElement-icon oo-ui-icon-close"></span><span class="oo-ui-labelElement-label oo-ui-labelElement-invisible">Close</span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator"></span></a></span></div>"`,
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
+      `"<div class="oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-labelElement oo-ui-messageWidget oo-ui-messageWidget-block oo-ui-messageWidget-showClose oo-ui-flaggedElement-error" role="alert"><span class="oo-ui-iconElement-icon oo-ui-icon-error oo-ui-image-error"></span><span class="oo-ui-labelElement-label">出错</span><span class="oo-ui-messageWidget-close oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-buttonWidget oo-ui-buttonElement oo-ui-buttonElement-frameless"><a class="oo-ui-buttonElement-button" rel="nofollow" role="button" tabindex="0" title="Close"><span class="oo-ui-iconElement-icon oo-ui-icon-close"></span><span class="oo-ui-labelElement-label oo-ui-labelElement-invisible">Close</span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator"></span></a></span></div>"`,
     );
   });
 });

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { getRoot, tick } from "../../testing";
+import { getRoot, snapshotHTML, tick } from "../../testing";
 import { SearchInput } from ".";
 
 /**
@@ -74,15 +74,15 @@ describe("HTML快照", () => {
   // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）
   it("空值", async () => {
     const screen = await render(<SearchInput />);
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
-      `"<div class="oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-inputWidget oo-ui-textInputWidget oo-ui-textInputWidget-type-search"><input tabindex="0" class="oo-ui-inputWidget-input" type="search" value=""><span class="oo-ui-iconElement-icon oo-ui-icon-search"></span><span role="button" tabindex="-1" class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator"></span></div>"`,
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
+      `"<div class="oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-inputWidget oo-ui-textInputWidget oo-ui-textInputWidget-type-search"><input class="oo-ui-inputWidget-input" tabindex="0" type="search" value=""><span class="oo-ui-iconElement-icon oo-ui-icon-search"></span><span class="oo-ui-indicatorElement-indicator oo-ui-indicatorElement-noIndicator" role="button" tabindex="-1"></span></div>"`,
     );
   });
 
   it("有值显示清除指示器", async () => {
     const screen = await render(<SearchInput defaultValue="kw" />);
-    expect(screen.container.innerHTML).toMatchInlineSnapshot(
-      `"<div class="oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-indicatorElement oo-ui-inputWidget oo-ui-textInputWidget oo-ui-textInputWidget-type-search"><input tabindex="0" class="oo-ui-inputWidget-input" type="search" value="kw"><span class="oo-ui-iconElement-icon oo-ui-icon-search"></span><span role="button" tabindex="-1" aria-label="Remove" class="oo-ui-indicatorElement-indicator oo-ui-indicator-clear"></span></div>"`,
+    expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(
+      `"<div class="oo-ui-widget oo-ui-widget-enabled oo-ui-iconElement oo-ui-indicatorElement oo-ui-inputWidget oo-ui-textInputWidget oo-ui-textInputWidget-type-search"><input class="oo-ui-inputWidget-input" tabindex="0" type="search" value="kw"><span class="oo-ui-iconElement-icon oo-ui-icon-search"></span><span aria-label="Remove" class="oo-ui-indicatorElement-indicator oo-ui-indicator-clear" role="button" tabindex="-1"></span></div>"`,
     );
   });
 });
