@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { forwardRef, type LabelHTMLAttributes } from "react";
 import clsx from "clsx";
 import { getWidgetClassName, labelElementLabelClasses, resolveTitle } from "../../mixins";
 import type { WidgetProps } from "../Widget";
@@ -17,16 +17,17 @@ export type LabelPosition = "before" | "after";
  *
  * 独立表单标签属性：未声明属性（含 `htmlFor`）直传根 `<label>`。
  */
-export type LabelProps = WidgetProps<HTMLLabelElement> & {
-  // 实现说明：按「视同无标签」语义抑制 oo-ui-labelElement 根类，视觉裁剪由
-  // oo-ui-labelElement-invisible 承担
-  /**
-   * Hide the label visually (kept as accessible name).
-   *
-   * 视觉隐藏标签（保留可访问名称）
-   */
-  invisibleLabel?: boolean;
-};
+export type LabelProps = WidgetProps<HTMLLabelElement> &
+  Pick<LabelHTMLAttributes<HTMLLabelElement>, "htmlFor"> & {
+    // 实现说明：按「视同无标签」语义抑制 oo-ui-labelElement 根类，视觉裁剪由
+    // oo-ui-labelElement-invisible 承担
+    /**
+     * Hide the label visually (kept as accessible name).
+     *
+     * 视觉隐藏标签（保留可访问名称）
+     */
+    invisibleLabel?: boolean;
+  };
 
 // 实现说明：对齐原版OO.ui.LabelWidget，根元素即<label>（原版static.tagName='label'，$label即
 // $element）；原版`config.input`的关联通道不映射（有id用`htmlFor`，无id交给FieldLayout），
