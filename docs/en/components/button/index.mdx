@@ -133,7 +133,7 @@ export default App;
 
 - The focusable element is the inner `<a>`; the root `<span>` is not focusable. To focus the button manually, use `anchorRef` (the component `ref` points to the outer `<span>`).
 - Enter / Space trigger `onClick`; `onKeyPress` prevents Space from scrolling the page whenever a click handler is present.
-- The pressed state (`oo-ui-buttonElement-pressed`) is maintained by the component in JS: CSS has no keyboard-press pseudo-class, so keyboard press and release are handled by explicit event listeners. The `pressed` prop is OR-ed with it, for cases like "keep the button pressed while its associated menu is open".
+- The pressed state (`oo-ui-buttonElement-pressed`) is maintained by the component in JS (including keyboard press and release). The `pressed` prop is OR-ed with it, for cases like "keep the button pressed while its associated menu is open".
 - `title` and `accessKey` land on the inner `<a>`; when `title` is not given and the label is hidden it falls back to the label text, and when `accessKey` is present a key hint is appended to `title` (the chord text can be localized via [OOUIProvider](/en/guide/configuration.html#access-key-label)).
 
 ## API
@@ -159,6 +159,6 @@ export default App;
 | `anchorRef` | Ref to the inner `<a>` element | `Ref<HTMLAnchorElement>` | — |
 | `anchorProps` | Extra props for the inner `<a>`; `role`, `tabIndex`, `aria-disabled`, etc. are taken over by the component and take priority | `HTMLAttributes<HTMLAnchorElement>` | — |
 | `iconProps` / `indicatorProps` | Extra props for the icon / indicator element | `object` | — |
-| `...rest` | Native `span` props (`className`, `id`, `data-*`, `aria-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLSpanElement>` | — |
+| `...rest` | Native `span` props (`className`, `id`, `data-*`, etc.) passed straight to the root; `aria-label` / `aria-labelledby` / `aria-pressed` are the exception — they land on the inner focusable `<a>` | `HTMLAttributes<HTMLSpanElement>` | — |
 
 `ButtonFlag` is `'progressive' | 'destructive' | 'invert' | 'error' | 'warning' | 'success' | 'primary' | 'safe' | 'back' | 'close'`; the first six decide tinting, the last four are button-specific form flags.

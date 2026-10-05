@@ -59,6 +59,7 @@
   - `warnDeprecation`
   - `getUserLanguages`/`getLocalValue`（MediaWiki 多语言回退）
   - `generateElementId`（React `useId` 已覆盖）
+  - `Keys`/`MouseButtons`（jQuery 时代的数值常量表：前者是 `keyCode` 值，后者是 `which` 风格的 1/2/3；React 事件直接比较 `KeyboardEvent.key` 与 `MouseEvent.button`，不需要常量表）
 
   `debounce`/`throttle` 也不进导出面，组件内部直接用 es-toolkit。
   > id：dev-oo-ui-globals ｜ 组件：全局 ｜ 文档：guide/ooui.mdx

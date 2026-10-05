@@ -7,7 +7,7 @@ description: "Props for the SearchInput component: a single-line search input wi
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/SearchInput) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.SearchInputWidget.html "OO.ui.SearchInputWidget")
 
-A search input: the search form of [TextInput](/en/components/text-input/index.html), with a clear indicator appearing when the value is non-empty — click it to clear.
+A search input: the search form of [TextInput](/en/components/text-input/index.html), with a clear indicator appearing when the value is non-empty and editable — click it to clear and refocus the input.
 
 ## Basic usage
 
@@ -30,7 +30,7 @@ function App() {
 export default App;
 ```
 
-Because the field already holds a value, a × clear indicator shows on the right; clearing the value removes it again.
+When the field holds a value and is editable (not disabled, not read-only), a × clear indicator shows on the right; clearing the value removes it again and returns focus to the input.
 
 ## With labels and soft validation
 

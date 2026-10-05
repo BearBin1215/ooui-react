@@ -17,6 +17,12 @@ description: "CheckboxMultiselectInput 组件的属性说明：CheckboxMultisele
 import { useState } from "react";
 import { ButtonInput, CheckboxMultiselectInput, FormLayout } from "ooui-react";
 
+const FRUITS = [
+  { value: "apple", children: "苹果" },
+  { value: "banana", children: "香蕉" },
+  { value: "cherry", children: "樱桃" },
+];
+
 function App() {
   const [fruits, setFruits] = useState<Array<string | number>>(["apple"]);
   const [submitted, setSubmitted] = useState("");
@@ -38,11 +44,7 @@ function App() {
         name="fruits"
         value={fruits}
         onChange={setFruits}
-        options={[
-          { value: "apple", children: "苹果" },
-          { value: "banana", children: "香蕉" },
-          { value: "cherry", children: "樱桃" },
-        ]}
+        options={FRUITS}
       />
       <ButtonInput type="submit">提交</ButtonInput>
       <div>已提交：{submitted}</div>
@@ -52,6 +54,10 @@ function App() {
 
 export default App;
 ```
+
+:::note 性能
+映射后的选项集仅在 `options` 引用变化时重算：热点路径请传稳定引用（模块常量或 `useMemo`），不要内联数组字面量。
+:::
 
 ## API
 

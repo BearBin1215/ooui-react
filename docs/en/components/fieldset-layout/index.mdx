@@ -56,6 +56,35 @@ function App() {
 export default App;
 ```
 
+Both forms side by side — the default ⓘ popup and the inline text with `helpInline={true}`:
+
+```tsx preview
+import { FieldLayout, FieldsetLayout, TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 420 }}>
+      <FieldsetLayout label="Popup help" help="Click the ⓘ icon in the header to pop up this explanation.">
+        <FieldLayout label="Username">
+          <TextInput />
+        </FieldLayout>
+      </FieldsetLayout>
+      <FieldsetLayout
+        label="Inline help"
+        helpInline
+        help="This explanation shows right after the heading, for things one sentence can cover."
+      >
+        <FieldLayout label="Email">
+          <TextInput type="email" />
+        </FieldLayout>
+      </FieldsetLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
 ## Group-level disable
 
 `disabled` lands on the native `<fieldset>`, so every input control inside the group is disabled by the browser's own mechanism — no per-item passing needed.

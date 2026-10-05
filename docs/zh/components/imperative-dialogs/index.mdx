@@ -61,7 +61,7 @@ export default App;
 ## 运行时语义
 
 - **Promise 在关闭动画播完后才兑现**（另加约 50ms 裕量），不是点击按钮的瞬间——`await confirm(...)` 后立即读 DOM 或跳转，会先等动画播完。
-- 弹窗渲染在应用 React 树内，继承所在子树的全部 context；**嵌套 `OOUIProvider` 时由最外层的宿主统一渲染全部命令式弹窗**（命令式调用没有位置信息，以应用根部的配置渲染最可预期）。
+- 弹窗渲染在应用 React 树内，继承所在子树的全部 context；**嵌套 `OOUIProvider` 时由最外层的宿主统一渲染全部命令式弹窗**。
 - 重复调用会**层叠出多个弹窗**、逐个可交互；原版三个 API 共用单窗口管理器，已有窗口打开时第二次调用被拒绝、返回的 Promise 永不兑现。{/* deviations: dev-imperative-no-queue */}
 - `prompt` 的输入框内按 Enter 等同点「确定」（IME 合成期的确认 Enter 除外，`textInput.onKeyDown` 可 `preventDefault` 否决）；弹窗就绪后自动聚焦输入框（`textInput.inputRef` 由内部占用、传入无效，`textInput.value` 只作初始值）。{/* deviations: dev-prompt-textinput-value */}
 

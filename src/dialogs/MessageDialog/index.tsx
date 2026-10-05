@@ -64,7 +64,7 @@ export interface MessageDialogProps extends Omit<DialogProps, "title" | "bodyFit
  * 消息弹窗（对齐原版 OO.ui.MessageDialog）：文本区 + 底部动作区（确定 / 取消），
  * 动作区横向装不下时切竖向布局。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/message-dialog/index.html
+ * @see https://bearbin1215.github.io/ooui-react/components/dialog/index.html
  */
 export const MessageDialog = forwardRef<HTMLDivElement, MessageDialogProps>(
   (

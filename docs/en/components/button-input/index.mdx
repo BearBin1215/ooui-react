@@ -79,6 +79,8 @@ export default App;
 | `icon` / `indicator` | Icon / indicator (unsupported with `useInputTag`) | `string` / `'clear' \| 'up' \| 'down' \| 'required'` | — |
 | `invisibleLabel` | Hide the label visually but keep it as the accessible name | `boolean` | `false` |
 | `onClick` | Click handler (Enter/Space on the keyboard fire it too) | `(ev) => void` | — |
+| `onMouseDown` / `onMouseUp` | Mouse-down / -up handlers; down enters and up resets the pressed state (not entered while disabled) | `(ev) => void` | — |
+| `onKeyDown` / `onKeyUp` | Key-down / -up handlers; Enter / Space enter and reset the pressed state, other keys only forward the event | `(ev) => void` | — |
 | `accessKey` | Access key (lands on the real `button` / `input`) | `string` | — |
 | `disabled` | Whether disabled | `boolean` | `false` |
 | `...rest` | Native `span` props passed straight to the root | `HTMLAttributes<HTMLSpanElement>` | — |

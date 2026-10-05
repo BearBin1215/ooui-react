@@ -47,6 +47,40 @@ function App() {
 export default App;
 ```
 
+When the passed value isn't among the options it falls back to the first selectable one — in the example below the initial `xl` is invalid, so the select shows "Small" and submits `s` as usual:
+
+```tsx preview
+import { useState } from "react";
+import { ButtonInput, DropdownInput, FormLayout } from "ooui-react";
+
+function App() {
+  const [submitted, setSubmitted] = useState("");
+
+  return (
+    <FormLayout
+      onSubmit={(event) => {
+        event.preventDefault();
+        setSubmitted(new FormData(event.currentTarget).get("size")?.toString() ?? "");
+      }}
+    >
+      <DropdownInput
+        name="size"
+        defaultValue="xl"
+        options={[
+          { value: "s", children: "Small" },
+          { value: "m", children: "Medium" },
+          { value: "l", children: "Large" },
+        ]}
+      />
+      <ButtonInput type="submit">Submit</ButtonInput>
+      <div>Submitted: {submitted || "(not submitted)"}</div>
+    </FormLayout>
+  );
+}
+
+export default App;
+```
+
 ## Grouped options
 
 Options without `value` are group headings, mapped to `<optgroup>` elements in the hidden `<select>` (`disabled` disables the whole group).

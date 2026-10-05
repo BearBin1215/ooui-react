@@ -61,7 +61,7 @@ A dialog called inside an `OOUIProvider` subtree inherits that Provider's langua
 ## Runtime semantics
 
 - **The Promise resolves after the close animation finishes** (plus a ~50ms margin), not at the instant of the button click — code right after `await confirm(...)` that reads the DOM or navigates waits for the animation first.
-- The dialog renders inside the app's React tree and inherits all context of its subtree; **with nested `OOUIProvider`s, the outermost host renders all imperative dialogs** (an imperative call has no position information, so rendering with the app-root config is the most predictable).
+- The dialog renders inside the app's React tree and inherits all context of its subtree; **with nested `OOUIProvider`s, the outermost host renders all imperative dialogs**.
 - Repeated calls **stack multiple dialogs**, each independently interactive; the original shares one single-window manager, where a second call while a window is open is rejected and its Promise never settles. {/* deviations: dev-imperative-no-queue */}
 - In `prompt`, pressing Enter in the input equals clicking OK (except during IME composition; `textInput.onKeyDown` can veto with `preventDefault`); the input is focused automatically once ready (`textInput.inputRef` is taken internally and passing it has no effect; `textInput.value` is only the initial value). {/* deviations: dev-prompt-textinput-value */}
 

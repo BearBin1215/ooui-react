@@ -62,8 +62,9 @@ function App() {
         value={tags}
         onChange={setTags}
         allowedValues={["red", "green", "blue"]}
+        allowDisplayInvalidTags
         tagLimit={2}
-        placeholder="Only red / green / blue, at most 2"
+        placeholder="Only red / green / blue (invalid values kept and flagged), at most 2"
       />
     </div>
   );
@@ -72,7 +73,7 @@ function App() {
 export default App;
 ```
 
-Note: the component's overall invalid flag (red border) is broader than `onInvalidTagsChange` — uncommitted text left in the input on blur also triggers it. If you see the red border without an `onInvalidTagsChange` callback, check for leftover text in the input first.
+Typing something outside the range — say `purple` — and pressing Enter still creates a tag, flagged invalid (the `allowDisplayInvalidTags` effect; without it the value is refused outright); once `tagLimit` of 2 is reached the input is disabled. Note: the component's overall invalid flag (red border) is broader than `onInvalidTagsChange` — uncommitted text left in the input on blur also triggers it. If you see the red border without an `onInvalidTagsChange` callback, check for leftover text in the input first.
 
 ## Sanitizing external values: pickValidTags
 
@@ -81,6 +82,29 @@ The exported pure function `pickValidTags(values, { options?, allowedValues?, al
 ## Input position and reordering
 
 `inputPosition` is `inline` (default, the input follows the last tag), `outline` (the input is below the tag area) or `none` (no input, display-only, paired with a controlled value). `allowReordering` (on by default) enables drag-to-reorder; when off, new tags insert according to the order in `allowedValues`. The original allows replacing the inner input via `config.input` / `inputWidget`; here the input is built in and cannot be replaced. {/* deviations: dev-tagmultiselect-input */}
+
+```tsx preview
+import { useState } from "react";
+import { TagMultiselect } from "ooui-react";
+
+function App() {
+  const [tags, setTags] = useState<(string | number)[]>(["ooui", "react"]);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 360 }}>
+      <TagMultiselect
+        value={tags}
+        onChange={setTags}
+        inputPosition="outline"
+        placeholder="The input sits below the tag area"
+      />
+      <TagMultiselect defaultValue={["display", "only"]} inputPosition="none" />
+    </div>
+  );
+}
+
+export default App;
+```
 
 ## API
 

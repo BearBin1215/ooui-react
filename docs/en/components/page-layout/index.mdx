@@ -14,7 +14,7 @@ A page panel: an item of [StackLayout](/en/components/stack-layout/index.html)'s
 Standalone, the active state is declared via `active`; without `active` it derives from `hidden` (not hidden = active) and outputs the `oo-ui-pageLayout-active` class. `label` / `value` are fields carried along with the page-set object — the component swallows them so they never land as DOM attributes.
 
 ```tsx preview
-import { PageLayout, StackLayout } from "ooui-react";
+import { StackLayout } from "ooui-react";
 
 function App() {
   return (
@@ -31,13 +31,34 @@ function App() {
 export default App;
 ```
 
+Rendered without a StackLayout, the active state is declared via `active` / `hidden` (panels default to `expanded`, filling a positioned parent; pass `expanded={false}` to place them statically):
+
+```tsx preview
+import { PageLayout } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <PageLayout active padded expanded={false}>
+        Active page: declared with active, the root emits the oo-ui-pageLayout-active class
+      </PageLayout>
+      <PageLayout padded expanded={false} hidden>
+        Hidden page: hidden derives to inactive
+      </PageLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
 ## API
 
 Inherits all [PanelLayout](/en/components/panel-layout/index.html) props, plus:
 
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
-| `active` | Whether this is the active page; without it, derived from `hidden` (not hidden = active) | `boolean` | derived from `hidden` |
+| `active` | Whether this is the active page; without it, derived from `hidden` (not hidden = active) — in continuous mode all pages are visible and the derivation no longer applies, so pass it explicitly | `boolean` | derived from `hidden` |
 | `scrollable` | Whether scrollable (pages scroll by default) | `boolean` | `true` |
 | `label` / `value` | Carried with the page-set object, swallowed by the component | `ReactNode` / `string \| number` | — |
 

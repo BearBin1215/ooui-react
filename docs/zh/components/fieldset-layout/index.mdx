@@ -56,6 +56,35 @@ function App() {
 export default App;
 ```
 
+两种形态并排——缺省的 ⓘ 弹出说明与 `helpInline={true}` 的内联文本：
+
+```tsx preview
+import { FieldLayout, FieldsetLayout, TextInput } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 420 }}>
+      <FieldsetLayout label="弹出帮助" help="点击头部的 ⓘ 图标弹出这段说明。">
+        <FieldLayout label="用户名">
+          <TextInput />
+        </FieldLayout>
+      </FieldsetLayout>
+      <FieldsetLayout
+        label="内联帮助"
+        helpInline
+        help="这段说明直接显示在标题之后，适合一句话能讲清的场合。"
+      >
+        <FieldLayout label="邮箱">
+          <TextInput type="email" />
+        </FieldLayout>
+      </FieldsetLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
 ## 组级禁用
 
 `disabled` 落在原生 `<fieldset>` 上，组内所有输入控件随浏览器机制一并禁用，无需逐项传递。

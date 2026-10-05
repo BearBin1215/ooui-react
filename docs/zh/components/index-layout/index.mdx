@@ -49,13 +49,42 @@ export default App;
 
 激活页签被移除时自动选中首个可用（非禁用）页签。
 
+`continuous` 模式：所有面板同时可见、纵向堆叠（常用于打印与全文浏览场景）：
+
+```tsx preview
+import { useState } from "react";
+import { IndexLayout } from "ooui-react";
+
+function App() {
+  const [tab, setTab] = useState<string | number>("intro");
+
+  return (
+    <div style={{ position: "relative", height: 220 }}>
+      <IndexLayout
+        framed
+        continuous
+        value={tab}
+        onChange={setTab}
+        options={[
+          { value: "intro", label: "简介", padded: true, children: "简介内容……" },
+          { value: "usage", label: "用法", padded: true, children: "用法内容……" },
+          { value: "faq", label: "FAQ", padded: true, children: "常见问题……" },
+        ]}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
 ## API
 
 继承 [MenuLayout](/components/menu-layout/index.html) 全部属性（`menu` / `menuPosition` / `children` 除外），另有：
 
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `options` | 页签集：`value`、`label`、`disabled` 加 [TabPanelLayout](/components/tab-panel-layout/index.html) 字段 | `IndexLayoutTabProps[]` | — |
+| `options` | 页签集：`value`、`label`、`disabled` 加 [TabPanelLayout](/components/tab-panel-layout/index.html) 字段（禁用页签对应的面板始终以 `hidden` 完全隐藏，不受 `openMatchedPanels` 影响） | `IndexLayoutTabProps[]` | — |
 | `value` | 当前激活页签（受控，传入即受控模式） | `string \| number` | — |
 | `defaultValue` | 非受控初始激活页签 | `string \| number` | — |
 | `onChange` | 激活页签变化回调 | `ChangeHandler<string \| number>` | — |

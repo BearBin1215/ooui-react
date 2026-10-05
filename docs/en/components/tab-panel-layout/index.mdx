@@ -33,6 +33,27 @@ function App() {
 export default App;
 ```
 
+Rendered without an IndexLayout, the active state is declared via `active` (the root emits the `oo-ui-tabPanelLayout-active` class; panels default to `expanded`, filling a positioned parent — pass `expanded={false}` to place them statically):
+
+```tsx preview
+import { TabPanelLayout } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <TabPanelLayout active padded expanded={false}>
+        General panel: declared with active, the root emits the oo-ui-tabPanelLayout-active class
+      </TabPanelLayout>
+      <TabPanelLayout padded expanded={false} hidden>
+        Advanced panel: fully hidden while hidden
+      </TabPanelLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
 ## API
 
 Inherits all [PanelLayout](/en/components/panel-layout/index.html) props, plus:

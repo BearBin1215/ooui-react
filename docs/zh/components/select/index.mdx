@@ -114,8 +114,10 @@ export default App;
 
 作为浮层内层时键盘导航由外层驱动。单独使用且已让列表获得焦点的场景下：
 
-- `handleNavigationKeys`：是否处理 Home / End / PageUp / PageDown（对齐原版，`MenuSelectWidget` 才开启）。
+- `handleNavigationKeys`：是否处理 Home / End / PageUp / PageDown。
 - `listWrapsAround`：方向键导航到端点后是否环绕（默认 `true`）。
+- **前缀跳转**：列表获得焦点后直接键入字符，按选项文本的前缀循环跳转（1.5 秒缓冲）。
+- **悬停高亮**：鼠标悬停的选项即成为高亮项，移开即清除（与键盘高亮共用同一状态）。
 
 ## API
 

@@ -7,7 +7,7 @@ description: "SearchInput 组件的属性说明：搜索用单行输入框，缺
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/SearchInput) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.SearchInputWidget.html "OO.ui.SearchInputWidget")
 
-搜索输入框：[TextInput](/components/text-input/index.html) 的搜索形态，值非空时出现清除指示器，点击即清空。
+搜索输入框：[TextInput](/components/text-input/index.html) 的搜索形态，值非空且可编辑时出现清除指示器，点击即清空并把焦点移回输入框。
 
 ## 基本用法
 
@@ -30,7 +30,7 @@ function App() {
 export default App;
 ```
 
-搜索框内已有值时，右侧出现 × 清除指示器；清空后指示器消失。
+搜索框内已有值且可编辑（未禁用、非只读）时，右侧出现 × 清除指示器；清空后指示器消失，焦点回到输入框。
 
 ## 与标签、软校验配合
 

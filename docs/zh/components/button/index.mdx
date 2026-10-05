@@ -133,7 +133,7 @@ export default App;
 
 - 可聚焦的是内部 `<a>`，根元素是不可聚焦的 `<span>`：要手动聚焦按钮请用 `anchorRef`（组件 `ref` 指向外层 `<span>`）。
 - Enter / 空格触发 `onClick`，`onKeyPress` 将在存在点击回调时阻止空格滚动页面。
-- 按压态（`oo-ui-buttonElement-pressed`）由组件用 JS 维护：CSS 没有键盘按压的伪类，键盘按压与松开因此由显式事件处理。`pressed` 属性可与之外取或，用于“关联菜单打开期间按钮保持按压”的场景。
+- 按压态（`oo-ui-buttonElement-pressed`）由组件用 JS 维护（含键盘按压与松开）。`pressed` 属性可与之外取或，用于“关联菜单打开期间按钮保持按压”的场景。
 - `title`、`accessKey` 落在内部 `<a>` 上；未显式给 `title` 且标签隐藏时以标签文本兜底，`accessKey` 存在时 `title` 末尾附键位提示（组合键文案可经 [OOUIProvider](/guide/configuration.html#快捷键文案) 本地化）。
 
 ## API
@@ -159,6 +159,6 @@ export default App;
 | `anchorRef` | 内部 `<a>` 元素的引用 | `Ref<HTMLAnchorElement>` | — |
 | `anchorProps` | 内部 `<a>` 的附加属性；`role`、`tabIndex`、`aria-disabled` 等由组件接管、优先 | `HTMLAttributes<HTMLAnchorElement>` | — |
 | `iconProps` / `indicatorProps` | 图标 / 指示器元素的附加属性 | `object` | — |
-| `...rest` | 原生 `span` 属性（`className`、`id`、`data-*`、`aria-*` 等）直传根元素 | `HTMLAttributes<HTMLSpanElement>` | — |
+| `...rest` | 原生 `span` 属性（`className`、`id`、`data-*` 等）直传根元素；`aria-label` / `aria-labelledby` / `aria-pressed` 例外，落在内部可聚焦的 `<a>` 上 | `HTMLAttributes<HTMLSpanElement>` | — |
 
 `ButtonFlag` 为 `'progressive' | 'destructive' | 'invert' | 'error' | 'warning' | 'success' | 'primary' | 'safe' | 'back' | 'close'`，其中前六个决定着色，后四个是按钮专属的形态标志。

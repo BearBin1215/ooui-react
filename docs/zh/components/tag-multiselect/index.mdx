@@ -62,8 +62,9 @@ function App() {
         value={tags}
         onChange={setTags}
         allowedValues={["红", "绿", "蓝"]}
+        allowDisplayInvalidTags
         tagLimit={2}
-        placeholder="只能输入 红 / 绿 / 蓝，最多 2 个"
+        placeholder="只能输入 红 / 绿 / 蓝（非法值保留并标红），最多 2 个"
       />
     </div>
   );
@@ -72,7 +73,7 @@ function App() {
 export default App;
 ```
 
-注意：组件整体的 invalid 标志（红框）比 `onInvalidTagsChange` 的口径更宽——失焦时输入框里还留着未提交文本也会标红。看到红框却没收到 `onInvalidTagsChange`，先检查输入框是否残留文本。
+输入 `紫` 这类值域外的文本并回车，标签仍会生成并带 invalid 标记（开启 `allowDisplayInvalidTags` 的效果；不开启时直接拒绝添加）；`tagLimit` 达到 2 个后输入框禁用。注意：组件整体的 invalid 标志（红框）比 `onInvalidTagsChange` 的口径更宽——失焦时输入框里还留着未提交文本也会标红。看到红框却没收到 `onInvalidTagsChange`，先检查输入框是否残留文本。
 
 ## 外部值清洗：pickValidTags
 
@@ -81,6 +82,29 @@ export default App;
 ## 输入框位置与重排
 
 `inputPosition` 取 `inline`（缺省，输入框接在标签末尾）、`outline`（输入框在标签区下方）、`none`（无输入，纯展示，配合受控值使用）。`allowReordering`（默认开）允许拖拽调整标签顺序，关闭时新增按 `allowedValues` 的给定顺序插入。原版可经 `config.input` / `inputWidget` 替换内部输入控件，本工程输入框内置、不可替换。{/* deviations: dev-tagmultiselect-input */}
+
+```tsx preview
+import { useState } from "react";
+import { TagMultiselect } from "ooui-react";
+
+function App() {
+  const [tags, setTags] = useState<(string | number)[]>(["ooui", "react"]);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 360 }}>
+      <TagMultiselect
+        value={tags}
+        onChange={setTags}
+        inputPosition="outline"
+        placeholder="输入框独立在标签区下方"
+      />
+      <TagMultiselect defaultValue={["只", "读", "形", "态"]} inputPosition="none" />
+    </div>
+  );
+}
+
+export default App;
+```
 
 ## API
 

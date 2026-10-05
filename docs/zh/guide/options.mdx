@@ -77,7 +77,7 @@ import { Icon, MenuTagMultiselect } from "ooui-react";
 
 - **`label` 收 `ReactNode`**（对齐原版接受富内容），缺省显示 `value`。标签多选的选项文本用 `label` 而非 `children`。
 - **`labelText` 是 `label` 的纯文本形态**，用于按输入前缀过滤菜单候选、选中/编辑标签时回填输入框。`label` 为字符串时缺省取自身；为富内容时必须显式给出——未给出时该选项**不参与前缀过滤**（回填以 `String(value)` 兜底），开发期会告警一次。{/* deviations: dev-tag-label-labeltext */}
-- **`data` 携带任意负载**。标签的身份恒为标量 `value`（受控数组可序列化、可比对），`onChange` 回传的也是标量数组；需要随标签携带对象时放在 `data` 里，按 `value` 在自己的 `options` 数组里反查取回。{/* deviations: dev-tag-value-data */}{/* deviations: dev-tag-value-data */}
+- **`data` 携带任意负载**。标签的身份恒为标量 `value`（受控数组可序列化、可比对），`onChange` 回传的也是标量数组；需要随标签携带对象时放在 `data` 里，按 `value` 在自己的 `options` 数组里反查取回。{/* deviations: dev-tag-value-data */}
 - `fixed: true` 的标签固定（不渲染关闭按钮、不可移除），拖拽排序也不会把它移到固定项之前。{/* deviations: dev-tag-fixed */}
 
 ## 禁用

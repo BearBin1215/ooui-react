@@ -13,7 +13,7 @@ Imperative `confirm` / `alert` / `prompt` that don't depend on the React tree ar
 
 ## MessageDialog
 
-A message (`children`) plus an OK / Cancel pair at the bottom. You control `open` and close it in `onOk` / `onCancel`. `cancelLabel={null}` hides the cancel button (so you can roll your own controlled `alert`).
+A message (`children`) plus an OK / Cancel pair at the bottom. You control `open` and close it in `onOk` / `onCancel`. `cancelLabel={null}` hides the cancel button (so you can roll your own controlled `alert`). The action area switches to a vertical layout automatically when the buttons don't fit horizontally.
 
 ```tsx preview
 import { useState } from "react";
@@ -46,6 +46,35 @@ export default App;
 ```
 
 `MessageDialog` focuses the OK button once ready; Ctrl / Cmd + Enter is equivalent to clicking OK.
+
+With `cancelLabel={null}` hiding the cancel button you get the single-button form — rolling your own controlled `alert` (remember to wire ESC in `onEscape`):
+
+```tsx preview
+import { useState } from "react";
+import { Button, MessageDialog } from "ooui-react";
+
+function App() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Show result</Button>
+      <MessageDialog
+        open={open}
+        title="All done"
+        okLabel="Got it"
+        cancelLabel={null}
+        onOk={() => setOpen(false)}
+        onEscape={() => setOpen(false)}
+      >
+        The page has been moved to the recycle bin.
+      </MessageDialog>
+    </>
+  );
+}
+
+export default App;
+```
 
 **ESC fires `onEscape`, not `onCancel`** (`escapable` on by default): with only `onOk` / `onCancel` wired, pressing ESC won't close the dialog — wire the close in `onEscape` yourself (the imperative `confirm` internally bridges `onEscape` to "cancel").
 
@@ -132,6 +161,7 @@ Inherits `Dialog`'s `open` / `size` / `escapable` / `onEscape` / `onReady`, and 
 | `children` | Body-area content | `ReactNode` | — |
 | `head` / `foot` | Head / bottom action area | `ReactNode` | — |
 | `overlay` | Overlay content covering the whole dialog (e.g. an error panel) | `ReactNode` | — |
+| `contentClassName` | Extra class for the `children` content container | `string` | — |
 | `escapable` | Whether ESC can trigger close | `boolean` | `true` |
 | `onEscape` | Fired on ESC (the caller is responsible for closing) | `() => void` | — |
 | `onPrimaryAction` | Fired on Ctrl / Cmd + Enter | `() => void` | — |

@@ -114,8 +114,10 @@ export default App;
 
 As a menu's inner layer, keyboard navigation is driven by the outer component. For the standalone case where the list has focus:
 
-- `handleNavigationKeys`: whether Home / End / PageUp / PageDown are handled (matching the original, only `MenuSelectWidget` enables it).
+- `handleNavigationKeys`: whether Home / End / PageUp / PageDown are handled.
 - `listWrapsAround`: whether arrow navigation wraps at the ends (default `true`).
+- **Prefix jump**: with the list focused, typing characters cycles through options by text prefix (1.5 s buffer).
+- **Hover highlight**: the hovered option becomes the highlighted one; the highlight clears on mouse-out (shared state with keyboard highlighting).
 
 ## API
 

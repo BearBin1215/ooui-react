@@ -48,6 +48,35 @@ export default App;
 - `clearOnSelect` 默认 `true`：菜单为纯命令菜单，选过的项不留选中态；置 `false` 会保留最后选定项。
 - 不带 `value` 的选项渲染为分组标题（见上方“高级”）。选项数据约定见[选择与选项](/guide/options.html)。
 
+```tsx preview
+import { useState } from "react";
+import { ButtonMenuSelectWidget } from "ooui-react";
+
+function App() {
+  const [chosen, setChosen] = useState<string | number>("share");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 260 }}>
+      <ButtonMenuSelectWidget
+        icon="share"
+        clearOnSelect={false}
+        onChoose={(value) => setChosen(value)}
+        options={[
+          { value: "share", children: "分享链接" },
+          { value: "move", children: "移动页面" },
+          { value: "protect", children: "保护页面" },
+        ]}
+      >
+        分享
+      </ButtonMenuSelectWidget>
+      <div>最后选定：{String(chosen)}（菜单里保留选中态）</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
 ## 键盘
 
 焦点在按钮上：Enter / 空格展开菜单；展开后 ↑↓ 移动高亮、Enter / 空格选定，键入字符按前缀跳转；Escape 或点外部收起。注意与 [Dropdown](/components/dropdown/index.html) 不同——本组件收起态聚焦时键入不会直接改选。

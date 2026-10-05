@@ -47,6 +47,40 @@ function App() {
 export default App;
 ```
 
+值失效回退：下面的示例初值 `fax` 不在选项内，回退为第一个可选值「邮件」且照常提交 `email`：
+
+```tsx preview
+import { useState } from "react";
+import { ButtonInput, FormLayout, RadioSelectInput } from "ooui-react";
+
+function App() {
+  const [submitted, setSubmitted] = useState("");
+
+  return (
+    <FormLayout
+      onSubmit={(event) => {
+        event.preventDefault();
+        setSubmitted(new FormData(event.currentTarget).get("notify")?.toString() ?? "");
+      }}
+    >
+      <RadioSelectInput
+        name="notify"
+        defaultValue="fax"
+        options={[
+          { value: "email", children: "邮件" },
+          { value: "sms", children: "短信" },
+          { value: "none", children: "不通知" },
+        ]}
+      />
+      <ButtonInput type="submit">提交</ButtonInput>
+      <div>已提交：{submitted || "（未提交）"}</div>
+    </FormLayout>
+  );
+}
+
+export default App;
+```
+
 ## API
 
 | 属性 | 描述 | 类型 | 默认值 |

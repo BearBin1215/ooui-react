@@ -97,11 +97,14 @@ export interface ToolProps {
 
   /**
    * Visible text of the tool (rendered into the `oo-ui-tool-title` slot). In Bar
-   * groups it is hidden by default (icon only) and shown when `displayBothIconAndLabel`
-   * is set or there is no icon; List / Menu groups always show it.
+   * groups it shows via `displayBothIconAndLabel` (icon + text with an icon, a
+   * text-only button without one; an icon-less tool without this flag falls into
+   * the original's raw icon-slot form, with the label sunk below the reserved
+   * slot); List / Menu groups always show it.
    *
-   * 工具可见文本（渲染进 `oo-ui-tool-title` 槽位）。Bar 组缺省仅显示图标，
-   * `displayBothIconAndLabel` 或无图标时才显示本文本；List / Menu 组恒显示。
+   * 工具可见文本（渲染进 `oo-ui-tool-title` 槽位）。Bar 组经 `displayBothIconAndLabel`
+   * 显示本文本（有图标时为图标 + 文本，无图标时为纯文本按钮；无图标且未开本项会落进
+   * 原版带图标槽的原始形态、标签沉底）；List / Menu 组恒显示。
    */
   label?: ReactNode;
 

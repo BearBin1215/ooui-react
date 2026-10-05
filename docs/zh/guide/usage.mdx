@@ -26,7 +26,7 @@ import { PackageManagerTabs, Steps, Tab, Tabs } from "@rspress/core/theme";
 - **面向浏览器运行，不支持服务端渲染（SSR）**：浮层组件（`Popup`、`Dropdown` 一类菜单、工具栏弹出面板）在 render 期解析 portal 容器并 `createPortal`，服务端没有 `document` 时直接抛错。用 Next.js 一类同构框架时，把这些组件挡在服务端渲染树之外，或仅在客户端挂载后再渲染。
 - **同时提供 ESM 与 CJS 两份产物，二者是独立模块实例**：Node 进程内混用 `import` 与 `require` 加载时，语言消息注册表与 `OOUIProvider` context 互不共享；浏览器打包场景不受影响。
 
-在非MediaWiki站点使用时~~（真有人用吗）~~，样式需自行引入 OOUI 的主题 CSS 与 Codex 设计令牌表（oojs-ui 0.54 起令牌表须一并引入）。主题 CSS 按需选用其一：wikimediaui 为当前默认，apex 为遗留主题（两主题下部分状态的观感不同，本组件库输出对两者均有效）：
+在非MediaWiki站点使用时，样式需自行引入 OOUI 的主题 CSS 与 Codex 设计令牌表（oojs-ui 0.54 起令牌表须一并引入）。主题 CSS 按需选用其一：wikimediaui 为当前默认，apex 为遗留主题（两主题下部分状态的观感不同，本组件库输出对两者均有效）：
 
 ```js
 import "@wikimedia/codex-design-tokens/dist/theme-wikimedia-ui.css";

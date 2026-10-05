@@ -132,7 +132,7 @@ export default App;
 
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `options` | 选项集，按展示顺序渲染；每项含 `value` 与 `children`（选项文本），支持 `disabled` 等选项字段 | `CheckboxMultiselectOptionProps[]` | — |
+| `options` | 选项集，按展示顺序渲染；每项含 `value` 与 `children`（选项文本），支持 `disabled`，另有 `inputRef`（内层 checkbox 引用）、`checkboxProps`（透传内层 checkbox，如 `inputId`）与选项级 `onChange` | `CheckboxMultiselectOptionProps[]` | — |
 | `value` | 当前选中值集合（受控，传入即受控模式） | `(string \| number)[]` | — |
 | `defaultValue` | 非受控初始选中值集合 | `(string \| number)[]` | `[]` |
 | `onChange` | 选中值集合变更回调，携带完整的值数组与原生事件 | `ChangeHandler<(string \| number)[], HTMLInputElement>` | — |

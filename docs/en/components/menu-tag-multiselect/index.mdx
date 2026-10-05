@@ -11,7 +11,7 @@ A tag input with a candidate menu. Props match [TagMultiselect](/en/components/t
 
 ## Basic usage
 
-Typing filters the candidates and Enter chooses the highlighted item (with no highlight, the typed text is committed); without `allowArbitrary`, typed text outside the candidate value range is rejected (no error — simply no tag). See the next section for free entry.
+Typing filters the candidates, ↑↓ moves the highlight and Enter chooses the highlighted item (with no highlight, the typed text is committed); without `allowArbitrary`, typed text outside the candidate value range is rejected (no error — simply no tag). A candidate's own `disabled` marks it as disabled — it cannot be added as a tag. See the next section for free entry.
 
 ```tsx preview
 import { useState } from "react";
@@ -86,6 +86,50 @@ export default App;
 ## Rich-content tags
 
 An option's `label` accepts a `ReactNode`; when it is rich content (not a plain string), the plain text needed for prefix filtering and backfill must be provided explicitly via `labelText`, or that option won't participate in prefix filtering (see [Selection and options · Options of tag inputs](/en/guide/options.html#options-of-tag-inputs)). Tags with `fixed: true` are fixed and can't be removed.
+
+```tsx preview
+import { useState } from "react";
+import { MenuTagMultiselect } from "ooui-react";
+
+function App() {
+  const [tags, setTags] = useState<(string | number)[]>(["template"]);
+
+  return (
+    <div style={{ maxWidth: 320 }}>
+      <MenuTagMultiselect
+        value={tags}
+        onChange={setTags}
+        placeholder={'Type "re" to filter by prefix'}
+        options={[
+          {
+            value: "template",
+            label: (
+              <>
+                <b>Template</b> (regular page)
+              </>
+            ),
+            labelText: "Template",
+            fixed: true,
+          },
+          {
+            value: "redirect",
+            label: (
+              <>
+                <b>Redirect</b> (points to another page)
+              </>
+            ),
+            labelText: "Redirect",
+          },
+        ]}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+The "Template" tag comes from the `fixed: true` candidate and shows the fixed marker (no close button); typing "re" filters to the "Redirect" candidate via `labelText` and backfills the plain text.
 
 ## API
 

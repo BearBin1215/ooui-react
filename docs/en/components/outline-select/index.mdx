@@ -44,7 +44,38 @@ export default App;
 
 - `level` is 0–2 (out-of-range is clamped); the theme only provides three indentation levels.
 - Options without a `value` render as group headings, per the [Selection and options](/en/guide/options.html) contract.
+- Options with icon slots support `icon` and `flags` (tinting the icon, see [Selection and options · Icons and flags](/en/guide/options.html#icons-and-flags)).
 - Keyboard: with the group focused, ↑↓←→ move the highlight and Enter chooses; Home/End/PageUp/PageDown are enabled via `handleNavigationKeys`, and `listWrapsAround` controls wrapping — exactly as in [Select](/en/components/select/index.html).
+
+```tsx preview
+import { useState } from "react";
+import { OutlineSelect } from "ooui-react";
+
+function App() {
+  const [value, setValue] = useState<string | number>("getting-started");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 240 }}>
+      <OutlineSelect
+        aria-label="Grouped outline"
+        value={value}
+        onChange={setValue}
+        options={[
+          { children: "Getting started" },
+          { value: "getting-started", children: "Quick start", level: 1, icon: "book" },
+          { value: "installation", children: "Installation", level: 1 },
+          { children: "Advanced" },
+          { value: "theming", children: "Theming", level: 1, icon: "palette", flags: "progressive" },
+          { value: "i18n", children: "Internationalization", level: 1 },
+        ]}
+      />
+      <div>Current: {String(value)}</div>
+    </div>
+  );
+}
+
+export default App;
+```
 
 ## API
 

@@ -11,7 +11,7 @@ description: "MenuTagMultiselect 组件的属性说明：带候选菜单的标�
 
 ## 基本用法
 
-输入即过滤候选，Enter 选定高亮项（无高亮时提交输入文本）；未开启 `allowArbitrary` 时，输入文本不在候选值域内会被拒绝（不报错，但不生成标签），需要自由输入见下节。
+输入即过滤候选，↑↓ 在候选间移动高亮，Enter 选定高亮项（无高亮时提交输入文本）；未开启 `allowArbitrary` 时，输入文本不在候选值域内会被拒绝（不报错，但不生成标签），需要自由输入见下节。候选自身的 `disabled` 表示禁用项——不可添加为标签。
 
 ```tsx preview
 import { useState } from "react";
@@ -86,6 +86,50 @@ export default App;
 ## 富内容标签
 
 选项 `label` 收 `ReactNode`；当它是富内容（非纯字符串）时，前缀过滤与回填需要的纯文本要经 `labelText` 显式给出，否则该选项不参与前缀过滤（详见[选择与选项 · 标签多选的选项](/guide/options.html#标签多选的选项)）。`fixed: true` 的标签固定、不可移除。
+
+```tsx preview
+import { useState } from "react";
+import { MenuTagMultiselect } from "ooui-react";
+
+function App() {
+  const [tags, setTags] = useState<(string | number)[]>(["template"]);
+
+  return (
+    <div style={{ maxWidth: 320 }}>
+      <MenuTagMultiselect
+        value={tags}
+        onChange={setTags}
+        placeholder="试试输入「重」按前缀过滤"
+        options={[
+          {
+            value: "template",
+            label: (
+              <>
+                <b>模板</b>（常规页面）
+              </>
+            ),
+            labelText: "模板",
+            fixed: true,
+          },
+          {
+            value: "redirect",
+            label: (
+              <>
+                <b>重定向</b>（指向其他页面）
+              </>
+            ),
+            labelText: "重定向",
+          },
+        ]}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+标签「模板」来自 `fixed: true` 的候选，带固定标记（无关闭按钮）；键入「重」能按 `labelText` 过滤到「重定向」候选并回填纯文本。
 
 ## API
 

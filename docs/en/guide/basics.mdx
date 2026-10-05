@@ -58,16 +58,18 @@ export default App;
 | `tabIndex` | Tab order; pass `null` to make the element entirely unfocusable (no `tabindex` attribute is emitted) | `number \| null` | `0` |
 | Everything else | `aria-*`, `data-*`, `style`, event handlers | Native attributes | — |
 
+Components with a label (`Button`, `TextInput`, etc.) also have `label` (the label text) and `invisibleLabel` (hidden visually but kept as the accessible name); the semantics are covered in the notes below.
+
 A few notes:
 
 - **`disabled` emits `aria-disabled`, not the native `disabled`**: a disabled element can still be focused and read out; the native `disabled` is only set on real form controls.
 - **`disabled` means something different on some layout containers**: on `FieldLayout` it applies to the field itself; `FieldsetLayout` uses a native `<fieldset disabled>`, which also disables every control in the group; pure layout containers (`PanelLayout`, `StackLayout`, etc.) have no `disabled`.
 - **Where `title` and `accessKey` land varies by component**: on most they land on the root element, on the Button family on the inner anchor, and on the input family on the inner `<input>`. Before pairing `title` with an `aria-*` attribute, check the landing spot on the component page.
-- **The `title` label fallback follows later label changes**: when the label is visually hidden and `title` is not given, the label text is used as the fallback; this library recomputes that fallback from the current `label` / `invisibleLabel` on every render, so changing the label later updates `title` too (the original evaluates it only once at construction, leaving `title` untouched by later label changes).{/* deviations: dev-resolve-title-rerender */}
-- **`label` accepts any renderable ReactNode**: renderable nodes such as `0` count as having a label, while booleans count as having none (the original only accepts non-empty strings).{/* deviations: dev-label-reactnode */}
+- **The `title` label fallback follows later label changes**: when the label is visually hidden and `title` is not given, the label text is used as the fallback; this library recomputes that fallback from the current `label` / `invisibleLabel` on every render, so changing the label later updates `title` too.{/* deviations: dev-resolve-title-rerender */}
+- **`label` accepts any renderable ReactNode**: renderable nodes such as `0` count as having a label, while booleans count as having none.{/* deviations: dev-label-reactnode */}
 - **`tabIndex={null}` removes the `tabindex` attribute entirely**: the element becomes completely unfocusable, programmatic focus included — unlike `-1`, which stays out of the Tab order but remains programmatically focusable.{/* deviations: dev-tabindex-null */}
 - **Not every component has `flags`**: each accepts different flags depending on its form (e.g. `Button`'s `primary` / `progressive`, `Icon`'s color variants); see the component pages.
 
 ## Keyboard and accessibility
 
-Keyboard interaction, focus management and `aria` attributes are implemented one by one against the original OOUI; the specific keys are documented on each component page.
+Keyboard interaction, focus management and `aria` attributes match the original OOUI; the specific keys are documented on each component page.

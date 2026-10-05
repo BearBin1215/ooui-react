@@ -33,6 +33,27 @@ function App() {
 export default App;
 ```
 
+不经 IndexLayout 直接渲染时，`active` 显式声明激活态（输出 `oo-ui-tabPanelLayout-active` 类；面板缺省 `expanded` 铺满已定位的父元素，static 摆放传 `expanded={false}`）：
+
+```tsx preview
+import { TabPanelLayout } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <TabPanelLayout active padded expanded={false}>
+        常规面板：声明 active，根元素输出 oo-ui-tabPanelLayout-active 类
+      </TabPanelLayout>
+      <TabPanelLayout padded expanded={false} hidden>
+        高级面板：hidden 时整面板隐藏
+      </TabPanelLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
 ## API
 
 继承 [PanelLayout](/components/panel-layout/index.html) 全部属性，另有：

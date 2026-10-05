@@ -58,6 +58,8 @@ export default App;
 | `tabIndex` | Tab 序；传 `null` 表示彻底不可聚焦（不输出 `tabindex` 属性） | `number \| null` | `0` |
 | 其余 | `aria-*`、`data-*`、`style`、各类事件 | 原生属性 | — |
 
+含标签的组件（`Button`、`TextInput` 等）另有 `label`（标签文本）与 `invisibleLabel`（视觉隐藏但保留可访问名称），语义见下方说明。
+
 几点说明：
 
 - **`disabled` 输出 `aria-disabled` 而非原生 `disabled`**：禁用后元素仍可被聚焦与朗读，原生 `disabled` 只写在真实的表单控件上。
@@ -65,11 +67,11 @@ export default App;
   - `FieldLayout` 只作用于字段本身；`FieldsetLayout` 走原生 `<fieldset disabled>`，会连带禁用整组内的控件；
   - 纯布局容器（`PanelLayout`、`StackLayout` 等）没有 `disabled`。
 - **`title` 与 `accessKey` 的落点因组件而异**：多数落在根元素，`Button` 系落在内部锚点，输入框系落在内部 `<input>` 上。要给 `title` 配 `aria-*` 时先看组件页的落点说明。
-- **`title` 的标签兜底随标签变化重算**：标签视觉隐藏且未显式给 `title` 时以标签文本兜底；本工程每次渲染按当前 `label` / `invisibleLabel` 重算该兜底，后续改标签会联动更新（原版只在构造期求值一次，之后改标签 `title` 不变）。{/* deviations: dev-resolve-title-rerender */}
-- **`label` 接受任意可渲染的 ReactNode**：`0` 等可渲染节点按有标签处理，布尔值按无标签处理（原版只认非空字符串）。{/* deviations: dev-label-reactnode */}
+- **`title` 的标签兜底随标签变化重算**：标签视觉隐藏且未显式给 `title` 时以标签文本兜底；本工程每次渲染按当前 `label` / `invisibleLabel` 重算该兜底，后续改标签会联动更新。{/* deviations: dev-resolve-title-rerender */}
+- **`label` 接受任意可渲染的 ReactNode**：`0` 等可渲染节点按有标签处理，布尔值按无标签处理。{/* deviations: dev-label-reactnode */}
 - **`tabIndex={null}` 彻底移除 `tabindex` 属性**：元素彻底不可聚焦，连编程聚焦也不成立——区别于 `-1` 的不进 Tab 序但仍可编程聚焦。{/* deviations: dev-tabindex-null */}
 - **`flags` 不是每个组件都有**：各组件按其形态接受不同的标志（如 `Button` 的 `primary` / `progressive`、`Icon` 的色彩变体），具体见组件页。
 
 ## 键盘与无障碍
 
-键盘操作、焦点管理与 `aria` 属性按原版 OOUI 逐项对照实现，具体按键见各组件页。
+键盘操作、焦点管理与 `aria` 属性与原版 OOUI 一致，具体按键见各组件页。

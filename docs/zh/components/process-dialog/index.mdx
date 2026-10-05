@@ -60,6 +60,48 @@ export default App;
 
 ## 多步流程
 
+其余动作排在底部动作区；`flags` 含 `close` / `back` 的动作渲染为纯图标按钮：
+
+```tsx preview
+import { useState } from "react";
+import { Button, ProcessDialog } from "ooui-react";
+
+function App() {
+  const [open, setOpen] = useState(false);
+  const [log, setLog] = useState<string[]>([]);
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>打开多动作弹窗</Button>
+      <ProcessDialog
+        open={open}
+        title="编辑条目"
+        onEscape={() => setOpen(false)}
+        actions={[
+          { action: "cancel", label: "取消", flags: "safe" },
+          { action: "save", label: "保存", flags: ["primary", "progressive"] },
+          { action: "preview", label: "预览" },
+          { action: "discard", label: "放弃更改", flags: "destructive" },
+          { action: "back", label: "返回上一步", flags: "back" },
+        ]}
+        onAction={(action) => {
+          if (action === "cancel" || action === "save") {
+            setOpen(false);
+            return;
+          }
+          setLog((prev) => [`点击了 ${action}`, ...prev].slice(0, 3));
+        }}
+      >
+        <div style={{ padding: 12 }}>safe / primary 在头部，其余动作与图标按钮在底部。</div>
+      </ProcessDialog>
+      <div>最近点击：{log.join("、") || "（无）"}</div>
+    </>
+  );
+}
+
+export default App;
+```
+
 传 `mode` 后，只有声明了含当前模式的 `modes` 的动作可见（未声明 `modes` 的动作同样隐藏）；不传 `mode` 则全部动作可见。配合状态切换即得向导。
 
 ```tsx preview
@@ -112,7 +154,7 @@ export default App;
 
 ## 错误面板
 
-`onAction` 返回的 Promise 以错误对象（或其数组）reject 时，弹出覆盖整个弹窗的错误面板：
+`onAction` 返回的 Promise 以错误对象（或其数组）reject 时，弹出覆盖整个弹窗的错误面板（reject 其他值——如普通 `Error` 或字符串——按仅含 `message` 的可恢复错误处理）：
 
 - 错误对象为 `{ message, recoverable?, warning? }`（类型 `ProcessDialogErrorProps`）；`recoverable` 缺省 `true`，面板显示**重试**按钮（重跑最近一次执行的动作）。
 - `warning: true` 的错误渲染为警告消息，按钮显示 Continue。

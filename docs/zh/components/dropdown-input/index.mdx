@@ -47,6 +47,40 @@ function App() {
 export default App;
 ```
 
+传入的值不在可选项内时回退为第一个可选值——下面的示例初值 `xl` 是非法值，下拉框显示「小」，照常提交 `s`：
+
+```tsx preview
+import { useState } from "react";
+import { ButtonInput, DropdownInput, FormLayout } from "ooui-react";
+
+function App() {
+  const [submitted, setSubmitted] = useState("");
+
+  return (
+    <FormLayout
+      onSubmit={(event) => {
+        event.preventDefault();
+        setSubmitted(new FormData(event.currentTarget).get("size")?.toString() ?? "");
+      }}
+    >
+      <DropdownInput
+        name="size"
+        defaultValue="xl"
+        options={[
+          { value: "s", children: "小" },
+          { value: "m", children: "中" },
+          { value: "l", children: "大" },
+        ]}
+      />
+      <ButtonInput type="submit">提交</ButtonInput>
+      <div>已提交：{submitted || "（未提交）"}</div>
+    </FormLayout>
+  );
+}
+
+export default App;
+```
+
 ## 分组选项
 
 不带 `value` 的选项是分组标题，映射为隐藏 `<select>` 的 `<optgroup>`（`disabled` 可禁用整组）。

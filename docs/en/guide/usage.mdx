@@ -26,7 +26,7 @@ React ≥ 18 is required.
 - **Browser-oriented; server-side rendering (SSR) is not supported**: floating components (`Popup`, dropdown menus, toolbar popup panels) resolve their portal container and call `createPortal` during render, which throws immediately on the server where `document` doesn't exist. With isomorphic frameworks such as Next.js, keep these components out of the server render tree, or render them only after mounting on the client.
 - **Both ESM and CJS builds are shipped, and they are separate module instances**: when a Node process loads the package through both `import` and `require`, the message registry and the `OOUIProvider` context are not shared; bundling for browsers is unaffected.
 
-Outside MediaWiki sites ~~(does anyone actually do that?)~~, you have to load OOUI's theme CSS and the Codex design tokens yourself — as of oojs-ui 0.54, the token stylesheet must be loaded alongside it. Pick one theme stylesheet: wikimediaui is the current default, while apex is the legacy theme (some states look different between the two; the class names emitted by this library are valid under both):
+Outside MediaWiki sites, you have to load OOUI's theme CSS and the Codex design tokens yourself — as of oojs-ui 0.54, the token stylesheet must be loaded alongside it. Pick one theme stylesheet: wikimediaui is the current default, while apex is the legacy theme (some states look different between the two; the class names emitted by this library are valid under both):
 
 ```js
 import "@wikimedia/codex-design-tokens/dist/theme-wikimedia-ui.css";

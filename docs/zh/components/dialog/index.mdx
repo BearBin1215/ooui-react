@@ -13,7 +13,7 @@ description: "弹窗族总览：声明式 MessageDialog 与 Dialog 基类，受�
 
 ## MessageDialog
 
-一段消息（`children`）加底部“确定 / 取消”两个按钮。`open` 由你控制，`onOk` / `onCancel` 里负责把它关掉。`cancelLabel={null}` 隐藏取消按钮（即自制一个受控 `alert`）。
+一段消息（`children`）加底部“确定 / 取消”两个按钮。`open` 由你控制，`onOk` / `onCancel` 里负责把它关掉。`cancelLabel={null}` 隐藏取消按钮（即自制一个受控 `alert`）。动作区横向装不下时自动切竖向布局。
 
 ```tsx preview
 import { useState } from "react";
@@ -46,6 +46,35 @@ export default App;
 ```
 
 `MessageDialog` 就绪后自动聚焦“确定”按钮；按 Ctrl / Cmd + Enter 等效点击“确定”。
+
+`cancelLabel={null}` 隐藏取消按钮后即得单按钮形态——自制一个受控 `alert`（ESC 记得接线 `onEscape`）：
+
+```tsx preview
+import { useState } from "react";
+import { Button, MessageDialog } from "ooui-react";
+
+function App() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>显示结果</Button>
+      <MessageDialog
+        open={open}
+        title="操作完成"
+        okLabel="知道了"
+        cancelLabel={null}
+        onOk={() => setOpen(false)}
+        onEscape={() => setOpen(false)}
+      >
+        页面已移动到回收站。
+      </MessageDialog>
+    </>
+  );
+}
+
+export default App;
+```
 
 **按 ESC 触发的是 `onEscape` 而非 `onCancel`**（`escapable` 默认开启）：只接线 `onOk` / `onCancel` 时按 ESC 不会关闭弹窗，需自行在 `onEscape` 里接线（命令式 `confirm` 内部就是把 `onEscape` 桥接为「取消」）。
 
@@ -132,6 +161,7 @@ export default App;
 | `children` | 正文区内容 | `ReactNode` | — |
 | `head` / `foot` | 头部 / 底部动作区 | `ReactNode` | — |
 | `overlay` | 覆盖整个弹窗的浮层内容（如错误面板） | `ReactNode` | — |
+| `contentClassName` | `children` 正文容器的附加类 | `string` | — |
 | `escapable` | 是否允许 ESC 触发关闭 | `boolean` | `true` |
 | `onEscape` | 按下 ESC 时触发（由调用方负责关闭） | `() => void` | — |
 | `onPrimaryAction` | 按下 Ctrl / Cmd + Enter 时触发 | `() => void` | — |

@@ -124,7 +124,7 @@ export default App;
 | `accessKey` | Access key (lands on `<input>`) | `string` | — |
 | `...rest` | Native `span` props (`className`, `id`, `data-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLSpanElement>` | — |
 
-`title`, `dir` and `tabIndex` are taken over by the component and land on the inner `<input>`; the component `ref` points to the outer `<span>`.
+`title`, `dir` and `tabIndex` are taken over by the component and land on the inner `<input>`; `role` lands there too (semantics like `role="presentation"` must hit the real input to work). The component `ref` points to the outer `<span>`.
 
 ## See also
 

@@ -14,7 +14,7 @@ description: "PageLayout 组件的属性说明：堆叠布局的单个分页，a
 单独使用时，激活态由 `active` 声明；未声明 `active` 时按「非 `hidden` 即激活」派生，并输出 `oo-ui-pageLayout-active` 类。`label` / `value` 是随页签集对象透入的字段，组件会吞掉、不落成 DOM 属性。
 
 ```tsx preview
-import { PageLayout, StackLayout } from "ooui-react";
+import { StackLayout } from "ooui-react";
 
 function App() {
   return (
@@ -31,13 +31,34 @@ function App() {
 export default App;
 ```
 
+不经 StackLayout 直接渲染时，`active` 与 `hidden` 显式声明激活态（面板缺省 `expanded` 铺满已定位的父元素，static 摆放传 `expanded={false}`）：
+
+```tsx preview
+import { PageLayout } from "ooui-react";
+
+function App() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <PageLayout active padded expanded={false}>
+        激活页：声明 active，根元素输出 oo-ui-pageLayout-active 类
+      </PageLayout>
+      <PageLayout padded expanded={false} hidden>
+        隐藏页：hidden 派生为非激活
+      </PageLayout>
+    </div>
+  );
+}
+
+export default App;
+```
+
 ## API
 
 继承 [PanelLayout](/components/panel-layout/index.html) 全部属性，另有：
 
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `active` | 是否为激活页；缺省时由 `hidden` 派生（非 `hidden` 即激活） | `boolean` | 由 `hidden` 派生 |
+| `active` | 是否为激活页；缺省时由 `hidden` 派生（非 `hidden` 即激活）——continuous 模式下所有页均可见、该派生失效，需显式传入以区分激活态 | `boolean` | 由 `hidden` 派生 |
 | `scrollable` | 是否可滚动（分页缺省可滚） | `boolean` | `true` |
 | `label` / `value` | 随页签集对象透入，仅供组件吞掉 | `ReactNode` / `string \| number` | — |
 

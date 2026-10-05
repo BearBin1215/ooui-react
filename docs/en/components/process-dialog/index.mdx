@@ -62,6 +62,48 @@ export default App;
 
 ## Multi-step flows
 
+The remaining actions line up in the bottom action area; actions with the `close` / `back` flag render as icon-only buttons:
+
+```tsx preview
+import { useState } from "react";
+import { Button, ProcessDialog } from "ooui-react";
+
+function App() {
+  const [open, setOpen] = useState(false);
+  const [log, setLog] = useState<string[]>([]);
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open multi-action dialog</Button>
+      <ProcessDialog
+        open={open}
+        title="Edit entry"
+        onEscape={() => setOpen(false)}
+        actions={[
+          { action: "cancel", label: "Cancel", flags: "safe" },
+          { action: "save", label: "Save", flags: ["primary", "progressive"] },
+          { action: "preview", label: "Preview" },
+          { action: "discard", label: "Discard changes", flags: "destructive" },
+          { action: "back", label: "Go back", flags: "back" },
+        ]}
+        onAction={(action) => {
+          if (action === "cancel" || action === "save") {
+            setOpen(false);
+            return;
+          }
+          setLog((prev) => [`clicked ${action}`, ...prev].slice(0, 3));
+        }}
+      >
+        <div style={{ padding: 12 }}>safe / primary sit in the header; the rest and the icon buttons sit at the bottom.</div>
+      </ProcessDialog>
+      <div>Recent clicks: {log.join(", ") || "(none)"}</div>
+    </>
+  );
+}
+
+export default App;
+```
+
 Once `mode` is passed, only actions whose `modes` include the current mode stay visible (actions without `modes` are hidden too); without `mode`, all actions are visible. Switch it with state and you have a wizard.
 
 ```tsx preview
@@ -114,7 +156,7 @@ export default App;
 
 ## Error panel
 
-When the `onAction` Promise rejects with an error object (or an array of them), a panel covering the whole dialog opens:
+When the `onAction` Promise rejects with an error object (or an array of them), a panel covering the whole dialog opens (other reject values — a plain `Error` or string — are normalized to a recoverable error carrying only the `message`):
 
 - The error object is `{ message, recoverable?, warning? }` (type `ProcessDialogErrorProps`); `recoverable` defaults to `true` and the panel shows a **Retry** button (re-runs the most recently executed action).
 - Errors with `warning: true` render as warning messages and the button reads Continue.

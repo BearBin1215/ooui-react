@@ -49,13 +49,42 @@ In the `expanded` form (on by default) the layout fills its parent via absolute 
 
 When the active tab is removed, the first selectable (non-disabled) tab is auto-selected.
 
+Under `continuous`, all panels are visible at once, stacked vertically (useful for printing and full-text reading):
+
+```tsx preview
+import { useState } from "react";
+import { IndexLayout } from "ooui-react";
+
+function App() {
+  const [tab, setTab] = useState<string | number>("intro");
+
+  return (
+    <div style={{ position: "relative", height: 220 }}>
+      <IndexLayout
+        framed
+        continuous
+        value={tab}
+        onChange={setTab}
+        options={[
+          { value: "intro", label: "Intro", padded: true, children: "Introduction content…" },
+          { value: "usage", label: "Usage", padded: true, children: "Usage content…" },
+          { value: "faq", label: "FAQ", padded: true, children: "Frequently asked questions…" },
+        ]}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
 ## API
 
 Inherits all [MenuLayout](/en/components/menu-layout/index.html) props (except `menu` / `menuPosition` / `children`), plus:
 
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
-| `options` | The tab set: `value`, `label`, `disabled` plus [TabPanelLayout](/en/components/tab-panel-layout/index.html) fields | `IndexLayoutTabProps[]` | — |
+| `options` | The tab set: `value`, `label`, `disabled` plus [TabPanelLayout](/en/components/tab-panel-layout/index.html) fields (a disabled tab's panel stays fully `hidden` regardless of `openMatchedPanels`) | `IndexLayoutTabProps[]` | — |
 | `value` | Current active tab (controlled; passing it enables controlled mode) | `string \| number` | — |
 | `defaultValue` | Initial active tab for uncontrolled use | `string \| number` | — |
 | `onChange` | Active-tab change callback | `ChangeHandler<string \| number>` | — |

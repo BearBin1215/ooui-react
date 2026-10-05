@@ -76,9 +76,9 @@ import { Icon, MenuTagMultiselect } from "ooui-react";
 ```
 
 - **`label` accepts a `ReactNode`** (matching the original's rich content support), and defaults to displaying `value`. Tag options use `label` rather than `children`.
-- **`labelText` is the plain-text form of `label`**, used for filtering menu candidates by typed prefix and for backfilling the input when a tag is selected or edited. When `label` is a string it defaults to the string itself; for rich content you must provide `labelText` explicitly — without it the option **does not participate in prefix filtering** (backfill falls back to `String(value)`), and a development warning is emitted once. {/* deviations: dev-tag-label-labeltext */} {/* deviations: dev-tag-label-labeltext */}
-- **`data` carries an arbitrary payload.** A tag's identity is always the scalar `value` (keeping the controlled array serializable and diffable), and `onChange` returns scalar values too; when you need an object to travel with a tag, put it in `data` and look it back up by `value` in your own `options` array. {/* deviations: dev-tag-value-data */} {/* deviations: dev-tag-value-data */}
-- Tags with `fixed: true` are fixed (no close button, cannot be removed), and drag-to-reorder never moves them before the fixed block. {/* deviations: dev-tag-fixed */} {/* deviations: dev-tag-fixed */}
+- **`labelText` is the plain-text form of `label`**, used for filtering menu candidates by typed prefix and for backfilling the input when a tag is selected or edited. When `label` is a string it defaults to the string itself; for rich content you must provide `labelText` explicitly — without it the option **does not participate in prefix filtering** (backfill falls back to `String(value)`), and a development warning is emitted once. {/* deviations: dev-tag-label-labeltext */}
+- **`data` carries an arbitrary payload.** A tag's identity is always the scalar `value` (keeping the controlled array serializable and diffable), and `onChange` returns scalar values too; when you need an object to travel with a tag, put it in `data` and look it back up by `value` in your own `options` array. {/* deviations: dev-tag-value-data */}
+- Tags with `fixed: true` are fixed (no close button, cannot be removed), and drag-to-reorder never moves them before the fixed block. {/* deviations: dev-tag-fixed */}
 
 ## Disabled
 
@@ -87,7 +87,7 @@ import { Icon, MenuTagMultiselect } from "ooui-react";
 
 ## Icons and flags
 
-Option forms with icon slots (menu/outline/button options and group headings) support `icon` and `flags`: `icon` takes an icon name (see [Icon](/en/components/icon/index.html)), and `flags` tint the icon (`progressive`, `destructive`, etc.). Plain-text options (the items of `TabSelect`, `RadioSelect`, `CheckboxMultiselect`) have no icon slot and do not support these fields. {/* deviations: dev-option-flags-scope */} {/* deviations: dev-option-flags-scope */}
+Option forms with icon slots (menu/outline/button options and group headings) support `icon` and `flags`: `icon` takes an icon name (see [Icon](/en/components/icon/index.html)), and `flags` tint the icon (`progressive`, `destructive`, etc.). Plain-text options (the items of `TabSelect`, `RadioSelect`, `CheckboxMultiselect`) have no icon slot and do not support these fields. {/* deviations: dev-option-flags-scope */}
 
 ## Keyboard and focus
 
@@ -95,9 +95,8 @@ Option forms with icon slots (menu/outline/button options and group headings) su
 - **Home / End / PageUp / PageDown** jump to the ends or page through: enabled by default in menu forms, available on a standalone `Select` via `handleNavigationKeys`; `listWrapsAround` controls whether navigation wraps at the ends.
 - **Prefix jump**: typing characters jumps by option text prefix (1.5 s buffer); tag inputs filter candidates by prefix.
 - **Focus never enters the list**: focus stays on the control (or trigger element), with the highlighted item linked via `aria-activedescendant`; the list root is not in the Tab order by default — the same listbox pattern as the original OOUI. **Exception**: the direct-select forms (`TabSelect`, `ButtonSelect`) keep their group root in the Tab order (focus rests on the whole group), and a click moves focus into the group root automatically (the original leaves focus where it was, leaving the arrow keys dead — this library follows the ARIA APG instead). {/* deviations: dev-directselect-focus */}
-- Direct-select forms (`TabSelect`, `ButtonSelect`) point `aria-activedescendant` at the selected item from the first frame when an initial value is present (the original only writes the attribute on the first re-selection). {/* deviations: dev-directselect-activedescendant */} {/* deviations: dev-directselect-focus */}
 - Direct-select forms (`TabSelect`, `ButtonSelect`) point `aria-activedescendant` at the selected item from the first frame when an initial value is present (the original only writes the attribute on the first re-selection). {/* deviations: dev-directselect-activedescendant */}
-- During input method **composition**, the confirming Enter and arrow keys for candidate selection never trigger selection, opening or submission by mistake. {/* deviations: dev-ime-guard */} {/* deviations: dev-ime-guard */}
+- During input method **composition**, the confirming Enter and arrow keys for candidate selection never trigger selection, opening or submission by mistake. {/* deviations: dev-ime-guard */}
 
 ## See also
 

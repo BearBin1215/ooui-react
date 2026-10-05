@@ -31,7 +31,23 @@ function App() {
 export default App;
 ```
 
-In the `expanded` form (on by default) the panel fills its parent via absolute positioning, so the parent must be positioned and sized — the outer `div` above (its `position: relative` and `height`) exists for exactly that; with an unpositioned or unsized parent, the panel expands against a further positioned ancestor (or the viewport) and looks like it "vanished". `expanded={false}` is the static form, shrinking to fit the content. Layouts built on this component, such as [StackLayout](/en/components/stack-layout/index.html), inherit the same premise.
+In the `expanded` form (on by default) the panel fills its parent via absolute positioning, so the parent must be positioned and sized — the outer `div` above (its `position: relative` and `height`) exists for exactly that; with an unpositioned or unsized parent, the panel expands against a further positioned ancestor (or the viewport) and looks like it "vanished". `expanded={false}` is the static form, shrinking to fit the content:
+
+```tsx preview
+import { PanelLayout } from "ooui-react";
+
+function App() {
+  return (
+    <PanelLayout padded framed expanded={false}>
+      Static form: does not fill the parent, shrinks to fit the content, no positioned or sized container needed.
+    </PanelLayout>
+  );
+}
+
+export default App;
+```
+
+Layouts built on this component, such as [StackLayout](/en/components/stack-layout/index.html), inherit the same premise.
 
 ## API
 

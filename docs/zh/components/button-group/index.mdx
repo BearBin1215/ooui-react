@@ -70,7 +70,7 @@ export default App;
 ```
 
 :::note 与原版的差异
-原版的组禁用靠命令式逐个更新子按钮；本工程用 React 上下文把 `disabled` 下发到组内按钮，这是同等的声明式便捷行为——组内按钮的 `disabled` 取“自身或所属组禁用”之或。{/* deviations: dev-buttongroup-disabled */}
+原版没有组级禁用下发，需自行逐个禁用组内按钮；本工程组级 `disabled` 经 React 上下文一并下发——组内按钮的 `disabled` 取“自身或所属组禁用”之或。{/* deviations: dev-buttongroup-disabled */}
 :::
 
 ## API

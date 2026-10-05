@@ -79,6 +79,8 @@ export default App;
 | `icon` / `indicator` | 图标 / 指示器（`useInputTag` 时不支持） | `string` / `'clear' \| 'up' \| 'down' \| 'required'` | — |
 | `invisibleLabel` | 标签视觉隐藏但保留可访问名称 | `boolean` | `false` |
 | `onClick` | 点击回调（键盘 Enter/空格同样触发） | `(ev) => void` | — |
+| `onMouseDown` / `onMouseUp` | 鼠标按下 / 松开回调；按下进入、松开复位按压态（禁用时不进入） | `(ev) => void` | — |
+| `onKeyDown` / `onKeyUp` | 按键按下 / 松开回调；Enter / 空格进入与复位按压态，其余键仅转发事件 | `(ev) => void` | — |
 | `accessKey` | 快捷键（落在真实 `button` / `input` 上） | `string` | — |
 | `disabled` | 是否禁用 | `boolean` | `false` |
 | `...rest` | 原生 `span` 属性直传根元素 | `HTMLAttributes<HTMLSpanElement>` | — |

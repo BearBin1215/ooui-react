@@ -53,7 +53,7 @@ export default App;
 - When space is tight the popup is clipped/clamped to the visible area (or nearest scroll container); `containerPadding` sets the clamp inset (default 10px), and `hideWhenOutOfView` (on by default) hides the popup while the anchor scrolls out of view (without changing `open`).
 
 :::note Differences from OOUI
-The flip direction is re-evaluated when scrolling changes the clipping (the original freezes it until the popup is reopened); the trade-off is that the popup may jump while scrolling. {/* deviations: dev-popup-scroll-reflip */}
+The flip direction is re-evaluated when scrolling changes the clipping (the original freezes it until the popup is reopened), so the popup may jump while scrolling. {/* deviations: dev-popup-scroll-reflip */}
 :::
 
 The two most common tweaks: `position` for the popup direction, and `anchor={false}` to drop the arrow.
@@ -150,6 +150,60 @@ function App() {
         A header with icon, title and close button; custom content in the footer.
       </Popup>
     </div>
+  );
+}
+
+export default App;
+```
+
+## Hover trigger
+
+Hover tips (term explanations, hover cards) are a common Popup scenario: open/close is driven entirely by the anchor's `mouseenter` / `mouseleave`, with `autoClose={false}` turning off the outside-click and Escape channels. Two implementation points: the popup portals out of the anchor's subtree, so moving the mouse toward it fires the anchor's `mouseleave` first — delay the close briefly and cancel it once the pointer enters the popup; and wrap the popup content in an element with its own mouse handlers so hovering the popup keeps it open.
+
+```tsx preview
+import { useRef, useState } from "react";
+import { Popup } from "ooui-react";
+
+function App() {
+  const anchorRef = useRef<HTMLSpanElement>(null);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [open, setOpen] = useState(false);
+
+  const show = () => {
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    setOpen(true);
+  };
+  const hideLater = () => {
+    hideTimer.current = setTimeout(() => setOpen(false), 150);
+  };
+
+  return (
+    <p style={{ padding: "56px 8px 8px" }}>
+      ooui-react is a React{" "}
+      <span
+        ref={anchorRef}
+        onMouseEnter={show}
+        onMouseLeave={hideLater}
+        style={{ textDecoration: "underline dotted", cursor: "help" }}
+      >
+        reimplementation
+        <Popup
+          open={open}
+          onOpenChange={setOpen}
+          container={anchorRef}
+          position="above"
+          autoClose={false}
+          padded
+          width={250}
+        >
+          <div onMouseEnter={show} onMouseLeave={hideLater}>
+            A React reimplementation of OOUI (oojs-ui); it stays open while you hover the term or the popup itself.
+          </div>
+        </Popup>
+      </span>
+      {" "}
+      of OOUI, reusing the original theme styles directly.
+    </p>
   );
 }
 

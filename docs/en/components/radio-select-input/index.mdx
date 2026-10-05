@@ -47,6 +47,40 @@ function App() {
 export default App;
 ```
 
+Invalid-value fallback: in the example below the initial `fax` is not among the options, so it falls back to the first selectable one ("Email") and submits `email` as usual:
+
+```tsx preview
+import { useState } from "react";
+import { ButtonInput, FormLayout, RadioSelectInput } from "ooui-react";
+
+function App() {
+  const [submitted, setSubmitted] = useState("");
+
+  return (
+    <FormLayout
+      onSubmit={(event) => {
+        event.preventDefault();
+        setSubmitted(new FormData(event.currentTarget).get("notify")?.toString() ?? "");
+      }}
+    >
+      <RadioSelectInput
+        name="notify"
+        defaultValue="fax"
+        options={[
+          { value: "email", children: "Email" },
+          { value: "sms", children: "Text message" },
+          { value: "none", children: "Don't notify" },
+        ]}
+      />
+      <ButtonInput type="submit">Submit</ButtonInput>
+      <div>Submitted: {submitted || "(not submitted)"}</div>
+    </FormLayout>
+  );
+}
+
+export default App;
+```
+
 ## API
 
 | Prop | Description | Type | Default |

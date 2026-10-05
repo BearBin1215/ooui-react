@@ -132,7 +132,7 @@ export default App;
 
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
-| `options` | The option set, rendered in display order; each item has `value` and `children` (the option text) and supports option fields such as `disabled` | `CheckboxMultiselectOptionProps[]` | — |
+| `options` | The option set, rendered in display order; each item has `value` and `children` (the option text) and supports `disabled`, plus `inputRef` (ref to the inner checkbox), `checkboxProps` (passed to the inner checkbox, e.g. `inputId`) and a per-option `onChange` | `CheckboxMultiselectOptionProps[]` | — |
 | `value` | Current selected values (controlled; passing it enables controlled mode) | `(string \| number)[]` | — |
 | `defaultValue` | Initial selected values for uncontrolled use | `(string \| number)[]` | `[]` |
 | `onChange` | Selected-values change callback with the full value array and the native event | `ChangeHandler<(string \| number)[], HTMLInputElement>` | — |

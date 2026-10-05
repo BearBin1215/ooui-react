@@ -31,7 +31,23 @@ function App() {
 export default App;
 ```
 
-`expanded`（缺省开启）形态按绝对定位铺满父元素，父元素需自行定位并给定尺寸——上面外层 `div` 的 `position: relative` 与 `height` 即为此而设；父元素不定位、不给尺寸时，面板会以更外层的定位祖先（乃至视口）为基准铺开，看起来像「消失」。`expanded={false}` 为 static 形态、按内容收缩排列。以本组件为基座的 [StackLayout](/components/stack-layout/index.html) 等布局继承该前提。
+`expanded`（缺省开启）形态按绝对定位铺满父元素，父元素需自行定位并给定尺寸——上面外层 `div` 的 `position: relative` 与 `height` 即为此而设；父元素不定位、不给尺寸时，面板会以更外层的定位祖先（乃至视口）为基准铺开，看起来像「消失」。`expanded={false}` 为 static 形态、按内容收缩排列：
+
+```tsx preview
+import { PanelLayout } from "ooui-react";
+
+function App() {
+  return (
+    <PanelLayout padded framed expanded={false}>
+      static 形态：不铺满父元素、按内容收缩，无需定位与给定尺寸的容器。
+    </PanelLayout>
+  );
+}
+
+export default App;
+```
+
+以本组件为基座的 [StackLayout](/components/stack-layout/index.html) 等布局继承该前提。
 
 ## API
 

@@ -17,6 +17,12 @@ The value channels match [CheckboxMultiselect](/en/components/checkbox-multisele
 import { useState } from "react";
 import { ButtonInput, CheckboxMultiselectInput, FormLayout } from "ooui-react";
 
+const FRUITS = [
+  { value: "apple", children: "Apple" },
+  { value: "banana", children: "Banana" },
+  { value: "cherry", children: "Cherry" },
+];
+
 function App() {
   const [fruits, setFruits] = useState<Array<string | number>>(["apple"]);
   const [submitted, setSubmitted] = useState("");
@@ -38,11 +44,7 @@ function App() {
         name="fruits"
         value={fruits}
         onChange={setFruits}
-        options={[
-          { value: "apple", children: "Apple" },
-          { value: "banana", children: "Banana" },
-          { value: "cherry", children: "Cherry" },
-        ]}
+        options={FRUITS}
       />
       <ButtonInput type="submit">Submit</ButtonInput>
       <div>Submitted: {submitted}</div>
@@ -52,6 +54,10 @@ function App() {
 
 export default App;
 ```
+
+:::note Performance
+The mapped option set is rebuilt only when the `options` reference changes: pass a stable reference (a module constant or `useMemo`) in hot paths instead of an inline array literal.
+:::
 
 ## API
 

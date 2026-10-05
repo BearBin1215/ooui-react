@@ -44,7 +44,38 @@ export default App;
 
 - `level` 取 0–2（超出钳制），主题仅提供三级缩进。
 - 不带 `value` 的选项渲染为分组标题，同[选择与选项](/guide/options.html)约定。
+- 带图标槽位的选项支持 `icon` 与 `flags`（给图标着色，见[选择与选项 · 图标与标志](/guide/options.html#图标与标志)）。
 - 键盘：聚焦整组后 ↑↓←→ 移动高亮、Enter 选定；Home/End/PageUp/PageDown 经 `handleNavigationKeys` 打开，`listWrapsAround` 控制是否环绕——与 [Select](/components/select/index.html) 完全一致。
+
+```tsx preview
+import { useState } from "react";
+import { OutlineSelect } from "ooui-react";
+
+function App() {
+  const [value, setValue] = useState<string | number>("getting-started");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 240 }}>
+      <OutlineSelect
+        aria-label="分组大纲"
+        value={value}
+        onChange={setValue}
+        options={[
+          { children: "入门" },
+          { value: "getting-started", children: "快速上手", level: 1, icon: "book" },
+          { value: "installation", children: "安装", level: 1 },
+          { children: "进阶" },
+          { value: "theming", children: "主题", level: 1, icon: "palette", flags: "progressive" },
+          { value: "i18n", children: "国际化", level: 1 },
+        ]}
+      />
+      <div>当前项：{String(value)}</div>
+    </div>
+  );
+}
+
+export default App;
+```
 
 ## API
 

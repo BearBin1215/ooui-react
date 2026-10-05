@@ -58,7 +58,7 @@
   - 组件顶部概述对应文档序言，参数注释对应文档 API 章节。
   - 概述尾部附带 `@see` 指向文档链接。
 
-## 文档
+### 文档
 
 见[CONTRIBUTING.md](./CONTRIBUTING.md)。
 

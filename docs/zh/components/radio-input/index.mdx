@@ -124,7 +124,7 @@ export default App;
 | `accessKey` | 快捷键（落在 `<input>`） | `string` | — |
 | `...rest` | 原生 `span` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLSpanElement>` | — |
 
-`title`、`dir`、`tabIndex` 由组件接管、落在内部 `<input>` 上；组件 `ref` 指向外层 `<span>`。
+`title`、`dir`、`tabIndex` 由组件接管、落在内部 `<input>` 上；`role` 同样落内层 `<input>`（`role="presentation"` 一类语义须命中真实 input 才生效）。组件 `ref` 指向外层 `<span>`。
 
 ## 另见
 

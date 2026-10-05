@@ -53,7 +53,7 @@ export default App;
 - 空间不足时浮层会被裁剪/钳制在可视区（或就近滚动容器）内，`containerPadding` 控制钳制内边距（默认 10px）；`hideWhenOutOfView`（默认开）让锚点滚出可视区时暂时隐藏浮层（不改 `open`）。
 
 :::note 与原版的差异
-滚动引起裁剪变化时会重新判定翻转方向（原版方向冻结到下次打开）；代价是滚动过程中浮层可能跳动，属有意的取舍。{/* deviations: dev-popup-scroll-reflip */}
+滚动引起裁剪变化时会重新判定翻转方向（原版方向冻结到下次打开），滚动过程中浮层可能因此跳动。{/* deviations: dev-popup-scroll-reflip */}
 :::
 
 最常用的两个调整：`position` 换弹出方位，`anchor={false}` 去掉指向锚点的箭头。
@@ -150,6 +150,60 @@ function App() {
         头部带图标、标题与关闭按钮，底部可放自定义内容。
       </Popup>
     </div>
+  );
+}
+
+export default App;
+```
+
+## 悬浮触发
+
+悬浮提示（术语解释、悬浮卡）是 Popup 的高频场景：开合完全由锚点的 `mouseenter` / `mouseleave` 驱动，并传 `autoClose={false}` 关掉外点与 Escape 通道。两个实现要点：浮层 portal 出锚点子树，鼠标移向浮层会先触发锚点的 `mouseleave`——收起前留一小段延时、移入浮层即取消；浮层内容再包一层自带 mouse 事件的元素，悬停浮层期间就不会收起。
+
+```tsx preview
+import { useRef, useState } from "react";
+import { Popup } from "ooui-react";
+
+function App() {
+  const anchorRef = useRef<HTMLSpanElement>(null);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [open, setOpen] = useState(false);
+
+  const show = () => {
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    setOpen(true);
+  };
+  const hideLater = () => {
+    hideTimer.current = setTimeout(() => setOpen(false), 150);
+  };
+
+  return (
+    <p style={{ padding: "56px 8px 8px" }}>
+      ooui-react 是{" "}
+      <span
+        ref={anchorRef}
+        onMouseEnter={show}
+        onMouseLeave={hideLater}
+        style={{ textDecoration: "underline dotted", cursor: "help" }}
+      >
+        OOUI
+        <Popup
+          open={open}
+          onOpenChange={setOpen}
+          container={anchorRef}
+          position="above"
+          autoClose={false}
+          padded
+          width={250}
+        >
+          <div onMouseEnter={show} onMouseLeave={hideLater}>
+            OOUI（oojs-ui）的 React 重实现；悬停在词条或浮层上都保持展开。
+          </div>
+        </Popup>
+      </span>
+      {" "}
+      的 React 重实现，样式直接复用原版主题。
+    </p>
   );
 }
 

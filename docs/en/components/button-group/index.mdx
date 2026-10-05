@@ -70,7 +70,7 @@ export default App;
 ```
 
 :::note Difference from the original
-The original propagates the group's disabled state by imperatively updating each child button; this library passes `disabled` down through a React context — the equivalent declarative convenience. A button's effective `disabled` is the OR of its own state and its group's. {/* deviations: dev-buttongroup-disabled */}
+The original has no group-level disabled propagation — each child button would have to be disabled one by one; this library passes the group's `disabled` down through a React context. A button's effective `disabled` is the OR of its own state and its group's. {/* deviations: dev-buttongroup-disabled */}
 :::
 
 ## API
