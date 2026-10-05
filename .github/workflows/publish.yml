@@ -14,7 +14,10 @@ jobs:
       id-token: write # OIDC 凭证
 
     steps:
+      # changelogithub 按 tag 区间汇总提交生成 Release 文案，需要完整历史与 tag
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - uses: pnpm/action-setup@v6
 
@@ -43,11 +46,8 @@ jobs:
 
       - run: npm publish
 
+      # 按 conventional commits 生成分组文案并创建 Release（tag 由本地 bumpp 推送）
       - name: Create GitHub Release
-        run: |
-          V=$(node -p "require('./package.json').version")
-          gh release create "v$V" \
-            --title "v$V" \
-            --generate-notes
+        run: pnpm exec changelogithub
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

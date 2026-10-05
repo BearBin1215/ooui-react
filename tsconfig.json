@@ -35,7 +35,9 @@
     "vite.config.ts",
     "vitest.config.ts",
     "tsdown.config.ts",
-    "vitest.browser-setup.ts"
+    "vitest.browser-setup.ts",
+    "bump.config.ts",
+    "changelogithub.config.ts"
   ],
   "exclude": [
     "node_modules"

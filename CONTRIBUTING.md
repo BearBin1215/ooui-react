@@ -87,6 +87,6 @@ docs/ 目录为本工程的文档工程，基于 Rspress 构建，托管到 GitH
 
 ## 发布
 
-本地 `pnpm release` 选择版本会携带 `v*` tag 推送到远程，触发 GitHub Actions 构建，通过 OIDC 发布到 npm。
+本地 `pnpm release` 选择版本会携带 `v*` tag 推送到远程，触发 GitHub Actions 构建，通过 OIDC 发布到 npm，随后由 [changelogithub](https://github.com/antfu/changelogithub) 按 conventional commits 生成分组 Release 文案（分组配置见根目录 `changelogithub.config.ts`）。版本提交本身使用非 conventional 的 `release:` 类型，借此从文案中过滤。
 
 tag 流程仅用于稳定版本；预发布版本会顶掉 `latest`，需本地手动发布并显式指定 dist-tag（如 `npm publish --tag rc`）。
