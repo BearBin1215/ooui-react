@@ -109,5 +109,5 @@ We recommend rendering into a `div` or a `DocumentFragment`, then inserting it b
 
 This library runs on the Preact compatibility layer (`preact/compat`); see the [official guide](https://preactjs.com/guide/getting-started/#aliasing-react-to-preact) for aliasing.
 
-- Requires Preact ≥ 10.18.
+- Requires Preact ≥ 10.18; both 10.x and 11.x are supported.
 - `react-dom/client` must be aliased to `preact/compat/client`; without it the imperative APIs (`confirm` / `alert` / `prompt`) fail because `createRoot` is not available.

@@ -4,6 +4,7 @@
   "description": "React reimplementation of OOUI components",
   "keywords": [
     "react",
+    "preact",
     "ooui",
     "oojs-ui",
     "mediawiki",
@@ -95,7 +96,7 @@
     "publint": "^0.3.24",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router": "^8.4.0",
+    "react-router": "^7.18.4",
     "tsdown": "^0.23.0",
     "typescript": "^6.0.3",
     "vite": "^8.3.0",

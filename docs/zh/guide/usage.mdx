@@ -109,5 +109,5 @@ mw.loader.using([
 
 本库可在 Preact 兼容层（`preact/compat`）下运行，映射方法参考[官方指南](https://preactjs.com/guide/getting-started/#aliasing-react-to-preact)。
 
-- 版本门槛 Preact ≥ 10.18。
+- 版本门槛 Preact ≥ 10.18，10.x 与 11.x 均兼容。
 - `react-dom/client` 须映射到 `preact/compat/client`，缺失时命令式 API（confirm / alert / prompt）会缺失 `createRoot` 而报错。
