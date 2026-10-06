@@ -3,3 +3,9 @@ packages:
   - "docs"
 allowBuilds:
   esbuild: true
+# 收敛 changelogithub（锁 changelogen@0.5.7）引入的 c12@1 依赖链，
+# 该链经 giget@1 传递引入 tar@6.2.1（Dependabot 8 条告警）；c12 3.x 依赖的
+# giget@3 无任何依赖，tar 随之消失。changelogen 仅用 loadConfig/setupDotenv，
+# v1→v3 API 稳定（changelogen 0.6.2 自身即依赖 c12 ^3）。
+overrides:
+  c12: ^3.3.4
