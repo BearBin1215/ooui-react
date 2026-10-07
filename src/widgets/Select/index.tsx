@@ -469,6 +469,11 @@ export const Select = forwardRef<HTMLDivElement, SelectInternalProps>(
      * 供aria-activedescendant指向高亮项；下标口径与highlightedIndex一致
      */
     const optionElementId = useOptionElementIds(options);
+    // 多选展示的选中集Set化：选项渲染按O(1)命中选中态
+    const selectedValueSet = useMemo(
+      () => (selectedValues === undefined ? undefined : new Set(selectedValues)),
+      [selectedValues],
+    );
     const highlightedIndex =
       currentHighlighted === undefined
         ? -1
@@ -536,12 +541,20 @@ export const Select = forwardRef<HTMLDivElement, SelectInternalProps>(
           // 同样带disabled外观，图标不参与主题变体着色）
           const itemDisabled = resolveOptionDisabled(option, disabled);
           if (option.value === undefined) {
-            return <MenuSectionOption {...option} disabled={itemDisabled} key={i} />;
+            // 分组标题无value可作key，按下标加前缀承载：避免与数值型选项value的key
+            // （React按字符串比较）碰撞，前缀也使标题不因选项增删而错误复用
+            return (
+              <MenuSectionOption
+                {...option}
+                disabled={itemDisabled}
+                key={`section-${i}`}
+              />
+            );
           }
           // 多选展示（selectedValues）优先于单值选中态
           const selected =
-            selectedValues !== undefined
-              ? selectedValues.includes(option.value)
+            selectedValueSet !== undefined
+              ? selectedValueSet.has(option.value)
               : currentValue === option.value;
           const isHighlighted = currentHighlighted === option.value;
           const itemRef = registerItem(option.value);

@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react";
+import { isEqual } from "es-toolkit";
 import { useDir, useViewportSpacing } from "../config";
 import {
   findScrollableContainer,
@@ -314,8 +315,15 @@ export function useAnchoredPanelLayout({
       };
     };
 
-    setLayout(compute());
-    const recompute = () => setLayout(compute());
+    // 高频重算（document捕获级scroll监听下任何滚动容器的每个滚动事件都会触发）的等值跳过：
+    // compute()恒产出新对象，直接setLayout会让布局值未变的滚动也重渲染整个浮层子树；逐字段
+    // 比对后沿用上一引用，React按Object.is跳过重渲染，下游style也因值不变跳过写回
+    const applyLayout = (next: AnchoredPanelLayout | null) => {
+      setLayout((prev) => (isEqual(prev, next) ? prev : next));
+    };
+
+    applyLayout(compute());
+    const recompute = () => applyLayout(compute());
     window.addEventListener("resize", recompute);
     document.addEventListener("scroll", recompute, true);
     // 面板尺寸变化（工具增减、文案换行等真实内容变化）时重算。钳高写入maxHeight引起的尺寸

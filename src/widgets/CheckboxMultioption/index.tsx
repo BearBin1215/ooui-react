@@ -1,4 +1,4 @@
-import { forwardRef, type Ref } from "react";
+import { forwardRef, memo, type Ref } from "react";
 import clsx from "clsx";
 import { LabelBase } from "../Label/Base";
 import { CheckboxInput, type CheckboxInputProps } from "../CheckboxInput";
@@ -45,59 +45,62 @@ export interface CheckboxMultioptionProps extends Omit<
  *
  * 复选组的选项（对齐原版 OO.ui.CheckboxMultioptionWidget）：label 根 + 内嵌
  * CheckboxInput，根显式声明 `role="checkbox"`。
+ * memo化缘由同MenuOption——CheckboxMultiselect逐项渲染，勾选态行变化时其余行浅比较跳过
  */
-export const CheckboxMultioption = forwardRef<HTMLLabelElement, CheckboxMultioptionProps>(
-  (
-    {
-      accessKey,
-      className,
-      disabled,
-      children,
-      name,
-      selected,
-      onChange,
-      inputRef,
-      checkboxProps,
-      value: _value,
-      ...rest
-    },
-    ref,
-  ) => {
-    const classes = clsx(
-      className,
-      // 对齐原版CheckboxMultioptionWidget继承的MultioptionWidget（根基类oo-ui-multioptionWidget、
-      // 选中态为oo-ui-multioptionWidget-selected，与OptionWidget系不同）
-      getWidgetClassName(
-        { disabled, label: children },
-        "multioption",
-        "checkboxMultioption",
-      ),
-      selected && "oo-ui-multioptionWidget-selected",
-    );
+export const CheckboxMultioption = memo(
+  forwardRef<HTMLLabelElement, CheckboxMultioptionProps>(
+    (
+      {
+        accessKey,
+        className,
+        disabled,
+        children,
+        name,
+        selected,
+        onChange,
+        inputRef,
+        checkboxProps,
+        value: _value,
+        ...rest
+      },
+      ref,
+    ) => {
+      const classes = clsx(
+        className,
+        // 对齐原版CheckboxMultioptionWidget继承的MultioptionWidget（根基类oo-ui-multioptionWidget、
+        // 选中态为oo-ui-multioptionWidget-selected，与OptionWidget系不同）
+        getWidgetClassName(
+          { disabled, label: children },
+          "multioption",
+          "checkboxMultioption",
+        ),
+        selected && "oo-ui-multioptionWidget-selected",
+      );
 
-    return (
-      <label
-        {...rest}
-        className={classes}
-        aria-disabled={disabled || undefined}
-        tabIndex={-1}
-        role="checkbox"
-        aria-checked={!!selected}
-        ref={ref}
-      >
-        <CheckboxInput
-          {...checkboxProps}
-          accessKey={accessKey}
-          disabled={disabled}
-          name={name}
-          checked={selected}
-          onChange={onChange}
-          inputRef={inputRef}
-        />
-        <LabelBase>{children}</LabelBase>
-      </label>
-    );
-  },
+      return (
+        <label
+          {...rest}
+          className={classes}
+          aria-disabled={disabled || undefined}
+          tabIndex={-1}
+          role="checkbox"
+          aria-checked={!!selected}
+          ref={ref}
+        >
+          <CheckboxInput
+            {...checkboxProps}
+            accessKey={accessKey}
+            disabled={disabled}
+            name={name}
+            checked={selected}
+            onChange={onChange}
+            inputRef={inputRef}
+          />
+          <LabelBase>{children}</LabelBase>
+        </label>
+      );
+    },
+  ),
 );
 
 CheckboxMultioption.displayName = "CheckboxMultioption";

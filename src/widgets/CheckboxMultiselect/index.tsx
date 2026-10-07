@@ -1,4 +1,4 @@
-import { useRef, forwardRef, type ChangeEvent, type KeyboardEvent } from "react";
+import { useRef, forwardRef, useMemo, type ChangeEvent, type KeyboardEvent } from "react";
 import clsx from "clsx";
 import {
   CheckboxMultioption,
@@ -18,6 +18,8 @@ import {
   useControlledValue,
   useFieldGroupLabelLink,
   useFieldLabelFocus,
+  useLatestRef,
+  useCallbackByKey,
 } from "../../hooks";
 import type { WidgetProps } from "../Widget";
 
@@ -197,6 +199,31 @@ export const CheckboxMultiselect = forwardRef<HTMLDivElement, CheckboxMultiselec
       event.preventDefault();
     };
 
+    // 选项级回调的按值缓存：经ref读取最新实现，使CheckboxMultioption（memo化）的
+    // ref/键盘/变更回调跨渲染稳定——勾选一项时其余项浅比较跳过重渲染
+    const optionsRef = useLatestRef(options);
+    const handleChangeRef = useLatestRef(handleChange);
+    const handleOptionKeyDownRef = useLatestRef(handleOptionKeyDown);
+    const getOptionCallbacks = useCallbackByKey((optionValue: string | number) => ({
+      inputRef: (node: HTMLInputElement | null) => {
+        if (node) {
+          inputRefs.current.set(optionValue, node);
+        } else {
+          inputRefs.current.delete(optionValue);
+        }
+      },
+      onKeyDown: (event: KeyboardEvent<HTMLLabelElement>) => {
+        handleOptionKeyDownRef.current(event, optionValue);
+      },
+      onChange: (checked: boolean, event?: ChangeEvent<HTMLInputElement>) => {
+        const option = optionsRef.current.find((o) => o.value === optionValue);
+        option?.onChange?.(checked, event);
+        handleChangeRef.current(optionValue, checked, event);
+      },
+    }));
+    // 选中集Set化：选项渲染按O(1)命中选中态
+    const selectedValueSet = useMemo(() => new Set(currentValue), [currentValue]);
+
     return (
       <div
         {...rest}
@@ -210,26 +237,17 @@ export const CheckboxMultiselect = forwardRef<HTMLDivElement, CheckboxMultiselec
         <div className="oo-ui-multiselectWidget-group">
           <FieldLabelLinkProvider value={groupLink}>
             {options.map((option) => {
-              const isSelected = currentValue.includes(option.value);
+              const callbacks = getOptionCallbacks(option.value);
               return (
                 <CheckboxMultioption
                   {...option}
                   disabled={resolveOptionDisabled(option, disabled)}
-                  selected={isSelected}
+                  selected={selectedValueSet.has(option.value)}
                   key={option.value}
                   name={name}
-                  inputRef={(node) => {
-                    if (node) {
-                      inputRefs.current.set(option.value, node);
-                    } else {
-                      inputRefs.current.delete(option.value);
-                    }
-                  }}
-                  onKeyDown={(event) => handleOptionKeyDown(event, option.value)}
-                  onChange={(checkedState, event) => {
-                    option.onChange?.(checkedState, event);
-                    handleChange(option.value, checkedState, event);
-                  }}
+                  inputRef={callbacks.inputRef}
+                  onKeyDown={callbacks.onKeyDown}
+                  onChange={callbacks.onChange}
                 />
               );
             })}

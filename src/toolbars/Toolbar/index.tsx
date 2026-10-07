@@ -94,9 +94,12 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(
       }
     };
 
+    // actions容器的在位状态（内容变化由MutationObserver承接，见下方effect注释）
+    const hasActions = !!actions;
+
     useEffect(() => {
       // 窄栏判定：栏宽不足以容纳内容总宽时进入窄栏。内容基准阈值按getNarrowThreshold缓存，
-      // effect重跑（actions/position/className变化，即内容集变化）时重置重测（重置时机与
+      // effect重跑（actions容器挂卸/position/className变化）时重置重测（重置时机与
       // 原版的差异见dev-docs/DEVIATIONS.md「增强」）
       thresholdRef.current = null;
       const measure = () => {
@@ -157,9 +160,10 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(
         contentObserver.disconnect();
       };
       // children每渲染新引用故不入deps（内容变化由MutationObserver承接）；
-      // actions挂卸需重观察（条件渲染）；position/className变化亦重测，
-      // 避免children/actions引用稳定时narrow判定过期
-    }, [actions, position, className]);
+      // actions同为ReactNode、内联JSX时每渲染都是新引用，入deps会让每次父渲染都清零
+      // 阈值重测并重建双观察器，故以hasActions布尔承载容器挂卸（条件渲染）；
+      // position/className变化亦重测，避免引用稳定时narrow判定过期
+    }, [hasActions, position, className]);
 
     // 按工具组的align分发到左侧工具区或右侧after容器（对齐原版insertItemElements对
     // align:'after'的处理）。工具组为React元素，仅按其props.align分组，不改变组内顺序

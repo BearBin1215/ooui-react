@@ -9,6 +9,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import clsx from "clsx";
+import { isEqual } from "es-toolkit";
 import { LabelBase } from "../Label/Base";
 import { IconBase } from "../Icon/Base";
 import { Button } from "../Button";
@@ -472,15 +473,18 @@ export const Popup = forwardRef<HTMLDivElement, PopupProps>(
         }
       };
       const initial = compute();
-      setLayout(initial);
+      setLayout((prev) => (isEqual(prev, initial) ? prev : initial));
       applyVisualBounds(initial);
       // 滚动/缩放/壳尺寸变化后整体重算（重定位+滚出隐藏+裁剪）。壳尺寸变化（open期间切换
       // head/footer、内容增减）经ResizeObserver触发：head/footer是内联JSX、每渲染都是新引用，
       // 进deps会导致每渲染重定位，故改观察壳尺寸。裁剪引起的壳尺寸回流会在下一轮回调内先清基
-      // 再测量，重算后净DOM变化为零，不会形成观察循环
+      // 再测量，重算后净DOM变化为零，不会形成观察循环。
+      // 布局逐字段等值跳过：document捕获级scroll监听下任何滚动容器的每个滚动事件都会触发
+      // recompute，布局值未变时沿用上一引用让React跳过重渲染（applyVisualBounds仍执行——
+      // 裁剪量还依赖壳与body的rect差值，仅布局相等不保证其幂等结果可省）
       const recompute = () => {
         const next = compute();
-        setLayout(next);
+        setLayout((prev) => (isEqual(prev, next) ? prev : next));
         applyVisualBounds(next);
       };
       const shellObserver = new ResizeObserver(recompute);

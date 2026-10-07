@@ -53,3 +53,28 @@ export function useMergedRefs<T>(
 export function useCleanId(): string {
   return useId().replace(/[:_]/g, "");
 }
+
+/**
+ * 按key缓存的回调工厂：返回稳定的取回函数，对每个key首次取用时以`create`创建回调并缓存、
+ * 后续渲染复用同一引用，供列表行组件的ref/事件回调跨渲染稳定（配合React.memo让未变化的行
+ * 跳过重渲染，用例见CheckboxMultiselect/RadioSelect/TagMultiselect的行渲染）。
+ * `create`只在key首次取用时执行，其闭包会过期——体内一律经useLatestRef读取最新实现，
+ * 不要直接捕获渲染期的props或函数；缓存条目不随key移除清理，回调体经ref读取最新实现，
+ * 复用旧条目仍正确，仅余少量闭包内存
+ */
+export function useCallbackByKey<K, T>(create: (key: K) => T): (key: K) => T {
+  const createRef = useLatestRef(create);
+  const cacheRef = useRef(new Map<K, T>());
+  return useMemo(
+    () => (key: K) => {
+      let value = cacheRef.current.get(key);
+      if (value === undefined) {
+        value = createRef.current(key);
+        cacheRef.current.set(key, value);
+      }
+      return value;
+    },
+    // ref容器身份稳定，仅作静态检查满足；缓存的创建与读取均经其进行
+    [createRef, cacheRef],
+  );
+}

@@ -1,10 +1,31 @@
-import { useLayoutEffect, useRef, type RefObject } from "react";
+import { useCallback, useLayoutEffect, useRef, type RefObject } from "react";
+import { useLatestRef } from "../../hooks";
 
 /**
  * inline输入框宽度自适应的安全余量（px）。对齐原版`updateInputSize`的"-13"经验值
  * （原版注释自陈为"不想深究这几像素从哪来"的兜底留白）
  */
 export const INLINE_INPUT_SAFETY_MARGIN = 13;
+
+/** 用离屏克隆量取占位符文本的固有宽度 */
+const measurePlaceholderWidth = (el: HTMLInputElement, text: string): number => {
+  const clone = el.cloneNode(false) as HTMLInputElement;
+  clone.removeAttribute("id");
+  clone.removeAttribute("name");
+  clone.readOnly = true;
+  clone.tabIndex = -1;
+  clone.setAttribute("aria-hidden", "true");
+  clone.style.position = "absolute";
+  clone.style.visibility = "hidden";
+  clone.style.pointerEvents = "none";
+  clone.style.width = "1em";
+  clone.value = text;
+  // 追加在标签组末尾：不影响其前元素（含真实输入框）的位置
+  el.parentElement?.appendChild(clone);
+  const width = clone.scrollWidth;
+  clone.remove();
+  return width;
+};
 
 /**
  * TagMultiselect inline输入框的宽度自适应（对齐原版`TagMultiselectWidget.updateInputSize`）：
@@ -38,78 +59,62 @@ export function useInlineInputWidth({
   const placeholderWidthRef = useRef<{ text: string; width: number } | null>(null);
   // 上一次观测到的content宽度：resize只按宽度变化重算，避免高度变化（输入框换行）引发重算循环
   const lastWidthRef = useRef<number | null>(null);
+  const placeholderRef = useLatestRef(placeholder);
 
+  // 测量只经ref读DOM与最新placeholder，引用跨渲染稳定：装卸与重测两个effect共用同一实例
+  const measure = useCallback(() => {
+    const el = inputRef.current;
+    const container = contentRef.current;
+    // 容器无宽度（隐藏于未展开面板等）时测量无意义
+    if (!el || !container || container.clientWidth === 0) {
+      return;
+    }
+    const style = getComputedStyle(el);
+    // 先把输入框钳到1em：不钳小的话它可能被自身旧宽度挤到下一行，
+    // 读到的就不是「紧接标签之后」的起始位置
+    el.style.width = "1em";
+    const inputRect = el.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    const boxWidth = inputRect.width;
+    const valueWidth = el.scrollWidth;
+    // 输入框起始位置：以content为基准（content为position:relative，是输入框的offsetParent），
+    // 复刻jQuery position().left「相对offsetParent内边距、再减去元素自身marginLeft」的取值
+    const startOffset =
+      inputRect.left - containerRect.left - (parseFloat(style.marginLeft) || 0);
+    const currentPlaceholder = placeholderRef.current;
+    if (currentPlaceholder && placeholderWidthRef.current?.text !== currentPlaceholder) {
+      placeholderWidthRef.current = {
+        text: currentPlaceholder,
+        width: measurePlaceholderWidth(el, currentPlaceholder),
+      };
+    }
+    // 内容宽度：实际值宽度与占位符宽度取较大者，避免占位符文本被裁切
+    const contentWidth = Math.max(valueWidth, placeholderWidthRef.current?.width ?? 0);
+    let bestWidth =
+      container.clientWidth - startOffset - boxWidth - INLINE_INPUT_SAFETY_MARGIN;
+    if (contentWidth > bestWidth) {
+      // 剩余空间连内容固有宽度都放不下：接受换行，取整行宽度
+      bestWidth = container.clientWidth - INLINE_INPUT_SAFETY_MARGIN;
+    }
+    // 与jQuery的.width(v)同语义：border-box元素写入的style.width须加上内边距与边框
+    const extra =
+      style.boxSizing === "border-box"
+        ? (parseFloat(style.paddingLeft) || 0) +
+          (parseFloat(style.paddingRight) || 0) +
+          (parseFloat(style.borderLeftWidth) || 0) +
+          (parseFloat(style.borderRightWidth) || 0)
+        : 0;
+    el.style.width = `${Math.floor(Math.max(0, bestWidth + extra))}px`;
+  }, [contentRef, inputRef, placeholderRef]);
+
+  // RO的装卸effect：观察器只随启用态装卸，输入值等触发源变化不拆建ResizeObserver
+  // （measure本身读输入框DOM的实时宽度，无需随value重建）
   useLayoutEffect(() => {
     const input = inputRef.current;
     const content = contentRef.current;
     if (!input || !content) {
       return;
     }
-
-    /** 用离屏克隆量取占位符文本的固有宽度 */
-    const measurePlaceholderWidth = (el: HTMLInputElement, text: string): number => {
-      const clone = el.cloneNode(false) as HTMLInputElement;
-      clone.removeAttribute("id");
-      clone.removeAttribute("name");
-      clone.readOnly = true;
-      clone.tabIndex = -1;
-      clone.setAttribute("aria-hidden", "true");
-      clone.style.position = "absolute";
-      clone.style.visibility = "hidden";
-      clone.style.pointerEvents = "none";
-      clone.style.width = "1em";
-      clone.value = text;
-      // 追加在标签组末尾：不影响其前元素（含真实输入框）的位置
-      el.parentElement?.appendChild(clone);
-      const width = clone.scrollWidth;
-      clone.remove();
-      return width;
-    };
-
-    const measure = () => {
-      const el = inputRef.current;
-      const container = contentRef.current;
-      // 容器无宽度（隐藏于未展开面板等）时测量无意义
-      if (!el || !container || container.clientWidth === 0) {
-        return;
-      }
-      const style = getComputedStyle(el);
-      // 先把输入框钳到1em：不钳小的话它可能被自身旧宽度挤到下一行，
-      // 读到的就不是「紧接标签之后」的起始位置
-      el.style.width = "1em";
-      const inputRect = el.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-      const boxWidth = inputRect.width;
-      const valueWidth = el.scrollWidth;
-      // 输入框起始位置：以content为基准（content为position:relative，是输入框的offsetParent），
-      // 复刻jQuery position().left「相对offsetParent内边距、再减去元素自身marginLeft」的取值
-      const startOffset =
-        inputRect.left - containerRect.left - (parseFloat(style.marginLeft) || 0);
-      if (placeholder && placeholderWidthRef.current?.text !== placeholder) {
-        placeholderWidthRef.current = {
-          text: placeholder,
-          width: measurePlaceholderWidth(el, placeholder),
-        };
-      }
-      // 内容宽度：实际值宽度与占位符宽度取较大者，避免占位符文本被裁切
-      const contentWidth = Math.max(valueWidth, placeholderWidthRef.current?.width ?? 0);
-      let bestWidth =
-        container.clientWidth - startOffset - boxWidth - INLINE_INPUT_SAFETY_MARGIN;
-      if (contentWidth > bestWidth) {
-        // 剩余空间连内容固有宽度都放不下：接受换行，取整行宽度
-        bestWidth = container.clientWidth - INLINE_INPUT_SAFETY_MARGIN;
-      }
-      // 与jQuery的.width(v)同语义：border-box元素写入的style.width须加上内边距与边框
-      const extra =
-        style.boxSizing === "border-box"
-          ? (parseFloat(style.paddingLeft) || 0) +
-            (parseFloat(style.paddingRight) || 0) +
-            (parseFloat(style.borderLeftWidth) || 0) +
-            (parseFloat(style.borderRightWidth) || 0)
-          : 0;
-      el.style.width = `${Math.floor(Math.max(0, bestWidth + extra))}px`;
-    };
-
     if (!enabled) {
       // 非inline/禁用时清除命令式宽度，避免切到outline或重新启用后残留旧宽度
       input.style.width = "";
@@ -132,5 +137,14 @@ export function useInlineInputWidth({
     });
     observer.observe(content);
     return () => observer.disconnect();
-  }, [enabled, placeholder, value, contentRef, inputRef, recomputeKey]);
+  }, [enabled, contentRef, inputRef, measure]);
+
+  // 值/占位符/触发源变化的重测：仅执行测量（每键入一字符一次），不动观察器。
+  // 输入框换行只改content高度、RO的宽度比对不触发，故键入必须在此显式重测
+  useLayoutEffect(() => {
+    if (!enabled) {
+      return;
+    }
+    measure();
+  }, [enabled, value, placeholder, recomputeKey, measure]);
 }

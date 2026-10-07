@@ -28,6 +28,8 @@ import {
   useFieldGroupLabelLink,
   useFieldLabelFocus,
   useGroupKeyboardSelection,
+  useLatestRef,
+  useCallbackByKey,
   useSelectableValues,
 } from "../../hooks";
 import type { WidgetProps } from "../Widget";
@@ -175,6 +177,19 @@ export const RadioSelect = forwardRef<HTMLDivElement, RadioSelectProps>(
       }
     };
 
+    // 选项级onChange的按值缓存：经ref读取最新实现，使RadioOption（memo化）的变更回调
+    // 跨渲染稳定——改选一项时其余项浅比较跳过重渲染
+    const optionsRef = useLatestRef(options);
+    const commitRef = useLatestRef(commit);
+    const getOptionChange = useCallbackByKey(
+      (optionValue: string | number): ChangeHandler<boolean, HTMLInputElement> =>
+        (checked, event) => {
+          const option = optionsRef.current.find((o) => o.value === optionValue);
+          option?.onChange?.(checked, event);
+          commitRef.current(optionValue, event);
+        },
+    );
+
     return (
       <div
         {...rest}
@@ -192,13 +207,6 @@ export const RadioSelect = forwardRef<HTMLDivElement, RadioSelectProps>(
       >
         <FieldLabelLinkProvider value={groupLink}>
           {options.map((option) => {
-            const handleChange: ChangeHandler<boolean, HTMLInputElement> = (
-              checked,
-              event,
-            ) => {
-              option.onChange?.(checked, event);
-              commit(option.value, event);
-            };
             return (
               <RadioOption
                 {...option}
@@ -206,7 +214,7 @@ export const RadioSelect = forwardRef<HTMLDivElement, RadioSelectProps>(
                 selected={currentValue === option.value}
                 key={option.value}
                 name={name}
-                onChange={handleChange}
+                onChange={getOptionChange(option.value)}
               />
             );
           })}

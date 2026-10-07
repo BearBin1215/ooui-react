@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
   type ChangeEvent,
+  type DragEvent,
   type KeyboardEvent,
   type MouseEvent,
 } from "react";
@@ -25,7 +26,12 @@ import {
   toFlagArray,
 } from "../../mixins";
 import { getElementDir, isComposingKeyEvent, type ChangeHandler } from "../../utils";
-import { useCleanId, useFieldLabelFocus } from "../../hooks";
+import {
+  useCleanId,
+  useFieldLabelFocus,
+  useLatestRef,
+  useCallbackByKey,
+} from "../../hooks";
 import type { WidgetProps } from "../Widget";
 import type { FlaggedElement, IconElement, IndicatorElement } from "../../Element";
 import type { TagInputPosition, TagOptionProps } from "./tagModel";
@@ -659,6 +665,48 @@ export const TagMultiselect = forwardRef<HTMLDivElement, TagMultiselectInternalP
       }
     };
 
+    // 标签项回调的按key缓存：闭包经ref读取最新实现、位置参数在触发时按当前项定位，
+    // 使TagItem（memo化）的回调props跨渲染稳定——输入过滤/键盘导航等仅引发整组重渲染的
+    // 场景下，未变化标签浅比较跳过
+    const renderItemsRef = useLatestRef(renderItems);
+    const startDragRef = useLatestRef(startDrag);
+    const handleDragEndRef = useLatestRef(handleDragEnd);
+    const removeTagAtRef = useLatestRef(removeTagAt);
+    const handleTagSelectRef = useLatestRef(handleTagSelect);
+    const handleTagNavigateRef = useLatestRef(handleTagNavigate);
+    const getTagCallbacks = useCallbackByKey((key: string) => {
+      // key在当前渲染序中的实际下标（renderItems各entry恒携带realIndex，预览重排不改写）
+      const realIndexOf = () =>
+        renderItemsRef.current.find((entry) => entry.key === key)?.realIndex ?? -1;
+      return {
+        onDragStart: (event: DragEvent<HTMLElement>) => {
+          startDragRef.current(key, event);
+        },
+        // onDragEnd与onDrop共用（放下与拖拽中断同路径提交预览顺序）
+        onDragEnd: () => {
+          handleDragEndRef.current();
+        },
+        onRemove: () => {
+          const realIndex = realIndexOf();
+          if (realIndex >= 0) {
+            removeTagAtRef.current(realIndex);
+          }
+        },
+        onSelect: () => {
+          const realIndex = realIndexOf();
+          if (realIndex >= 0) {
+            handleTagSelectRef.current(realIndex);
+          }
+        },
+        onNavigate: (direction: "backwards" | "forwards") => {
+          const realIndex = realIndexOf();
+          if (realIndex >= 0) {
+            handleTagNavigateRef.current(realIndex, direction);
+          }
+        },
+      };
+    });
+
     /**
      * 点击handle空白处聚焦输入框（对齐原版onMouseDown；点击输入框自身不处理）
      */
@@ -738,27 +786,28 @@ export const TagMultiselect = forwardRef<HTMLDivElement, TagMultiselectInternalP
           <IconBase icon={icon} />
           <div className="oo-ui-tagMultiselectWidget-content" ref={contentRef}>
             <div className="oo-ui-tagMultiselectWidget-group" ref={groupRef}>
-              {renderItems.map((entry, position) => (
-                <TagItem
-                  key={entry.key}
-                  label={entry.item.label}
-                  fixed={entry.item.fixed}
-                  valid={entry.item.valid}
-                  disabled={disabled}
-                  // data-index取预览位置（对齐原版拖拽预览期间的updateIndexes）
-                  index={position}
-                  draggable={allowReordering && !disabled && !entry.item.fixed}
-                  dragPhase={draggingKey === entry.key ? dragPhase : undefined}
-                  onDragStart={(event) => startDrag(entry.key, event)}
-                  onDragEnd={handleDragEnd}
-                  onDrop={handleDragEnd}
-                  onRemove={() => removeTagAt(entry.realIndex)}
-                  onSelect={() => handleTagSelect(entry.realIndex)}
-                  onNavigate={(direction) =>
-                    handleTagNavigate(entry.realIndex, direction)
-                  }
-                />
-              ))}
+              {renderItems.map((entry, position) => {
+                const callbacks = getTagCallbacks(entry.key);
+                return (
+                  <TagItem
+                    key={entry.key}
+                    label={entry.item.label}
+                    fixed={entry.item.fixed}
+                    valid={entry.item.valid}
+                    disabled={disabled}
+                    // data-index取预览位置（对齐原版拖拽预览期间的updateIndexes）
+                    index={position}
+                    draggable={allowReordering && !disabled && !entry.item.fixed}
+                    dragPhase={draggingKey === entry.key ? dragPhase : undefined}
+                    onDragStart={callbacks.onDragStart}
+                    onDragEnd={callbacks.onDragEnd}
+                    onDrop={callbacks.onDragEnd}
+                    onRemove={callbacks.onRemove}
+                    onSelect={callbacks.onSelect}
+                    onNavigate={callbacks.onNavigate}
+                  />
+                );
+              })}
               {inputPosition === "inline" && inputElement}
             </div>
             {!hasInput && (

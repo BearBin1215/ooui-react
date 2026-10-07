@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { forwardRef, memo } from "react";
 import clsx from "clsx";
 import { LabelBase } from "../Label/Base";
 import { RadioInput } from "../RadioInput";
@@ -36,58 +36,61 @@ export interface RadioOptionProps extends Omit<
 /**
  * 单选组的选项（对齐原版 OO.ui.RadioOptionWidget）：label 根 + 内嵌 RadioInput，
  * 选中态同时映射为内层原生 radio 的 checked（内部中间件，不进公共导出面）。
+ * memo化缘由同MenuOption——RadioSelect逐项渲染，选中态行变化时其余行浅比较跳过
  */
-export const RadioOption = forwardRef<HTMLLabelElement, RadioOptionProps>(
-  (
-    {
-      accessKey,
-      className,
-      disabled,
-      children,
-      name,
-      onChange,
-      selected,
-      value,
-      ...rest
-    },
-    ref,
-  ) => {
-    const classes = clsx(
-      className,
-      getWidgetClassName({ disabled, label: children }, "option", "radioOption"),
-      // 原版RadioOptionWidget.static.highlightable/pressable=false（单选选项无高亮与按压态）
-      optionWidgetClasses({ selected, highlightable: false, pressable: false }),
-    );
+export const RadioOption = memo(
+  forwardRef<HTMLLabelElement, RadioOptionProps>(
+    (
+      {
+        accessKey,
+        className,
+        disabled,
+        children,
+        name,
+        onChange,
+        selected,
+        value,
+        ...rest
+      },
+      ref,
+    ) => {
+      const classes = clsx(
+        className,
+        getWidgetClassName({ disabled, label: children }, "option", "radioOption"),
+        // 原版RadioOptionWidget.static.highlightable/pressable=false（单选选项无高亮与按压态）
+        optionWidgetClasses({ selected, highlightable: false, pressable: false }),
+      );
 
-    return (
-      <label
-        {...rest}
-        className={classes}
-        aria-disabled={disabled || undefined}
-        tabIndex={-1}
-        role="radio"
-        aria-checked={!!selected}
-        ref={ref}
-      >
-        <RadioInput
-          accessKey={accessKey}
-          disabled={disabled}
-          name={name}
-          onChange={onChange}
-          checked={selected}
-          value={value}
-          // 对齐原版RadioOptionWidget：内层radio以tabIndex:-1+role:presentation屏蔽
-          // 原生语义，由外层label（role=radio）承担可聚焦与读屏语义，避免radio套radio
-          // 重复播报与多余的tab停靠点；value承接选项值（原版构造期
-          // new OO.ui.RadioInputWidget({ value: config.data, tabIndex: -1 })，oojs-ui.js:9270，
-          // radio的value是表单提交通道）
+      return (
+        <label
+          {...rest}
+          className={classes}
+          aria-disabled={disabled || undefined}
           tabIndex={-1}
-          role="presentation"
-        />
-        <LabelBase>{children}</LabelBase>
-      </label>
-    );
-  },
+          role="radio"
+          aria-checked={!!selected}
+          ref={ref}
+        >
+          <RadioInput
+            accessKey={accessKey}
+            disabled={disabled}
+            name={name}
+            onChange={onChange}
+            checked={selected}
+            value={value}
+            // 对齐原版RadioOptionWidget：内层radio以tabIndex:-1+role:presentation屏蔽
+            // 原生语义，由外层label（role=radio）承担可聚焦与读屏语义，避免radio套radio
+            // 重复播报与多余的tab停靠点；value承接选项值（原版构造期
+            // new OO.ui.RadioInputWidget({ value: config.data, tabIndex: -1 })，oojs-ui.js:9270，
+            // radio的value是表单提交通道）
+            tabIndex={-1}
+            role="presentation"
+          />
+          <LabelBase>{children}</LabelBase>
+        </label>
+      );
+    },
+  ),
 );
 
 RadioOption.displayName = "RadioOption";

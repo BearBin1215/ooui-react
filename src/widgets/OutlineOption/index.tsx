@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { forwardRef, memo } from "react";
 import clsx from "clsx";
 import { clamp } from "es-toolkit";
 import { DecoratedOption, type DecoratedOptionProps } from "../DecoratedOption";
@@ -23,34 +23,37 @@ export interface OutlineOptionProps
   pressed?: boolean;
 }
 
-/** 大纲选项，对齐原版OO.ui.OutlineOptionWidget：按level输出缩进层级类，供OutlineSelect渲染 */
-export const OutlineOption = forwardRef<HTMLDivElement, OutlineOptionProps>(
-  (
-    { className, level = 0, disabled, selected, highlighted, pressed, flags, ...rest },
-    ref,
-  ) => {
-    // 对齐原版setLevel：钳制到[0, levels-1]（原版static.levels=3，主题CSS仅定义level-0/1/2）
-    const clampedLevel = clamp(level, 0, 2);
-    // 原版OutlineOptionWidget沿用OptionWidget基类static（三者皆true）
-    const classes = clsx(
-      className,
-      "oo-ui-outlineOptionWidget",
-      `oo-ui-outlineOptionWidget-level-${clampedLevel}`,
-      optionWidgetClasses({ selected, highlighted, pressed }),
-    );
+/** 大纲选项，对齐原版OO.ui.OutlineOptionWidget：按level输出缩进层级类，供OutlineSelect渲染。
+ * memo化缘由同MenuOption——OutlineSelect在大列表上逐项渲染，状态行变化时其余行浅比较跳过 */
+export const OutlineOption = memo(
+  forwardRef<HTMLDivElement, OutlineOptionProps>(
+    (
+      { className, level = 0, disabled, selected, highlighted, pressed, flags, ...rest },
+      ref,
+    ) => {
+      // 对齐原版setLevel：钳制到[0, levels-1]（原版static.levels=3，主题CSS仅定义level-0/1/2）
+      const clampedLevel = clamp(level, 0, 2);
+      // 原版OutlineOptionWidget沿用OptionWidget基类static（三者皆true）
+      const classes = clsx(
+        className,
+        "oo-ui-outlineOptionWidget",
+        `oo-ui-outlineOptionWidget-level-${clampedLevel}`,
+        optionWidgetClasses({ selected, highlighted, pressed }),
+      );
 
-    return (
-      <DecoratedOption
-        {...rest}
-        disabled={disabled}
-        className={classes}
-        // 图标着色：选中/按压态progressive + flags变体（对齐wikimediaui主题的选项分支）
-        variantClasses={getOptionIconClasses({ selected, pressed, disabled, flags })}
-        aria-selected={!!selected}
-        ref={ref}
-      />
-    );
-  },
+      return (
+        <DecoratedOption
+          {...rest}
+          disabled={disabled}
+          className={classes}
+          // 图标着色：选中/按压态progressive + flags变体（对齐wikimediaui主题的选项分支）
+          variantClasses={getOptionIconClasses({ selected, pressed, disabled, flags })}
+          aria-selected={!!selected}
+          ref={ref}
+        />
+      );
+    },
+  ),
 );
 
 OutlineOption.displayName = "OutlineOption";

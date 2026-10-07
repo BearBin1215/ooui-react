@@ -27,9 +27,24 @@ export function createMenuOptionTextLookup<T extends string | number>(
   options: ReadonlyArray<{ value?: T }>,
   menuRef: RefObject<HTMLElement | null>,
 ): (optionValue: T) => string {
+  // 值→下标索引按options引用缓存（O(n)建一次、单次取文本O(1)）：前缀跳转的每个按键至多
+  // 扫描全部候选值、逐候选取文本。
+  // 分组标题无value不进索引；重复value保留首个下标
+  let indexedOptions: ReadonlyArray<{ value?: T }> | null = null;
+  let valueIndex: Map<T, number> = new Map();
   return (optionValue) => {
-    const index = options.findIndex((option) => option.value === optionValue);
-    return menuRef.current?.children[index]?.textContent ?? "";
+    if (options !== indexedOptions) {
+      indexedOptions = options;
+      valueIndex = new Map();
+      for (let i = 0; i < options.length; i++) {
+        const value = options[i].value;
+        if (value !== undefined && !valueIndex.has(value)) {
+          valueIndex.set(value, i);
+        }
+      }
+    }
+    const index = valueIndex.get(optionValue);
+    return menuRef.current?.children[index ?? -1]?.textContent ?? "";
   };
 }
 
