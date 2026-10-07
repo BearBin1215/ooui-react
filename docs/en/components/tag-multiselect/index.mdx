@@ -11,7 +11,7 @@ A tag input: values are shown as removable chips. Free-entry form — for "type 
 
 ## Basic usage
 
-Type text in the input and press **Enter** to commit a tag; press **Backspace** (when the input is empty) at the end to remove the previous tag; **click a tag** to move it back into the input for editing.
+Type text in the input and press **Enter** to commit a tag; press **Backspace** (when the input is empty) at the end to remove the previous tag; **click a tag** to move it back into the input for editing. A tag's close button **only removes the tag** — it does not also trigger the select/edit flow (opening the menu in menu mode, or backfilling text in edit mode). In the original, clicks on the close button bubble into those flows; this is an intentional deviation.{/* deviations: dev-tagitem-remove-nobubble */}
 
 Free entry requires `allowArbitrary`: matching the original, without it (and without `allowedValues`) any typed value lies outside the legal range, so Enter is rejected (no error — simply no tag). See the next section for the whitelist form.
 

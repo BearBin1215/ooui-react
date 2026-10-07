@@ -182,6 +182,8 @@
   > id：dev-focusable-content-visibility ｜ 组件：Dialog、Popup、布局族 ｜ 文档：无需（对调用方不可见）
 - **`TagMultiselect` 键入添加的标签同步菜单选中态**。原版经输入框键入添加的标签不同步菜单选项的选中态（菜单里该项仍呈未选中），对该项的后续操作自相矛盾——点击会移除标签、菜单选中态却错乱。本工程菜单选中态恒由当前标签集派生（`selectedValues={currentValue}`），键入与经菜单添加的标签在菜单中呈现一致的选中态，切换语义随之自洽。代价仅是与原版的菜单选中显示不同，而原版的显示本身是失步缺陷（即上述矛盾）。
   > id：dev-tag-typed-menu-selected ｜ 组件：TagMultiselect、MenuTagMultiselect ｜ 文档：components/menu-tag-multiselect/index.mdx
+- **`TagItem` 关闭按钮的点击只移除、不触发标签选中/编辑流程**。原版 `TagItemWidget` 在 `$element` 上监听 click 调 `select`（`dist/oojs-ui.js:18787-18802`），关闭按钮嵌于其内，click 冒泡使「移除」与「选中」两个独立事件对一次关闭点击同时派发，净行为随形态分叉：`MenuTagMultiselectWidget` 下删标签会顺带聚焦输入框、打开菜单并高亮被删项（`onTagSelect` 菜单分支的 `focus()` 触发 `onInputFocus` 的 `menu.toggle(true)`，`dist/oojs-ui.js:20233-20244`、`:20294-20311`）；基础形态则把被删标签回填进输入框，失焦时经 `addTagFromInput` 被再次加回。本工程在关闭按钮的 onClick 中 `stopPropagation`，关闭按钮只移除；点击标签主体的选中/编辑流程与键盘通道（Enter 选中、Backspace/Delete 移除）不变。这是修事件委派附带缺陷的净收益修正：「关闭按钮=仅移除」是两侧一致的组件语义，双触发并非有意设计；若站点依赖原版「点关闭顺带开菜单」的连带行为，应显式点击标签主体或监听 `onRemove` 自行驱动。
+  > id：dev-tagitem-remove-nobubble ｜ 组件：TagMultiselect、MenuTagMultiselect ｜ 文档：components/tag-multiselect/index.mdx
 
 ### 等效替代
 
