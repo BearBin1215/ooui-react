@@ -35,7 +35,7 @@ export interface PlaygroundLocaleOption {
   messages?: Partial<Record<MessageKey, MessageValue>>;
 }
 
-/** 与库内建语言包一一对应（顺序同选取排行），供头部语言下拉与文案下发 */
+/** 头部语言下拉的选项：从库内建语言包中取常用语种（顺序同选取排行），供语言切换与文案下发 */
 export const localeOptions: PlaygroundLocaleOption[] = [
   { value: "en", label: "English" },
   { value: "zh-hans", label: "简体中文", messages: zhHans },

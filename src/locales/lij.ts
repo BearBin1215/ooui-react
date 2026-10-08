@@ -1,0 +1,29 @@
+import type { MessageKey, MessageValue } from "../i18n";
+
+/**
+ * 利古里亚语消息包：译文取自原版OOUI dist/i18n/lij.json（0.54.2，译者见原文件@metadata）。
+ * 类型为Partial——缺键由英文默认逐键兜底
+ */
+export default {
+  "ooui-copytextlayout-copy": "Còpia",
+  "ooui-outline-control-move-down": "Méscia da bàsso",
+  "ooui-outline-control-move-up": "Méscia de d'âto",
+  "ooui-outline-control-remove": "Lêva eleménto",
+  "ooui-toolgroup-expand": "Âtro",
+  "ooui-toolgroup-collapse": "Mêno",
+  "ooui-item-remove": "Lêva",
+  "ooui-dialog-message-accept": "OK",
+  "ooui-dialog-message-reject": "Anùlla",
+  "ooui-dialog-process-error": "Quarcösa o l'é anæto stòrto",
+  "ooui-dialog-process-dismiss": "Ignöra",
+  "ooui-dialog-process-retry": "Prêuvighe ancón",
+  "ooui-dialog-process-continue": "Væ avànti",
+  "ooui-combobox-button-label": "Càngia e opçioìn",
+  "ooui-selectfile-button-select": "Seleçiónn-a 'n file",
+  "ooui-selectfile-button-select-multiple": "Seleçiónn-a file",
+  "ooui-selectfile-placeholder": "Nisciùn file seleçionòu",
+  "ooui-selectfile-dragdrop-placeholder": "Métti o file chi",
+  "ooui-selectfile-dragdrop-placeholder-multiple": "Métti i file chi",
+  "ooui-popup-widget-close-button-aria-label": "Særa",
+  "ooui-field-help": "Agiùtto",
+} satisfies Partial<Record<MessageKey, MessageValue>>;

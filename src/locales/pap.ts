@@ -1,0 +1,30 @@
+import type { MessageKey, MessageValue } from "../i18n";
+
+/**
+ * 帕皮阿门托语消息包：译文取自原版OOUI dist/i18n/pap.json（0.54.2，译者见原文件@metadata）。
+ * 类型为Partial——缺键由英文默认逐键兜底
+ */
+export default {
+  "ooui-copytextlayout-copy": "Kopia",
+  "ooui-outline-control-move-down": "Move item abou",
+  "ooui-outline-control-move-up": "Move item ariba",
+  "ooui-outline-control-remove": "Kita item",
+  "ooui-toolgroup-expand": "Mas",
+  "ooui-toolgroup-collapse": "Ménos",
+  "ooui-item-remove": "Eliminá",
+  "ooui-dialog-message-accept": "OK",
+  "ooui-dialog-message-reject": "Kanselá",
+  "ooui-dialog-process-error": "Algu a bai robes",
+  "ooui-dialog-process-back": "Bèk",
+  "ooui-dialog-process-dismiss": "Rechasá",
+  "ooui-dialog-process-retry": "Purba atrobe",
+  "ooui-dialog-process-continue": "Kontinuá",
+  "ooui-combobox-button-label": "Bòltu opshon (pa)",
+  "ooui-selectfile-button-select": "Selektá un fail",
+  "ooui-selectfile-button-select-multiple": "Selektá failnan",
+  "ooui-selectfile-placeholder": "No a selektá fail",
+  "ooui-selectfile-dragdrop-placeholder": "Tou un fail aki",
+  "ooui-selectfile-dragdrop-placeholder-multiple": "Tou failnan aki",
+  "ooui-popup-widget-close-button-aria-label": "Sera",
+  "ooui-field-help": "Ayudo",
+} satisfies Partial<Record<MessageKey, MessageValue>>;

@@ -1,0 +1,29 @@
+import type { MessageKey, MessageValue } from "../i18n";
+
+/**
+ * 查克马语消息包：译文取自原版OOUI dist/i18n/ccp.json（0.54.2，译者见原文件@metadata）。
+ * 类型为Partial——缺键由英文默认逐键兜底
+ */
+export default {
+  "ooui-copytextlayout-copy": "𑄇𑄧𑄛𑄨",
+  "ooui-outline-control-move-down": "𑄃𑄭𑄑𑄬𑄟𑄴 𑄖𑄧𑄣𑄬𑄘𑄨 𑄚𑄬𑄡",
+  "ooui-outline-control-move-up": "𑄃𑄭𑄑𑄬𑄟𑄴 𑄅𑄉𑄪𑄢𑄬𑄘𑄨 𑄖𑄪𑄣𑄴",
+  "ooui-outline-control-remove": "𑄃𑄭𑄑𑄬𑄟𑄴 𑄛𑄪𑄏𑄨𑄜𑄬𑄣",
+  "ooui-toolgroup-expand": "𑄃𑄢𑄧 𑄝𑄬𑄌𑄴𑄉𑄧𑄢𑄨",
+  "ooui-toolgroup-collapse": "𑄇𑄮𑄟𑄬𑄭 𑄘𑄬𑄊𑄚",
+  "ooui-item-remove": "𑄛𑄪𑄏𑄨𑄜𑄬𑄣",
+  "ooui-dialog-message-accept": "𑄒𑄨𑄇𑄴 𑄃𑄉𑄬",
+  "ooui-dialog-message-reject": "𑄝𑄖𑄴 𑄘𑄬",
+  "ooui-dialog-process-error": "𑄇𑄨𑄏𑄪 𑄃𑄬𑄇𑄴𑄳𑄦𑄚𑄴 𑄞𑄫𑄣𑄴 𑄦𑄮𑄠𑄬",
+  "ooui-dialog-process-dismiss": "𑄝𑄖𑄴 𑄘𑄬𑄚",
+  "ooui-dialog-process-retry": "𑄃𑄢𑄧𑄇𑄴𑄬𑄛𑄴 𑄌𑄬𑄢𑄬𑄖𑄴𑄳𑄦 𑄉𑄧𑄢𑄴",
+  "ooui-dialog-process-continue": "𑄌𑄣𑄬𑄭 𑄡",
+  "ooui-combobox-button-label": "𑄑𑄮𑄉𑄧𑄣𑄴 𑄃𑄧𑄛𑄴𑄥𑄧𑄚𑄴",
+  "ooui-selectfile-button-select": "𑄃𑄨𑄇𑄴𑄮 𑄜𑄭𑄣𑄴 𑄥𑄨𑄣𑄬𑄇𑄴𑄑𑄴 𑄉𑄧𑄢𑄴",
+  "ooui-selectfile-button-select-multiple": "𑄜𑄭𑄣𑄪𑄚𑄴 𑄥𑄨𑄣𑄬𑄇𑄴𑄑𑄴 𑄉𑄧𑄢𑄴",
+  "ooui-selectfile-placeholder": "𑄇𑄧𑄚𑄧 𑄜𑄭𑄣𑄴 𑄥𑄨𑄣𑄬𑄇𑄴𑄑𑄴 𑄚𑄧 𑄦𑄧𑄚𑄴",
+  "ooui-selectfile-dragdrop-placeholder": "𑄃𑄨𑄠𑄮𑄖𑄴 𑄜𑄭𑄣𑄴𑄮 𑄘𑄬",
+  "ooui-selectfile-dragdrop-placeholder-multiple": "𑄃𑄨𑄠𑄮𑄖𑄴 𑄜𑄭𑄣𑄴𑄮 𑄘𑄬",
+  "ooui-popup-widget-close-button-aria-label": "𑄝𑄧𑄚𑄴𑄙𑄧",
+  "ooui-field-help": "𑄝𑄧𑄣𑄝𑄧𑄣𑄴",
+} satisfies Partial<Record<MessageKey, MessageValue>>;

@@ -125,37 +125,9 @@ export default App;
 
 ### Supported languages
 
-25 in total, imported by language code (`ooui-react/locales/<code>`); language packs are loaded on demand and don't affect each other's bundle size. `en` is the built-in default baseline, always part of the main bundle, and doesn't need importing; any key missing from a pack falls back to its English default, key by key.
+Language packs follow the languages of the original OOUI `dist/i18n`: 222 in total, imported by MediaWiki language code (`ooui-react/locales/<code>`); language packs are loaded on demand and don't affect each other's bundle size. `en` is the built-in default baseline, always part of the main bundle, and doesn't need importing; any key missing from a pack falls back to its English default, key by key.
 
-:::details All languages
-
-- `zh-hans` Simplified Chinese
-- `zh-hant` Traditional Chinese
-- `yue-hant` Cantonese
-- `ja` Japanese
-- `ko` Korean
-- `ru` Russian
-- `uk` Ukrainian
-- `de` German
-- `fr` French
-- `es` Spanish
-- `pt-br` Brazilian Portuguese
-- `it` Italian
-- `nl` Dutch
-- `pl` Polish
-- `cs` Czech
-- `sv` Swedish
-- `tr` Turkish
-- `vi` Vietnamese
-- `id` Indonesian
-- `th` Thai
-- `hi` Hindi
-- `bn` Bengali
-- `ar` Arabic
-- `he` Hebrew
-- `fa` Persian
-
-:::
+Languages without an upstream translation for the messages this library uses (`crh-cyrl` / `crh-latn` / `vo`) and the translation-documentation pseudo-language `qqq` are not included. The full set of codes lives in the installed package under `ooui-react/dist/locales/`.
 
 For right-to-left languages such as Arabic, Hebrew and Persian, the page or container text direction is covered in [Text direction](#text-direction).
 
