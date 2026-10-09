@@ -2,7 +2,7 @@
 
 ## 项目性质
 
-以 React 重新实现[OOUI（oojs-ui）](https://www.mediawiki.org/wiki/OOUI)，计划产出组件库ooui-react。使用TypeScript开发，调用方直接使用oojs-ui的样式，本工程无组件样式。
+以 React 重新实现[OOUI（oojs-ui）](https://www.mediawiki.org/wiki/OOUI)，产出组件库ooui-react。
 
 项目结构、常用命令见[CONTRIBUTING.md](./CONTRIBUTING.md)。
 
@@ -11,7 +11,7 @@
 - **不乱判断，拒绝猜测性编码**：
   - 遇到原版实现和 React 最佳实践冲突的地方，提出方案让用户选择。
   - 遇到原版存在的缺陷，提出处理方案，让用户决定是否处理、如何处理。
-  - 如果原版实现有更优方案，分析优劣、告知用户。
+  - 如果有比原版实现更优的方案，分析优劣、告知用户。
 - **不遵循最小修改原则，积极重构**：
   - 修改模块时将其作为一个整体进行修改，不要只纯粹打补丁。
   - 涉及多模块变更时，综合考虑全局，不要为了少修改而拒绝更优方案。
@@ -22,7 +22,7 @@
 ## 核心约定
 
 - **不自带 CSS**：依赖原版 OOUI 样式，组件只负责输出与原版 CSS 契约一致的 DOM 结构、类名（`oo-ui-*`）和 aria 属性。改类名前须核对原版对应 mixin/主题选择器。
-- **对照开发**：所有有交互的组件都要与本地安装的原版 OOUI 在playground中做行为对照，确保交互语义（键盘、焦点、a11y、边界值）一致。原版未压缩源码在 `node_modules/.pnpm/oojs-ui@<版本>/node_modules/oojs-ui/dist/oojs-ui.js`。
+- **对照开发**：所有有交互的组件都要与本地安装的原版 OOUI 在 playground 中做行为对照，确保交互语义（键盘、焦点、a11y、边界值）一致。原版未压缩源码在 `node_modules/.pnpm/oojs-ui@<版本>/node_modules/oojs-ui/dist/oojs-ui.js`。
   - 对照开发流程见 `dev-docs/comparison-guide.md`
 - **体积敏感**：本组件库多数使用场景较为重视产物体积，实现成本高、价值过低的功能应和用户确认是否实现。
 
