@@ -24,6 +24,7 @@ export default defineConfig({
   root,
   outDir: path.join(root, "build"),
   base: "/ooui-react/",
+  siteOrigin: "https://bearbin1215.github.io",
   title: "ooui-react",
   description: "OOUI 的 React 实现",
   // 语言列表。默认语言由下方 lang 指定（zh），其路由不带语言前缀；其余语言的路由在

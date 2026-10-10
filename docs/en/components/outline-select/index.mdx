@@ -43,9 +43,9 @@ export default App;
 ## Levels and groups
 
 - `level` is 0–2 (out-of-range is clamped); the theme only provides three indentation levels.
-- Options without a `value` render as group headings, per the [Selection and options](/en/guide/options.html) contract.
-- Options with icon slots support `icon` and `flags` (tinting the icon, see [Selection and options · Icons and flags](/en/guide/options.html#icons-and-flags)).
-- Keyboard: with the group focused, ↑↓←→ move the highlight and Enter chooses; Home/End/PageUp/PageDown are enabled via `handleNavigationKeys`, and `listWrapsAround` controls wrapping — exactly as in [Select](/en/components/select/index.html).
+- Options without a `value` render as group headings, per the [Selection and options](../../guide/options.mdx) contract.
+- Options with icon slots support `icon` and `flags` (tinting the icon, see [Selection and options · Icons and flags](../../guide/options.mdx#icons-and-flags)).
+- Keyboard: with the group focused, ↑↓←→ move the highlight and Enter chooses; Home/End/PageUp/PageDown are enabled via `handleNavigationKeys`, and `listWrapsAround` controls wrapping — exactly as in [Select](../select/index.mdx).
 
 ```tsx preview
 import { useState } from "react";
@@ -79,7 +79,7 @@ export default App;
 
 ## API
 
-Inherits [Select](/en/components/select/index.html) props (`value` / `defaultValue` / `onChange` / `disabled` / `handleNavigationKeys` / `listWrapsAround`, etc.); the differences are:
+Inherits [Select](../select/index.mdx) props (`value` / `defaultValue` / `onChange` / `disabled` / `handleNavigationKeys` / `listWrapsAround`, etc.); the differences are:
 
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
@@ -90,5 +90,5 @@ Inherits [Select](/en/components/select/index.html) props (`value` / `defaultVal
 
 ## See also
 
-- The base selection list: [Select](/en/components/select/index.html)
-- Option data and the keyboard focus model: [Selection and options](/en/guide/options.html)
+- The base selection list: [Select](../select/index.mdx)
+- Option data and the keyboard focus model: [Selection and options](../../guide/options.mdx)

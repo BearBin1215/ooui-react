@@ -7,7 +7,7 @@ description: "Props for the FieldLayout component: alignment for pairing a label
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/FieldLayout) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.FieldLayout.html "OO.ui.FieldLayout")
 
-Field layout: a container that places a field control together with its label — the basic unit inside a [FormLayout](/en/components/form-layout/index.html).
+Field layout: a container that places a field control together with its label — the basic unit inside a [FormLayout](../form-layout/index.mdx).
 
 ## Basic usage
 
@@ -63,7 +63,7 @@ export default App;
 - `label` is the label content (`ReactNode`).
 - `invisibleLabel` hides the label visually but keeps the accessible name; then `title` falls back to the label text when not given explicitly.
 - `title` lands on the **label element** (matching the original `$titled = $label`), not on the layout root.
-- When the field control registers its own `accessKey`, the label tooltip gets the key appended (the chord text can be localized via [OOUIProvider](/en/guide/configuration.html)).
+- When the field control registers its own `accessKey`, the label tooltip gets the key appended (the chord text can be localized via [OOUIProvider](../../guide/configuration.mdx)).
 
 ```tsx preview
 import { FieldLayout, TextInput } from "ooui-react";
@@ -118,6 +118,6 @@ export default App;
 
 ## See also
 
-- The form container that wraps several `FieldLayout`s: [FormLayout](/en/components/form-layout/index.html)
-- Props and landing spots of the controls: [TextInput](/en/components/text-input/index.html), [CheckboxInput](/en/components/checkbox-input/index.html)
-- The `disabled`, `title` and `accessKey` semantics shared by all components: [Common props](/en/guide/basics.html)
+- The form container that wraps several `FieldLayout`s: [FormLayout](../form-layout/index.mdx)
+- Props and landing spots of the controls: [TextInput](../text-input/index.mdx), [CheckboxInput](../checkbox-input/index.mdx)
+- The `disabled`, `title` and `accessKey` semantics shared by all components: [Common props](../../guide/basics.mdx)

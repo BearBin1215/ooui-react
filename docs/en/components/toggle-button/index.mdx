@@ -7,7 +7,7 @@ description: "Props for the ToggleButton component: a Button with an on/off stat
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ToggleButton) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ToggleButtonWidget.html "OO.ui.ToggleButtonWidget")
 
-A toggle button: a [Button](/en/components/button/index.html) that can be "pressed / unpressed".
+A toggle button: a [Button](../button/index.mdx) that can be "pressed / unpressed".
 
 ## Basic usage
 
@@ -64,7 +64,7 @@ export default App;
 
 ## How it differs from Button
 
-ToggleButton borrows Button's appearance but has **no link capability**: `href` / `target` / `rel` / `anchorRef` are not accepted, and `active`, `onClick` and `aria-pressed` are driven by the toggle state and not exposed. Use [Button](/en/components/button/index.html) to "run an action once on click", and this component to "express a persistent on/off state".
+ToggleButton borrows Button's appearance but has **no link capability**: `href` / `target` / `rel` / `anchorRef` are not accepted, and `active`, `onClick` and `aria-pressed` are driven by the toggle state and not exposed. Use [Button](../button/index.mdx) to "run an action once on click", and this component to "express a persistent on/off state".
 
 ## API
 
@@ -83,10 +83,10 @@ ToggleButton borrows Button's appearance but has **no link capability**: `href` 
 | `tabIndex` | Tab order | `number \| null` | `0` |
 | `...rest` | Button's remaining non-link props, passed straight to the button element | `object` | — |
 
-`onChange` is a toggle callback and does not follow the value-first `ChangeHandler` signature (see [Controlled and uncontrolled · Callback signatures](/en/guide/controlled.html#callback-signatures)).
+`onChange` is a toggle callback and does not follow the value-first `ChangeHandler` signature (see [Controlled and uncontrolled · Callback signatures](../../guide/controlled.mdx#callback-signatures)).
 
 ## See also
 
-- Button's base capabilities and icon / indicator: [Button](/en/components/button/index.html)
-- The switch form: [ToggleSwitch](/en/components/toggle-switch/index.html)
-- Arranging buttons into a group: [ButtonGroup](/en/components/button-group/index.html)
+- Button's base capabilities and icon / indicator: [Button](../button/index.mdx)
+- The switch form: [ToggleSwitch](../toggle-switch/index.mdx)
+- Arranging buttons into a group: [ButtonGroup](../button-group/index.mdx)

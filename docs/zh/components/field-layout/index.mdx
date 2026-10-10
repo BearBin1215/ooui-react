@@ -7,7 +7,7 @@ description: "FieldLayout 组件的属性说明：给字段控件配标签的对
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/FieldLayout) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.FieldLayout.html "OO.ui.FieldLayout")
 
-字段布局：把一个字段控件与它的标签排在一起，是 [FormLayout](/components/form-layout/index.html) 里的基本单元。
+字段布局：把一个字段控件与它的标签排在一起，是 [FormLayout](../form-layout/index.mdx) 里的基本单元。
 
 ## 基本用法
 
@@ -63,7 +63,7 @@ export default App;
 - `label` 是标签内容（`ReactNode`）。
 - `invisibleLabel` 把标签视觉隐藏，但保留可访问名称；此时 `title` 未显式给出会以标签文本兜底。
 - `title` 落在标签元素上（对齐原版 `$titled = $label`），而不是布局根。
-- 字段控件登记了自己的 `accessKey` 时，标签提示末尾附上键位（组合键文案可经 [OOUIProvider](/guide/configuration.html) 本地化）。
+- 字段控件登记了自己的 `accessKey` 时，标签提示末尾附上键位（组合键文案可经 [OOUIProvider](../../guide/configuration.mdx) 本地化）。
 
 ```tsx preview
 import { FieldLayout, TextInput } from "ooui-react";
@@ -118,6 +118,6 @@ export default App;
 
 ## 另见
 
-- 包裹多个 `FieldLayout` 的表单容器：[FormLayout](/components/form-layout/index.html)
-- 各控件的属性与落点：[TextInput](/components/text-input/index.html)、[CheckboxInput](/components/checkbox-input/index.html)
-- 所有组件共有的 `disabled`、`title`、`accessKey` 语义：[通用属性](/guide/basics.html)
+- 包裹多个 `FieldLayout` 的表单容器：[FormLayout](../form-layout/index.mdx)
+- 各控件的属性与落点：[TextInput](../text-input/index.mdx)、[CheckboxInput](../checkbox-input/index.mdx)
+- 所有组件共有的 `disabled`、`title`、`accessKey` 语义：[通用属性](../../guide/basics.mdx)

@@ -16,10 +16,10 @@ Clicking the label to focus/activate the control relies on the native `<label>`'
 - **TextInput family** (including MultilineTextInput, NumberInput, ComboBoxInput, etc.): `id` lands on the root div; to reach the native input, pass it through `inputProps={{ id }}`.
 - **CheckboxInput / RadioInput**: there is no `inputProps` channel — use the dedicated `inputId` prop, which lands directly on the native `<input>`.
 
-Inside a form, [FieldLayout](/en/components/field-layout/index.html) wires this automatically; no hand wiring needed.
+Inside a form, [FieldLayout](../field-layout/index.mdx) wires this automatically; no hand wiring needed.
 
 :::note Prefer FieldLayout in forms
-In a form, the layout, alignment and click-to-focus linkage of "label + control" are usually handled by [FieldLayout](/en/components/field-layout/index.html); writing `htmlFor`/`id` by hand suits free-form composition.
+In a form, the layout, alignment and click-to-focus linkage of "label + control" are usually handled by [FieldLayout](../field-layout/index.mdx); writing `htmlFor`/`id` by hand suits free-form composition.
 :::
 
 ```tsx preview
@@ -92,5 +92,5 @@ The component renders a single `<label>`; the `ref` points to it, and undeclared
 
 ## See also
 
-- Label layout and association for form fields: [FieldLayout](/en/components/field-layout/index.html)
-- Inline labels built into input components: the "Label" section of [TextInput](/en/components/text-input/index.html)
+- Label layout and association for form fields: [FieldLayout](../field-layout/index.mdx)
+- Inline labels built into input components: the "Label" section of [TextInput](../text-input/index.mdx)

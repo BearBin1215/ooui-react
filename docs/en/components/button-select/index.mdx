@@ -7,7 +7,7 @@ description: "Props for the ButtonSelect component: a row of mutually exclusive 
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ButtonSelect) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ButtonSelectWidget.html "OO.ui.ButtonSelectWidget")
 
-A button select: a set of mutually exclusive options shown as a row of buttons. The option data contract is in [Selection and options](/en/guide/options.html).
+A button select: a set of mutually exclusive options shown as a row of buttons. The option data contract is in [Selection and options](../../guide/options.mdx).
 
 ## Basic usage
 
@@ -37,7 +37,7 @@ export default App;
 
 ## Unframed and disabled items
 
-Options support `framed={false}`; items with `disabled` are not selectable, and a group-level `disabled` disables the whole group (see [Selection and options · Disabled](/en/guide/options.html#disabled)).
+Options support `framed={false}`; items with `disabled` are not selectable, and a group-level `disabled` disables the whole group (see [Selection and options · Disabled](../../guide/options.mdx#disabled)).
 
 ```tsx preview
 import { ButtonSelect } from "ooui-react";
@@ -61,7 +61,7 @@ export default App;
 
 ## Keyboard
 
-After a click, focus moves into the group automatically (slightly better than the original, which leaves focus where it was so the arrow keys stay dead), and ↑↓←→ then **cycle among non-disabled items and select directly**; Enter re-affirms the current item. Pressing Tab also moves focus into the group. This is the "direct-select family" keyboard model (shared by [TabSelect](/en/components/tab-select/index.html) and [RadioSelect](/en/components/radio-select/index.html)).
+After a click, focus moves into the group automatically (slightly better than the original, which leaves focus where it was so the arrow keys stay dead), and ↑↓←→ then **cycle among non-disabled items and select directly**; Enter re-affirms the current item. Pressing Tab also moves focus into the group. This is the "direct-select family" keyboard model (shared by [TabSelect](../tab-select/index.mdx) and [RadioSelect](../radio-select/index.mdx)).
 
 ## API
 
@@ -81,6 +81,6 @@ After a click, focus moves into the group automatically (slightly better than th
 
 ## See also
 
-- Tab-style direct select: [TabSelect](/en/components/tab-select/index.html)
-- Radio group (native radio semantics): [RadioSelect](/en/components/radio-select/index.html)
-- Option data and the keyboard focus model: [Selection and options](/en/guide/options.html)
+- Tab-style direct select: [TabSelect](../tab-select/index.mdx)
+- Radio group (native radio semantics): [RadioSelect](../radio-select/index.mdx)
+- Option data and the keyboard focus model: [Selection and options](../../guide/options.mdx)

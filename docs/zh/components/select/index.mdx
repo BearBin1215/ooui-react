@@ -7,10 +7,10 @@ description: "Select 组件的属性说明：作为下拉/菜单内层的选择�
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Select) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.SelectWidget.html "OO.ui.SelectWidget")
 
-选择列表：可点选的选项集合，既是 [Dropdown](/components/dropdown/index.html) 等浮层组件的内层列表，也可单独使用。选项数据约定见[选择与选项](/guide/options.html)。
+选择列表：可点选的选项集合，既是 [Dropdown](../dropdown/index.mdx) 等浮层组件的内层列表，也可单独使用。选项数据约定见[选择与选项](../../guide/options.mdx)。
 
 :::note 单独使用时如何交互
-对齐原版 `SelectWidget`，本组件根元素**缺省不可聚焦**（不进 Tab 序），因此更适合鼠标点选。需要键盘可达的单选/多选，请优先使用 [Dropdown](/components/dropdown/index.html)、[RadioSelect](/components/radio-select/index.html)、`ButtonSelect` 等把焦点管理做好的组件，它们都以 `Select` 为内层。作为浮层内层时，键盘导航由外层触发元素统一管理，无需你操心。{/* deviations: dev-select-tabindex */}
+对齐原版 `SelectWidget`，本组件根元素**缺省不可聚焦**（不进 Tab 序），因此更适合鼠标点选。需要键盘可达的单选/多选，请优先使用 [Dropdown](../dropdown/index.mdx)、[RadioSelect](../radio-select/index.mdx)、`ButtonSelect` 等把焦点管理做好的组件，它们都以 `Select` 为内层。作为浮层内层时，键盘导航由外层触发元素统一管理，无需你操心。{/* deviations: dev-select-tabindex */}
 :::
 
 ## 基本用法
@@ -123,7 +123,7 @@ export default App;
 
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `options` | 选项集，书写约定见[选择与选项](/guide/options.html) | `SelectOptionProps[]` | — |
+| `options` | 选项集，书写约定见[选择与选项](../../guide/options.mdx) | `SelectOptionProps[]` | — |
 | `value` | 当前选中值（受控，传入即受控模式） | `string \| number` | — |
 | `defaultValue` | 非受控初始选中值 | `string \| number` | — |
 | `onChange` | 选中值变化回调（值优先，仅变化时触发） | `ChangeHandler<string \| number>` | — |
@@ -142,6 +142,6 @@ export default App;
 
 ## 另见
 
-- 选项数据与键盘焦点模型：[选择与选项](/guide/options.html)
-- 以 Select 为内层的浮层：[Dropdown](/components/dropdown/index.html)
-- `onChange` 与 `onChoose` 的分工：[受控与非受控](/guide/controlled.html#回调签名)
+- 选项数据与键盘焦点模型：[选择与选项](../../guide/options.mdx)
+- 以 Select 为内层的浮层：[Dropdown](../dropdown/index.mdx)
+- `onChange` 与 `onChoose` 的分工：[受控与非受控](../../guide/controlled.mdx#回调签名)

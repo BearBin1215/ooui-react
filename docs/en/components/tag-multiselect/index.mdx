@@ -7,7 +7,7 @@ description: "Props for the TagMultiselect component: a chip-style multi-value i
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/TagMultiselect) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.TagMultiselectWidget.html "OO.ui.TagMultiselectWidget")
 
-A tag input: values are shown as removable chips. Free-entry form — for "type to filter + dropdown candidates" use [MenuTagMultiselect](/en/components/menu-tag-multiselect/index.html).
+A tag input: values are shown as removable chips. Free-entry form — for "type to filter + dropdown candidates" use [MenuTagMultiselect](../menu-tag-multiselect/index.mdx).
 
 ## Basic usage
 
@@ -128,10 +128,10 @@ export default App;
 | `...rest` | Native `div` props passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
 
 :::note Differences from OOUI
-The original allows `tag.data` to be any object; this library always keeps a tag's identity as the scalar `value`, so the controlled array is serializable and diffable. To carry an object with a tag, use the `data` field on [MenuTagMultiselect](/en/components/menu-tag-multiselect/index.html) options and look it up by `value` in your own `options`. {/* deviations: dev-tag-value-data */}
+The original allows `tag.data` to be any object; this library always keeps a tag's identity as the scalar `value`, so the controlled array is serializable and diffable. To carry an object with a tag, use the `data` field on [MenuTagMultiselect](../menu-tag-multiselect/index.mdx) options and look it up by `value` in your own `options`. {/* deviations: dev-tag-value-data */}
 :::
 
 ## See also
 
-- Tag input with a candidate menu: [MenuTagMultiselect](/en/components/menu-tag-multiselect/index.html)
-- The `label` / `labelText` / `data` option contract: [Selection and options](/en/guide/options.html#options-of-tag-inputs)
+- Tag input with a candidate menu: [MenuTagMultiselect](../menu-tag-multiselect/index.mdx)
+- The `label` / `labelText` / `data` option contract: [Selection and options](../../guide/options.mdx#options-of-tag-inputs)

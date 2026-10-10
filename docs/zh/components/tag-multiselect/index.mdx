@@ -7,7 +7,7 @@ description: "TagMultiselect 组件的属性说明：以标签（chip）呈现�
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/TagMultiselect) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.TagMultiselectWidget.html "OO.ui.TagMultiselectWidget")
 
-标签输入：把值以可移除的标签（chip）呈现。自由输入形态，需要“输入过滤 + 下拉候选”时用 [MenuTagMultiselect](/components/menu-tag-multiselect/index.html)。
+标签输入：把值以可移除的标签（chip）呈现。自由输入形态，需要“输入过滤 + 下拉候选”时用 [MenuTagMultiselect](../menu-tag-multiselect/index.mdx)。
 
 ## 基本用法
 
@@ -128,10 +128,10 @@ export default App;
 | `...rest` | 原生 `div` 属性直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
 
 :::note 与原版的差异
-原版的 `tag.data` 可为任意对象；本工程把标签身份恒为标量 `value`，以便受控数组可序列化、可比对。需要随标签携带对象时，改用 [MenuTagMultiselect](/components/menu-tag-multiselect/index.html) 的选项 `data` 字段，按 `value` 在自己的 `options` 里反查。{/* deviations: dev-tag-value-data */}
+原版的 `tag.data` 可为任意对象；本工程把标签身份恒为标量 `value`，以便受控数组可序列化、可比对。需要随标签携带对象时，改用 [MenuTagMultiselect](../menu-tag-multiselect/index.mdx) 的选项 `data` 字段，按 `value` 在自己的 `options` 里反查。{/* deviations: dev-tag-value-data */}
 :::
 
 ## 另见
 
-- 带候选菜单的标签输入：[MenuTagMultiselect](/components/menu-tag-multiselect/index.html)
-- 选项数据的 `label` / `labelText` / `data` 约定：[选择与选项](/guide/options.html#标签多选的选项)
+- 带候选菜单的标签输入：[MenuTagMultiselect](../menu-tag-multiselect/index.mdx)
+- 选项数据的 `label` / `labelText` / `data` 约定：[选择与选项](../../guide/options.mdx#标签多选的选项)

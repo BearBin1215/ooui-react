@@ -7,11 +7,11 @@ description: "Props for the StackLayout component: pages rendered from options, 
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/StackLayout) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.StackLayout.html "OO.ui.StackLayout")
 
-A stack layout: renders a set of [pages](/en/components/page-layout/index.html) from `options`, showing only the active page at a time; with `continuous`, all pages are visible and the container scrolls. Also the inner page stack of [BookletLayout](/en/components/booklet-layout/index.html).
+A stack layout: renders a set of [pages](../page-layout/index.mdx) from `options`, showing only the active page at a time; with `continuous`, all pages are visible and the container scrolls. Also the inner page stack of [BookletLayout](../booklet-layout/index.mdx).
 
 ## Basic usage
 
-The active page rides the `value` / `defaultValue` / `onChange` channels; an option is a [PageLayout](/en/components/page-layout/index.html) prop set plus `value` (which doubles as the match key and the list key).
+The active page rides the `value` / `defaultValue` / `onChange` channels; an option is a [PageLayout](../page-layout/index.mdx) prop set plus `value` (which doubles as the match key and the list key).
 
 ```tsx preview
 import { useState } from "react";
@@ -42,7 +42,7 @@ export default App;
 ```
 
 :::note Form premise
-In the `expanded` form (on by default) the layout fills its parent via absolute positioning, so the parent must be positioned and sized (the demo wrapper above exists for exactly that); the whole-container scrolling of `continuous` rides on the same premise. The `expanded={false}` static form works only for [MenuLayout](/en/components/menu-layout/index.html)'s own flow content — this component's pages are absolutely positioned panels with no content height in static mode, so don't use it here.
+In the `expanded` form (on by default) the layout fills its parent via absolute positioning, so the parent must be positioned and sized (the demo wrapper above exists for exactly that); the whole-container scrolling of `continuous` rides on the same premise. The `expanded={false}` static form works only for [MenuLayout](../menu-layout/index.mdx)'s own flow content — this component's pages are absolutely positioned panels with no content height in static mode, so don't use it here.
 :::
 
 When the active value is missing or stale (e.g. its page was removed), a page is auto-selected: the next surviving page, or the new last page when the last one was removed; when no value was ever given or the value is not among the options, the first usable page is taken.
@@ -82,11 +82,11 @@ export default App;
 
 ## API
 
-Inherits all [PanelLayout](/en/components/panel-layout/index.html) props, plus:
+Inherits all [PanelLayout](../panel-layout/index.mdx) props, plus:
 
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
-| `options` | The page set: [PageLayout](/en/components/page-layout/index.html) props plus `value` | `(PageLayoutProps & { value: string \| number })[]` | — |
+| `options` | The page set: [PageLayout](../page-layout/index.mdx) props plus `value` | `(PageLayoutProps & { value: string \| number })[]` | — |
 | `value` | Current active page (controlled; passing it enables controlled mode) | `string \| number` | — |
 | `defaultValue` | Initial active page for uncontrolled use | `string \| number` | — |
 | `onChange` | Active-page change callback | `ChangeHandler<string \| number>` | — |
@@ -96,6 +96,6 @@ Inherits all [PanelLayout](/en/components/panel-layout/index.html) props, plus:
 
 ## See also
 
-- The fields of a single page: [PageLayout](/en/components/page-layout/index.html)
-- The wrapper with an outline menu: [BookletLayout](/en/components/booklet-layout/index.html)
-- The value-channel contract: [Controlled and uncontrolled](/en/guide/controlled.html)
+- The fields of a single page: [PageLayout](../page-layout/index.mdx)
+- The wrapper with an outline menu: [BookletLayout](../booklet-layout/index.mdx)
+- The value-channel contract: [Controlled and uncontrolled](../../guide/controlled.mdx)

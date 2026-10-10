@@ -7,11 +7,11 @@ description: "Props for the BookletLayout component: a booklet layout with an ou
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/BookletLayout) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.BookletLayout.html "OO.ui.BookletLayout")
 
-A booklet layout: with `outlined`, an [outline select](/en/components/outline-select/index.html) on the left and a [page stack](/en/components/stack-layout/index.html) on the right; without it, a plain stacked panel. Suits settings pages and multi-section content.
+A booklet layout: with `outlined`, an [outline select](../outline-select/index.mdx) on the left and a [page stack](../stack-layout/index.mdx) on the right; without it, a plain stacked panel. Suits settings pages and multi-section content.
 
 ## Basic usage
 
-An `options` item is `{ value, label, children }` plus the [PageLayout](/en/components/page-layout/index.html) panel fields; the active page rides the `value` / `defaultValue` / `onChange` channels.
+An `options` item is `{ value, label, children }` plus the [PageLayout](../page-layout/index.mdx) panel fields; the active page rides the `value` / `defaultValue` / `onChange` channels.
 
 ```tsx preview
 import { useState } from "react";
@@ -40,7 +40,7 @@ export default App;
 ```
 
 :::note Form premise
-In the `expanded` form (on by default) the layout fills its parent via absolute positioning, so the parent must be positioned and sized (the demo wrapper above exists for exactly that). The `expanded={false}` static form works only for [MenuLayout](/en/components/menu-layout/index.html)'s own flow content — the panels in the page stack are absolutely positioned panels with no content height in static mode, so don't use it here. The `editable` outline's select widget and controls are absolutely positioned in the theme CSS, likewise usable only in the expanded form.
+In the `expanded` form (on by default) the layout fills its parent via absolute positioning, so the parent must be positioned and sized (the demo wrapper above exists for exactly that). The `expanded={false}` static form works only for [MenuLayout](../menu-layout/index.mdx)'s own flow content — the panels in the page stack are absolutely positioned panels with no content height in static mode, so don't use it here. The `editable` outline's select widget and controls are absolutely positioned in the theme CSS, likewise usable only in the expanded form.
 :::
 
 ## Editable outline
@@ -118,11 +118,11 @@ When the active page is removed, a page is auto-selected: the next surviving pag
 
 ## API
 
-Inherits all [MenuLayout](/en/components/menu-layout/index.html) props (except `menu` / `children`), plus:
+Inherits all [MenuLayout](../menu-layout/index.mdx) props (except `menu` / `children`), plus:
 
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
-| `options` | The page set: `value`, `label`, `movable`, `removable` plus [PageLayout](/en/components/page-layout/index.html) fields | array | — |
+| `options` | The page set: `value`, `label`, `movable`, `removable` plus [PageLayout](../page-layout/index.mdx) fields | array | — |
 | `value` | Current active page (controlled; passing it enables controlled mode) | `string \| number` | — |
 | `defaultValue` | Initial active page for uncontrolled use | `string \| number` | — |
 | `onChange` | Active-page change callback | `ChangeHandler<string \| number>` | — |
@@ -136,6 +136,6 @@ Inherits all [MenuLayout](/en/components/menu-layout/index.html) props (except `
 
 ## See also
 
-- The page stack on the right: [StackLayout](/en/components/stack-layout/index.html)
-- The outline select on the left: [OutlineSelect](/en/components/outline-select/index.html)
-- The top-tabs variant: [IndexLayout](/en/components/index-layout/index.html)
+- The page stack on the right: [StackLayout](../stack-layout/index.mdx)
+- The outline select on the left: [OutlineSelect](../outline-select/index.mdx)
+- The top-tabs variant: [IndexLayout](../index-layout/index.mdx)

@@ -7,7 +7,7 @@ description: "ToggleSwitch 组件的属性说明：拨动开关（role=switch）
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ToggleSwitch) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ToggleSwitchWidget.html "OO.ui.ToggleSwitchWidget")
 
-拨动开关。不自带文字标签，需要标签时交给 [FieldLayout](/components/field-layout/index.html) 包裹。
+拨动开关。不自带文字标签，需要标签时交给 [FieldLayout](../field-layout/index.mdx) 包裹。
 
 ## 基本用法
 
@@ -34,7 +34,7 @@ export default App;
 
 ## 与 FieldLayout 配合
 
-字段文字标签交给 [FieldLayout](/components/field-layout/index.html)。点击标签会**直接翻转开关**并聚焦（与多数“点标签聚焦控件”的字段不同，这是原版 `ToggleSwitchWidget` 的覆写行为）。
+字段文字标签交给 [FieldLayout](../field-layout/index.mdx)。点击标签会**直接翻转开关**并聚焦（与多数“点标签聚焦控件”的字段不同，这是原版 `ToggleSwitchWidget` 的覆写行为）。
 
 ```tsx preview
 import { ToggleSwitch, FieldLayout } from "ooui-react";
@@ -69,10 +69,10 @@ export default App;
 | `tabIndex` | Tab 序 | `number \| null` | `0` |
 | `...rest` | 原生 `div` 属性（`className`、`id`、`aria-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
 
-本组件没有 `children`、`label`、`icon` 落点——开关是纯图形控件，文字说明交给 [FieldLayout](/components/field-layout/index.html)。`onClick` / `onKeyDown` 由组件承载切换逻辑，不接受外部覆盖。
+本组件没有 `children`、`label`、`icon` 落点——开关是纯图形控件，文字说明交给 [FieldLayout](../field-layout/index.mdx)。`onClick` / `onKeyDown` 由组件承载切换逻辑，不接受外部覆盖。
 
 ## 另见
 
-- 按钮形态的切换控件：[ToggleButton](/components/toggle-button/index.html)
-- 带标签字段的排版：[FieldLayout](/components/field-layout/index.html)
-- 勾选通道的定位：[受控与非受控](/guide/controlled.html)
+- 按钮形态的切换控件：[ToggleButton](../toggle-button/index.mdx)
+- 带标签字段的排版：[FieldLayout](../field-layout/index.mdx)
+- 勾选通道的定位：[受控与非受控](../../guide/controlled.mdx)

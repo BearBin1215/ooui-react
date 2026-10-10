@@ -7,7 +7,7 @@ description: "Props for the TextInput component: controlled/uncontrolled, the ty
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/TextInput) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.TextInputWidget.html "OO.ui.TextInputWidget")
 
-A single-line text input, and also the base for input components such as [MultilineTextInput](/en/components/multiline-text-input/index.html), [NumberInput](/en/components/number-input/index.html) and [SearchInput](/en/components/search-input/index.html).
+A single-line text input, and also the base for input components such as [MultilineTextInput](../multiline-text-input/index.mdx), [NumberInput](../number-input/index.mdx) and [SearchInput](../search-input/index.mdx).
 
 ## Basic usage
 
@@ -56,7 +56,7 @@ export default App;
 `label` is the field label text; `labelPosition` puts it before (`before`) or after (`after`, the default) the input. To hide the label visually, turn on `invisibleLabel`: the accessible name is kept, and `title` falls back to the label text when not given explicitly.
 
 :::note Prefer FieldLayout for labeled form fields
-Writing the label on the input itself suits standalone placement; in a form, the label, alignment and "click label to focus the input" linkage are usually delegated to [FieldLayout](/en/components/field-layout/index.html), and the field control itself does not set `label`.
+Writing the label on the input itself suits standalone placement; in a form, the label, alignment and "click label to focus the input" linkage are usually delegated to [FieldLayout](../field-layout/index.mdx), and the field control itself does not set `label`.
 :::
 
 ```tsx preview
@@ -76,7 +76,7 @@ export default App;
 
 ## Icons and indicators
 
-`icon` renders on one side of the input (see [Icon](/en/components/icon/index.html)), `indicator` on the other (see [Indicator](/en/components/indicator/index.html)). When `indicator` is not given explicitly and `required` is true, it falls back to the `required` indicator.
+`icon` renders on one side of the input (see [Icon](../icon/index.mdx)), `indicator` on the other (see [Indicator](../indicator/index.mdx)). When `indicator` is not given explicitly and `required` is true, it falls back to the `required` indicator.
 
 ```tsx preview
 import { TextInput } from "ooui-react";
@@ -197,6 +197,6 @@ When `required` is true, this library also outputs `aria-required` on the native
 
 ## See also
 
-- How values flow between the component and your state: [Controlled and uncontrolled](/en/guide/controlled.html)
-- The pass-through and `ref` rules shared by all components: [Common props](/en/guide/basics.html)
-- The multiline, number and search forms: [MultilineTextInput](/en/components/multiline-text-input/index.html), [NumberInput](/en/components/number-input/index.html), `SearchInput`
+- How values flow between the component and your state: [Controlled and uncontrolled](../../guide/controlled.mdx)
+- The pass-through and `ref` rules shared by all components: [Common props](../../guide/basics.mdx)
+- The multiline, number and search forms: [MultilineTextInput](../multiline-text-input/index.mdx), [NumberInput](../number-input/index.mdx), `SearchInput`

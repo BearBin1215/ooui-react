@@ -7,7 +7,7 @@ description: "ButtonMenuSelectWidget 组件的属性说明：由按钮触发的�
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ButtonMenuSelectWidget) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ButtonMenuSelectWidget.html "OO.ui.ButtonMenuSelectWidget")
 
-按钮触发的命令菜单：选定即执行并收起菜单。与 [Dropdown](/components/dropdown/index.html) 记“当前选中项”不同，适合工具栏里“点了就执行一项命令”的场景。
+按钮触发的命令菜单：选定即执行并收起菜单。与 [Dropdown](../dropdown/index.mdx) 记“当前选中项”不同，适合工具栏里“点了就执行一项命令”的场景。
 
 ## 基本用法
 
@@ -46,7 +46,7 @@ export default App;
 
 - `open` / `defaultOpen` / `onOpenChange` 控制菜单开合（点按钮、点外部、Escape、选定均会触发 `onOpenChange`）。
 - `clearOnSelect` 默认 `true`：菜单为纯命令菜单，选过的项不留选中态；置 `false` 会保留最后选定项。
-- 不带 `value` 的选项渲染为分组标题（见上方“高级”）。选项数据约定见[选择与选项](/guide/options.html)。
+- 不带 `value` 的选项渲染为分组标题（见上方“高级”）。选项数据约定见[选择与选项](../../guide/options.mdx)。
 
 ```tsx preview
 import { useState } from "react";
@@ -79,7 +79,7 @@ export default App;
 
 ## 键盘
 
-焦点在按钮上：Enter / 空格展开菜单；展开后 ↑↓ 移动高亮、Enter / 空格选定，键入字符按前缀跳转；Escape 或点外部收起。注意与 [Dropdown](/components/dropdown/index.html) 不同——本组件收起态聚焦时键入不会直接改选。
+焦点在按钮上：Enter / 空格展开菜单；展开后 ↑↓ 移动高亮、Enter / 空格选定，键入字符按前缀跳转；Escape 或点外部收起。注意与 [Dropdown](../dropdown/index.mdx) 不同——本组件收起态聚焦时键入不会直接改选。
 
 与原版有两处差异：
 
@@ -88,11 +88,11 @@ export default App;
 
 ## API
 
-继承 [Button](/components/button/index.html) 的按钮属性（`icon` / `indicator` / `flags` / `framed` / `disabled` 等，`onClick` 为“切换开合前触发”），另有：
+继承 [Button](../button/index.mdx) 的按钮属性（`icon` / `indicator` / `flags` / `framed` / `disabled` 等，`onClick` 为“切换开合前触发”），另有：
 
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `options` | 菜单选项集（**必填**），书写约定见[选择与选项](/guide/options.html) | `ButtonMenuSelectWidgetOptionProps[]` | — |
+| `options` | 菜单选项集（**必填**），书写约定见[选择与选项](../../guide/options.mdx) | `ButtonMenuSelectWidgetOptionProps[]` | — |
 | `open` | 菜单是否打开（受控） | `boolean` | — |
 | `defaultOpen` | 非受控初始打开态 | `boolean` | `false` |
 | `onOpenChange` | 菜单开合回调 | `(open: boolean) => void` | — |
@@ -103,6 +103,6 @@ export default App;
 
 ## 另见
 
-- 记录当前选中值的下拉：[Dropdown](/components/dropdown/index.html)
-- 触发浮层的通用按钮：[PopupButton](/components/popup-button/index.html)
+- 记录当前选中值的下拉：[Dropdown](../dropdown/index.mdx)
+- 触发浮层的通用按钮：[PopupButton](../popup-button/index.mdx)
 - 命令菜单的更多形态：工具栏的 `MenuToolGroup`

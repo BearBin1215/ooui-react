@@ -7,7 +7,7 @@ description: "CheckboxInput 组件的属性说明：勾选态走 checked/default
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/CheckboxInput) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.CheckboxInputWidget.html "OO.ui.CheckboxInputWidget")
 
-单个复选框。本组件不自带文字标签，需要标签时交给 [FieldLayout](/components/field-layout/index.html) 包裹。
+单个复选框。本组件不自带文字标签，需要标签时交给 [FieldLayout](../field-layout/index.mdx) 包裹。
 
 ## 基本用法
 
@@ -119,7 +119,7 @@ export default App;
 
 ## 与 FieldLayout 配合
 
-字段文字标签通常交给 [FieldLayout](/components/field-layout/index.html)。它会自动把标签与该复选框的原生 `<input>` 关联（点标签即切换勾选）；需要手动指定关联目标时，用 `inputId` 给出输入元素的 id。
+字段文字标签通常交给 [FieldLayout](../field-layout/index.mdx)。它会自动把标签与该复选框的原生 `<input>` 关联（点标签即切换勾选）；需要手动指定关联目标时，用 `inputId` 给出输入元素的 id。
 
 ```tsx preview
 import { CheckboxInput, FieldLayout } from "ooui-react";
@@ -177,6 +177,6 @@ export default App;
 
 ## 另见
 
-- 勾选通道在三条值通道中的位置：[受控与非受控](/guide/controlled.html)
-- 带标签字段的排版：[FieldLayout](/components/field-layout/index.html)
-- 单选场景：[RadioInput](/components/radio-input/index.html)（参数与本组件一致，无 `indeterminate`）
+- 勾选通道在三条值通道中的位置：[受控与非受控](../../guide/controlled.mdx)
+- 带标签字段的排版：[FieldLayout](../field-layout/index.mdx)
+- 单选场景：[RadioInput](../radio-input/index.mdx)（参数与本组件一致，无 `indeterminate`）

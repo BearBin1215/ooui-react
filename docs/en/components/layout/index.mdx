@@ -11,7 +11,7 @@ The layout base class: the common root of the other layout components. Used alon
 
 ## The hidden three states
 
-`hidden` has three states: `true` hides fully (`hidden` attribute + `aria-hidden`); `'until-found'` hides visually but stays reachable by the browser's in-page search (Ctrl+F) — when matched, the browser reveals the element itself and fires the `beforematch` event, which you can listen for on the element for custom reactions ([IndexLayout](/en/components/index-layout/index.html)'s `openMatchedPanels` is exactly this); omitting it leaves the element visible.
+`hidden` has three states: `true` hides fully (`hidden` attribute + `aria-hidden`); `'until-found'` hides visually but stays reachable by the browser's in-page search (Ctrl+F) — when matched, the browser reveals the element itself and fires the `beforematch` event, which you can listen for on the element for custom reactions ([IndexLayout](../index-layout/index.mdx)'s `openMatchedPanels` is exactly this); omitting it leaves the element visible.
 
 ```tsx preview
 import { useState } from "react";
@@ -54,5 +54,5 @@ React 18 writes any truthy `hidden` as the boolean attribute, so the component r
 
 ## See also
 
-- The form switches built on it: [PanelLayout](/en/components/panel-layout/index.html)
-- The full application of `until-found`: [IndexLayout](/en/components/index-layout/index.html)'s `openMatchedPanels`
+- The form switches built on it: [PanelLayout](../panel-layout/index.mdx)
+- The full application of `until-found`: [IndexLayout](../index-layout/index.mdx)'s `openMatchedPanels`

@@ -7,7 +7,7 @@ description: "MenuTagMultiselect 组件的属性说明：带候选菜单的标�
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/MenuTagMultiselect) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.MenuTagMultiselectWidget.html "OO.ui.MenuTagMultiselectWidget")
 
-带候选菜单的标签输入，属性与 [TagMultiselect](/components/tag-multiselect/index.html) 一致，另增必填的 `options`。
+带候选菜单的标签输入，属性与 [TagMultiselect](../tag-multiselect/index.mdx) 一致，另增必填的 `options`。
 
 ## 基本用法
 
@@ -47,7 +47,7 @@ export default App;
 
 菜单候选是**切换语义**：对已选中的候选再次 Enter / 点击会**移除**对应标签——同一候选既是添加入口也是移除入口，已添加标签对应的菜单项呈选中态（键入添加的标签同样同步选中态）。{/* deviations: dev-tag-typed-menu-selected */}
 
-点击标签的行为随 `allowArbitrary` 分叉：未开启时点击标签是在菜单中定位（打开菜单并高亮对应候选），[TagMultiselect](/components/tag-multiselect/index.html) 的 `allowEditTags` 回填编辑不生效；开启 `allowArbitrary` 后点击标签才把标签文本移回输入框编辑。
+点击标签的行为随 `allowArbitrary` 分叉：未开启时点击标签是在菜单中定位（打开菜单并高亮对应候选），[TagMultiselect](../tag-multiselect/index.mdx) 的 `allowEditTags` 回填编辑不生效；开启 `allowArbitrary` 后点击标签才把标签文本移回输入框编辑。
 
 :::note 与原版的差异
 `inputPosition='none'`（无输入框）形态下点击标签同样能展开菜单并高亮被点项——原版该形态没有任何展开菜单的路径；展开后暂无键盘导航。{/* deviations: dev-menu-open-no-input */}
@@ -85,7 +85,7 @@ export default App;
 
 ## 富内容标签
 
-选项 `label` 收 `ReactNode`；当它是富内容（非纯字符串）时，前缀过滤与回填需要的纯文本要经 `labelText` 显式给出，否则该选项不参与前缀过滤（详见[选择与选项 · 标签多选的选项](/guide/options.html#标签多选的选项)）。`fixed: true` 的标签固定、不可移除。
+选项 `label` 收 `ReactNode`；当它是富内容（非纯字符串）时，前缀过滤与回填需要的纯文本要经 `labelText` 显式给出，否则该选项不参与前缀过滤（详见[选择与选项 · 标签多选的选项](../../guide/options.mdx#标签多选的选项)）。`fixed: true` 的标签固定、不可移除。
 
 ```tsx preview
 import { useState } from "react";
@@ -133,14 +133,14 @@ export default App;
 
 ## API
 
-在 [TagMultiselect](/components/tag-multiselect/index.html) 全部属性之上：
+在 [TagMultiselect](../tag-multiselect/index.mdx) 全部属性之上：
 
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `options` | 候选菜单选项集（**必填**），字段见[选择与选项](/guide/options.html#标签多选的选项) | `MenuTagMultiselectOptionProps[]` | — |
+| `options` | 候选菜单选项集（**必填**），字段见[选择与选项](../../guide/options.mdx#标签多选的选项) | `MenuTagMultiselectOptionProps[]` | — |
 | `clearInputOnChoose` | 选定菜单项后是否清空过滤文本 | `boolean` | `true` |
 
 ## 另见
 
-- 无候选菜单的自由输入：[TagMultiselect](/components/tag-multiselect/index.html)
-- 选项数据与键盘焦点模型：[选择与选项](/guide/options.html)
+- 无候选菜单的自由输入：[TagMultiselect](../tag-multiselect/index.mdx)
+- 选项数据与键盘焦点模型：[选择与选项](../../guide/options.mdx)

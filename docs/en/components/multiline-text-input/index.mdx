@@ -7,7 +7,7 @@ description: "Props for the MultilineTextInput component: rows/maxRows, autosize
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/MultilineTextInput) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.MultilineTextInputWidget.html "OO.ui.MultilineTextInputWidget")
 
-A multi-line text input; input capabilities match [TextInput](/en/components/text-input/index.html).
+A multi-line text input; input capabilities match [TextInput](../text-input/index.mdx).
 
 ## Basic usage
 
@@ -91,7 +91,7 @@ export default App;
 
 ## Where props land
 
-The component root is a non-focusable `<div>` and the input element is a `<textarea>`. The landing rules are the same as [TextInput](/en/components/text-input/index.html):
+The component root is a non-focusable `<div>` and the input element is a `<textarea>`. The landing rules are the same as [TextInput](../text-input/index.mdx):
 
 - `...rest` from props lands on the root div; attributes that must go on the native `<textarea>` (such as `role`, `aria-*`) go through the `inputProps` channel, whose `onChange`/`onBlur`/`onFocus` are chained after the component's own logic.
 - `inputRef` points to the inner `<textarea>` (the component `ref` points to the root div); use `inputRef` to focus the input.
@@ -114,7 +114,7 @@ The component root is a non-focusable `<div>` and the input element is a `<texta
 | `icon` | Icon name | `string` | — |
 | `indicator` | Indicator (falls back to required when `required` and not given explicitly) | `'up' \| 'down' \| 'clear' \| 'required'` | — |
 | `required` | Required (native `required` attribute, part of browser validation) | `boolean` | `false` |
-| `validate` | Soft validation (RegExp / function / symbolic name), see [TextInput's soft validation](/en/components/text-input/index.html#soft-validation) | `RegExp \| ((value: string) => boolean \| Promise<boolean>) \| 'non-empty' \| 'integer'` | — |
+| `validate` | Soft validation (RegExp / function / symbolic name), see [TextInput's soft validation](../text-input/index.mdx#soft-validation) | `RegExp \| ((value: string) => boolean \| Promise<boolean>) \| 'non-empty' \| 'integer'` | — |
 | `readOnly` | Read-only (keeps focus and selection/copying) | `boolean` | `false` |
 | `disabled` | Whether disabled | `boolean` | `false` |
 | `flags` | Extra flags on the root (the invalid flag is layered on top) | `string \| string[]` | — |
@@ -127,6 +127,6 @@ The component root is a non-focusable `<div>` and the input element is a `<texta
 
 ## See also
 
-- The single-line form and full soft-validation details: [TextInput](/en/components/text-input/index.html)
-- How values flow between the component and your state: [Controlled and uncontrolled](/en/guide/controlled.html)
-- The pass-through and `ref` rules shared by all components: [Common props](/en/guide/basics.html)
+- The single-line form and full soft-validation details: [TextInput](../text-input/index.mdx)
+- How values flow between the component and your state: [Controlled and uncontrolled](../../guide/controlled.mdx)
+- The pass-through and `ref` rules shared by all components: [Common props](../../guide/basics.mdx)

@@ -7,7 +7,7 @@ description: "ButtonGroup 组件的属性说明：把若干按钮并排成一组
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ButtonGroup) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ButtonGroupWidget.html "OO.ui.ButtonGroupWidget")
 
-按钮组：把若干 [Button](/components/button/index.html) 排在一起，相邻按钮首尾相连成一块。
+按钮组：把若干 [Button](../button/index.mdx) 排在一起，相邻按钮首尾相连成一块。
 
 ## 基本用法
 
@@ -29,7 +29,7 @@ export default App;
 
 ## 组内混用切换按钮
 
-组里可以同时放普通按钮与 [ToggleButton](/components/toggle-button/index.html)，常用于编辑器工具条。
+组里可以同时放普通按钮与 [ToggleButton](../toggle-button/index.mdx)，常用于编辑器工具条。
 
 ```tsx preview
 import { Button, ButtonGroup, ToggleButton } from "ooui-react";
@@ -77,11 +77,11 @@ export default App;
 
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `children` | 组内按钮（[Button](/components/button/index.html) / [ToggleButton](/components/toggle-button/index.html) 等） | `ReactNode` | — |
+| `children` | 组内按钮（[Button](../button/index.mdx) / [ToggleButton](../toggle-button/index.mdx) 等） | `ReactNode` | — |
 | `disabled` | 组级禁用，一并下发到组内按钮 | `boolean` | `false` |
 | `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
 
 ## 另见
 
-- 组内按钮：[Button](/components/button/index.html)、[ToggleButton](/components/toggle-button/index.html)
-- 通用透传与 `ref` 规则：[通用属性](/guide/basics.html)
+- 组内按钮：[Button](../button/index.mdx)、[ToggleButton](../toggle-button/index.mdx)
+- 通用透传与 `ref` 规则：[通用属性](../../guide/basics.mdx)

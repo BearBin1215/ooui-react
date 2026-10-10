@@ -49,14 +49,14 @@ export default App;
 ## Query and choosing
 
 - `value` / `defaultValue` / `onQueryChange` are the query box's controlled/uncontrolled channels (there is no `onChange`; query changes go through `onQueryChange`).
-- Each `results` item is standard [option data](/en/guide/options.html) (with `value` and `children`).
+- Each `results` item is standard [option data](../../guide/options.mdx) (with `value` and `children`).
 - `onChoose` fires when a result is chosen (Enter on the highlighted result, or clicking one). The highlight clears whenever the results set or query changes.
 - The component implements no searching; real use is mostly async: fire the request in `onQueryChange`, optionally empty `results` while loading and fill them in when ready — the highlight clears automatically on every results/query change, no manual reset needed.
 - `inputProps` is a **two-layer channel**: SearchInput-level props are passed directly; props meant for the native `<input>` (`aria-*`, `autoComplete`, etc.) go through `inputProps.inputProps` (TextInput's input-element channel). `inputProps.inputRef` is merged — that input doubles as the focus owner for the results list's `aria-activedescendant`.
 
 ## Keyboard and focus
 
-Focus always stays in the query box: ↑↓ move the highlight among results (wrapping at the ends), Enter chooses the current highlight. The clear indicator on the query box comes from [SearchInput](/en/components/search-input/index.html) — it appears when there's a value and clears on click.
+Focus always stays in the query box: ↑↓ move the highlight among results (wrapping at the ends), Enter chooses the current highlight. The clear indicator on the query box comes from [SearchInput](../search-input/index.mdx) — it appears when there's a value and clears on click.
 
 ## API
 
@@ -74,6 +74,6 @@ Focus always stays in the query box: ↑↓ move the highlight among results (wr
 
 ## See also
 
-- Lookup with candidates, shown as tags: [MenuTagMultiselect](/en/components/menu-tag-multiselect/index.html)
-- A free-input dropdown of candidates: [ComboBoxInput](/en/components/combo-box-input/index.html)
-- The query box itself: [SearchInput](/en/components/search-input/index.html)
+- Lookup with candidates, shown as tags: [MenuTagMultiselect](../menu-tag-multiselect/index.mdx)
+- A free-input dropdown of candidates: [ComboBoxInput](../combo-box-input/index.mdx)
+- The query box itself: [SearchInput](../search-input/index.mdx)

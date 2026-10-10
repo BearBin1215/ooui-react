@@ -7,11 +7,11 @@ description: "RadioSelectInput 组件的属性说明：RadioSelect 展示加隐�
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/RadioSelectInput) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.RadioSelectInputWidget.html "OO.ui.RadioSelectInputWidget")
 
-表单单选组：[RadioSelect](/components/radio-select/index.html) 负责展示与键盘交互，内嵌的隐藏 `<input>` 承载表单提交。
+表单单选组：[RadioSelect](../radio-select/index.mdx) 负责展示与键盘交互，内嵌的隐藏 `<input>` 承载表单提交。
 
 ## 基本用法
 
-与 [RadioSelect](/components/radio-select/index.html) 的区别：`name` 不写在各 `radio` 上（互斥由受控状态保证），且组件**始终有选中项**——传入的值不在可选项内时回退为第一个可选值，与 HTML 单选表单「必有选中项」的语义一致。
+与 [RadioSelect](../radio-select/index.mdx) 的区别：`name` 不写在各 `radio` 上（互斥由受控状态保证），且组件**始终有选中项**——传入的值不在可选项内时回退为第一个可选值，与 HTML 单选表单「必有选中项」的语义一致。
 
 ```tsx preview
 import { useState } from "react";
@@ -94,10 +94,10 @@ export default App;
 | `tabIndex` | 转发给内部 RadioSelect 的根 | `number` | — |
 | `...rest` | 原生 `div` 属性直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
 
-原版构造选项时只转发 `data` 与 `label`，`options[].disabled` 被静默丢弃；本工程按声明采纳 `disabled`，与 [CheckboxMultiselectInput](/components/checkbox-multiselect-input/index.html)、[DropdownInput](/components/dropdown-input/index.html) 的口径一致。{/* deviations: dev-radioselectinput-disabled */}
+原版构造选项时只转发 `data` 与 `label`，`options[].disabled` 被静默丢弃；本工程按声明采纳 `disabled`，与 [CheckboxMultiselectInput](../checkbox-multiselect-input/index.mdx)、[DropdownInput](../dropdown-input/index.mdx) 的口径一致。{/* deviations: dev-radioselectinput-disabled */}
 
 ## 另见
 
-- 交互层的单选组：[RadioSelect](/components/radio-select/index.html)
-- 下拉字段形态：[DropdownInput](/components/dropdown-input/index.html)
-- 复选组字段：[CheckboxMultiselectInput](/components/checkbox-multiselect-input/index.html)
+- 交互层的单选组：[RadioSelect](../radio-select/index.mdx)
+- 下拉字段形态：[DropdownInput](../dropdown-input/index.mdx)
+- 复选组字段：[CheckboxMultiselectInput](../checkbox-multiselect-input/index.mdx)

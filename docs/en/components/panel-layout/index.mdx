@@ -7,7 +7,7 @@ description: "Props for the PanelLayout component: the padded/scrollable/expande
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/PanelLayout) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.PanelLayout.html "OO.ui.PanelLayout")
 
-A panel: a content container with a set of form switches (padding, scrolling, expansion, border), also the base of layout components such as [StackLayout](/en/components/stack-layout/index.html).
+A panel: a content container with a set of form switches (padding, scrolling, expansion, border), also the base of layout components such as [StackLayout](../stack-layout/index.mdx).
 
 ## Basic usage
 
@@ -47,7 +47,7 @@ function App() {
 export default App;
 ```
 
-Layouts built on this component, such as [StackLayout](/en/components/stack-layout/index.html), inherit the same premise.
+Layouts built on this component, such as [StackLayout](../stack-layout/index.mdx), inherit the same premise.
 
 ## API
 
@@ -57,10 +57,10 @@ Layouts built on this component, such as [StackLayout](/en/components/stack-layo
 | `scrollable` | Whether scrollable | `boolean` | `false` |
 | `expanded` | Whether to fill the parent element | `boolean` | `true` |
 | `framed` | Whether framed | `boolean` | `false` |
-| `hidden` | Whether hidden (three-state semantics in [Layout](/en/components/layout/index.html)) | `boolean \| 'until-found'` | — |
+| `hidden` | Whether hidden (three-state semantics in [Layout](../layout/index.mdx)) | `boolean \| 'until-found'` | — |
 | `...rest` | Native `div` props (`className`, `id`, `data-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
 
 ## See also
 
-- The `hidden` three-state semantics of the base class: [Layout](/en/components/layout/index.html)
-- The paged container built on it: [StackLayout](/en/components/stack-layout/index.html)
+- The `hidden` three-state semantics of the base class: [Layout](../layout/index.mdx)
+- The paged container built on it: [StackLayout](../stack-layout/index.mdx)

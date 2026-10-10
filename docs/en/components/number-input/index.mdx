@@ -7,7 +7,7 @@ description: "Props for the NumberInput component: the number | '' value shape, 
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/NumberInput) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.NumberInputWidget.html "OO.ui.NumberInputWidget")
 
-A number input; input capabilities match [TextInput](/en/components/text-input/index.html).
+A number input; input capabilities match [TextInput](../text-input/index.mdx).
 
 ## Basic usage
 
@@ -94,7 +94,7 @@ export default App;
 
 ## Where props land
 
-The component root is a non-focusable `<div>` and the input element is an `<input type="number">` wrapped in an `oo-ui-numberInputWidget-field` container (with buttons on, the root also carries `oo-ui-numberInputWidget-buttoned`). The landing rules are the same as [TextInput](/en/components/text-input/index.html):
+The component root is a non-focusable `<div>` and the input element is an `<input type="number">` wrapped in an `oo-ui-numberInputWidget-field` container (with buttons on, the root also carries `oo-ui-numberInputWidget-buttoned`). The landing rules are the same as [TextInput](../text-input/index.mdx):
 
 - `...rest` from props lands on the root div; attributes that must go on the native `<input>` (such as `role`, `aria-*`, `autoComplete`) go through the `inputProps` channel, whose `onChange`/`onBlur`/`onFocus` are chained after the component's own logic.
 - `inputRef` points to the inner `<input>` (the component `ref` points to the root div); use `inputRef` to focus the input.
@@ -135,6 +135,6 @@ The component root is a non-focusable `<div>` and the input element is an `<inpu
 
 ## See also
 
-- The single-line foundation (type whitelist, `validate` soft validation, etc.): [TextInput](/en/components/text-input/index.html)
-- How values flow between the component and your state: [Controlled and uncontrolled](/en/guide/controlled.html)
-- The pass-through and `ref` rules shared by all components: [Common props](/en/guide/basics.html)
+- The single-line foundation (type whitelist, `validate` soft validation, etc.): [TextInput](../text-input/index.mdx)
+- How values flow between the component and your state: [Controlled and uncontrolled](../../guide/controlled.mdx)
+- The pass-through and `ref` rules shared by all components: [Common props](../../guide/basics.mdx)

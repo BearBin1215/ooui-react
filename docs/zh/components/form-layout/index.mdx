@@ -7,7 +7,7 @@ description: "FormLayout 组件的属性说明：包裹字段集的原生 <form>
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/FormLayout) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.FormLayout.html "OO.ui.FormLayout")
 
-表单容器：渲染一个 `<form>`，把若干 [FieldLayout](/components/field-layout/index.html) 包起来。它本身不做数据管理，带 `name` 的输入控件随原生 `<form>` 一起提交。不需要原生提交语义时，直接把控件摆在自己的容器里即可，不必套这层。
+表单容器：渲染一个 `<form>`，把若干 [FieldLayout](../field-layout/index.mdx) 包起来。它本身不做数据管理，带 `name` 的输入控件随原生 `<form>` 一起提交。不需要原生提交语义时，直接把控件摆在自己的容器里即可，不必套这层。
 
 ## 基本用法
 
@@ -71,7 +71,7 @@ export default App;
 
 原生提交只携带**真实表单控件**的值：输入框系（`TextInput`、`MultilineTextInput`、`NumberInput`、`ComboBoxInput`、`SearchInput`）、勾选系（`CheckboxInput`、`RadioInput`）与 `SelectFileInputWidget`、`HiddenInputWidget` 渲染真实控件，带 `name` 即随表单提交。
 
-选择类的展示形态（`Select`、`Dropdown`、`RadioSelect`、`CheckboxMultiselect`、`TagMultiselect`、`TabSelect` 等）不渲染真实表单控件，放进 `FormLayout` 会在提交时**静默丢值**——要提交选择值，改用对应的表单字段形态 [DropdownInput](/components/dropdown-input/index.html)、[RadioSelectInput](/components/radio-select-input/index.html)、[CheckboxMultiselectInput](/components/checkbox-multiselect-input/index.html)，或用 [HiddenInputWidget](/components/hidden-input-widget/index.html) 携带任意自定义值。
+选择类的展示形态（`Select`、`Dropdown`、`RadioSelect`、`CheckboxMultiselect`、`TagMultiselect`、`TabSelect` 等）不渲染真实表单控件，放进 `FormLayout` 会在提交时**静默丢值**——要提交选择值，改用对应的表单字段形态 [DropdownInput](../dropdown-input/index.mdx)、[RadioSelectInput](../radio-select-input/index.mdx)、[CheckboxMultiselectInput](../checkbox-multiselect-input/index.mdx)，或用 [HiddenInputWidget](../hidden-input-widget/index.mdx) 携带任意自定义值。
 
 ## API
 
@@ -86,6 +86,6 @@ export default App;
 
 ## 另见
 
-- 字段与标签的排版：[FieldLayout](/components/field-layout/index.html)
-- 随表单提交的输入控件：[TextInput](/components/text-input/index.html)、[CheckboxInput](/components/checkbox-input/index.html)
-- 组件的产物形态与 SSR 限制：见[使用方式](/guide/usage.html)
+- 字段与标签的排版：[FieldLayout](../field-layout/index.mdx)
+- 随表单提交的输入控件：[TextInput](../text-input/index.mdx)、[CheckboxInput](../checkbox-input/index.mdx)
+- 组件的产物形态与 SSR 限制：见[使用方式](../../guide/usage.mdx)

@@ -5,7 +5,7 @@ description: "The option data contract shared by the Select family: value and gr
 
 # Selection and options
 
-[Controlled and uncontrolled](/en/guide/controlled.html) covers how the value flows between the components and your state; this page covers what sits on both ends of that value — the option data contract shared by the Select family. It applies to:
+[Controlled and uncontrolled](./controlled.mdx) covers how the value flows between the components and your state; this page covers what sits on both ends of that value — the option data contract shared by the Select family. It applies to:
 
 - Selection lists: `Select`, `OutlineSelect`, `TabSelect`, `ButtonSelect`, `ButtonMenuSelectWidget`
 - Tag inputs: `TagMultiselect`, `MenuTagMultiselect`
@@ -87,7 +87,7 @@ import { Icon, MenuTagMultiselect } from "ooui-react";
 
 ## Icons and flags
 
-Option forms with icon slots (menu/outline/button options and group headings) support `icon` and `flags`: `icon` takes an icon name (see [Icon](/en/components/icon/index.html)), and `flags` tint the icon (`progressive`, `destructive`, etc.). Plain-text options (the items of `TabSelect`, `RadioSelect`, `CheckboxMultiselect`) have no icon slot and do not support these fields. {/* deviations: dev-option-flags-scope */}
+Option forms with icon slots (menu/outline/button options and group headings) support `icon` and `flags`: `icon` takes an icon name (see [Icon](../components/icon/index.mdx)), and `flags` tint the icon (`progressive`, `destructive`, etc.). Plain-text options (the items of `TabSelect`, `RadioSelect`, `CheckboxMultiselect`) have no icon slot and do not support these fields. {/* deviations: dev-option-flags-scope */}
 
 ## Keyboard and focus
 
@@ -100,5 +100,5 @@ Option forms with icon slots (menu/outline/button options and group headings) su
 
 ## See also
 
-- What happens when the controlled value is not among the options: [Controlled and uncontrolled](/en/guide/controlled.html#when-the-controlled-value-isnt-among-the-options)
-- The division of labor between `onChange` and `onChoose` (fired on every choice): [Controlled and uncontrolled](/en/guide/controlled.html#callback-signatures)
+- What happens when the controlled value is not among the options: [Controlled and uncontrolled](./controlled.mdx#when-the-controlled-value-isnt-among-the-options)
+- The division of labor between `onChange` and `onChoose` (fired on every choice): [Controlled and uncontrolled](./controlled.mdx#callback-signatures)

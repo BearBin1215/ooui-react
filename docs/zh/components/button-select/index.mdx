@@ -7,7 +7,7 @@ description: "ButtonSelect 组件的属性说明：一排互斥的按钮式选�
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ButtonSelect) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ButtonSelectWidget.html "OO.ui.ButtonSelectWidget")
 
-按钮式选择：把一组互斥选项呈现为一排按钮。选项数据约定见[选择与选项](/guide/options.html)。
+按钮式选择：把一组互斥选项呈现为一排按钮。选项数据约定见[选择与选项](../../guide/options.mdx)。
 
 ## 基本用法
 
@@ -37,7 +37,7 @@ export default App;
 
 ## 无边框与禁用项
 
-选项支持 `framed={false}`；带 `disabled` 的项不可选，组级 `disabled` 一并禁用全组（见[选择与选项 · 禁用](/guide/options.html#禁用)）。
+选项支持 `framed={false}`；带 `disabled` 的项不可选，组级 `disabled` 一并禁用全组（见[选择与选项 · 禁用](../../guide/options.mdx#禁用)）。
 
 ```tsx preview
 import { ButtonSelect } from "ooui-react";
@@ -61,7 +61,7 @@ export default App;
 
 ## 键盘
 
-点击选项后焦点自动收进整组（略优于原版：原版点击后焦点留在原处，方向键不响应），↑↓←→ 随即在非禁用项间**环绕移动并直接改选**，Enter 重申当前项；也可以按 Tab 让焦点进入整组。这是“直选族”（与 [TabSelect](/components/tab-select/index.html)、[RadioSelect](/components/radio-select/index.html) 相同）的键盘模型。
+点击选项后焦点自动收进整组（略优于原版：原版点击后焦点留在原处，方向键不响应），↑↓←→ 随即在非禁用项间**环绕移动并直接改选**，Enter 重申当前项；也可以按 Tab 让焦点进入整组。这是“直选族”（与 [TabSelect](../tab-select/index.mdx)、[RadioSelect](../radio-select/index.mdx) 相同）的键盘模型。
 
 ## API
 
@@ -81,6 +81,6 @@ export default App;
 
 ## 另见
 
-- 页签式直选：[TabSelect](/components/tab-select/index.html)
-- 单选组（带原生 radio 语义）：[RadioSelect](/components/radio-select/index.html)
-- 选项数据与键盘焦点模型：[选择与选项](/guide/options.html)
+- 页签式直选：[TabSelect](../tab-select/index.mdx)
+- 单选组（带原生 radio 语义）：[RadioSelect](../radio-select/index.mdx)
+- 选项数据与键盘焦点模型：[选择与选项](../../guide/options.mdx)

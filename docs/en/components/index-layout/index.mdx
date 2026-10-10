@@ -7,11 +7,11 @@ description: "Props for the IndexLayout component: tabs on top with a panel stac
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/IndexLayout) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.IndexLayout.html "OO.ui.IndexLayout")
 
-An index layout: a [tab select](/en/components/tab-select/index.html) on top and a stack of [tab panels](/en/components/tab-panel-layout/index.html) below. Suits settings pages — "top tabs + chunked content"; for the side-outline variant see [BookletLayout](/en/components/booklet-layout/index.html).
+An index layout: a [tab select](../tab-select/index.mdx) on top and a stack of [tab panels](../tab-panel-layout/index.mdx) below. Suits settings pages — "top tabs + chunked content"; for the side-outline variant see [BookletLayout](../booklet-layout/index.mdx).
 
 ## Basic usage
 
-An `options` item is `{ value, label, children }` plus the [TabPanelLayout](/en/components/tab-panel-layout/index.html) panel fields (with `disabled` to disable a tab); the active tab rides the `value` / `defaultValue` / `onChange` channels. Tabs and panels are wired with `aria-controls` / `aria-labelledby` automatically.
+An `options` item is `{ value, label, children }` plus the [TabPanelLayout](../tab-panel-layout/index.mdx) panel fields (with `disabled` to disable a tab); the active tab rides the `value` / `defaultValue` / `onChange` channels. Tabs and panels are wired with `aria-controls` / `aria-labelledby` automatically.
 
 ```tsx preview
 import { useState } from "react";
@@ -40,7 +40,7 @@ export default App;
 ```
 
 :::note Form premise
-In the `expanded` form (on by default) the layout fills its parent via absolute positioning, so the parent must be positioned and sized (the demo wrapper above exists for exactly that). The `expanded={false}` static form works only for [MenuLayout](/en/components/menu-layout/index.html)'s own flow content — the panel stacks of this component and BookletLayout are absolutely positioned panels with no content height in static mode, so don't use it here.
+In the `expanded` form (on by default) the layout fills its parent via absolute positioning, so the parent must be positioned and sized (the demo wrapper above exists for exactly that). The `expanded={false}` static form works only for [MenuLayout](../menu-layout/index.mdx)'s own flow content — the panel stacks of this component and BookletLayout are absolutely positioned panels with no content height in static mode, so don't use it here.
 :::
 
 ## Browser-search linkage
@@ -80,11 +80,11 @@ export default App;
 
 ## API
 
-Inherits all [MenuLayout](/en/components/menu-layout/index.html) props (except `menu` / `menuPosition` / `children`), plus:
+Inherits all [MenuLayout](../menu-layout/index.mdx) props (except `menu` / `menuPosition` / `children`), plus:
 
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
-| `options` | The tab set: `value`, `label`, `disabled` plus [TabPanelLayout](/en/components/tab-panel-layout/index.html) fields (a disabled tab's panel stays fully `hidden` regardless of `openMatchedPanels`) | `IndexLayoutTabProps[]` | — |
+| `options` | The tab set: `value`, `label`, `disabled` plus [TabPanelLayout](../tab-panel-layout/index.mdx) fields (a disabled tab's panel stays fully `hidden` regardless of `openMatchedPanels`) | `IndexLayoutTabProps[]` | — |
 | `value` | Current active tab (controlled; passing it enables controlled mode) | `string \| number` | — |
 | `defaultValue` | Initial active tab for uncontrolled use | `string \| number` | — |
 | `onChange` | Active-tab change callback | `ChangeHandler<string \| number>` | — |
@@ -95,6 +95,6 @@ Inherits all [MenuLayout](/en/components/menu-layout/index.html) props (except `
 
 ## See also
 
-- The fields of a single tab panel: [TabPanelLayout](/en/components/tab-panel-layout/index.html)
-- The side-outline variant: [BookletLayout](/en/components/booklet-layout/index.html)
-- The `hidden="until-found"` three states: [Layout](/en/components/layout/index.html)
+- The fields of a single tab panel: [TabPanelLayout](../tab-panel-layout/index.mdx)
+- The side-outline variant: [BookletLayout](../booklet-layout/index.mdx)
+- The `hidden="until-found"` three states: [Layout](../layout/index.mdx)

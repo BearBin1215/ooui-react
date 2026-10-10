@@ -43,9 +43,9 @@ export default App;
 ## 层级与分组
 
 - `level` 取 0–2（超出钳制），主题仅提供三级缩进。
-- 不带 `value` 的选项渲染为分组标题，同[选择与选项](/guide/options.html)约定。
-- 带图标槽位的选项支持 `icon` 与 `flags`（给图标着色，见[选择与选项 · 图标与标志](/guide/options.html#图标与标志)）。
-- 键盘：聚焦整组后 ↑↓←→ 移动高亮、Enter 选定；Home/End/PageUp/PageDown 经 `handleNavigationKeys` 打开，`listWrapsAround` 控制是否环绕——与 [Select](/components/select/index.html) 完全一致。
+- 不带 `value` 的选项渲染为分组标题，同[选择与选项](../../guide/options.mdx)约定。
+- 带图标槽位的选项支持 `icon` 与 `flags`（给图标着色，见[选择与选项 · 图标与标志](../../guide/options.mdx#图标与标志)）。
+- 键盘：聚焦整组后 ↑↓←→ 移动高亮、Enter 选定；Home/End/PageUp/PageDown 经 `handleNavigationKeys` 打开，`listWrapsAround` 控制是否环绕——与 [Select](../select/index.mdx) 完全一致。
 
 ```tsx preview
 import { useState } from "react";
@@ -79,7 +79,7 @@ export default App;
 
 ## API
 
-继承 [Select](/components/select/index.html) 的属性（`value` / `defaultValue` / `onChange` / `disabled` / `handleNavigationKeys` / `listWrapsAround` 等），差异在于：
+继承 [Select](../select/index.mdx) 的属性（`value` / `defaultValue` / `onChange` / `disabled` / `handleNavigationKeys` / `listWrapsAround` 等），差异在于：
 
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
@@ -90,5 +90,5 @@ export default App;
 
 ## 另见
 
-- 基础选择列表：[Select](/components/select/index.html)
-- 选项数据与键盘焦点模型：[选择与选项](/guide/options.html)
+- 基础选择列表：[Select](../select/index.mdx)
+- 选项数据与键盘焦点模型：[选择与选项](../../guide/options.mdx)

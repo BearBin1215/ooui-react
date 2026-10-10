@@ -7,11 +7,11 @@ description: "ButtonInput 组件的属性说明：真实 <button>/<input> 元素
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ButtonInput) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ButtonInputWidget.html "OO.ui.ButtonInputWidget")
 
-表单按钮：渲染真实的 `<button>` / `<input>` 元素，`type` / `name` / `value` / `formNoValidate` 参与表单原生提交。没有提交需求时用 [Button](/components/button/index.html)。
+表单按钮：渲染真实的 `<button>` / `<input>` 元素，`type` / `name` / `value` / `formNoValidate` 参与表单原生提交。没有提交需求时用 [Button](../button/index.mdx)。
 
 ## 基本用法
 
-放进 [FormLayout](/components/form-layout/index.html) 即可触发原生提交；`type="submit"` 的按钮携带自身的 `name` / `value`，点哪个提交哪个。
+放进 [FormLayout](../form-layout/index.mdx) 即可触发原生提交；`type="submit"` 的按钮携带自身的 `name` / `value`，点哪个提交哪个。
 
 ```tsx preview
 import { useState } from "react";
@@ -89,6 +89,6 @@ export default App;
 
 ## 另见
 
-- 无表单提交需求的按钮：[Button](/components/button/index.html)
-- 表单容器：[FormLayout](/components/form-layout/index.html)
-- 随表单提交的选择字段：[DropdownInput](/components/dropdown-input/index.html)
+- 无表单提交需求的按钮：[Button](../button/index.mdx)
+- 表单容器：[FormLayout](../form-layout/index.mdx)
+- 随表单提交的选择字段：[DropdownInput](../dropdown-input/index.mdx)

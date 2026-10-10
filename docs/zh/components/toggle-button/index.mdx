@@ -7,7 +7,7 @@ description: "ToggleButton 组件的属性说明：在 Button 形态上叠加开
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ToggleButton) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ToggleButtonWidget.html "OO.ui.ToggleButtonWidget")
 
-切换按钮：能“按下 / 弹起”的 [Button](/components/button/index.html)。
+切换按钮：能“按下 / 弹起”的 [Button](../button/index.mdx)。
 
 ## 基本用法
 
@@ -64,7 +64,7 @@ export default App;
 
 ## 与 Button 的区别
 
-ToggleButton 继承 Button 的外观，但**没有链接能力**：`href` / `target` / `rel` / `anchorRef` 不接受；`active`、`onClick`、`aria-pressed` 由开关状态驱动，不外露。要“点击执行一次动作”请用 [Button](/components/button/index.html)，要“表达一个持续的开/关状态”才用本组件。
+ToggleButton 继承 Button 的外观，但**没有链接能力**：`href` / `target` / `rel` / `anchorRef` 不接受；`active`、`onClick`、`aria-pressed` 由开关状态驱动，不外露。要“点击执行一次动作”请用 [Button](../button/index.mdx)，要“表达一个持续的开/关状态”才用本组件。
 
 ## API
 
@@ -83,10 +83,10 @@ ToggleButton 继承 Button 的外观，但**没有链接能力**：`href` / `tar
 | `tabIndex` | Tab 序 | `number \| null` | `0` |
 | `...rest` | Button 的其余非链接属性，直传按钮元素 | `object` | — |
 
-`onChange` 是切换回调，不遵循值优先的 `ChangeHandler` 签名（见[受控与非受控 · 回调签名](/guide/controlled.html#回调签名)）。
+`onChange` 是切换回调，不遵循值优先的 `ChangeHandler` 签名（见[受控与非受控 · 回调签名](../../guide/controlled.mdx#回调签名)）。
 
 ## 另见
 
-- 按钮的基础能力与图标 / 指示器：[Button](/components/button/index.html)
-- 拨动开关形态：[ToggleSwitch](/components/toggle-switch/index.html)
-- 把多个按钮排成一组：[ButtonGroup](/components/button-group/index.html)
+- 按钮的基础能力与图标 / 指示器：[Button](../button/index.mdx)
+- 拨动开关形态：[ToggleSwitch](../toggle-switch/index.mdx)
+- 把多个按钮排成一组：[ButtonGroup](../button-group/index.mdx)

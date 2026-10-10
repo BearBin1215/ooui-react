@@ -11,7 +11,7 @@ description: "Layout 组件的属性说明：布局基类，输出 oo-ui-layout 
 
 ## 隐藏的三态
 
-`hidden` 有三态：`true` 完全隐藏（`hidden` 属性 + `aria-hidden`）；`'until-found'` 视觉隐藏但对浏览器页内查找（Ctrl+F）可见——查找命中时浏览器自动显示该元素并派发 `beforematch` 事件，可在元素上监听做自定义联动（[IndexLayout](/components/index-layout/index.html) 的 `openMatchedPanels` 即此用法）；不传则不隐藏。
+`hidden` 有三态：`true` 完全隐藏（`hidden` 属性 + `aria-hidden`）；`'until-found'` 视觉隐藏但对浏览器页内查找（Ctrl+F）可见——查找命中时浏览器自动显示该元素并派发 `beforematch` 事件，可在元素上监听做自定义联动（[IndexLayout](../index-layout/index.mdx) 的 `openMatchedPanels` 即此用法）；不传则不隐藏。
 
 ```tsx preview
 import { useState } from "react";
@@ -54,5 +54,5 @@ React 18 会把 `'until-found'` 一并写成布尔 `hidden`，组件在提交后
 
 ## 另见
 
-- 在其上的形态开关：[PanelLayout](/components/panel-layout/index.html)
-- `until-found` 的完整应用：[IndexLayout](/components/index-layout/index.html) 的 `openMatchedPanels`
+- 在其上的形态开关：[PanelLayout](../panel-layout/index.mdx)
+- `until-found` 的完整应用：[IndexLayout](../index-layout/index.mdx) 的 `openMatchedPanels`

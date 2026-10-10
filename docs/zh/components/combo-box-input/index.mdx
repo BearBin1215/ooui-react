@@ -43,7 +43,7 @@ export default App;
 
 ## 标签、图标与软校验
 
-`label` / `labelPosition` / `invisibleLabel`、`icon` / `indicator`、`validate`、`required` 等属性沿用 [TextInput](/components/text-input/index.html) 的语义；`validate` 是软反馈（标红 `aria-invalid`，不改写值）。
+`label` / `labelPosition` / `invisibleLabel`、`icon` / `indicator`、`validate`、`required` 等属性沿用 [TextInput](../text-input/index.mdx) 的语义；`validate` 是软反馈（标红 `aria-invalid`，不改写值）。
 
 ```tsx preview
 import { ComboBoxInput } from "ooui-react";
@@ -73,24 +73,24 @@ export default App;
 | 按键 | 行为 |
 | --- | --- |
 | ↑ / ↓ | 展开菜单并移动高亮（未展开时分别自首 / 末项起步） |
-| Enter | 选定高亮项（无高亮时选定与输入精确匹配的选项）并收起；菜单展开时阻止默认行为，处于 [FormLayout](/components/form-layout/index.html) 内回车不会顺带提交表单 |
+| Enter | 选定高亮项（无高亮时选定与输入精确匹配的选项）并收起；菜单展开时阻止默认行为，处于 [FormLayout](../form-layout/index.mdx) 内回车不会顺带提交表单 |
 | Tab | 仅菜单展开时占用：有未选定的高亮项则提交该高亮项并阻止焦点移出，否则收起菜单、放行焦点移出 |
 | PageUp / PageDown | ±10 翻页（仅菜单展开时占用） |
 | Home / End / ← / → | 不占用，交还输入框光标 |
 
-高亮到端点后不环绕（区别于 `SearchWidget` 的端点环绕）；Escape 或点击外部收起菜单（捕获阶段处理，嵌套于 [Dialog](/components/dialog/index.html) 不误关弹窗）。焦点保持在输入框、高亮项经 `aria-activedescendant` 关联，通用模型见[选择与选项](/guide/options.html)。
+高亮到端点后不环绕（区别于 `SearchWidget` 的端点环绕）；Escape 或点击外部收起菜单（捕获阶段处理，嵌套于 [Dialog](../dialog/index.mdx) 不误关弹窗）。焦点保持在输入框、高亮项经 `aria-activedescendant` 关联，通用模型见[选择与选项](../../guide/options.mdx)。
 
 ## 属性落点
 
-与 [TextInput](/components/text-input/index.html) 一致：`...rest` 落在根 `<div>` 上，写到原生 `<input>` 的属性走 `inputProps`，聚焦输入框用 `inputRef`；`tabIndex`、`title`、`dir`、`accessKey`、`name` 由组件接管落到 `<input>` 上。
+与 [TextInput](../text-input/index.mdx) 一致：`...rest` 落在根 `<div>` 上，写到原生 `<input>` 的属性走 `inputProps`，聚焦输入框用 `inputRef`；`tabIndex`、`title`、`dir`、`accessKey`、`name` 由组件接管落到 `<input>` 上。
 
 ## API
 
-只列 ComboBoxInput 特有属性；输入框通用属性见 [TextInput · API](/components/text-input/index.html#api)。
+只列 ComboBoxInput 特有属性；输入框通用属性见 [TextInput · API](../text-input/index.mdx#api)。
 
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `options` | 候选选项集（**必填**），书写约定见[选择与选项](/guide/options.html) | `DropdownOptionProps[]` | — |
+| `options` | 候选选项集（**必填**），书写约定见[选择与选项](../../guide/options.mdx) | `DropdownOptionProps[]` | — |
 | `value` | 输入框文本（受控） | `string` | — |
 | `defaultValue` | 非受控初始值 | `string` | `''` |
 | `onChange` | 值变化回调（键入与选定菜单项均触发） | `ChangeHandler<string>` | — |
@@ -98,13 +98,13 @@ export default App;
 | `label` / `labelPosition` / `invisibleLabel` | 字段标签 / 位置 / 视觉隐藏 | — | — / `'after'` / `false` |
 | `icon` / `indicator` | 图标名 / 指示器 | `string` / `'up' \| 'down' \| 'clear' \| 'required'` | — |
 | `flags` | 根元素附加标志（invalid 叠加其上） | `string \| string[]` | — |
-| `validate` | 软校验，见[软校验](/components/text-input/index.html#软校验) | `RegExp \| ((v: string) => boolean \| Promise<boolean>) \| 'non-empty' \| 'integer'` | — |
+| `validate` | 软校验，见[软校验](../text-input/index.mdx#软校验) | `RegExp \| ((v: string) => boolean \| Promise<boolean>) \| 'non-empty' \| 'integer'` | — |
 | `inputRef` | 内部 `<input>` 的引用 | `Ref<HTMLInputElement>` | — |
 | `inputProps` | 原生 `<input>` 附加属性通道；事件串联在组件逻辑之后 | `object` | — |
 | `disabled` | 是否禁用 | `boolean` | `false` |
 
 ## 另见
 
-- 单行输入的基础能力：[TextInput](/components/text-input/index.html)
-- 只能从候选里选（不给自由输入）：[Dropdown](/components/dropdown/index.html)
-- 选项数据与键盘焦点模型：[选择与选项](/guide/options.html)
+- 单行输入的基础能力：[TextInput](../text-input/index.mdx)
+- 只能从候选里选（不给自由输入）：[Dropdown](../dropdown/index.mdx)
+- 选项数据与键盘焦点模型：[选择与选项](../../guide/options.mdx)

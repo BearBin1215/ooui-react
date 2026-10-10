@@ -7,7 +7,7 @@ description: "Props for the MenuTagMultiselect component: a tag input with a can
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/MenuTagMultiselect) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.MenuTagMultiselectWidget.html "OO.ui.MenuTagMultiselectWidget")
 
-A tag input with a candidate menu. Props match [TagMultiselect](/en/components/tag-multiselect/index.html), plus the required `options`.
+A tag input with a candidate menu. Props match [TagMultiselect](../tag-multiselect/index.mdx), plus the required `options`.
 
 ## Basic usage
 
@@ -47,7 +47,7 @@ export default App;
 
 Menu candidates are **toggle-style**: pressing Enter / clicking an already-chosen candidate again **removes** that tag — the same candidate is both the add and the remove entry, and menu items with a corresponding tag show as selected (tags added by typing are marked selected as well). {/* deviations: dev-tag-typed-menu-selected */}
 
-Clicking a tag behaves differently depending on `allowArbitrary`: without it, clicking a tag locates it in the menu (opens the menu and highlights the matching candidate), and [TagMultiselect](/en/components/tag-multiselect/index.html)'s `allowEditTags` backfill-to-edit doesn't take effect; with `allowArbitrary`, clicking a tag moves its text back into the input for editing.
+Clicking a tag behaves differently depending on `allowArbitrary`: without it, clicking a tag locates it in the menu (opens the menu and highlights the matching candidate), and [TagMultiselect](../tag-multiselect/index.mdx)'s `allowEditTags` backfill-to-edit doesn't take effect; with `allowArbitrary`, clicking a tag moves its text back into the input for editing.
 
 :::note Differences from OOUI
 With `inputPosition='none'` (no input), clicking a tag also opens the menu and highlights the clicked candidate — the original has no path at all to open the menu in that form; keyboard navigation is not yet available once opened. {/* deviations: dev-menu-open-no-input */}
@@ -85,7 +85,7 @@ export default App;
 
 ## Rich-content tags
 
-An option's `label` accepts a `ReactNode`; when it is rich content (not a plain string), the plain text needed for prefix filtering and backfill must be provided explicitly via `labelText`, or that option won't participate in prefix filtering (see [Selection and options · Options of tag inputs](/en/guide/options.html#options-of-tag-inputs)). Tags with `fixed: true` are fixed and can't be removed.
+An option's `label` accepts a `ReactNode`; when it is rich content (not a plain string), the plain text needed for prefix filtering and backfill must be provided explicitly via `labelText`, or that option won't participate in prefix filtering (see [Selection and options · Options of tag inputs](../../guide/options.mdx#options-of-tag-inputs)). Tags with `fixed: true` are fixed and can't be removed.
 
 ```tsx preview
 import { useState } from "react";
@@ -133,14 +133,14 @@ The "Template" tag comes from the `fixed: true` candidate and shows the fixed ma
 
 ## API
 
-On top of all [TagMultiselect](/en/components/tag-multiselect/index.html) props:
+On top of all [TagMultiselect](../tag-multiselect/index.mdx) props:
 
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
-| `options` | Candidate menu option set (**required**); fields in [Selection and options](/en/guide/options.html#options-of-tag-inputs) | `MenuTagMultiselectOptionProps[]` | — |
+| `options` | Candidate menu option set (**required**); fields in [Selection and options](../../guide/options.mdx#options-of-tag-inputs) | `MenuTagMultiselectOptionProps[]` | — |
 | `clearInputOnChoose` | Whether to clear the filter text after choosing a menu item | `boolean` | `true` |
 
 ## See also
 
-- Free entry without a candidate menu: [TagMultiselect](/en/components/tag-multiselect/index.html)
-- Option data and the keyboard focus model: [Selection and options](/en/guide/options.html)
+- Free entry without a candidate menu: [TagMultiselect](../tag-multiselect/index.mdx)
+- Option data and the keyboard focus model: [Selection and options](../../guide/options.mdx)

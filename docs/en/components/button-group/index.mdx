@@ -7,7 +7,7 @@ description: "Props for the ButtonGroup component: arranging several buttons sid
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ButtonGroup) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ButtonGroupWidget.html "OO.ui.ButtonGroupWidget")
 
-A button group: it lines up several [Button](/en/components/button/index.html) elements so adjacent ones connect head-to-tail into a single block.
+A button group: it lines up several [Button](../button/index.mdx) elements so adjacent ones connect head-to-tail into a single block.
 
 ## Basic usage
 
@@ -29,7 +29,7 @@ export default App;
 
 ## Mixing in toggle buttons
 
-A group can hold both plain buttons and [ToggleButton](/en/components/toggle-button/index.html) elements, common in editor toolbars.
+A group can hold both plain buttons and [ToggleButton](../toggle-button/index.mdx) elements, common in editor toolbars.
 
 ```tsx preview
 import { Button, ButtonGroup, ToggleButton } from "ooui-react";
@@ -77,11 +77,11 @@ The original has no group-level disabled propagation — each child button would
 
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
-| `children` | Buttons in the group ([Button](/en/components/button/index.html) / [ToggleButton](/en/components/toggle-button/index.html), etc.) | `ReactNode` | — |
+| `children` | Buttons in the group ([Button](../button/index.mdx) / [ToggleButton](../toggle-button/index.mdx), etc.) | `ReactNode` | — |
 | `disabled` | Group-level disable, propagated to the buttons inside | `boolean` | `false` |
 | `...rest` | Native `div` props (`className`, `id`, `data-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
 
 ## See also
 
-- Buttons within the group: [Button](/en/components/button/index.html), [ToggleButton](/en/components/toggle-button/index.html)
-- Common pass-through and `ref` rules: [Common props](/en/guide/basics.html)
+- Buttons within the group: [Button](../button/index.mdx), [ToggleButton](../toggle-button/index.mdx)
+- Common pass-through and `ref` rules: [Common props](../../guide/basics.mdx)

@@ -7,7 +7,7 @@ description: "Props for the Dropdown component: the options list, controlled/unc
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Dropdown) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.DropdownWidget.html "OO.ui.DropdownWidget")
 
-A dropdown select. The option data contract is in [Selection and options](/en/guide/options.html).
+A dropdown select. The option data contract is in [Selection and options](../../guide/options.mdx).
 
 ## Basic usage
 
@@ -65,7 +65,7 @@ export default App;
 
 ## Groups and disabled items
 
-Items without a `value` render as group headings; items with `disabled` cannot be selected. For menu-style components, `disabled` disables the **trigger** (the handle won't open, keyboard is off), while each item inside the menu is governed by its own `disabled` — see [Selection and options · Disabled](/en/guide/options.html#disabled).
+Items without a `value` render as group headings; items with `disabled` cannot be selected. For menu-style components, `disabled` disables the **trigger** (the handle won't open, keyboard is off), while each item inside the menu is governed by its own `disabled` — see [Selection and options · Disabled](../../guide/options.mdx#disabled).
 
 ```tsx preview
 import { Dropdown } from "ooui-react";
@@ -106,7 +106,7 @@ With the menu open, **Space**: the original never feeds Space to the menu — a 
 
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
-| `options` | The option set; see [Selection and options](/en/guide/options.html) for the contract | `DropdownOptionProps[]` | — |
+| `options` | The option set; see [Selection and options](../../guide/options.mdx) for the contract | `DropdownOptionProps[]` | — |
 | `value` | Current selected value (controlled; passing it enables control) | `string \| number` | — |
 | `defaultValue` | Initial selected value for uncontrolled use | `string \| number` | — |
 | `onChange` | Selection-change callback (fires when the value changes) | `ChangeHandler<string \| number>` | — |
@@ -120,6 +120,6 @@ There is no `children` slot — the handle and menu are a fixed structure, and t
 
 ## See also
 
-- Option data and the keyboard focus model: [Selection and options](/en/guide/options.html)
-- The inner list of the menu: [Select](/en/components/select/index.html)
-- How values flow between the component and your state: [Controlled and uncontrolled](/en/guide/controlled.html)
+- Option data and the keyboard focus model: [Selection and options](../../guide/options.mdx)
+- The inner list of the menu: [Select](../select/index.mdx)
+- How values flow between the component and your state: [Controlled and uncontrolled](../../guide/controlled.mdx)

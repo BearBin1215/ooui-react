@@ -16,10 +16,10 @@ description: "Label 组件的属性说明：独立摆放的表单标签、htmlFo
 - **TextInput 系**（含 MultilineTextInput、NumberInput、ComboBoxInput 等）：`id` 落在根 div 上，要落到原生输入元素须经 `inputProps={{ id }}` 写入。
 - **CheckboxInput / RadioInput**：没有 `inputProps` 通道，用专用的 `inputId` prop——它直接落在原生 `<input>` 上。
 
-表单里这类关联由 [FieldLayout](/components/field-layout/index.html) 自动接线，无需手写。
+表单里这类关联由 [FieldLayout](../field-layout/index.mdx) 自动接线，无需手写。
 
 :::note 表单里更推荐用 FieldLayout
-表单中「标签 + 控件」的布局、对齐与关联激活通常交给 [FieldLayout](/components/field-layout/index.html) 统一处理，标签与控件各自单独书写 `htmlFor`/`id` 适合自由拼装的场景。
+表单中「标签 + 控件」的布局、对齐与关联激活通常交给 [FieldLayout](../field-layout/index.mdx) 统一处理，标签与控件各自单独书写 `htmlFor`/`id` 适合自由拼装的场景。
 :::
 
 ```tsx preview
@@ -92,5 +92,5 @@ export default App;
 
 ## 另见
 
-- 表单字段的标签布局与关联：[FieldLayout](/components/field-layout/index.html)
-- 输入组件自带的内嵌标签：[TextInput](/components/text-input/index.html) 的「标签」一节
+- 表单字段的标签布局与关联：[FieldLayout](../field-layout/index.mdx)
+- 输入组件自带的内嵌标签：[TextInput](../text-input/index.mdx) 的「标签」一节

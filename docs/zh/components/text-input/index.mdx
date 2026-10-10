@@ -7,7 +7,7 @@ description: "TextInput 组件的属性说明：受控/非受控、类型白名�
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/TextInput) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.TextInputWidget.html "OO.ui.TextInputWidget")
 
-单行文本输入框，同时也是 [MultilineTextInput](/components/multiline-text-input/index.html)、[NumberInput](/components/number-input/index.html)、[SearchInput](/components/search-input/index.html) 等输入组件的基础。
+单行文本输入框，同时也是 [MultilineTextInput](../multiline-text-input/index.mdx)、[NumberInput](../number-input/index.mdx)、[SearchInput](../search-input/index.mdx) 等输入组件的基础。
 
 ## 基本用法
 
@@ -56,7 +56,7 @@ export default App;
 `label` 是字段标签文本，`labelPosition` 控制在输入框前（`before`）还是后（`after`，默认）。标签视觉隐藏时打开 `invisibleLabel`：保留可访问名称，`title` 未显式给出时以标签文本兜底。
 
 :::note 带标签的表单字段更推荐用 FieldLayout
-把标签写在输入框自身上适合独立摆放的场景；在表单里，标签、对齐与「点标签聚焦输入框」的联动通常交给 [FieldLayout](/components/field-layout/index.html)，字段控件本身不写 `label`。
+把标签写在输入框自身上适合独立摆放的场景；在表单里，标签、对齐与「点标签聚焦输入框」的联动通常交给 [FieldLayout](../field-layout/index.mdx)，字段控件本身不写 `label`。
 :::
 
 ```tsx preview
@@ -76,7 +76,7 @@ export default App;
 
 ## 图标与指示器
 
-`icon` 渲染在输入框一侧（见 [Icon](/components/icon/index.html)），`indicator` 渲染在另一侧（见 [Indicator](/components/indicator/index.html)）。未显式给 `indicator` 且 `required` 为真时，自动回退为 `required` 指示器。
+`icon` 渲染在输入框一侧（见 [Icon](../icon/index.mdx)），`indicator` 渲染在另一侧（见 [Indicator](../indicator/index.mdx)）。未显式给 `indicator` 且 `required` 为真时，自动回退为 `required` 指示器。
 
 ```tsx preview
 import { TextInput } from "ooui-react";
@@ -197,6 +197,6 @@ export default App;
 
 ## 另见
 
-- 值如何在组件与状态之间流动：[受控与非受控](/guide/controlled.html)
-- 所有组件共有的透传与 `ref` 规则：[通用属性](/guide/basics.html)
-- 多行、数字、搜索等形态：[MultilineTextInput](/components/multiline-text-input/index.html)、[NumberInput](/components/number-input/index.html)、`SearchInput`
+- 值如何在组件与状态之间流动：[受控与非受控](../../guide/controlled.mdx)
+- 所有组件共有的透传与 `ref` 规则：[通用属性](../../guide/basics.mdx)
+- 多行、数字、搜索等形态：[MultilineTextInput](../multiline-text-input/index.mdx)、[NumberInput](../number-input/index.mdx)、`SearchInput`

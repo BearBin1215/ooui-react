@@ -72,7 +72,7 @@ export default App;
 
 ## Using it with FieldLayout
 
-To give the whole group a field label, wrap it with [FieldLayout](/en/components/field-layout/index.html). Clicking the field label moves focus to the first enabled option's checkbox (it does not toggle anything — a group has no "one value for the whole group" semantics like a single checkbox does).
+To give the whole group a field label, wrap it with [FieldLayout](../field-layout/index.mdx). Clicking the field label moves focus to the first enabled option's checkbox (it does not toggle anything — a group has no "one value for the whole group" semantics like a single checkbox does).
 
 ```tsx preview
 import { CheckboxMultiselect, FieldLayout } from "ooui-react";
@@ -100,7 +100,7 @@ export default App;
 ## Disabled
 
 - An option's own `disabled` skips that item (not checkable).
-- Component-level `disabled` disables every option in the group, and the group state wins. See [Selection and options · Disabled](/en/guide/options.html#disabled).
+- Component-level `disabled` disables every option in the group, and the group state wins. See [Selection and options · Disabled](../../guide/options.mdx#disabled).
 
 ```tsx preview
 import { CheckboxMultiselect } from "ooui-react";
@@ -142,6 +142,6 @@ export default App;
 
 ## See also
 
-- Option data and the keyboard focus model: [Selection and options](/en/guide/options.html)
-- A single checkbox: [CheckboxInput](/en/components/checkbox-input/index.html)
+- Option data and the keyboard focus model: [Selection and options](../../guide/options.mdx)
+- A single checkbox: [CheckboxInput](../checkbox-input/index.mdx)
 - The checkbox group field that submits with a form: `CheckboxMultiselectInput`

@@ -5,7 +5,7 @@ description: "Select 系组件共用的选项数据约定：value 与分组标�
 
 # 选择与选项
 
-[受控与非受控](/guide/controlled.html)讲了值如何在组件与你的状态之间流动，本页讲值的两端怎么写——Select 系组件共用的选项数据约定。适用于：
+[受控与非受控](./controlled.mdx)讲了值如何在组件与你的状态之间流动，本页讲值的两端怎么写——Select 系组件共用的选项数据约定。适用于：
 
 - 选择列表：`Select`、`OutlineSelect`、`TabSelect`、`ButtonSelect`、`ButtonMenuSelectWidget`
 - 标签输入：`TagMultiselect`、`MenuTagMultiselect`
@@ -87,7 +87,7 @@ import { Icon, MenuTagMultiselect } from "ooui-react";
 
 ## 图标与标志
 
-带图标槽位的选项形态（菜单/大纲/按钮选项及分组标题）支持 `icon` 与 `flags`：`icon` 取图标名（见 [Icon](/components/icon/index.html)），`flags` 给图标着色（`progressive`、`destructive` 等变体）。纯文本选项（`TabSelect`、`RadioSelect`、`CheckboxMultiselect` 的项）没有图标槽位，不支持这两个字段。{/* deviations: dev-option-flags-scope */}
+带图标槽位的选项形态（菜单/大纲/按钮选项及分组标题）支持 `icon` 与 `flags`：`icon` 取图标名（见 [Icon](../components/icon/index.mdx)），`flags` 给图标着色（`progressive`、`destructive` 等变体）。纯文本选项（`TabSelect`、`RadioSelect`、`CheckboxMultiselect` 的项）没有图标槽位，不支持这两个字段。{/* deviations: dev-option-flags-scope */}
 
 ## 键盘与焦点
 
@@ -100,5 +100,5 @@ import { Icon, MenuTagMultiselect } from "ooui-react";
 
 ## 另见
 
-- 受控值不在备选项内时各组件的行为：[受控与非受控](/guide/controlled.html#受控值不在备选项内时)
-- `onChange` 与 `onChoose`（每次选定都触发）的分工：[受控与非受控](/guide/controlled.html#回调签名)
+- 受控值不在备选项内时各组件的行为：[受控与非受控](./controlled.mdx#受控值不在备选项内时)
+- `onChange` 与 `onChoose`（每次选定都触发）的分工：[受控与非受控](./controlled.mdx#回调签名)

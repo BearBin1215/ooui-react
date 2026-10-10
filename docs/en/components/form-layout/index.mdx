@@ -7,7 +7,7 @@ description: "Props for the FormLayout component: a native <form> container wrap
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/FormLayout) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.FormLayout.html "OO.ui.FormLayout")
 
-Form container: it renders a `<form>` wrapping several [FieldLayout](/en/components/field-layout/index.html)s. It does no data management itself — input controls with a `name` (`TextInput`, `CheckboxInput`, `ButtonInput`, etc.) submit natively with the `<form>`. When you don't need native submission semantics, just place the controls in your own container; you don't have to add this layer.
+Form container: it renders a `<form>` wrapping several [FieldLayout](../field-layout/index.mdx)s. It does no data management itself — input controls with a `name` (`TextInput`, `CheckboxInput`, `ButtonInput`, etc.) submit natively with the `<form>`. When you don't need native submission semantics, just place the controls in your own container; you don't have to add this layer.
 
 ## Basic usage
 
@@ -71,7 +71,7 @@ This component does not sanitize `action` (it bypasses the original `OO.ui.isSaf
 
 Native submission only carries the values of **real form controls**: the input family (`TextInput`, `MultilineTextInput`, `NumberInput`, `ComboBoxInput`, `SearchInput`), the check family (`CheckboxInput`, `RadioInput`), and `SelectFileInputWidget` / `HiddenInputWidget` render real controls — with a `name`, they submit with the form.
 
-The display forms of the select family (`Select`, `Dropdown`, `RadioSelect`, `CheckboxMultiselect`, `TagMultiselect`, `TabSelect`, etc.) render no real form control; placed in a `FormLayout` they **silently drop their values on submit** — to submit a selection, switch to the matching form-field forms [DropdownInput](/en/components/dropdown-input/index.html), [RadioSelectInput](/en/components/radio-select-input/index.html) and [CheckboxMultiselectInput](/en/components/checkbox-multiselect-input/index.html), or carry arbitrary custom values with [HiddenInputWidget](/en/components/hidden-input-widget/index.html).
+The display forms of the select family (`Select`, `Dropdown`, `RadioSelect`, `CheckboxMultiselect`, `TagMultiselect`, `TabSelect`, etc.) render no real form control; placed in a `FormLayout` they **silently drop their values on submit** — to submit a selection, switch to the matching form-field forms [DropdownInput](../dropdown-input/index.mdx), [RadioSelectInput](../radio-select-input/index.mdx) and [CheckboxMultiselectInput](../checkbox-multiselect-input/index.mdx), or carry arbitrary custom values with [HiddenInputWidget](../hidden-input-widget/index.mdx).
 
 ## API
 
@@ -86,6 +86,6 @@ The display forms of the select family (`Select`, `Dropdown`, `RadioSelect`, `Ch
 
 ## See also
 
-- Layout for fields and labels: [FieldLayout](/en/components/field-layout/index.html)
-- Input controls that submit with the form: [TextInput](/en/components/text-input/index.html), [CheckboxInput](/en/components/checkbox-input/index.html)
-- Bundle output and SSR limits: see [Usage](/en/guide/usage.html)
+- Layout for fields and labels: [FieldLayout](../field-layout/index.mdx)
+- Input controls that submit with the form: [TextInput](../text-input/index.mdx), [CheckboxInput](../checkbox-input/index.mdx)
+- Bundle output and SSR limits: see [Usage](../../guide/usage.mdx)

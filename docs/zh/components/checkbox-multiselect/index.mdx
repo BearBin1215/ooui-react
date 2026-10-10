@@ -72,7 +72,7 @@ export default App;
 
 ## 与 FieldLayout 配合
 
-给整组加字段标签时，用 [FieldLayout](/components/field-layout/index.html) 包裹。点击字段标签会把焦点移到首个可用选项的复选框上（不像复选框那样直接切换勾选——组内没有「整组一个值」的语义）。
+给整组加字段标签时，用 [FieldLayout](../field-layout/index.mdx) 包裹。点击字段标签会把焦点移到首个可用选项的复选框上（不像复选框那样直接切换勾选——组内没有「整组一个值」的语义）。
 
 ```tsx preview
 import { CheckboxMultiselect, FieldLayout } from "ooui-react";
@@ -100,7 +100,7 @@ export default App;
 ## 禁用
 
 - 选项对象自己的 `disabled` 禁用该项（跳过、不可勾选）。
-- 组件级 `disabled` 会一并禁用组内全部选项，且组禁用优先。详见[选择与选项 · 禁用](/guide/options.html#禁用)。
+- 组件级 `disabled` 会一并禁用组内全部选项，且组禁用优先。详见[选择与选项 · 禁用](../../guide/options.mdx#禁用)。
 
 ```tsx preview
 import { CheckboxMultiselect } from "ooui-react";
@@ -142,6 +142,6 @@ export default App;
 
 ## 另见
 
-- 选项数据与键盘焦点模型：[选择与选项](/guide/options.html)
-- 单个复选框：[CheckboxInput](/components/checkbox-input/index.html)
+- 选项数据与键盘焦点模型：[选择与选项](../../guide/options.mdx)
+- 单个复选框：[CheckboxInput](../checkbox-input/index.mdx)
 - 随表单提交的复选组字段：`CheckboxMultiselectInput`

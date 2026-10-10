@@ -7,7 +7,7 @@ description: "Props for the CheckboxInput component: the checked/defaultChecked/
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/CheckboxInput) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.CheckboxInputWidget.html "OO.ui.CheckboxInputWidget")
 
-A single checkbox. It has no text label of its own — when you need one, wrap it in [FieldLayout](/en/components/field-layout/index.html).
+A single checkbox. It has no text label of its own — when you need one, wrap it in [FieldLayout](../field-layout/index.mdx).
 
 ## Basic usage
 
@@ -119,7 +119,7 @@ export default App;
 
 ## Using it with FieldLayout
 
-The field's text label is usually delegated to [FieldLayout](/en/components/field-layout/index.html). It automatically associates the label with this checkbox's native `<input>` (clicking the label toggles the check); to specify the association target manually, give the input element's id via `inputId`.
+The field's text label is usually delegated to [FieldLayout](../field-layout/index.mdx). It automatically associates the label with this checkbox's native `<input>` (clicking the label toggles the check); to specify the association target manually, give the input element's id via `inputId`.
 
 ```tsx preview
 import { CheckboxInput, FieldLayout } from "ooui-react";
@@ -177,6 +177,6 @@ export default App;
 
 ## See also
 
-- Where the checked channel sits among the three value channels: [Controlled and uncontrolled](/en/guide/controlled.html)
-- Layout for a labeled field: [FieldLayout](/en/components/field-layout/index.html)
-- The single-choice case: [RadioInput](/en/components/radio-input/index.html) (same props as this component, without `indeterminate`)
+- Where the checked channel sits among the three value channels: [Controlled and uncontrolled](../../guide/controlled.mdx)
+- Layout for a labeled field: [FieldLayout](../field-layout/index.mdx)
+- The single-choice case: [RadioInput](../radio-input/index.mdx) (same props as this component, without `indeterminate`)

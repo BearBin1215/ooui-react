@@ -7,7 +7,7 @@ description: "Button 组件的属性说明：标签、图标、指示器、标�
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Button) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ButtonWidget.html "OO.ui.ButtonWidget")
 
-基础按钮组件，同时也是 [ToggleButton](/components/toggle-button/index.html)、[PopupButton](/components/popup-button/index.html)、[ButtonMenuSelectWidget](/components/button-menu-select/index.html) 等组件的按钮基座。
+基础按钮组件，同时也是 [ToggleButton](../toggle-button/index.mdx)、[PopupButton](../popup-button/index.mdx)、[ButtonMenuSelectWidget](../button-menu-select/index.mdx) 等组件的按钮基座。
 
 ## 基本用法
 
@@ -31,7 +31,7 @@ export default App;
 
 ## 图标与指示器
 
-`icon` 取图标名（见 [Icon](/components/icon/index.html)），`indicator` 取四种指示器之一（见 [Indicator](/components/indicator/index.html)）。二者分别渲染在标签两端。
+`icon` 取图标名（见 [Icon](../icon/index.mdx)），`indicator` 取四种指示器之一（见 [Indicator](../indicator/index.mdx)）。二者分别渲染在标签两端。
 
 标签只用图标时把 `invisibleLabel` 打开：标签视觉隐藏但仍保留可访问名称，`title` 未显式给出时以标签文本兜底。
 
@@ -134,7 +134,7 @@ export default App;
 - 可聚焦的是内部 `<a>`，根元素是不可聚焦的 `<span>`：要手动聚焦按钮请用 `anchorRef`（组件 `ref` 指向外层 `<span>`）。
 - Enter / 空格触发 `onClick`，`onKeyPress` 将在存在点击回调时阻止空格滚动页面。
 - 按压态（`oo-ui-buttonElement-pressed`）由组件用 JS 维护（含键盘按压与松开）。`pressed` 属性可与之外取或，用于“关联菜单打开期间按钮保持按压”的场景。
-- `title`、`accessKey` 落在内部 `<a>` 上；未显式给 `title` 且标签隐藏时以标签文本兜底，`accessKey` 存在时 `title` 末尾附键位提示（组合键文案可经 [OOUIProvider](/guide/configuration.html#快捷键文案) 本地化）。
+- `title`、`accessKey` 落在内部 `<a>` 上；未显式给 `title` 且标签隐藏时以标签文本兜底，`accessKey` 存在时 `title` 末尾附键位提示（组合键文案可经 [OOUIProvider](../../guide/configuration.mdx#快捷键文案) 本地化）。
 
 ## API
 

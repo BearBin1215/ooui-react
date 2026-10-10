@@ -7,7 +7,7 @@ description: "PanelLayout 组件的属性说明：padded/scrollable/expanded/fra
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/PanelLayout) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.PanelLayout.html "OO.ui.PanelLayout")
 
-面板：带一组形态开关（内边距、滚动、铺满、边框）的内容容器，也是 [StackLayout](/components/stack-layout/index.html) 等布局组件的基座。
+面板：带一组形态开关（内边距、滚动、铺满、边框）的内容容器，也是 [StackLayout](../stack-layout/index.mdx) 等布局组件的基座。
 
 ## 基本用法
 
@@ -47,7 +47,7 @@ function App() {
 export default App;
 ```
 
-以本组件为基座的 [StackLayout](/components/stack-layout/index.html) 等布局继承该前提。
+以本组件为基座的 [StackLayout](../stack-layout/index.mdx) 等布局继承该前提。
 
 ## API
 
@@ -57,10 +57,10 @@ export default App;
 | `scrollable` | 是否可滚动 | `boolean` | `false` |
 | `expanded` | 是否铺满父元素 | `boolean` | `true` |
 | `framed` | 是否带边框 | `boolean` | `false` |
-| `hidden` | 是否隐藏（三态语义见 [Layout](/components/layout/index.html)） | `boolean \| 'until-found'` | — |
+| `hidden` | 是否隐藏（三态语义见 [Layout](../layout/index.mdx)） | `boolean \| 'until-found'` | — |
 | `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
 
 ## 另见
 
-- 基类的 `hidden` 三态语义：[Layout](/components/layout/index.html)
-- 由它驱动的分页容器：[StackLayout](/components/stack-layout/index.html)
+- 基类的 `hidden` 三态语义：[Layout](../layout/index.mdx)
+- 由它驱动的分页容器：[StackLayout](../stack-layout/index.mdx)

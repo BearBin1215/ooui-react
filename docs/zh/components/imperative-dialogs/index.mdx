@@ -7,7 +7,7 @@ description: "confirm / alert / prompt 三个命令式弹窗函数：不依赖 R
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/dialogs) | [原版 API](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.html "OO.ui.confirm / alert / prompt")
 
-`confirm` / `alert` / `prompt` 三个独立函数，import 后从任意事件回调里 `await` 即可——无需 hook、无需挂载组件、不依赖 React 树。需要完整自定义内容的弹窗用 [Dialog](/components/dialog/index.html) 组件。
+`confirm` / `alert` / `prompt` 三个独立函数，import 后从任意事件回调里 `await` 即可——无需 hook、无需挂载组件、不依赖 React 树。需要完整自定义内容的弹窗用 [Dialog](../dialog/index.mdx) 组件。
 
 ## 基本用法
 
@@ -56,7 +56,7 @@ export default App;
 
 ## 配置继承
 
-弹窗若被包在 `OOUIProvider` 子树内，会继承该 Provider 的语言、方向与浮层容器等配置；未包裹时按缺省值渲染。消息文案的覆盖方式见 [OOUIProvider · 命令式弹窗](/guide/configuration.html#命令式弹窗)。{/* deviations: dev-imperative-host */}
+弹窗若被包在 `OOUIProvider` 子树内，会继承该 Provider 的语言、方向与浮层容器等配置；未包裹时按缺省值渲染。消息文案的覆盖方式见 [OOUIProvider · 命令式弹窗](../../guide/configuration.mdx#命令式弹窗)。{/* deviations: dev-imperative-host */}
 
 ## 运行时语义
 
@@ -85,6 +85,6 @@ export default App;
 
 ## 另见
 
-- 弹窗组件本身（`open` 受控、动作区、多窗隔离）：[Dialog](/components/dialog/index.html)
-- 命令式弹窗如何继承 Provider 配置：[OOUIProvider](/guide/configuration.html#命令式弹窗)
-- 多步流程弹窗：[ProcessDialog](/components/process-dialog/index.html)
+- 弹窗组件本身（`open` 受控、动作区、多窗隔离）：[Dialog](../dialog/index.mdx)
+- 命令式弹窗如何继承 Provider 配置：[OOUIProvider](../../guide/configuration.mdx#命令式弹窗)
+- 多步流程弹窗：[ProcessDialog](../process-dialog/index.mdx)

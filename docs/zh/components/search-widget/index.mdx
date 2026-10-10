@@ -49,14 +49,14 @@ export default App;
 ## 查询与选定
 
 - `value` / `defaultValue` / `onQueryChange` 是查询框的受控/非受控通道（无 `onChange`，查询变化走 `onQueryChange`）。
-- `results` 每项是标准的[选项数据](/guide/options.html)（带 `value` 与 `children`）。
+- `results` 每项是标准的[选项数据](../../guide/options.mdx)（带 `value` 与 `children`）。
 - `onChoose` 在选定结果时触发（Enter 选定高亮结果，或鼠标点击结果）。结果集或查询变化时高亮自动清除。
 - 组件不实现检索，真实场景多为异步：在 `onQueryChange` 里发起请求，加载期间可先把 `results` 清空、就绪后再填入——结果集或查询每次变化高亮都会自动清除，无需手动复位。
 - `inputProps` 是**双层通道**：SearchInput 组件层的属性直接写；要落到原生 `<input>` 的属性（`aria-*`、`autoComplete` 等）经 `inputProps.inputProps` 给入（TextInput 的输入元素通道）。`inputProps.inputRef` 会被合并——该 input 兼作结果列表 `aria-activedescendant` 的焦点归属元素。
 
 ## 键盘与焦点
 
-焦点始终留在查询框：↑↓ 在结果间移动高亮（端点环绕）、Enter 选定当前高亮项。查询框右侧的清除指示器由 [SearchInput](/components/search-input/index.html) 提供，有值即出现、点击清空。
+焦点始终留在查询框：↑↓ 在结果间移动高亮（端点环绕）、Enter 选定当前高亮项。查询框右侧的清除指示器由 [SearchInput](../search-input/index.mdx) 提供，有值即出现、点击清空。
 
 ## API
 
@@ -74,6 +74,6 @@ export default App;
 
 ## 另见
 
-- 带候选菜单、以标签呈现的查找：[MenuTagMultiselect](/components/menu-tag-multiselect/index.html)
-- 可自由输入的下拉候选：[ComboBoxInput](/components/combo-box-input/index.html)
-- 查询框本身的能力：[SearchInput](/components/search-input/index.html)
+- 带候选菜单、以标签呈现的查找：[MenuTagMultiselect](../menu-tag-multiselect/index.mdx)
+- 可自由输入的下拉候选：[ComboBoxInput](../combo-box-input/index.mdx)
+- 查询框本身的能力：[SearchInput](../search-input/index.mdx)

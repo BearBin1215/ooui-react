@@ -7,7 +7,7 @@ description: "PopupButton 组件的属性说明：点击按钮开合一个锚定
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/PopupButton) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.PopupButtonWidget.html "OO.ui.PopupButtonWidget")
 
-弹出按钮：点击 [Button](/components/button/index.html) 开合一个锚定到它的 [Popup](/components/popup/index.html)，并内建“点按钮与浮层之外自动关闭”。多数“点按钮弹一块浮层”的场景用它即可，无需手写 Popup 的锚定与开合。
+弹出按钮：点击 [Button](../button/index.mdx) 开合一个锚定到它的 [Popup](../popup/index.mdx)，并内建“点按钮与浮层之外自动关闭”。多数“点按钮弹一块浮层”的场景用它即可，无需手写 Popup 的锚定与开合。
 
 ## 基本用法
 
@@ -66,7 +66,7 @@ export default App;
 
 ## 浮层定位
 
-`position` / `align` / `anchor` / `autoFlip` / `width` / `height` / `padded` / `head` / `footer` / `container` 等浮层属性都会透传给内部 Popup（含义同 [Popup](/components/popup/index.html)）。缺省以按钮为锚点、朝下弹出。
+`position` / `align` / `anchor` / `autoFlip` / `width` / `height` / `padded` / `head` / `footer` / `container` 等浮层属性都会透传给内部 Popup（含义同 [Popup](../popup/index.mdx)）。缺省以按钮为锚点、朝下弹出。
 
 ## API
 
@@ -79,13 +79,13 @@ export default App;
 | `onOpenChange` | 开合变化回调（点按钮 / 点外部 / 关闭按钮 / Escape） | `(open: boolean) => void` | — |
 | `onClick` | 按钮点击回调（在切换开合前触发） | `(ev: ButtonClickEvent) => void` | — |
 | `label` | 浮层头部标签，经 `head` 渲染（按钮标签是 `children`，二者分离） | `ReactNode` | — |
-| `icon` / `flags` / `framed` / `title` / `accessKey` / `invisibleLabel` / `disabled` | 按钮侧属性，含义同 [Button](/components/button/index.html) | — | — |
-| `position` / `align` / `anchor` / `autoFlip` / `head` / `hideCloseButton` / `padded` / `width` / `height` / `footer` / `container` / `hideWhenOutOfView` / `containerPadding` | 浮层侧属性，透传给内部 [Popup](/components/popup/index.html) | — | — |
+| `icon` / `flags` / `framed` / `title` / `accessKey` / `invisibleLabel` / `disabled` | 按钮侧属性，含义同 [Button](../button/index.mdx) | — | — |
+| `position` / `align` / `anchor` / `autoFlip` / `head` / `hideCloseButton` / `padded` / `width` / `height` / `footer` / `container` / `hideWhenOutOfView` / `containerPadding` | 浮层侧属性，透传给内部 [Popup](../popup/index.mdx) | — | — |
 
 `framed` 除决定按钮边框外，还会切换浮层的带框 / 无框外观。`label` 路由到浮层头部，`invisibleLabel` 仅作用于按钮侧——原版 `PopupButtonWidget` 中两者属于按钮、popup 经独立配置传入。`active`、`autoClose`、`autoCloseIgnore` 由组件内部管理，不接受外部覆盖。
 
 ## 另见
 
-- 底层浮层组件：[Popup](/components/popup/index.html)
+- 底层浮层组件：[Popup](../popup/index.mdx)
 - 触发命令菜单的按钮：`ButtonMenuSelectWidget`
-- 通用透传与 `ref` 规则：[通用属性](/guide/basics.html)
+- 通用透传与 `ref` 规则：[通用属性](../../guide/basics.mdx)

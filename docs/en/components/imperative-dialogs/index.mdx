@@ -7,7 +7,7 @@ description: "The confirm / alert / prompt imperative dialog functions: Promise-
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/dialogs) | [Original API](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.html "OO.ui.confirm / alert / prompt")
 
-`confirm` / `alert` / `prompt` are three standalone functions — import and `await` them from any event callback: no hook, no component to mount, no React tree required. For fully custom dialogs use the [Dialog](/en/components/dialog/index.html) component.
+`confirm` / `alert` / `prompt` are three standalone functions — import and `await` them from any event callback: no hook, no component to mount, no React tree required. For fully custom dialogs use the [Dialog](../dialog/index.mdx) component.
 
 ## Basic usage
 
@@ -56,7 +56,7 @@ export default App;
 
 ## Config inheritance
 
-A dialog called inside an `OOUIProvider` subtree inherits that Provider's language, direction and popup container settings; unwrapped, it renders with defaults. For overriding message text, see [OOUIProvider · Imperative dialogs](/en/guide/configuration.html#imperative-dialogs). {/* deviations: dev-imperative-host */}
+A dialog called inside an `OOUIProvider` subtree inherits that Provider's language, direction and popup container settings; unwrapped, it renders with defaults. For overriding message text, see [OOUIProvider · Imperative dialogs](../../guide/configuration.mdx#imperative-dialogs). {/* deviations: dev-imperative-host */}
 
 ## Runtime semantics
 
@@ -85,6 +85,6 @@ A dialog called inside an `OOUIProvider` subtree inherits that Provider's langua
 
 ## See also
 
-- The dialog components themselves (controlled `open`, action areas, multi-dialog isolation): [Dialog](/en/components/dialog/index.html)
-- How imperative dialogs inherit provider config: [OOUIProvider](/en/guide/configuration.html#imperative-dialogs)
-- The multi-step dialog: [ProcessDialog](/en/components/process-dialog/index.html)
+- The dialog components themselves (controlled `open`, action areas, multi-dialog isolation): [Dialog](../dialog/index.mdx)
+- How imperative dialogs inherit provider config: [OOUIProvider](../../guide/configuration.mdx#imperative-dialogs)
+- The multi-step dialog: [ProcessDialog](../process-dialog/index.mdx)

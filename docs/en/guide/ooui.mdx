@@ -11,18 +11,18 @@ Whether you know OOUI and want to lean on that experience in a new script, or ar
 
 ## Mental model mapping
 
-The original imperative API is uniformly expressed as declarative props in this library; see [Controlled and uncontrolled](/en/guide/controlled.html) for the rules:
+The original imperative API is uniformly expressed as declarative props in this library; see [Controlled and uncontrolled](./controlled.mdx) for the rules:
 
 | Original | ooui-react |
 | --- | --- |
 | `setValue` / `setDisabled` / `setPage` setters | Controlled props such as `value` / `defaultValue` / `onChange` |
-| `WindowManager.openWindow` / `closeWindow` | The Dialog family takes a required `open` prop only; close intent is reported via `onEscape` and other callbacks, see [Dialogs must be controlled](/en/guide/controlled.html#dialogs-must-be-controlled) |
+| `WindowManager.openWindow` / `closeWindow` | The Dialog family takes a required `open` prop only; close intent is reported via `onEscape` and other callbacks, see [Dialogs must be controlled](./controlled.mdx#dialogs-must-be-controlled) |
 | `updateState` / `choose` / `toggle` events | Callback props such as `onChange` / `onChoose` / `onOpenChange` |
-| `OO.ui.msg` global and `OO.ui.deferMsg` | The `messages` config and `useMessage` of `OOUIProvider`, see [Global configuration](/en/guide/configuration.html) |
+| `OO.ui.msg` global and `OO.ui.deferMsg` | The `messages` config and `useMessage` of `OOUIProvider`, see [Global configuration](./configuration.mdx) |
 | `OO.ui.isMobile()` (stub that always returns `false`) | The `isMobile` config of `OOUIProvider` |
 | `OO.ui.HtmlSnippet` (raw-output wrapper) | Write `ReactNode` directly; strings are escaped by default, and there is no dedicated wrapper for raw HTML — use `dangerouslySetInnerHTML` yourself and own the risk |
 | `OO.ui.Theme` runtime object (`getElementClasses` hooks) | None. Class names are emitted by components following wikimediaui semantics; theme styles come from site CSS. Under third-party themes such as apex a few state classes appear that the original would not output (e.g. progressive coloring on selected options) — a known deviation |
-| `ToolFactory` / `ToolGroupToolFactory` registration | Declarative data: pass a `tools` array to the toolbar and nest tool groups as React elements, see [Toolbar](/en/components/toolbar/index.html) |
+| `ToolFactory` / `ToolGroupToolFactory` registration | Declarative data: pass a `tools` array to the toolbar and nest tool groups as React elements, see [Toolbar](../components/toolbar/index.mdx) |
 
 {/* deviations: dev-htmlsnippet */}
 {/* deviations: dev-theme-runtime */}
@@ -36,11 +36,11 @@ Some original classes do not map to standalone components:
 | Original class | Where it went |
 | --- | --- |
 | `OO.ui.WindowManager` | Each Dialog component owns its open/close state (controlled `open`); content isolation and stacking are built in. Imperative `confirm` / `alert` / `prompt` need no manager |
-| `OO.ui.ActionWidget` / `ActionSet` / `OO.ui.Error` | Inlined into `ProcessDialog`: the action array, mode filtering and the error panel, see [Process dialog](/en/components/process-dialog/index.html) |
+| `OO.ui.ActionWidget` / `ActionSet` / `OO.ui.Error` | Inlined into `ProcessDialog`: the action array, mode filtering and the error panel, see [Process dialog](../components/process-dialog/index.mdx) |
 | `OO.ui.Process` | The `onAction` async callback; rewrite `.next()` chains as one async function |
-| `OO.ui.OutlineControlsWidget` | Inlined into `BookletLayout`'s outline panel, see [Booklet layout](/en/components/booklet-layout/index.html) |
-| `OO.ui.SelectWidget` | [`Select`](/en/components/select/index.html) |
-| `OO.ui.PopupTagMultiselectWidget` (deprecated upstream) | Not provided; use [MenuTagMultiselect](/en/components/menu-tag-multiselect/index.html) |
+| `OO.ui.OutlineControlsWidget` | Inlined into `BookletLayout`'s outline panel, see [Booklet layout](../components/booklet-layout/index.mdx) |
+| `OO.ui.SelectWidget` | [`Select`](../components/select/index.mdx) |
+| `OO.ui.PopupTagMultiselectWidget` (deprecated upstream) | Not provided; use [MenuTagMultiselect](../components/menu-tag-multiselect/index.mdx) |
 | `OO.ui` host-environment utilities (`bind` / `infuse` / `getUserLanguages` / `generateElementId` / `debounce` / `Keys` / `MouseButtons` etc.) | Not mapped: React capabilities, `useId` and es-toolkit cover these scenarios |
 
 {/* deviations: dev-popup-tag-multiselect */}
@@ -52,14 +52,14 @@ The following original capabilities are intentionally not implemented, indexed b
 
 | Original capability | What to do instead |
 | --- | --- |
-| `href` on `TabOption` | Not supported (the original only used it from PHP); compose link tabs yourself, see [Tab select](/en/components/tab-select/index.html) |
-| `allowLinebreaks` / `enter` on `MultilineTextInputWidget` | Line breaks are always allowed; strip them yourself when you need to forbid them, see [Multiline text input](/en/components/multiline-text-input/index.html) |
+| `href` on `TabOption` | Not supported (the original only used it from PHP); compose link tabs yourself, see [Tab select](../components/tab-select/index.mdx) |
+| `allowLinebreaks` / `enter` on `MultilineTextInputWidget` | Line breaks are always allowed; strip them yourself when you need to forbid them, see [Multiline text input](../components/multiline-text-input/index.mdx) |
 | `config.input` / `inputWidget` on `TagMultiselectWidget` | The input is built in and cannot be replaced |
-| `config.input` on `LabelWidget` | Use `htmlFor` for fields with an id, otherwise let FieldLayout wire the association, see [Label](/en/components/label/index.html) |
+| `config.input` on `LabelWidget` | Use `htmlFor` for fields with an id, otherwise let FieldLayout wire the association, see [Label](../components/label/index.mdx) |
 | `ActionSet.static.specialFlags` subclass override | Special actions are fixed to `safe` / `primary`; declare them via `flags` |
 | `align='inline'` downgrade check on `FieldLayout` | No automatic downgrade; make sure the field root element is inline before passing `inline` |
-| `flags` on plain-label options (Tab / Radio / CheckboxMultioption) | `flags` is only available on option forms with icon slots, see [Selections and options](/en/guide/options.html) |
-| Automatic URL sanitizing (`OO.ui.isSafeUrl`) | Components never rewrite `href` / `action`; sanitize untrusted URLs yourself with the exported `sanitizeUrl` (the responsibility is on the caller and the backend), see [Button](/en/components/button/index.html) |
+| `flags` on plain-label options (Tab / Radio / CheckboxMultioption) | `flags` is only available on option forms with icon slots, see [Selections and options](./options.mdx) |
+| Automatic URL sanitizing (`OO.ui.isSafeUrl`) | Components never rewrite `href` / `action`; sanitize untrusted URLs yourself with the exported `sanitizeUrl` (the responsibility is on the caller and the backend), see [Button](../components/button/index.mdx) |
 
 ## Behavioral differences at a glance
 
@@ -67,24 +67,24 @@ These behaviors differ from the original in ways that will break or surprise you
 
 | Component | Difference | Details |
 | --- | --- | --- |
-| `Message` | The close button only calls `onClose` and does not hide itself — if you ignore the callback the message cannot be dismissed | [Message](/en/components/message/index.html) |
-| Bare `Dialog` | No built-in title slot; render the title yourself and pass `aria-labelledby`, otherwise you get an unnamed dialog | [Dialog](/en/components/dialog/index.html) |
-| Dialog family | Always controlled: a required `open` prop, no `defaultOpen` | [Controlled and uncontrolled](/en/guide/controlled.html#dialogs-must-be-controlled) |
-| `confirm` / `alert` / `prompt` | The original silently drops the second call while a window is open; this library stacks them, each independently interactive | [Imperative dialogs](/en/components/imperative-dialogs/index.html) |
-| `prompt` | `textInput.value` is initial-only; it cannot be changed externally while the dialog is alive | [Imperative dialogs](/en/components/imperative-dialogs/index.html) |
-| `Toolbar` tools | Visible text and tooltip split from one `title` key into `label` + `title` (pass the old `narrowConfig.title` value as `label`) | [Toolbar](/en/components/toolbar/index.html) |
-| `Toolbar` | Do not put popup tools inside List / Menu groups: the popup anchor dies with the collapsed panel and ends up misplaced at the viewport's top-left corner | [Toolbar](/en/components/toolbar/index.html) |
-| `TagMultiselect` | Tag identity is a scalar `value`; carry objects via the `data` field and look them up by value | [Tag multiselect](/en/components/tag-multiselect/index.html) |
-| `Dropdown` / `ButtonMenuSelectWidget` | Space selects the highlighted option while open (the original ignored Space and only closed the menu via key-press click emulation) | [Dropdown](/en/components/dropdown/index.html) |
-| `Popup` | Re-evaluates the flip direction when scrolling changes clipping (the original freezes it until reopened); the popup may jump while scrolling | [Popup](/en/components/popup/index.html) |
+| `Message` | The close button only calls `onClose` and does not hide itself — if you ignore the callback the message cannot be dismissed | [Message](../components/message/index.mdx) |
+| Bare `Dialog` | No built-in title slot; render the title yourself and pass `aria-labelledby`, otherwise you get an unnamed dialog | [Dialog](../components/dialog/index.mdx) |
+| Dialog family | Always controlled: a required `open` prop, no `defaultOpen` | [Controlled and uncontrolled](./controlled.mdx#dialogs-must-be-controlled) |
+| `confirm` / `alert` / `prompt` | The original silently drops the second call while a window is open; this library stacks them, each independently interactive | [Imperative dialogs](../components/imperative-dialogs/index.mdx) |
+| `prompt` | `textInput.value` is initial-only; it cannot be changed externally while the dialog is alive | [Imperative dialogs](../components/imperative-dialogs/index.mdx) |
+| `Toolbar` tools | Visible text and tooltip split from one `title` key into `label` + `title` (pass the old `narrowConfig.title` value as `label`) | [Toolbar](../components/toolbar/index.mdx) |
+| `Toolbar` | Do not put popup tools inside List / Menu groups: the popup anchor dies with the collapsed panel and ends up misplaced at the viewport's top-left corner | [Toolbar](../components/toolbar/index.mdx) |
+| `TagMultiselect` | Tag identity is a scalar `value`; carry objects via the `data` field and look them up by value | [Tag multiselect](../components/tag-multiselect/index.mdx) |
+| `Dropdown` / `ButtonMenuSelectWidget` | Space selects the highlighted option while open (the original ignored Space and only closed the menu via key-press click emulation) | [Dropdown](../components/dropdown/index.mdx) |
+| `Popup` | Re-evaluates the flip direction when scrolling changes clipping (the original freezes it until reopened); the popup may jump while scrolling | [Popup](../components/popup/index.mdx) |
 
 ## Imperative dialogs
 
-`confirm` / `alert` / `prompt` are standalone functions you can `await` from any event handler; the dialogs inherit the enclosing `OOUIProvider` configuration (messages, `isMobile`, `dir` and your own providers). Unlike the original's shared singleton manager, repeated calls stack. See [Imperative dialogs](/en/components/imperative-dialogs/index.html) for the runtime semantics and [Global configuration](/en/guide/configuration.html#imperative-dialogs) for config inheritance.
+`confirm` / `alert` / `prompt` are standalone functions you can `await` from any event handler; the dialogs inherit the enclosing `OOUIProvider` configuration (messages, `isMobile`, `dir` and your own providers). Unlike the original's shared singleton manager, repeated calls stack. See [Imperative dialogs](../components/imperative-dialogs/index.mdx) for the runtime semantics and [Global configuration](./configuration.mdx#imperative-dialogs) for config inheritance.
 
 ## Localization
 
-`en` is the built-in default baseline; 222 more language packs (`ooui-react/locales/<code>`) are available as optional imports. On a MediaWiki site you can wire `mw.msg` into `messages` to follow the site language. See [Messages and i18n](/en/guide/configuration.html#messages-and-i18n) for the language list and setup.
+`en` is the built-in default baseline; 222 more language packs (`ooui-react/locales/<code>`) are available as optional imports. On a MediaWiki site you can wire `mw.msg` into `messages` to follow the site language. See [Messages and i18n](./configuration.mdx#messages-and-i18n) for the language list and setup.
 
 ## Full deviation ledger
 

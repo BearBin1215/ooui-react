@@ -7,7 +7,7 @@ description: "MultilineTextInput 组件的属性说明：rows/maxRows 行数、a
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/MultilineTextInput) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.MultilineTextInputWidget.html "OO.ui.MultilineTextInputWidget")
 
-多行文本输入框，输入能力与 [TextInput](/components/text-input/index.html) 一致。
+多行文本输入框，输入能力与 [TextInput](../text-input/index.mdx) 一致。
 
 ## 基本用法
 
@@ -94,7 +94,7 @@ export default App;
 
 ## 属性落点
 
-组件根是不可聚焦的 `<div>`，输入元素是 `<textarea>`。落点规则与 [TextInput](/components/text-input/index.html) 相同：
+组件根是不可聚焦的 `<div>`，输入元素是 `<textarea>`。落点规则与 [TextInput](../text-input/index.mdx) 相同：
 
 - props 的 `...rest` 落在根 div 上；要写到原生 `<textarea>` 的属性（如 `role`、`aria-*`）走 `inputProps` 通道，其 `onChange`/`onBlur`/`onFocus` 串联在组件自身逻辑之后。
 - `inputRef` 指向内部 `<textarea>`（组件 `ref` 指向根 div），聚焦输入框用 `inputRef`。
@@ -117,7 +117,7 @@ export default App;
 | `icon` | 图标名 | `string` | — |
 | `indicator` | 指示器（`required` 且未显式给时回退为 required） | `'up' \| 'down' \| 'clear' \| 'required'` | — |
 | `required` | 必填（原生 `required` 属性，参与浏览器校验） | `boolean` | `false` |
-| `validate` | 软校验（正则 / 函数 / 符号名），见 [TextInput 的软校验](/components/text-input/index.html#软校验) | `RegExp \| ((value: string) => boolean \| Promise<boolean>) \| 'non-empty' \| 'integer'` | — |
+| `validate` | 软校验（正则 / 函数 / 符号名），见 [TextInput 的软校验](../text-input/index.mdx#软校验) | `RegExp \| ((value: string) => boolean \| Promise<boolean>) \| 'non-empty' \| 'integer'` | — |
 | `readOnly` | 只读（保留聚焦与可选中复制） | `boolean` | `false` |
 | `disabled` | 是否禁用 | `boolean` | `false` |
 | `flags` | 根元素附加标志（invalid 标志叠加其上） | `string \| string[]` | — |
@@ -130,6 +130,6 @@ export default App;
 
 ## 另见
 
-- 单行形态与软校验的完整说明：[TextInput](/components/text-input/index.html)
-- 值如何在组件与状态之间流动：[受控与非受控](/guide/controlled.html)
-- 所有组件共有的透传与 `ref` 规则：[通用属性](/guide/basics.html)
+- 单行形态与软校验的完整说明：[TextInput](../text-input/index.mdx)
+- 值如何在组件与状态之间流动：[受控与非受控](../../guide/controlled.mdx)
+- 所有组件共有的透传与 `ref` 规则：[通用属性](../../guide/basics.mdx)

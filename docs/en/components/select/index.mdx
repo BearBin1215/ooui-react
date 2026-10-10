@@ -7,10 +7,10 @@ description: "Props for the Select component: the listbox that powers dropdowns 
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Select) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.SelectWidget.html "OO.ui.SelectWidget")
 
-A selection list: a clickable set of options — the inner list of floating components like [Dropdown](/en/components/dropdown/index.html), and usable on its own. The option data contract is in [Selection and options](/en/guide/options.html).
+A selection list: a clickable set of options — the inner list of floating components like [Dropdown](../dropdown/index.mdx), and usable on its own. The option data contract is in [Selection and options](../../guide/options.mdx).
 
 :::note How to interact with it standalone
-Matching the original `SelectWidget`, this component's root is **not focusable by default** (it is not in the Tab order), so it is best suited to mouse selection. For keyboard-reachable single or multiple selection, prefer components that handle focus for you — [Dropdown](/en/components/dropdown/index.html), [RadioSelect](/en/components/radio-select/index.html), `ButtonSelect` — all of which use `Select` as their inner list. As a menu's inner layer, keyboard navigation is handled by the outer trigger for you, so you don't have to manage it. {/* deviations: dev-select-tabindex */}
+Matching the original `SelectWidget`, this component's root is **not focusable by default** (it is not in the Tab order), so it is best suited to mouse selection. For keyboard-reachable single or multiple selection, prefer components that handle focus for you — [Dropdown](../dropdown/index.mdx), [RadioSelect](../radio-select/index.mdx), `ButtonSelect` — all of which use `Select` as their inner list. As a menu's inner layer, keyboard navigation is handled by the outer trigger for you, so you don't have to manage it. {/* deviations: dev-select-tabindex */}
 :::
 
 ## Basic usage
@@ -123,7 +123,7 @@ As a menu's inner layer, keyboard navigation is driven by the outer component. F
 
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
-| `options` | The option set; see [Selection and options](/en/guide/options.html) for the contract | `SelectOptionProps[]` | — |
+| `options` | The option set; see [Selection and options](../../guide/options.mdx) for the contract | `SelectOptionProps[]` | — |
 | `value` | Current selected value (controlled; passing it enables control) | `string \| number` | — |
 | `defaultValue` | Initial selected value for uncontrolled use | `string \| number` | — |
 | `onChange` | Selected-value change callback (value-first, fires only on change) | `ChangeHandler<string \| number>` | — |
@@ -142,6 +142,6 @@ There is no `children` slot; every option is declared through `options`.
 
 ## See also
 
-- Option data and the keyboard focus model: [Selection and options](/en/guide/options.html)
-- Floating components that use Select as their inner list: [Dropdown](/en/components/dropdown/index.html)
-- The division of labor between `onChange` and `onChoose`: [Controlled and uncontrolled](/en/guide/controlled.html#callback-signatures)
+- Option data and the keyboard focus model: [Selection and options](../../guide/options.mdx)
+- Floating components that use Select as their inner list: [Dropdown](../dropdown/index.mdx)
+- The division of labor between `onChange` and `onChoose`: [Controlled and uncontrolled](../../guide/controlled.mdx#callback-signatures)

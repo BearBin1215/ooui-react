@@ -7,11 +7,11 @@ description: "Props for the RadioSelectInput component: a RadioSelect for displa
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/RadioSelectInput) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.RadioSelectInputWidget.html "OO.ui.RadioSelectInputWidget")
 
-A radio group field: a [RadioSelect](/en/components/radio-select/index.html) handles display and keyboard interaction while an embedded hidden `<input>` carries the form submission.
+A radio group field: a [RadioSelect](../radio-select/index.mdx) handles display and keyboard interaction while an embedded hidden `<input>` carries the form submission.
 
 ## Basic usage
 
-Compared with [RadioSelect](/en/components/radio-select/index.html): `name` is not written on each `radio` (exclusivity is guaranteed by the controlled state), and the component **always has a selection** — a value not among the selectable options falls back to the first selectable one, matching the "always one selected" semantics of HTML radio forms.
+Compared with [RadioSelect](../radio-select/index.mdx): `name` is not written on each `radio` (exclusivity is guaranteed by the controlled state), and the component **always has a selection** — a value not among the selectable options falls back to the first selectable one, matching the "always one selected" semantics of HTML radio forms.
 
 ```tsx preview
 import { useState } from "react";
@@ -94,10 +94,10 @@ export default App;
 | `tabIndex` | Forwarded to the inner RadioSelect's root | `number` | — |
 | `...rest` | Native `div` props passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
 
-The original forwards only `data` and `label` when building options, silently dropping `options[].disabled`; this implementation honors `disabled` as declared, matching [CheckboxMultiselectInput](/en/components/checkbox-multiselect-input/index.html) and [DropdownInput](/en/components/dropdown-input/index.html).{/* deviations: dev-radioselectinput-disabled */}
+The original forwards only `data` and `label` when building options, silently dropping `options[].disabled`; this implementation honors `disabled` as declared, matching [CheckboxMultiselectInput](../checkbox-multiselect-input/index.mdx) and [DropdownInput](../dropdown-input/index.mdx).{/* deviations: dev-radioselectinput-disabled */}
 
 ## See also
 
-- The interactive radio group: [RadioSelect](/en/components/radio-select/index.html)
-- The dropdown field form: [DropdownInput](/en/components/dropdown-input/index.html)
-- The checkbox group field: [CheckboxMultiselectInput](/en/components/checkbox-multiselect-input/index.html)
+- The interactive radio group: [RadioSelect](../radio-select/index.mdx)
+- The dropdown field form: [DropdownInput](../dropdown-input/index.mdx)
+- The checkbox group field: [CheckboxMultiselectInput](../checkbox-multiselect-input/index.mdx)

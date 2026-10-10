@@ -7,11 +7,11 @@ description: "IndexLayout 组件的属性说明：顶部页签加下方面板栈
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/layouts/IndexLayout) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.IndexLayout.html "OO.ui.IndexLayout")
 
-页签布局：顶部是[页签选择](/components/tab-select/index.html)，下方是[页签面板](/components/tab-panel-layout/index.html)栈。适合设置页这类「顶部页签 + 分块内容」的场景；侧边大纲的变体见 [BookletLayout](/components/booklet-layout/index.html)。
+页签布局：顶部是[页签选择](../tab-select/index.mdx)，下方是[页签面板](../tab-panel-layout/index.mdx)栈。适合设置页这类「顶部页签 + 分块内容」的场景；侧边大纲的变体见 [BookletLayout](../booklet-layout/index.mdx)。
 
 ## 基本用法
 
-`options` 数组项为 `{ value, label, children }` 加 [TabPanelLayout](/components/tab-panel-layout/index.html) 的面板字段（可带 `disabled` 禁用页签）；激活页走 `value` / `defaultValue` / `onChange` 三条通道。页签与面板自动建立 `aria-controls` / `aria-labelledby` 关联。
+`options` 数组项为 `{ value, label, children }` 加 [TabPanelLayout](../tab-panel-layout/index.mdx) 的面板字段（可带 `disabled` 禁用页签）；激活页走 `value` / `defaultValue` / `onChange` 三条通道。页签与面板自动建立 `aria-controls` / `aria-labelledby` 关联。
 
 ```tsx preview
 import { useState } from "react";
@@ -40,7 +40,7 @@ export default App;
 ```
 
 :::note 形态前提
-`expanded`（缺省开启）形态按绝对定位铺满父元素，父元素需已定位并给定尺寸（上面的示例容器即为此而设）。`expanded={false}` 的 static 形态只有 [MenuLayout](/components/menu-layout/index.html) 自身的流式内容可用——本组件与 BookletLayout 的页面栈都是绝对定位面板，static 下没有内容高度，不要使用。
+`expanded`（缺省开启）形态按绝对定位铺满父元素，父元素需已定位并给定尺寸（上面的示例容器即为此而设）。`expanded={false}` 的 static 形态只有 [MenuLayout](../menu-layout/index.mdx) 自身的流式内容可用——本组件与 BookletLayout 的页面栈都是绝对定位面板，static 下没有内容高度，不要使用。
 :::
 
 ## 浏览器查找联动
@@ -80,11 +80,11 @@ export default App;
 
 ## API
 
-继承 [MenuLayout](/components/menu-layout/index.html) 全部属性（`menu` / `menuPosition` / `children` 除外），另有：
+继承 [MenuLayout](../menu-layout/index.mdx) 全部属性（`menu` / `menuPosition` / `children` 除外），另有：
 
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `options` | 页签集：`value`、`label`、`disabled` 加 [TabPanelLayout](/components/tab-panel-layout/index.html) 字段（禁用页签对应的面板始终以 `hidden` 完全隐藏，不受 `openMatchedPanels` 影响） | `IndexLayoutTabProps[]` | — |
+| `options` | 页签集：`value`、`label`、`disabled` 加 [TabPanelLayout](../tab-panel-layout/index.mdx) 字段（禁用页签对应的面板始终以 `hidden` 完全隐藏，不受 `openMatchedPanels` 影响） | `IndexLayoutTabProps[]` | — |
 | `value` | 当前激活页签（受控，传入即受控模式） | `string \| number` | — |
 | `defaultValue` | 非受控初始激活页签 | `string \| number` | — |
 | `onChange` | 激活页签变化回调 | `ChangeHandler<string \| number>` | — |
@@ -95,6 +95,6 @@ export default App;
 
 ## 另见
 
-- 单个页签面板的字段：[TabPanelLayout](/components/tab-panel-layout/index.html)
-- 侧边大纲的变体：[BookletLayout](/components/booklet-layout/index.html)
-- `hidden="until-found"` 三态：[Layout](/components/layout/index.html)
+- 单个页签面板的字段：[TabPanelLayout](../tab-panel-layout/index.mdx)
+- 侧边大纲的变体：[BookletLayout](../booklet-layout/index.mdx)
+- `hidden="until-found"` 三态：[Layout](../layout/index.mdx)

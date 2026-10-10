@@ -7,7 +7,7 @@ description: "Dropdown 组件的属性说明：options 选项集、受控/非受
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Dropdown) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.DropdownWidget.html "OO.ui.DropdownWidget")
 
-下拉选择框。选项数据的书写约定见[选择与选项](/guide/options.html)。
+下拉选择框。选项数据的书写约定见[选择与选项](../../guide/options.mdx)。
 
 ## 基本用法
 
@@ -65,7 +65,7 @@ export default App;
 
 ## 分组与禁用项
 
-选项数组里不带 `value` 的项渲染为分组标题，带 `disabled` 的项不可选。菜单类组件的 `disabled` 禁用的是**触发端**（handle 不可展开、键盘不可用），菜单内各项是否禁用由选项自身的 `disabled` 决定，详见[选择与选项 · 禁用](/guide/options.html#禁用)。
+选项数组里不带 `value` 的项渲染为分组标题，带 `disabled` 的项不可选。菜单类组件的 `disabled` 禁用的是**触发端**（handle 不可展开、键盘不可用），菜单内各项是否禁用由选项自身的 `disabled` 决定，详见[选择与选项 · 禁用](../../guide/options.mdx#禁用)。
 
 ```tsx preview
 import { Dropdown } from "ooui-react";
@@ -106,7 +106,7 @@ export default App;
 
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `options` | 选项集，书写约定见[选择与选项](/guide/options.html) | `DropdownOptionProps[]` | — |
+| `options` | 选项集，书写约定见[选择与选项](../../guide/options.mdx) | `DropdownOptionProps[]` | — |
 | `value` | 当前选中值（受控，传入即受控模式） | `string \| number` | — |
 | `defaultValue` | 非受控初始选中值 | `string \| number` | — |
 | `onChange` | 选中值变更回调（值变化时触发） | `ChangeHandler<string \| number>` | — |
@@ -120,6 +120,6 @@ export default App;
 
 ## 另见
 
-- 选项数据与键盘焦点模型：[选择与选项](/guide/options.html)
-- 菜单的内层列表：[Select](/components/select/index.html)
-- 值如何在组件与状态之间流动：[受控与非受控](/guide/controlled.html)
+- 选项数据与键盘焦点模型：[选择与选项](../../guide/options.mdx)
+- 菜单的内层列表：[Select](../select/index.mdx)
+- 值如何在组件与状态之间流动：[受控与非受控](../../guide/controlled.mdx)

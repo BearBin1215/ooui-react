@@ -43,7 +43,7 @@ export default App;
 
 ## Labels, icons and soft validation
 
-`label` / `labelPosition` / `invisibleLabel`, `icon` / `indicator`, `validate`, `required` and the rest follow [TextInput](/en/components/text-input/index.html); `validate` is soft feedback (marks `aria-invalid`, never rewrites the value).
+`label` / `labelPosition` / `invisibleLabel`, `icon` / `indicator`, `validate`, `required` and the rest follow [TextInput](../text-input/index.mdx); `validate` is soft feedback (marks `aria-invalid`, never rewrites the value).
 
 ```tsx preview
 import { ComboBoxInput } from "ooui-react";
@@ -73,24 +73,24 @@ Choosing (clicking an option, Enter, the dropdown button) writes the option text
 | Key | Behavior |
 | --- | --- |
 | ↑ / ↓ | Open the menu and move the highlight (starting from the first / last option when closed) |
-| Enter | Choose the highlighted option (with no highlight, the option exactly matching the input) and close; while the menu is open the default is prevented, so Enter inside a [FormLayout](/en/components/form-layout/index.html) won't submit the form as a side effect |
+| Enter | Choose the highlighted option (with no highlight, the option exactly matching the input) and close; while the menu is open the default is prevented, so Enter inside a [FormLayout](../form-layout/index.mdx) won't submit the form as a side effect |
 | Tab | Taken only while the menu is open: with an unchosen highlight, it commits that option and keeps focus; otherwise it closes the menu and lets focus move on |
 | PageUp / PageDown | Page by ±10 (only while the menu is open) |
 | Home / End / ← / → | Not taken; the caret stays with the input |
 
-The highlight does not wrap at the ends (unlike `SearchWidget`'s wrap-around); Escape or clicking outside closes the menu (handled in the capture phase, so nested in a [Dialog](/en/components/dialog/index.html) it won't close the dialog by mistake). Focus stays on the input and the highlighted option is announced via `aria-activedescendant`; the common model is in [Selection and options](/en/guide/options.html).
+The highlight does not wrap at the ends (unlike `SearchWidget`'s wrap-around); Escape or clicking outside closes the menu (handled in the capture phase, so nested in a [Dialog](../dialog/index.mdx) it won't close the dialog by mistake). Focus stays on the input and the highlighted option is announced via `aria-activedescendant`; the common model is in [Selection and options](../../guide/options.mdx).
 
 ## Where props land
 
-Same as [TextInput](/en/components/text-input/index.html): `...rest` lands on the root `<div>`, props for the native `<input>` go through `inputProps`, `inputRef` focuses the input; `tabIndex`, `title`, `dir`, `accessKey` and `name` are taken over and land on the `<input>`.
+Same as [TextInput](../text-input/index.mdx): `...rest` lands on the root `<div>`, props for the native `<input>` go through `inputProps`, `inputRef` focuses the input; `tabIndex`, `title`, `dir`, `accessKey` and `name` are taken over and land on the `<input>`.
 
 ## API
 
-Only ComboBoxInput-specific props are listed; input props are in [TextInput · API](/en/components/text-input/index.html#api).
+Only ComboBoxInput-specific props are listed; input props are in [TextInput · API](../text-input/index.mdx#api).
 
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
-| `options` | Candidate option set (**required**); see [Selection and options](/en/guide/options.html) | `DropdownOptionProps[]` | — |
+| `options` | Candidate option set (**required**); see [Selection and options](../../guide/options.mdx) | `DropdownOptionProps[]` | — |
 | `value` | Input text (controlled) | `string` | — |
 | `defaultValue` | Initial value for uncontrolled use | `string` | `''` |
 | `onChange` | Value-change callback (typed and chosen items both fire) | `ChangeHandler<string>` | — |
@@ -98,13 +98,13 @@ Only ComboBoxInput-specific props are listed; input props are in [TextInput · A
 | `label` / `labelPosition` / `invisibleLabel` | Field label / position / visually hidden | — | — / `'after'` / `false` |
 | `icon` / `indicator` | Icon name / indicator | `string` / `'up' \| 'down' \| 'clear' \| 'required'` | — |
 | `flags` | Extra root flags (invalid overlays it) | `string \| string[]` | — |
-| `validate` | Soft validation, see [Soft validation](/en/components/text-input/index.html#soft-validation) | `RegExp \| ((v: string) => boolean \| Promise<boolean>) \| 'non-empty' \| 'integer'` | — |
+| `validate` | Soft validation, see [Soft validation](../text-input/index.mdx#soft-validation) | `RegExp \| ((v: string) => boolean \| Promise<boolean>) \| 'non-empty' \| 'integer'` | — |
 | `inputRef` | Ref to the inner `<input>` | `Ref<HTMLInputElement>` | — |
 | `inputProps` | Extra props for the native `<input>`; events chain after the component's logic | `object` | — |
 | `disabled` | Whether disabled | `boolean` | `false` |
 
 ## See also
 
-- The base single-line input: [TextInput](/en/components/text-input/index.html)
-- Pick only from candidates (no free entry): [Dropdown](/en/components/dropdown/index.html)
-- Option data and the keyboard focus model: [Selection and options](/en/guide/options.html)
+- The base single-line input: [TextInput](../text-input/index.mdx)
+- Pick only from candidates (no free entry): [Dropdown](../dropdown/index.mdx)
+- Option data and the keyboard focus model: [Selection and options](../../guide/options.mdx)

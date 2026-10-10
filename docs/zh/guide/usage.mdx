@@ -1,6 +1,6 @@
 ---
 title: 使用方式
-description: "ooui-react 的安装命令、运行环境与样式引入，以及在 MediaWiki 站点、Preact 兼容层下的使用方式。"
+description: "ooui-react 的安装命令、运行环境与样式引入，在 MediaWiki 站点、Preact 兼容层下的使用方式，以及面向 AI 的文档消费入口。"
 ---
 
 import { PackageManagerTabs, Steps, Tab, Tabs } from "@rspress/core/theme";
@@ -64,7 +64,7 @@ mw.loader.using([
 ]);
 ```
 
-其中图标组的组名见[图标索引](/components/icon/index.html#全部图标)里的分组。
+其中图标组的组名见[图标索引](../components/icon/index.mdx#全部图标)里的分组。
 
 ### 挂载
 
@@ -111,3 +111,20 @@ mw.loader.using([
 
 - 版本门槛 Preact ≥ 10.18，10.x 与 11.x 均兼容。
 - `react-dom/client` 须映射到 `preact/compat/client`，缺失时命令式 API（confirm / alert / prompt）会缺失 `createRoot` 而报错。
+
+## 与 AI 协作
+
+本文档站已开启 `llms` 支持，除每页标题下方的复制 Markdown 等入口外，同步发布两份面向 LLM 的纯文本文件：
+
+- [llms.txt](https://bearbin1215.github.io/ooui-react/llms.txt)：索引文件，包含文档站各页面的说明和链接
+  ```
+  https://bearbin1215.github.io/ooui-react/llms.txt
+  ```
+- [llms-full.txt](https://bearbin1215.github.io/ooui-react/llms-full.txt)：合并有本文档站全部中文内容
+  ```
+  https://bearbin1215.github.io/ooui-react/llms-full.txt
+  ```
+
+英文站内容对应 `/en/llms.txt` 与 `/en/llms-full.txt`。引用单页时，把页面地址的 `.html` 后缀换成 `.md` 也可获得该页的纯 Markdown 版本。
+
+可以视使用需要将上述链接复制给你的 agent。

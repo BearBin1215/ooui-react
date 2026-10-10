@@ -1,6 +1,6 @@
 ---
 title: Usage
-description: "Installing ooui-react, its runtime environment, loading the OOUI stylesheets, and using the library on MediaWiki sites or on the Preact compatibility layer."
+description: "Installing ooui-react, its runtime environment, loading the OOUI stylesheets, using the library on MediaWiki sites or on the Preact compatibility layer, and the AI-friendly entry points to these docs."
 ---
 
 import { PackageManagerTabs, Steps, Tab, Tabs } from "@rspress/core/theme";
@@ -64,7 +64,7 @@ mw.loader.using([
 ]);
 ```
 
-The icon pack names are listed by group on the [Icon component page](/en/components/icon/index.html#all-icons).
+The icon pack names are listed by group on the [Icon component page](../components/icon/index.mdx#all-icons).
 
 ### Mounting
 
@@ -111,3 +111,20 @@ This library runs on the Preact compatibility layer (`preact/compat`); see the [
 
 - Requires Preact ≥ 10.18; both 10.x and 11.x are supported.
 - `react-dom/client` must be aliased to `preact/compat/client`; without it the imperative APIs (`confirm` / `alert` / `prompt`) fail because `createRoot` is not available.
+
+## Working with AI
+
+This docs site is built with `llms` support: besides the copy-Markdown and open-in-ChatGPT/Claude entries under each page title, two plain-text files for LLMs are published alongside the site on every build:
+
+- [llms.txt](https://bearbin1215.github.io/ooui-react/en/llms.txt): an index file with descriptions and links for every page on the site
+  ```
+  https://bearbin1215.github.io/ooui-react/en/llms.txt
+  ```
+- [llms-full.txt](https://bearbin1215.github.io/ooui-react/en/llms-full.txt): the entire English site content merged into one file
+  ```
+  https://bearbin1215.github.io/ooui-react/en/llms-full.txt
+  ```
+
+The Chinese site publishes the same files at the root: `/llms.txt` and `/llms-full.txt`. When citing a single page, replacing the `.html` suffix of its URL with `.md` also gives you the plain-Markdown version of that page.
+
+Copy whichever link fits your use case and hand it to your agent.

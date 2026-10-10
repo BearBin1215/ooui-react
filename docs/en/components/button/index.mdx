@@ -7,7 +7,7 @@ description: "Props for the Button component: label, icon, indicator, flags and 
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Button) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ButtonWidget.html "OO.ui.ButtonWidget")
 
-The basic button component, and also the button base for [ToggleButton](/en/components/toggle-button/index.html), [PopupButton](/en/components/popup-button/index.html), [ButtonMenuSelectWidget](/en/components/button-menu-select/index.html) and other components.
+The basic button component, and also the button base for [ToggleButton](../toggle-button/index.mdx), [PopupButton](../popup-button/index.mdx), [ButtonMenuSelectWidget](../button-menu-select/index.mdx) and other components.
 
 ## Basic usage
 
@@ -31,7 +31,7 @@ export default App;
 
 ## Icons and indicators
 
-`icon` takes an icon name (see [Icon](/en/components/icon/index.html)), `indicator` takes one of the four indicators (see [Indicator](/en/components/indicator/index.html)). They render on opposite ends of the label.
+`icon` takes an icon name (see [Icon](../icon/index.mdx)), `indicator` takes one of the four indicators (see [Indicator](../indicator/index.mdx)). They render on opposite ends of the label.
 
 When the label is icon-only, turn on `invisibleLabel`: the label is visually hidden but kept as the accessible name, and `title` falls back to the label text when not given explicitly.
 
@@ -134,7 +134,7 @@ export default App;
 - The focusable element is the inner `<a>`; the root `<span>` is not focusable. To focus the button manually, use `anchorRef` (the component `ref` points to the outer `<span>`).
 - Enter / Space trigger `onClick`; `onKeyPress` prevents Space from scrolling the page whenever a click handler is present.
 - The pressed state (`oo-ui-buttonElement-pressed`) is maintained by the component in JS (including keyboard press and release). The `pressed` prop is OR-ed with it, for cases like "keep the button pressed while its associated menu is open".
-- `title` and `accessKey` land on the inner `<a>`; when `title` is not given and the label is hidden it falls back to the label text, and when `accessKey` is present a key hint is appended to `title` (the chord text can be localized via [OOUIProvider](/en/guide/configuration.html#access-key-label)).
+- `title` and `accessKey` land on the inner `<a>`; when `title` is not given and the label is hidden it falls back to the label text, and when `accessKey` is present a key hint is appended to `title` (the chord text can be localized via [OOUIProvider](../../guide/configuration.mdx#access-key-label)).
 
 ## API
 

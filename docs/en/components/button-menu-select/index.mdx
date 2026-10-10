@@ -7,7 +7,7 @@ description: "Props for the ButtonMenuSelectWidget component: a command menu ope
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ButtonMenuSelectWidget) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ButtonMenuSelectWidget.html "OO.ui.ButtonMenuSelectWidget")
 
-A button-triggered command menu: choosing an item runs it and closes the menu. Unlike a [Dropdown](/en/components/dropdown/index.html) that tracks a "current selection", it suits toolbar-style "click to run a command" cases.
+A button-triggered command menu: choosing an item runs it and closes the menu. Unlike a [Dropdown](../dropdown/index.mdx) that tracks a "current selection", it suits toolbar-style "click to run a command" cases.
 
 ## Basic usage
 
@@ -46,7 +46,7 @@ export default App;
 
 - `open` / `defaultOpen` / `onOpenChange` control the menu (the button, outside clicks, Escape and choosing all fire `onOpenChange`).
 - `clearOnSelect` defaults to `true`: the menu is a pure command menu with no lingering selection; set it to `false` to keep the last chosen item.
-- Options without a `value` render as group headings (the "Advanced" item above). The option contract is in [Selection and options](/en/guide/options.html).
+- Options without a `value` render as group headings (the "Advanced" item above). The option contract is in [Selection and options](../../guide/options.mdx).
 
 ```tsx preview
 import { useState } from "react";
@@ -79,7 +79,7 @@ export default App;
 
 ## Keyboard
 
-Focus is on the button: Enter / Space opens the menu; with it open, ↑↓ move the highlight, Enter / Space choose, and typed characters jump by prefix; Escape or an outside click closes it. Note that, unlike [Dropdown](/en/components/dropdown/index.html), typing while the menu is closed and focused does not change the selection directly.
+Focus is on the button: Enter / Space opens the menu; with it open, ↑↓ move the highlight, Enter / Space choose, and typed characters jump by prefix; Escape or an outside click closes it. Note that, unlike [Dropdown](../dropdown/index.mdx), typing while the menu is closed and focused does not change the selection directly.
 
 Two differences from OOUI:
 
@@ -88,11 +88,11 @@ Two differences from OOUI:
 
 ## API
 
-Inherits [Button](/en/components/button/index.html) props (`icon` / `indicator` / `flags` / `framed` / `disabled`, etc.; `onClick` fires "before toggling the open state"), and adds:
+Inherits [Button](../button/index.mdx) props (`icon` / `indicator` / `flags` / `framed` / `disabled`, etc.; `onClick` fires "before toggling the open state"), and adds:
 
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
-| `options` | Menu option set (**required**); see [Selection and options](/en/guide/options.html) | `ButtonMenuSelectWidgetOptionProps[]` | — |
+| `options` | Menu option set (**required**); see [Selection and options](../../guide/options.mdx) | `ButtonMenuSelectWidgetOptionProps[]` | — |
 | `open` | Whether the menu is open (controlled) | `boolean` | — |
 | `defaultOpen` | Initial open state for uncontrolled use | `boolean` | `false` |
 | `onOpenChange` | Menu open-state callback | `(open: boolean) => void` | — |
@@ -103,6 +103,6 @@ Inherits [Button](/en/components/button/index.html) props (`icon` / `indicator` 
 
 ## See also
 
-- A dropdown that records the current value: [Dropdown](/en/components/dropdown/index.html)
-- A general button that opens a popup: [PopupButton](/en/components/popup-button/index.html)
+- A dropdown that records the current value: [Dropdown](../dropdown/index.mdx)
+- A general button that opens a popup: [PopupButton](../popup-button/index.mdx)
 - More command-menu forms: the toolbar's `MenuToolGroup`
