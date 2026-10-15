@@ -171,7 +171,9 @@ describe("主题 CSS 规则检查（贡献器与输入框折叠层类名）", ()
   it("白名单条目确实不在规则范围内（否则应从白名单移除，避免掩盖真实回归）", () => {
     // 白名单是「已知无规则」的记录；一旦上游补上规则，白名单即成噪音，应清理
     for (const token of ALLOWLIST) {
-      expect(contractTokens.has(token), `${token} 已进入规则范围，应移出白名单`).toBe(false);
+      expect(contractTokens.has(token), `${token} 已进入规则范围，应移出白名单`).toBe(
+        false,
+      );
     }
   });
 });
