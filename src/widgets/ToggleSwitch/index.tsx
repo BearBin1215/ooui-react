@@ -6,12 +6,12 @@ import { isActivationKey, isComposingKeyEvent } from "../../utils";
 import type { WidgetProps } from "../Widget";
 
 // 内部实现说明：onClick/onKeyDown由组件内部承载切换逻辑（见handleClick/handleKeyDown），
-// Omit掉避免调用方传入被静默覆盖——与ToggleButton「Omit掉自身占用的事件」同口径
+// Omit掉避免调用方传入被静默覆盖——与ToggleButton「Omit掉自身占用的事件」同规则
 /**
  * Props of the toggle switch: no `children`, `label` or `icon` slot, and
  * `onClick` / `onKeyDown` are taken over by the toggling logic.
  *
- * 拨动开关属性：没有 `children`、`label`、`icon` 落点，`onClick` / `onKeyDown`
+ * 拨动开关属性：没有 `children`、`label`、`icon` 位置，`onClick` / `onKeyDown`
  * 由切换逻辑占用。
  */
 export interface ToggleSwitchProps extends Omit<

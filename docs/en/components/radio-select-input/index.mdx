@@ -89,7 +89,7 @@ export default App;
 | `value` | Current value (controlled; passing it enables controlled mode) | `string \| number` | — |
 | `defaultValue` | Initial value for uncontrolled use | `string \| number` | — |
 | `onChange` | Value change callback (the second argument is the radio's native change event, carried on click reselection; keyboard reselection and the focus auto-select update silently, matching the original, with no event) | `ChangeHandler<string \| number, HTMLInputElement>` | — |
-| `name` | Form field name (lands on the hidden `input` only) | `string` | — |
+| `name` | Form field name (written to the hidden `input` only) | `string` | — |
 | `disabled` | Whether disabled (the hidden `input` is disabled too, dropping out of submission) | `boolean` | `false` |
 | `tabIndex` | Forwarded to the inner RadioSelect's root | `number` | — |
 | `...rest` | Native `div` props passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |

@@ -154,7 +154,7 @@ function OriginalPopups() {
     noArrowHostRef.current?.appendChild(unwrapJQuery(noArrowPopup.$element));
     noArrowButton.on("click", () => noArrowPopup.toggle());
 
-    // 悬浮触发对照：原版无内置封装，容器mouseenter/mouseleave手动toggle（两侧等价接线）
+    // 悬浮触发对照：原版无内置封装，容器mouseenter/mouseleave手动toggle（两侧写法等价）
     const hoverButton = new oo.ui.ButtonWidget({ label: "悬浮我试试（原版）" });
     const hoverPopup = new oo.ui.PopupWidget({
       $content: $(
@@ -383,7 +383,7 @@ function ReactAutoFlip() {
   );
 }
 
-/** 原版侧：align对齐方向（forwards/backwards是逻辑值、随方向换物理侧；force-left/force-right是物理值、弹层体恒在锚点物理左/右侧。缺省center） */
+/** 原版侧：align对齐方向（forwards/backwards是逻辑值、随方向换物理侧；force-left/force-right是物理值、弹层体始终在锚点物理左/右侧。缺省center） */
 function OriginalAlignPopups() {
   const forwardsHostRef = useRef<HTMLDivElement>(null);
   const backwardsHostRef = useRef<HTMLDivElement>(null);
@@ -1032,7 +1032,7 @@ function ReactProviderChannels() {
       <div style={{ height: "1em" }} />
       <div>
         {/* viewportSpacing只作用于视口边界的钳制（锚点的就近滚动容器为html时生效）。
-            本playground内容区是内部滚动容器，弹层钳制恒以该容器为基准，故此读数
+            本playground内容区是内部滚动容器，弹层钳制始终以该容器为基准，故此读数
             不随配置变化——该配置面向页面自身滚动的站点场景（如MediaWiki） */}
         viewportSpacing=80（配置通道演示，见下方说明）
         <OOUIProvider viewportSpacing={80}>
@@ -1055,7 +1055,7 @@ function ReactProviderChannels() {
         <p style={{ maxWidth: 480 }}>
           说明：viewportSpacing只参与「视口」边界的钳制与留白；当锚点的就近滚动容器是
           页面本身（html）时，弹层贴视口边会被内缩80px。本playground内容区是内部滚动
-          容器，弹层恒按容器边界钳制，此读数不随配置变化，仅供核对配置通道已接通。
+          容器，弹层始终按容器边界钳制，此读数不随配置变化，仅供核对配置通道已接通。
         </p>
       </div>
     </div>
@@ -1123,7 +1123,7 @@ function PopupComparePage() {
         original={
           <p>
             原版对应OO.ui.getTeleportTarget（浮层挂载目标）与视口计算留白，二者为宿主级
-            全局覆写、无构造配置形态，本工程收敛为OOUIProvider配置，此处无对照形态。
+            全局覆写、无构造配置形态，本工程收进OOUIProvider配置，此处无对照形态。
           </p>
         }
       >

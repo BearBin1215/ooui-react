@@ -48,7 +48,7 @@ export interface UseTagMenuParams {
   model: TagMenuModelSlice;
 
   /**
-   * 组件合法性（不含聚焦抑制的口径：全部标签合法且输入框无未提交文本）。聚焦驱动的菜单
+   * 组件合法性（不含聚焦抑制的规则：全部标签合法且输入框无未提交文本）。聚焦驱动的菜单
    * 展开在非法态不自动高亮，对齐原版MenuTagMultiselectWidget.onInputFocus聚焦前抓取
    * isValid、开启菜单后清除刚设高亮的净效果
    */
@@ -57,9 +57,9 @@ export interface UseTagMenuParams {
 
 /**
  * 标签多选的菜单交互域（MenuTagMultiselect的候选菜单）：选项过滤、开合状态、
- * useMenuPopup键盘接线与三个高亮时机（收起清高亮/刚开启高亮首个可选项/过滤后原高亮项
+ * useMenuPopup的键盘处理与这三个高亮时机（收起清高亮/刚开启高亮首个可选项/过滤后原高亮项
  * 仍在结果内则保留、否则高亮首个匹配项），以及菜单项与标签的切换选定。
- * `enabled`为false（TagMultiselect基础形态）时开合恒闭、过滤集为空，各行为静默。
+ * `enabled`为false（TagMultiselect基础形态）时开合始终关闭、过滤集为空，各行为静默。
  * 菜单的焦点归属元素由组件渲染MenuSelect时直传（useTagMenu不消费）
  */
 export function useTagMenu({
@@ -92,16 +92,16 @@ export function useTagMenu({
   }
 
   /**
-   * 菜单选项的过滤结果（对齐原版filterFromInput的标签前缀匹配；打开帧恒全量）。
+   * 菜单选项的过滤结果（对齐原版filterFromInput的标签前缀匹配；打开帧始终为全量）。
    * `unmatchedValues`收集因缺纯文本匹配键而被排除的选项，供告警通道报出——过滤本身须保持
    * 渲染期无副作用，告警另经effect发出
    */
   const { filtered, query, unmatchedValues } = useMemo(() => {
     const source = options ?? [];
-    // showAll对齐原版`!isVisible() || previouslySelectedValue === $input.val()`：关闭期恒全量
-    // （菜单不可见，仅免算），展开期与打开帧快照一致时也恒全量，自首次编辑起偏离快照才过滤
+    // showAll对齐原版`!isVisible() || previouslySelectedValue === $input.val()`：关闭期始终为全量
+    // （菜单不可见，仅免算），展开期与打开帧快照一致时也始终为全量，自首次编辑起偏离快照才过滤
     const showAll = !open || inputValue === openFrameInput;
-    // 输入与匹配键两侧同口径归一化（原版getItemMatcher的行为），与Select前缀跳转一致
+    // 输入与匹配键两侧按同一规则规范化（原版getItemMatcher的行为），与Select前缀跳转一致
     const normalizedQuery = showAll ? "" : normalizeForMatching(inputValue);
     if (!normalizedQuery) {
       return { filtered: source, query: "", unmatchedValues: [] as (string | number)[] };
@@ -164,12 +164,12 @@ export function useTagMenu({
     [currentValue, removeTagByValue, addTag, hasInput, clearInputOnChoose, setInputValue],
   );
 
-  // 菜单开合与键盘高亮（端点钳制不环绕）；开启时点击外部/Escape关闭。基础形态open恒false。
+  // 菜单开合与键盘高亮（端点钳制不环绕）；开启时点击外部/Escape关闭。基础形态open始终为false。
   // 不传getItemText：本组件有输入框，原版前缀跳转只绑定无$input的菜单，不启用。
   // 不传selectedValue：原版多选菜单的键盘路径对选定项无回退（SelectWidget.onDocumentKeyDown
   // 的currentItem带`!this.multiselect`门，oojs-ui.js:7518-7520；MenuSelectWidget自身
   // `findHighlightedItem() || findFirstSelectedItem()`只服务TAB/ESCAPE分支，对多选形态
-  // 均为无操作），导航起点恒为高亮项
+  // 均为无操作），导航起点始终为高亮项
   const {
     highlightedValue,
     setHighlightedValue,
@@ -221,7 +221,7 @@ export function useTagMenu({
     const justOpened = open && !wasOpenRef.current;
     wasOpenRef.current = open;
     // 已有高亮时不覆盖：点击标签经onTagSelect会先聚焦输入框（连带开启菜单）再指定高亮项，
-    // 此处改写会让随后的Enter落到首个选项上（对齐原版onTagSelect末尾的highlightItem(menuItem)）
+    // 此处改写会让随后的Enter作用在首个选项上（对齐原版onTagSelect末尾的highlightItem(menuItem)）
     if (!justOpened || !enabled || allowArbitrary || highlightedValue !== undefined) {
       return;
     }

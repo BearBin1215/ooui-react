@@ -40,7 +40,7 @@ import { useInlineInputWidth } from "./useInlineInputWidth";
 import { useTagValues } from "./useTagValues";
 import { useTagMenu } from "./useTagMenu";
 
-// 契约类型与标签域纯函数定义于tagModel.ts（供useTagValues/useTagMenu取用而不反向依赖本组件），
+// 类型定义与标签域纯函数定义于tagModel.ts（供useTagValues/useTagMenu取用而不反向依赖本组件），
 // 此处转发导出
 export type { TagInputPosition, TagOptionProps } from "./tagModel";
 export { pickValidTags } from "./tagModel";
@@ -258,7 +258,7 @@ export const TagMultiselect = forwardRef<HTMLDivElement, TagMultiselectInternalP
     const menuFocusOwnerRef = hasInput ? inputRef : focusTrapRef;
     // 菜单id：焦点归属元素经aria-owns声明所拥有的菜单（展开期写入、收起移除，对齐原版
     // MenuSelectWidget.onToggle的写/移除稳态，与Dropdown/ComboBoxInput/ButtonMenuSelectWidget
-    // 三处触发组件的写/移除口径一致）。id一律经useCleanId生成（含`:`的id在CSS选择器中非法，
+    // 这三处触发组件的写/移除规则一致）。id一律经useCleanId生成（含`:`的id在CSS选择器中非法，
     // 见hooks/refs.ts）
     const menuId = useCleanId();
     const groupRef = useRef<HTMLDivElement>(null);
@@ -267,7 +267,7 @@ export const TagMultiselect = forwardRef<HTMLDivElement, TagMultiselectInternalP
     const outlineWrapperRef = useRef<HTMLDivElement>(null);
 
     /**
-     * 聚焦输入框；无输入时聚焦焦点陷阱（对齐原版TabIndexedElement.focus落于$tabIndexed）
+     * 聚焦输入框；无输入时聚焦焦点陷阱（对齐原版TabIndexedElement.focus移到$tabIndexed）
      */
     const focusInput = useCallback(() => {
       if (hasInput) {
@@ -312,7 +312,7 @@ export const TagMultiselect = forwardRef<HTMLDivElement, TagMultiselectInternalP
     const allItemsValid = items.every((item) => item.valid);
     /**
      * 合法性判定（不含聚焦抑制）：全部标签合法且输入框无未提交文本（对齐原版
-     * TagMultiselectWidget.onInputBlur的toggleValid实参口径）。失焦后的整体非法标志与
+     * TagMultiselectWidget.onInputBlur的toggleValid实参的取值方式）。失焦后的整体非法标志与
      * 聚焦开启菜单时的自动高亮门控共用
      */
     const widgetValid = allItemsValid && (!hasInput || inputValue === "");
@@ -625,7 +625,7 @@ export const TagMultiselect = forwardRef<HTMLDivElement, TagMultiselectInternalP
         }
         // 被点标签按「值+同类序数」定位后删除：原版removeItems按项引用定位
         // （GroupElement.removeItems，oojs-ui.js:2781），本工程标签为标量值、无项引用可凭，
-        // 先加后删时白名单序插入（buildAdded）可能落在被点项之前，按点击时下标删除会漂移
+        // 先加后删时白名单序插入（buildAdded）可能插到被点项之前，按点击时下标删除会漂移
         // 误删他项。序数取旧列表中该值在其之前的出现次数（items[].occurrence），多重集语义
         // 下插入不改变既有项的序数身份
         let ordinal = item.occurrence;
@@ -675,7 +675,7 @@ export const TagMultiselect = forwardRef<HTMLDivElement, TagMultiselectInternalP
     const handleTagSelectRef = useLatestRef(handleTagSelect);
     const handleTagNavigateRef = useLatestRef(handleTagNavigate);
     const getTagCallbacks = useCallbackByKey((key: string) => {
-      // key在当前渲染序中的实际下标（renderItems各entry恒携带realIndex，预览重排不改写）
+      // key在当前渲染序中的实际下标（renderItems各entry始终携带realIndex，预览重排不改写）
       const realIndexOf = () =>
         renderItemsRef.current.find((entry) => entry.key === key)?.realIndex ?? -1;
       return {
@@ -758,7 +758,7 @@ export const TagMultiselect = forwardRef<HTMLDivElement, TagMultiselectInternalP
         disabled={inputDisabled}
         tabIndex={inputTabIndex}
         aria-disabled={inputDisabled || undefined}
-        // aria-labelledby落在$tabIndexed（输入框）上，与原版setLabelledBy落点一致
+        // aria-labelledby写在$tabIndexed（输入框）上，与原版setLabelledBy写入位置一致
         aria-labelledby={mergeAriaLabelledBy(fieldLabelId, ariaLabelledBy)}
         // 展开期声明所拥有的菜单（菜单portal到body，非DOM后代，须显式关联）
         aria-owns={isMenu && open ? menuId : undefined}
@@ -817,7 +817,7 @@ export const TagMultiselect = forwardRef<HTMLDivElement, TagMultiselectInternalP
                 tabIndex={inputTabIndex}
                 aria-disabled={disabled || undefined}
                 aria-labelledby={mergeAriaLabelledBy(fieldLabelId, ariaLabelledBy)}
-                // 同输入框：焦点陷阱是菜单焦点归属（inputPosition='none'）时的aria-owns落点
+                // 同输入框：焦点陷阱是菜单焦点归属（inputPosition='none'）时的aria-owns写入位置
                 aria-owns={isMenu && open ? menuId : undefined}
               />
             )}

@@ -1,6 +1,6 @@
 ---
 title: ComboBoxInput 组合框
-description: "ComboBoxInput 组件的属性说明：可自由输入的文本框 + 下拉候选菜单，选定写入文本但不限定取值；输入能力与 TextInput 同源，含键盘与选定语义、软校验与标签。"
+description: "ComboBoxInput 组件的属性说明：可自由输入的文本框 + 下拉候选菜单，选定写入文本但不限定取值；输入能力与 TextInput 一致，含键盘与选定语义、软校验与标签。"
 ---
 
 # ComboBoxInput 组合框
@@ -66,9 +66,9 @@ export default App;
 
 ## 键盘与选定
 
-键入只**展开菜单**并把高亮重定位到与输入精确匹配的项（无匹配则清高亮），候选列表本身不随输入过滤——要「边输入边筛」需自行收窄 `options`。点击输入框也会重新展开菜单。`readOnly` 时是完全只读：方向键、下拉按钮、点击输入框三条展开通道均不可展开（原版点击输入框仍会展开一个全部禁用的菜单，本工程收窄为不展开）。{/* deviations: dev-combobox-readonly */}
+键入只**展开菜单**并把高亮重定位到与输入精确匹配的项（无匹配则清高亮），候选列表本身不随输入过滤——要「边输入边筛」需自行收窄 `options`。点击输入框也会重新展开菜单。`readOnly` 时是完全只读：方向键、下拉按钮、点击输入框都无法展开（原版点击输入框仍会展开一个全部禁用的菜单，本工程改为不展开）。{/* deviations: dev-combobox-readonly */}
 
-选定（点击选项、Enter、下拉按钮）把选项文本写入输入框，值恒为字符串：**数值型 `value` 的选项不会呈现选中态**（对齐原版按序列化文本比较，`1` 与 `'1'` 不等价），需要选中态时选项值请用字符串。
+选定（点击选项、Enter、下拉按钮）把选项文本写入输入框，值始终是字符串：**数值型 `value` 的选项不会呈现选中态**（对齐原版按序列化文本比较，`1` 与 `'1'` 不等价），需要选中态时选项值请用字符串。
 
 | 按键 | 行为 |
 | --- | --- |
@@ -80,9 +80,9 @@ export default App;
 
 高亮到端点后不环绕（区别于 `SearchWidget` 的端点环绕）；Escape 或点击外部收起菜单（捕获阶段处理，嵌套于 [Dialog](../dialog/index.mdx) 不误关弹窗）。焦点保持在输入框、高亮项经 `aria-activedescendant` 关联，通用模型见[选择与选项](../../guide/options.mdx)。
 
-## 属性落点
+## 属性写入位置
 
-与 [TextInput](../text-input/index.mdx) 一致：`...rest` 落在根 `<div>` 上，写到原生 `<input>` 的属性走 `inputProps`，聚焦输入框用 `inputRef`；`tabIndex`、`title`、`dir`、`accessKey`、`name` 由组件接管落到 `<input>` 上。
+与 [TextInput](../text-input/index.mdx) 一致：`...rest` 写在根 `<div>` 上，写到原生 `<input>` 的属性通过 `inputProps` 传递，聚焦输入框用 `inputRef`；`tabIndex`、`title`、`dir`、`accessKey`、`name` 由组件接管，写入 `<input>`。
 
 ## API
 
@@ -100,7 +100,7 @@ export default App;
 | `flags` | 根元素附加标志（invalid 叠加其上） | `string \| string[]` | — |
 | `validate` | 软校验，见[软校验](../text-input/index.mdx#软校验) | `RegExp \| ((v: string) => boolean \| Promise<boolean>) \| 'non-empty' \| 'integer'` | — |
 | `inputRef` | 内部 `<input>` 的引用 | `Ref<HTMLInputElement>` | — |
-| `inputProps` | 原生 `<input>` 附加属性通道；事件串联在组件逻辑之后 | `object` | — |
+| `inputProps` | 原生 `<input>` 的附加属性；事件串联在组件逻辑之后 | `object` | — |
 | `disabled` | 是否禁用 | `boolean` | `false` |
 
 ## 另见

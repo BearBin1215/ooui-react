@@ -64,7 +64,7 @@ export default App;
 | `enctype` | Encoding type, native `enctype` (defaults to `application/x-www-form-urlencoded`) |
 
 :::warning Security note
-This component does not sanitize `action` (it bypasses the original `OO.ui.isSafeUrl`). `<form action="javascript:...">` runs a script on submit, and neither the browser nor React blocks it at runtime. An `action` of **untrusted origin (e.g. concatenated from user input) must have its protocol validated by you or the backend first**, otherwise this is an XSS; when you want component-level sanitizing, use the exported `sanitizeUrl`. {/* deviations: dev-safe-url */}
+This component does not sanitize `action` (it skips the original's `OO.ui.isSafeUrl` check). `<form action="javascript:...">` runs a script on submit, and neither the browser nor React blocks it at runtime. An `action` of **untrusted origin (e.g. concatenated from user input) must have its protocol validated by you or the backend first**, otherwise this is an XSS; when you want component-level sanitizing, use the exported `sanitizeUrl`. {/* deviations: dev-safe-url */}
 :::
 
 ## Controls that submit with the form

@@ -12,7 +12,7 @@ export interface HiddenInputWidgetProps extends ElementProps<HTMLInputElement> {
   /**
    * The hidden input's value (controlled; defaults to `''`).
    *
-   * 隐藏输入的值（受控；缺省空串）。
+   * 隐藏输入的值（受控；缺省空字符串）。
    */
   value?: string;
 
@@ -40,7 +40,7 @@ export interface HiddenInputWidgetProps extends ElementProps<HTMLInputElement> {
  *
  * 隐藏输入组件（对齐原版 OO.ui.HiddenInputWidget）：以 `<input type="hidden">`
  * 为根元素，承载不展示但需随表单提交的值（如数组字段、与多值控件配对的值）。
- * 与原版不同：`disabled` 落到原生属性（禁用时不再提交）、`value` 为受控值。
+ * 与原版不同：`disabled` 写到原生属性（禁用时不再提交）、`value` 为受控值。
  *
  * @see https://bearbin1215.github.io/ooui-react/components/hidden-input-widget/index.html
  */

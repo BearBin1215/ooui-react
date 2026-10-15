@@ -216,7 +216,7 @@ export const ButtonInput = forwardRef<HTMLSpanElement, ButtonInputProps>(
     const accessKeyLabel = useAccessKeyLabel(accessKey);
     // 快捷键登记给FieldLayout（原版FieldLayout的label tooltip委托字段控件的accessKey；
     // 原版formatTitleWithAccessKey对ButtonInputWidget同样生效，见hooks/field.ts的
-    // useFieldAccessKey契约）。组件ref落在外层span（不可聚焦），不做标签点击聚焦通道
+    // useFieldAccessKey约定）。组件ref指向外层span（不可聚焦），不做标签点击聚焦通道
     useFieldAccessKey(accessKey);
 
     const classes = clsx(
@@ -249,8 +249,8 @@ export const ButtonInput = forwardRef<HTMLSpanElement, ButtonInputProps>(
       disabled,
       tabIndex: resolveTabIndex(tabIndex, disabled),
       "aria-disabled": disabled || undefined,
-      // title落真实button/input并做invisibleLabel兜底：对齐原版ButtonInputWidget经InputWidget
-      // 混入TitledElement（$titled即$input，oojs-ui.js:10026-10028/10357）的落点，属等效替代
+      // title写在真实button/input上并做invisibleLabel兜底：对齐原版ButtonInputWidget经InputWidget
+      // 混入TitledElement（$titled即$input，oojs-ui.js:10026-10028/10357）的写入位置，属等效替代
       // （见dev-docs/DEVIATIONS.md等效替代的ButtonInput条）
       title: resolveTitle({
         title,

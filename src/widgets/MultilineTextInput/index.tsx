@@ -74,14 +74,14 @@ export const MultilineTextInput = forwardRef<HTMLDivElement, MultilineTextInputP
       labelPosition = "after",
       readOnly,
       required,
-      // tabIndex落在textarea上（组件根为不可聚焦的div）
+      // tabIndex写在textarea上（组件根为不可聚焦的div）
       tabIndex,
       validate,
       flags,
       autosize,
       rows,
       maxRows: maxRowsProp,
-      // title/dir对齐原版InputWidget的落点（TitledElement的$titled与setDir均为$input），不放外层div
+      // title/dir对齐原版InputWidget的写入位置（TitledElement的$titled与setDir均为$input），不放外层div
       title,
       dir,
       value,
@@ -117,7 +117,7 @@ export const MultilineTextInput = forwardRef<HTMLDivElement, MultilineTextInputP
     });
     // 滚动条让位：垂直滚动条出现时，指示器与后置标签按滚动条宽度偏移；滚动条宽度同时计入
     // 输入框标签同侧的内边距（对齐原版positionLabel，经useInputProps的scrollbarWidth并入）。
-    // 多行恒启用——固定行数（非autosize）时同样会出现滚动条，原版该分支也在autosize判断之外。
+    // 多行始终启用——固定行数（非autosize）时同样会出现滚动条，原版该分支也在autosize判断之外。
     // 传入根ref：让位只在滚动条所在侧与主题CSS锚定侧（根方向）一致时生效（见useScrollbarOffset）。
     // 该测量同时给出根方向（rootRtl）并回传给useInputProps：标签让位取侧与撤回判定取同一份
     // 方向、在同一测量周期更新（方向解析的单一来源，见DEVIATIONS「标签让位的内边距落侧」条）
@@ -126,7 +126,7 @@ export const MultilineTextInput = forwardRef<HTMLDivElement, MultilineTextInputP
       rootRef: internalRootRef,
       labelPosition,
     });
-    // 输入元素的公共属性派生：属性落点、字段id、标签让位、指示器回退、装饰聚焦、软校验
+    // 输入元素的公共属性派生：属性写入位置、字段id、标签让位、指示器回退、装饰聚焦、软校验
     const {
       inputProps: commonInputProps,
       invalid,

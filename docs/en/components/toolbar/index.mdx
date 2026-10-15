@@ -7,7 +7,7 @@ description: "Props for the Toolbar component: a horizontal bar holding tool gro
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/toolbars) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.Toolbar.html "OO.ui.Toolbar")
 
-A toolbar: a horizontal bar arranging several tool groups, with tools living inside the groups:
+A toolbar: a horizontal bar arranging several tool groups, with tools held inside the groups:
 
 - `BarToolGroup`: tools tiled horizontally as icon buttons (the most common).
 - `ListToolGroup` / `MenuToolGroup`: tools gathered into a dropdown panel opened from a handle.
@@ -120,7 +120,7 @@ export default App;
 
 ## Icon text forms and accelerators in Bar groups
 
-A Bar group's tool shows the icon only by default; `displayBothIconAndLabel` makes a single tool show its text (icon + text with an icon; a text-only button without an icon — without it an icon-less tool falls into the original's raw icon-slot form). `accelerator` is the keyboard-shortcut hint — a Bar group appends it to the link's tooltip (List / Menu groups render it as a visible accel slot inside the panel).
+A Bar group's tool shows the icon only by default; `displayBothIconAndLabel` makes a single tool show its text (icon + text with an icon; a text-only button without an icon — without it an icon-less tool uses the original's raw icon-slot form). `accelerator` is the keyboard-shortcut hint — a Bar group appends it to the link's tooltip (List / Menu groups render it as a visible accel slot inside the panel).
 
 ```tsx preview
 import { useState } from "react";
@@ -165,14 +165,14 @@ function App() {
 export default App;
 ```
 
-The three tool slots demonstrate the three forms in order: `bold` icon + text, `italic` icon only (default), `clear` text only (no icon, also via `displayBothIconAndLabel`). Hover the first two to see the accelerator hint in the tooltip.
+The tool slots demonstrate the forms in order: `bold` icon + text, `italic` icon only (default), `clear` text only (no icon, also via `displayBothIconAndLabel`). Hover the first two to see the accelerator hint in the tooltip.
 
 ## Popup tools
 
-A tool with a `popup` config becomes a popup tool: clicking it opens/closes a floating layer, and the tool shows an active state while the layer is open. The layer content comes from `popup.popupContent`, and its visibility can be controlled with `open` / `defaultOpen` / `onOpenChange`. `onSelect` still fires on every selection (independent of the toggling; adding `popup` doesn't disable it); the layer is locked below the tool (above on a bottom toolbar), with `autoFlip` off by default and available to enable; `container` / `autoClose` / `position` are taken over by the tool and can't be overridden.
+A tool with a `popup` config becomes a popup tool: clicking it opens/closes a floating layer, and the tool shows an active state while the layer is open. The layer content comes from `popup.popupContent`, and its visibility can be controlled with `open` / `defaultOpen` / `onOpenChange`. `onSelect` still fires on every selection (independent of the toggling; adding `popup` doesn't disable it); the layer is fixed below the tool (above on a bottom toolbar), with `autoFlip` off by default and available to enable; `container` / `autoClose` / `position` are taken over by the tool and can't be overridden.
 
 :::warning Differences from OOUI
-Do not put popup tools inside `ListToolGroup` / `MenuToolGroup`: selecting the tool collapses the group panel and the popup anchor dies with it — the original hides the layer, while here it still renders but ends up misplaced at the viewport's top-left corner. Put popup tools in a Bar group. {/* deviations: dev-popup-tool-in-list */}
+Do not put popup tools inside `ListToolGroup` / `MenuToolGroup`: selecting the tool collapses the group panel and the popup anchor is invalidated with it — the original hides the layer, while here it still renders but ends up misplaced at the viewport's top-left corner. Put popup tools in a Bar group. {/* deviations: dev-popup-tool-in-list */}
 :::
 
 ```tsx preview
@@ -210,7 +210,7 @@ Both consist of a handle plus a dropdown panel (the handle's icon/label/indicato
 
 **MenuToolGroup** holds tools as a horizontal text list, and the handle label is composed from the **active tool**'s (`active: true`) visible text joined with ", ", falling back to `label` when none is active — a fit for exclusive menus that display the current choice, such as paragraph format or alignment. {/* deviations: dev-menutoolgroup-label */}
 
-Shared contract of the two groups: the panel rides the common `open` / `defaultOpen` / `onOpenChange` controlled channel (handle toggle, choosing a tool, outside click and Escape all fire it); `onToolSelect` receives the tool definition whenever any tool is chosen, for unified dispatch; the panel closes automatically after a tool is chosen. A group-level `disabled` disables every tool; **when all tools are disabled the group disables itself**, and a group with empty `tools` hides entirely — permission-driven scenarios that clear `tools` dynamically need no extra handling. Escape closes the panel in the capture phase, so a toolbar nested in a Dialog won't close the dialog by mistake. {/* deviations: dev-toolbar-panel-escape */}
+Shared convention of the two groups: the panel opens and closes through the common `open` / `defaultOpen` / `onOpenChange` controlled props (handle toggle, choosing a tool, outside click and Escape all fire it); `onToolSelect` receives the tool definition whenever any tool is chosen, for unified dispatch; the panel closes automatically after a tool is chosen. A group-level `disabled` disables every tool; **when all tools are disabled the group disables itself**, and a group with empty `tools` hides entirely — permission-driven scenarios that clear `tools` dynamically need no extra handling. Escape closes the panel in the capture phase, so a toolbar nested in a Dialog won't close the dialog by mistake. {/* deviations: dev-toolbar-panel-escape */}
 
 ```tsx preview
 import { useState } from "react";
@@ -383,18 +383,18 @@ export default App;
 Common fields of a tool (an element of the `tools` array):
 
 - `name` (symbol name, required): contributes the `oo-ui-tool-name-{name}` class (a path form `'a/b/c'` takes its first two segments) — usable as a style or test hook.
-- `label` (visible text) and `icon`: Bar groups show the icon only by default; the text shows via `displayBothIconAndLabel: true` (icon + text with an icon, a text-only button without one — without it an icon-less tool falls into the original's raw icon-slot form); List / Menu groups always show the label. `title` is always a tooltip (Bar groups append `title` and `accelerator` to the link's title; List / Menu groups render only the accelerator slot and don't append it). {/* deviations: dev-tool-accelerator */}
+- `label` (visible text) and `icon`: Bar groups show the icon only by default; the text shows via `displayBothIconAndLabel: true` (icon + text with an icon, a text-only button without one — without it an icon-less tool uses the original's raw icon-slot form); List / Menu groups always show the label. `title` is always a tooltip (Bar groups append `title` and `accelerator` to the link's title; List / Menu groups render only the accelerator slot and don't append it). {/* deviations: dev-tool-accelerator */}
 - `active` (controlled active state), `onSelect` (fires on click or keyboard Enter / Space), `disabled`.
 - `narrowConfig`: in narrow mode the **defined** fields replace the tool's icon / label form, restored on leaving narrow mode.
 - `popup`: popup tool (see the previous section).
 - `group`: a nested tool group — the tool slot renders a whole tool group instead of a tool link (for "nested dropdowns"); the handle and selection state are owned by the nested group, and `title` / `icon` / `active` / `onSelect` don't apply to this tool, only `disabled` carries over as the slot's disabled state; when both `popup` and `group` are given, `group` wins. {/* deviations: dev-toolgroup-tool-element */}
 
-The full contract is in the tool-group components and the `ToolProps` type.
+The full reference is in the tool-group components and the `ToolProps` type.
 
 ## Differences from OOUI
 
 - **Tools are no longer registered through a `ToolFactory`**: tools are handed to the group as a declarative `tools` array, with the active state owned by the caller. {/* deviations: dev-tool-factory */}
-- **The toolbar and tool groups have no event surface**: the equivalent of listening to `Toolbar.active` in the original is re-rendering the `tools` array with `active` declared; popup layers and panels likewise ride controlled props and callbacks. {/* deviations: dev-toolbar-events */}
+- **The toolbar and tool groups have no event surface**: the equivalent of listening to `Toolbar.active` in the original is re-rendering the `tools` array with `active` declared; popup layers and panels likewise use controlled props and callbacks. {/* deviations: dev-toolbar-events */}
 - **A popup tool's `onSelect` still fires**: in the original it is occupied by the popup toggle and the caller never hears about selections; here selection is independent of toggling, and visibility changes are reported via `popup.onOpenChange`. {/* deviations: dev-popup-tool-onselect */}
 - **A popup tool's `autoFlip` defaults to off and can be enabled explicitly.** {/* deviations: dev-popup-tool-autoflip */}
 - **Visible text and tooltip are split from one `title` key into `label` + `title`**: `label` is the visible text, `title` is always the tooltip; when migrating, pass the old `narrowConfig.title` value as `label`. {/* deviations: dev-tool-label-title */}

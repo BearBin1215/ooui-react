@@ -12,7 +12,7 @@ export interface OptionData {
    * Option value; doubles as the selected-match key and the list key.
    * Always a scalar.
    *
-   * 选项值，同时作为选中态匹配依据与列表 key；恒为标量。
+   * 选项值，同时作为选中态匹配依据与列表 key；始终为标量。
    */
   value: string | number;
 
@@ -60,8 +60,8 @@ export type OptionProps<T = HTMLDivElement> = WidgetProps<T> &
  * label options (TabOption / RadioOption / CheckboxMultioption) have nothing to
  * tint, so they do not open it.
  *
- * 选项的标志集（对齐原版 OptionWidget 混入的 FlaggedElement）：标志给选项的
- * 图标 / 指示器上对应主题变体（progressive / destructive / error / warning /
+ * 选项的标志集（对齐原版 OptionWidget 混入的 FlaggedElement）：标志使选项的
+ * 图标 / 指示器呈现对应的主题变体（progressive / destructive / error / warning /
  * success / invert）。只开放给带图标 / 指示器槽位的选项形态（MenuOption /
  * OutlineOption / MenuSectionOption / ButtonOption）；纯标签选项（TabOption /
  * RadioOption / CheckboxMultioption）无着色对象，不开放。

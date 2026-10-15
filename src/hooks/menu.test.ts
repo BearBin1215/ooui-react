@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { useGroupKeyboardSelection } from "./menu";
 
 /**
- * menu.ts的useGroupKeyboardSelection（契约与原版锚点见该hook的jsdoc）：本hook不调用
+ * menu.ts的useGroupKeyboardSelection（约定与原版锚点见该hook的jsdoc）：本hook不调用
  * React Hook、返回读取入参的纯闭包，故可在node环境直接构造伪事件调用
  */
 describe("useGroupKeyboardSelection（直选型选项组的方向键改选）", () => {

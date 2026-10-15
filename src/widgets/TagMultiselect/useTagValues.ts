@@ -47,7 +47,7 @@ export interface UseTagValuesParams {
 
 /**
  * 标签值模型（TagMultiselect的编辑核心，无菜单/输入框/拖拽感知；对齐原版
- * TagMultiselectWidget的值管线：addTag/removeTagByData/isAllowedData/isValid状态）：
+ * TagMultiselectWidget的值处理流程：addTag/removeTagByData/isAllowedData/isValid状态）：
  * 受控/非受控值、由值派生的标签项（文本/固定/合法）、非法集通知与增删操作。
  * 与具体交互解耦——输入框、菜单、拖拽各域经本hook的API读写同一份值
  */
@@ -70,7 +70,7 @@ export function useTagValues({
   );
 
   /** 合法值序列：白名单与菜单选项值合并并保持给定顺序（对齐原版MenuTagMultiselect的
-   * getAllowedValues，口径见mergeTagAllowedValues，与公开的pickValidTags共用） */
+   * getAllowedValues，规则见mergeTagAllowedValues，与公开的pickValidTags共用） */
   const allowedValueList = useMemo(
     () => mergeTagAllowedValues(allowedValues, options),
     [allowedValues, options],
@@ -125,7 +125,7 @@ export function useTagValues({
     });
   }, [currentValue, validityRule, optionByValue]);
 
-  /** 非法标签值（按标签顺序，`items[].valid`的派生结果）；`onInvalidTagsChange`的载荷 */
+  /** 非法标签值（按标签顺序，`items[].valid`的派生结果）；`onInvalidTagsChange`的数据 */
   const invalidTagValues = useMemo(
     () => items.filter((item) => !item.valid).map((item) => item.value),
     [items],

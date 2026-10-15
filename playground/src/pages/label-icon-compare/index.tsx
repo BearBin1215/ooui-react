@@ -21,7 +21,7 @@ function makeRowAppender(container: HTMLElement, register: (widget: object) => v
   };
 }
 
-/** 原版侧：LabelWidget（title落在根元素，invisibleLabel视觉隐藏保留可访问文本） */
+/** 原版侧：LabelWidget（title写在根元素，invisibleLabel视觉隐藏保留可访问文本） */
 function OriginalLabels() {
   const { containerRef } = useOriginalWidgets((oo, container, register) => {
     const ui = oo.ui as unknown as BaseElementUi;
@@ -206,7 +206,7 @@ function LabelIconComparePage() {
       title="Label / Icon / Indicator 对照"
       description={
         <>
-          对照点：LabelWidget的title落点（根元素）与invisibleLabel（视觉隐藏保留可访问文本，
+          对照点：LabelWidget的title写入位置（根元素）与invisibleLabel（视觉隐藏保留可访问文本，
           title兜底）、disabled态；IconWidget的flags变体着色（image-变体类，invert需深色底）；
           IndicatorWidget四种指示器（clear/up/down/required）与title/disabled。
         </>

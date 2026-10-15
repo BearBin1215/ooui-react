@@ -109,7 +109,7 @@ export const Message = forwardRef<HTMLDivElement, MessageProps>(
 
     const classes = clsx(
       className,
-      // invisibleLabel的裁剪类只落在label元素上（下方LabelBase）；根类按原版setInvisibleLabel
+      // invisibleLabel的裁剪类只加在label元素上（下方LabelBase）；根类按原版setInvisibleLabel
       // 的"视同无标签"语义由labelElementClasses抑制
       getWidgetClassName(
         { disabled, icon: displayIcon, label: children, invisibleLabel },

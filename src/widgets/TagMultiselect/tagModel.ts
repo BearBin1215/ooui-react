@@ -1,5 +1,5 @@
 /**
- * TagMultiselect的域模型（契约类型 + 标签域纯函数，独立成文件：useTagValues/useTagMenu经此
+ * TagMultiselect的域模型（类型定义 + 标签域纯函数，独立成文件：useTagValues/useTagMenu经此
  * 取用而不反向依赖组件本体形成模块环，对齐Popup/popupLayout.ts的按域组织）。
  * 公开类型与pickValidTags经index.tsx转发导出，公共路径不变
  */
@@ -25,7 +25,7 @@ export interface TagOptionProps {
    * array is serializable and diffable (comparison for value / onChange / drag /
    * validity all key off it).
    *
-   * 选项值（标签的身份）。恒为标量，以便受控数组可序列化、可 diff（值/onChange/
+   * 选项值（标签的身份）。始终为标量，以便受控数组可序列化、可 diff（值/onChange/
    * 拖拽/非法值判定都按它比较）。
    */
   value: string | number;
@@ -36,8 +36,8 @@ export interface TagOptionProps {
    * `onChange` still returns the scalar `value` — look the payload up by `value`
    * in your own `options` array when needed.
    *
-   * 该标签关联的任意负载。与身份 `value` 相互独立、不参与相等判定与受控值，
-   * 本组件不消费它——`onChange` 仍回传标量 `value`，需取回负载时按 `value` 在
+   * 该标签关联的任意数据。与身份 `value` 相互独立、不参与相等判定与受控值，
+   * 本组件不消费它——`onChange` 仍回传标量 `value`，需取回数据时按 `value` 在
    * 自己的 `options` 数组里反查。
    */
   data?: unknown;
@@ -47,7 +47,7 @@ export interface TagOptionProps {
    * value's string form. Accepts a `ReactNode` for rich content; when rich, the
    * plain text needed for filtering / backfill comes from `labelText`.
    *
-   * 显示内容（标签本体与菜单项共用），缺省显示值的字符串形态。收 `ReactNode`
+   * 显示内容（标签本体与菜单项共用），缺省显示值的字符串形态。接受 `ReactNode`
    * 以承载富内容；富内容下过滤/回填需要的纯文本由 `labelText` 另给。
    */
   label?: ReactNode;
@@ -118,7 +118,7 @@ export function tagMatchText(option: TagOptionProps | undefined): string | undef
 /**
  * 合法值域的合并（对齐原版`MenuTagMultiselectWidget.getAllowedValues`的
  * `whitelist.concat(options.map(o => o.data))`）：白名单在前、菜单选项值在后，重复值由消费方的
- * Set去重。组件（useTagValues）与公开的{@link pickValidTags}共用，避免调用方按错口径自行拼装
+ * Set去重。组件（useTagValues）与公开的{@link pickValidTags}共用，避免调用方按错规则自行拼装
  */
 export function mergeTagAllowedValues(
   allowedValues: (string | number)[] | undefined,
@@ -127,7 +127,7 @@ export function mergeTagAllowedValues(
   return [...(allowedValues ?? []), ...(options ?? []).map((option) => option.value)];
 }
 
-/** 标签值的合法性规则：值域与「重复/任意值」两个口径，items判定、添加准入与pickValidTags共用 */
+/** 标签值的合法性规则：值域与「重复/任意值」这两个判定标准，items判定、添加准入与pickValidTags共用 */
 export interface TagValidityRule {
   /** 合法值域（白名单与菜单选项值经{@link mergeTagAllowedValues}合并） */
   allowedValueSet: ReadonlySet<string | number>;

@@ -9,7 +9,7 @@
  * 让出宏任务一次，使 React 提交与 effect 走完。
  *
  * 仅用于"经 `dispatchEvent` 合成事件驱动"的用例——合成事件不经 React 的事件池 flush，
- * state 更新要等一轮才落到 DOM。断言 DOM 属性/类名本身不需要它；能用 locator 自动等待
+ * state 更新要等一轮才写入 DOM。断言 DOM 属性/类名本身不需要它；能用 locator 自动等待
  * （`await expect.element(...)`）或 `expect.poll` 表达的场景，优先用那两种。
  * @param ms 让步时长，缺省 20ms；带 CSS 过渡的动画时序由调用方放宽——浮层开合
  * （Popup / PopupButton）缺省一拍不够，统一用 `tick(30)`
@@ -55,7 +55,7 @@ export const pressKey = (el: Element, key: string): void => {
  * 单发一次原生 `click`。不用 Playwright 的 `locator.click()`：真实点击会移动虚拟光标，
  * 静止光标下的 DOM 变化会被浏览器补发 `mouseover`，悬停高亮将干扰键盘导航/高亮类断言。
  *
- * checkbox / radio 类组件的勾选、改选也用它：React 把这类输入的 `onChange` 归一到 click
+ * checkbox / radio 类组件的勾选、改选也用它：React 把这类输入的 `onChange` 转换为 click
  * 模拟通道，派发 `click` 即触发变更，无需另造 `change` 事件。
  * @param init 覆盖修饰键等（如 Shift+点击范围选择传 `{ shiftKey: true }`）
  */
@@ -102,8 +102,8 @@ export const typeValue = async (
 const START_TAG_PATTERN = /<([a-zA-Z][\w:-]*)((?:\s+[\w:.-]+="[^"]*")*)\s*(\/?)>/g;
 
 /**
- * 把每个起始标签的属性按名排序。属性顺序不属于 DOM 契约，却随 React 版本变化
- * （React 19 起 `<input>` 的 `name`、`type` 等落在属性串末尾），不归一化会让快照
+ * 把每个起始标签的属性按名排序。属性顺序不属于 DOM 约定，却随 React 版本变化
+ * （React 19 起 `<input>` 的 `name`、`type` 等排在属性串末尾），不规范化会让快照
  * 锁死 React 版本而非锁住结构。
  */
 const sortTagAttributes = (html: string): string =>
@@ -116,13 +116,13 @@ const sortTagAttributes = (html: string): string =>
   );
 
 /**
- * 取元素的 `innerHTML` 归一化后供 `toMatchInlineSnapshot` 使用。
+ * 取元素的 `innerHTML` 规范化后供 `toMatchInlineSnapshot` 使用。
  *
  * **HTML 快照一律经本函数，不得直接对 `innerHTML` 断言**：裸 `innerHTML` 会把 React 版本
- * 决定的 id 取值与属性顺序一并锁进契约，换 React 版本即整批失败。归一化两项：
+ * 决定的 id 取值与属性顺序一并固定在约定，换 React 版本即整批失败。规范化两项：
  *
  * - **id 类属性值**：React `useId` 在同一页面跨 root 累计且为 base32 编码，取值随用例执行
- *   顺序漂移；归一化为 `r#` 后只锁"id 及其引用结构存在"，不锁计数值。React 18 产出 `:r0:`、
+ *   顺序漂移；规范化为 `r#` 后只锁"id 及其引用结构存在"，不锁计数值。React 18 产出 `:r0:`、
  *   React 19 起产出 `_r_0_`，`useCleanId` 已统一剥为 `r0` 形态，此处再兼容未经理器的
  *   `_r_0_` 原始形态。
  * - **属性顺序**：见 {@link sortTagAttributes}。
@@ -144,7 +144,7 @@ export const snapshotHTML = (el: Element): string =>
 /**
  * 等弹窗打开动画跑完（active≈0ms→setup 60ms→ready 120ms）后再断言。
  *
- * ready 前动作按钮与焦点归位均未就绪，早断会抢跑；时长留余量，不随动画调参反向脆弱。
+ * ready 前动作按钮与焦点复位均未就绪，早断会抢跑；时长留余量，不随动画调参反向脆弱。
  */
 export const openSettled = (): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, 200));

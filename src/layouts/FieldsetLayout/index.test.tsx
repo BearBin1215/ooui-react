@@ -4,7 +4,7 @@ import { getRoot } from "../../testing";
 import { FieldsetLayout } from ".";
 
 /**
- * FieldsetLayout（对齐原版OO.ui.FieldsetLayout）的浏览器渲染契约：
+ * FieldsetLayout（对齐原版OO.ui.FieldsetLayout）的浏览器渲染结果：
  * fieldset根 + legend头部 + group分组的三段结构、label/icon类、帮助文本的
  * inline标签与非inline帮助按钮两形态。
  */

@@ -75,7 +75,7 @@ function OriginalToolbar() {
       return DemoPopupTool;
     };
     // 内嵌工具组工具（ToolGroupTool）：工具位渲染为groupConfig声明的内嵌工具组
-    // （原版经toolbar.getToolGroupFactory()创建list组），把手与面板由内嵌组提供
+    // （原版经toolbar.getToolGroupFactory()创建list组），handle与面板由内嵌组提供
     const createToolGroupTool = (
       name: string,
       title: string,
@@ -138,7 +138,7 @@ function OriginalToolbar() {
     const top = new ui.Toolbar(toolFactory, toolGroupFactory);
     top.setup([
       { type: "bar", include: ["person", "help"] },
-      // 弹出工具与内嵌工具组工具：二者都在bar组内，工具位分别渲染为浮层把手与内嵌list组
+      // 弹出工具与内嵌工具组工具：二者都在bar组内，工具位分别渲染为浮层handle与内嵌list组
       { type: "bar", include: ["helpPopup", "settingsGroup"] },
       // 空工具组：两侧均输出oo-ui-toolGroup-empty（主题display:none）整体隐藏
       { type: "bar", include: [] },
@@ -150,7 +150,7 @@ function OriginalToolbar() {
         title: "标签工具组",
       },
       { type: "label", label: "纯文本" },
-      // narrowConfig：窄栏下把手换图标/标签（对应React侧ListToolGroup的narrowConfig）
+      // narrowConfig：窄栏下handle换图标/标签（对应React侧ListToolGroup的narrowConfig）
       {
         type: "list",
         include: ["comment", "settings", "image"],
@@ -475,7 +475,7 @@ function ReactPopupAndGroupTools({ onLog }: { onLog: (title: string) => void }) 
         onOpenChange: (open) => open && onLog("弹出工具：帮助"),
       },
     },
-    // 内嵌工具组：工具位渲染为该工具组，把手与面板由它自行提供（工具本身不渲染链接）
+    // 内嵌工具组：工具位渲染为该工具组，handle与面板由它自行提供（工具本身不渲染链接）
     {
       name: "settingsGroup",
       title: "设置",
@@ -495,7 +495,7 @@ function ReactToolbar() {
   return (
     <div>
       {/* active状态按组隔离：对齐原版各ToolGroup实例化各自Tool实例的语义，
-          未激活本组工具时把手标签显示组标签而非激活项标题 */}
+          未激活本组工具时handle标签显示组标签而非激活项标题 */}
       <Toolbar>
         <ReactBarGroup onLog={handleSelect} />
         {/* 弹出工具（点击开合浮层）与内嵌工具组（工具位渲染为list组） */}
@@ -674,9 +674,9 @@ function OriginalDisabledGroup() {
     appendRow("组级disabled（工具仍声明onSelect，点击不应有记录）", barToolbar);
 
     // List组组级禁用：disabled经构造config生效（Widget基类setDisabled），
-    // PopupToolGroup.setDisabled在禁用时收起面板（setActive(false)）、把手不可聚焦
+    // PopupToolGroup.setDisabled在禁用时收起面板（setActive(false)）、handle不可聚焦
     appendRow(
-      "ListToolGroup：组级disabled（禁用时收起面板、把手不可聚焦）",
+      "ListToolGroup：组级disabled（禁用时收起面板、handle不可聚焦）",
       setupToolbar([
         {
           type: "list",
@@ -720,7 +720,7 @@ function OriginalDisabledGroup() {
 
 /**
  * React侧：组级disabled、ListToolGroup的forceExpand/受控open/onToolSelect、
- * MenuToolGroup的keepOpenToolNames（React侧面板开合通道，原版面板由把手点击开合、
+ * MenuToolGroup的keepOpenToolNames（React侧面板开合通道，原版面板由handle点击开合、
  * 无构造配置形态）
  */
 function ReactDisabledAndPanel({ onLog }: { onLog: (msg: string) => void }) {
@@ -754,7 +754,7 @@ function ReactDisabledAndPanel({ onLog }: { onLog: (msg: string) => void }) {
         </Toolbar>
       </div>
       <div>
-        ListToolGroup：组级disabled（禁用时收起面板、把手不可聚焦）
+        ListToolGroup：组级disabled（禁用时收起面板、handle不可聚焦）
         <Toolbar>
           <ListToolGroup
             label="禁用列表组"
@@ -776,7 +776,7 @@ function ReactDisabledAndPanel({ onLog }: { onLog: (msg: string) => void }) {
         />
       </div>
       <div>
-        {/* React侧独有演示：原版面板仅由把手开合，无keepOpenToolNames与受控open的构造配置形态 */}
+        {/* React侧独有演示：原版面板仅由handle开合，无keepOpenToolNames与受控open的构造配置形态 */}
         MenuToolGroup：keepOpenToolNames保留打开（menuA选中后面板不收起）+ 受控open
         <MenuToolGroup
           label="菜单组"
@@ -803,7 +803,7 @@ function ToolbarComparePage() {
       description={
         <>
           对照点：Bar组平铺按钮（标题tooltip、按压态）、Label组（不可交互、不承载工具的纯文本/图标/
-          指示器）、List组下拉面板（选中收起、标题为标签文本）、Menu组（把手标签按激活工具合成、
+          指示器）、List组下拉面板（选中收起、标题为标签文本）、Menu组（handle标签按激活工具合成、
           选中不关闭时更新标签）、工具active态样式；第二组bar为PopupTool（点击工具开合浮层、
           浮层显隐期间工具呈激活态）与ToolGroupTool（工具位渲染为内嵌list组）；第三组为空工具组
           （无工具时两侧均整体隐藏，且判为禁用）。
@@ -815,9 +815,9 @@ function ToolbarComparePage() {
           选中不收起）、面板header说明行、bar组displayBothIconAndLabel图标+标签工具、
           Toolbar的actions动作区（原版经$actions追加、无setup配置）。
           「组级禁用与面板开合」区块验证组级disabled（Bar组原版经setDisabled、List组经
-          构造config.disabled，禁用时面板收起、把手不可聚焦）、List组的
+          构造config.disabled，禁用时面板收起、handle不可聚焦）、List组的
           forceExpand/defaultExpanded/onToolSelect、Menu组的keepOpenToolNames与受控open
-          （原版面板仅由把手开合，keepOpen与受控开合为React侧形态）。
+          （原版面板仅由handle开合，keepOpen与受控开合为React侧形态）。
         </>
       }
     >

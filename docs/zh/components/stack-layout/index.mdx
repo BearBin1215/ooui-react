@@ -11,7 +11,7 @@ description: "StackLayout 组件的属性说明：按 options 渲染分页、val
 
 ## 基本用法
 
-激活页走 `value` / `defaultValue` / `onChange` 三条通道；选项即 [PageLayout](../page-layout/index.mdx) 的字段加 `value`（兼作激活匹配与列表 key）。
+激活页由 `value` / `defaultValue` / `onChange` 控制；选项即 [PageLayout](../page-layout/index.mdx) 的字段加 `value`（兼作激活匹配与列表 key）。
 
 ```tsx preview
 import { useState } from "react";
@@ -41,7 +41,7 @@ function App() {
 export default App;
 ```
 
-:::note 形态前提
+:::note 形态要求
 `expanded`（缺省开启）形态按绝对定位铺满父元素，父元素需已定位并给定尺寸（上面的示例容器即为此而设）；`continuous` 的整体滚动同样依赖该前提。`expanded={false}` 的 static 形态只有 [MenuLayout](../menu-layout/index.mdx) 自身的流式内容可用——本组件的分页都是绝对定位面板，static 下没有内容高度，不要使用。
 :::
 
@@ -87,7 +87,7 @@ export default App;
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | `options` | 页集，[PageLayout](../page-layout/index.mdx) 字段加 `value` | `(PageLayoutProps & { value: string \| number })[]` | — |
-| `value` | 当前激活页（受控，传入即受控模式） | `string \| number` | — |
+| `value` | 当前激活页（受控，传入后即进入受控模式） | `string \| number` | — |
 | `defaultValue` | 非受控初始激活页 | `string \| number` | — |
 | `onChange` | 激活页变化回调 | `ChangeHandler<string \| number>` | — |
 | `onPageFocus` | 焦点进入某页时触发（携带页 value；焦点联动用，不改激活值） | `(value: string \| number, event: FocusEvent<HTMLDivElement>) => void` | — |
@@ -98,4 +98,4 @@ export default App;
 
 - 单个分页的字段：[PageLayout](../page-layout/index.mdx)
 - 带大纲菜单的封装：[BookletLayout](../booklet-layout/index.mdx)
-- 值通道约定：[受控与非受控](../../guide/controlled.mdx)
+- 受控值约定：[受控与非受控](../../guide/controlled.mdx)

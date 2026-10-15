@@ -15,9 +15,9 @@ const getSelect = (screen: { container: Element }) =>
   getRoot(screen).querySelector<HTMLSelectElement>("select")!;
 
 /**
- * DropdownInput（对齐原版OO.ui.DropdownInputWidget）的浏览器渲染契约：
+ * DropdownInput（对齐原版OO.ui.DropdownInputWidget）的浏览器渲染约定：
  * Dropdown展示 + 隐藏select承载表单提交（分组标题→optgroup、值类型还原）、
- * 非法值回退首个可选值并回写、禁用/必填落点、isMobile形态类。
+ * 非法值回退首个可选值并回写、禁用/必填写入位置、isMobile形态类。
  */
 it("结构：dropdownInput类链与隐藏select承载提交，分组标题为optgroup", async () => {
   const screen = await render(
@@ -73,7 +73,7 @@ it("原生select的change按选项原值类型提交onChange并携带原生事�
   select.value = "2";
   select.dispatchEvent(new Event("change", { bubbles: true }));
   await tick();
-  // select的值恒为字符串，组件映射回选项原值（数字）再提交；第二参数为原生change事件
+  // select的值始终为字符串，组件映射回选项原值（数字）再提交；第二参数为原生change事件
   expect(onChange).toHaveBeenCalledTimes(1);
   const [value, event] = onChange.mock.calls[0];
   expect(value).toBe(2);

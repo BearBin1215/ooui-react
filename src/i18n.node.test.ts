@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { formatMessage, msg, resolveMsg } from "./i18n";
 
 /**
- * i18n纯函数的契约测试：消息值解析（字符串/函数）、$n参数替换，以及覆盖表与英文默认表的
+ * i18n纯函数的约定测试：消息值解析（字符串/函数）、$n参数替换，以及覆盖表与英文默认表的
  * 优先级（registerMessages覆盖 > 英文默认），逐项对齐原版OO.ui.msg/resolveMsg/deferMsg。
  *
  * 覆盖表是模块级状态：涉及写入的用例统一经vi.resetModules + 动态import取全新模块实例，

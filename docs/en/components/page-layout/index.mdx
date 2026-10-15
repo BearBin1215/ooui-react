@@ -11,7 +11,7 @@ A page panel: an item of [StackLayout](../stack-layout/index.mdx)'s `options` ar
 
 ## Standalone use
 
-Standalone, the active state is declared via `active`; without `active` it derives from `hidden` (not hidden = active) and outputs the `oo-ui-pageLayout-active` class. `label` / `value` are fields carried along with the page-set object — the component swallows them so they never land as DOM attributes.
+Standalone, the active state is declared via `active`; without `active` it derives from `hidden` (not hidden = active) and outputs the `oo-ui-pageLayout-active` class. `label` / `value` are fields carried along with the page-set object — the component takes them but never writes them as DOM attributes.
 
 ```tsx preview
 import { StackLayout } from "ooui-react";
@@ -60,7 +60,7 @@ Inherits all [PanelLayout](../panel-layout/index.mdx) props, plus:
 | --- | --- | --- | --- |
 | `active` | Whether this is the active page; without it, derived from `hidden` (not hidden = active) — in continuous mode all pages are visible and the derivation no longer applies, so pass it explicitly | `boolean` | derived from `hidden` |
 | `scrollable` | Whether scrollable (pages scroll by default) | `boolean` | `true` |
-| `label` / `value` | Carried with the page-set object, swallowed by the component | `ReactNode` / `string \| number` | — |
+| `label` / `value` | Carried with the page-set object, taken by the component but never written as DOM attributes | `ReactNode` / `string \| number` | — |
 
 ## See also
 

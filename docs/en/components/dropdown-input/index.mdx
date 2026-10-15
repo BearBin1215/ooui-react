@@ -7,11 +7,11 @@ description: "Props for the DropdownInput component: a Dropdown for display with
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/DropdownInput) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.DropdownInputWidget.html "OO.ui.DropdownInputWidget")
 
-A dropdown select field: a Dropdown handles display and interaction while an embedded hidden `<select>` carries the form submission (`name` lands on it).
+A dropdown select field: a Dropdown handles display and interaction while an embedded hidden `<select>` carries the form submission (`name` goes on it).
 
 ## Basic usage
 
-The value rides the `value` / `defaultValue` / `onChange` channels. A value not among the selectable options falls back to the first selectable one, so the component always holds a valid value.
+The value is passed through the `value` / `defaultValue` / `onChange` props. A value not among the selectable options falls back to the first selectable one, so the component always holds a valid value.
 
 ```tsx preview
 import { useState } from "react";
@@ -118,7 +118,7 @@ In the mobile form ([OOUIProvider](../../guide/configuration.mdx#mobile-mode)'s 
 | `value` | Current value (controlled; passing it enables controlled mode) | `string \| number` | — |
 | `defaultValue` | Initial value for uncontrolled use | `string \| number` | — |
 | `onChange` | Value change callback (the second argument is the native change event: carried on the mobile native `<select>` path; choosing from the desktop menu has no native event and passes `undefined`) | `ChangeHandler<string \| number, HTMLSelectElement>` | — |
-| `name` | Form field name (lands on the hidden `<select>`) | `string` | — |
+| `name` | Form field name (goes on the hidden `<select>`) | `string` | — |
 | `required` | Required (native `required`, carried by the hidden `<select>`) | `boolean` | `false` |
 | `disabled` | Whether disabled | `boolean` | `false` |
 | `tabIndex` | Forwarded to the inner Dropdown's handle | `number` | — |

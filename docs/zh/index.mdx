@@ -1,6 +1,6 @@
 ---
 pageType: home
-description: "OOUI 的 React 重实现：不自带样式，输出的 DOM 结构、类名、属性与原版一致；命令式 API 收敛为受控 props。"
+description: "OOUI 的 React 重实现：不自带样式，输出的 DOM 结构、类名、属性与原版一致；命令式 API 改写为受控 props。"
 hero:
   name: ooui-react
   tagline: OOUI 的 React 实现
@@ -23,7 +23,7 @@ features:
     details: 键盘、焦点、a11y 与边界值逐项对照原版，交互语义一致。
   - icon: /feature-icons/react.svg
     title: 声明式 API
-    details: 原版的命令式 setter 与事件收敛为 value、onChange 等受控 props，贴合 React 使用习惯。
+    details: 原版的命令式 setter 与事件改写为 value、onChange 等受控 props，贴合 React 使用习惯。
   - icon: /feature-icons/typescript.svg
     title: 类型支持
     details: 完全使用 TypeScript 开发，类型定义完整。
@@ -69,9 +69,9 @@ import DemoCard from "../theme/DemoCard";
 
 ## 为什么会有这个组件库？
 
-2023年，我在编写[自己的萌娘百科小工具](https://github.com/BearBin1215/MoegirlPedia)时，有些较复杂的场景仅靠 JQuery 想要实现状态闭环十分费劲，就想引入一个现代的框架。当时情况是这样：
+2023 年，我在编写[自己的萌娘百科小工具](https://github.com/BearBin1215/MoegirlPedia)时，有些较复杂的场景仅靠 JQuery 很难把状态管理清楚，就想引入一个现代的框架。当时情况是这样：
 
-- MediaWiki 版本为1.31，没有自带 Vue、Codex。
+- MediaWiki 版本为 1.31，没有自带 Vue、Codex。
 - 如果自行打包完整的 Vue，构建产物从 60KB 起步，稍微多写一点就会导致产物太大、提交到站内超时。
 - 成熟的组件库多数会引入样式表，产物同样很大。
 - 我美术水平太差不会设计样式~~（重要！）~~。

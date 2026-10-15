@@ -25,7 +25,7 @@ function OriginalSwitches() {
     row(ui.ToggleSwitchWidget, "禁用·关", { disabled: true });
     row(ui.ToggleSwitchWidget, "禁用·开", { disabled: true, value: true });
 
-    // 原版无声明式aria通道：role=switch落在根元素，经attr关联外部说明（React为aria-labelledby prop）
+    // 原版无声明式aria通道：role=switch写在根元素，经attr关联外部说明（React为aria-labelledby prop）
     const named = new ui.ToggleSwitchWidget();
     named.$element.attr("aria-labelledby", "pg-switch-label-orig");
     register(named);

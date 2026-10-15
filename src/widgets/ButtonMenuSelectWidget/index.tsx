@@ -115,14 +115,14 @@ export interface ButtonMenuSelectWidgetProps extends Omit<ButtonProps, "onClick"
 
 // 实现说明：对齐原版OO.ui.ButtonMenuSelectWidget——按钮（真Button，Tab停靠点）触发菜单，
 // 菜单经MenuSelect浮动于按钮下方（间距4px）。焦点始终在按钮上，菜单不是Tab停靠点；
-// 菜单id与按钮锚点互相关联（haspopup/expanded/owns/activedescendant落在锚点）；
+// 菜单id与按钮锚点互相关联（haspopup/expanded/owns/activedescendant写在锚点）；
 // 菜单打开期间按钮呈按压态（对齐原版onMenuToggle）
 /**
  * A button-triggered command menu: choosing an item runs it and closes the menu.
  * Unlike a Dropdown that tracks a "current selection", it suits toolbar-style
  * "click to run a command" cases.
  *
- * 按钮触发的命令菜单：选定即执行并收起菜单。与 Dropdown 记“当前选中项”不同，
+ * 按钮触发的命令菜单：选定后立即执行并收起菜单。与 Dropdown 记“当前选中项”不同，
  * 适合工具栏里“点了就执行一项命令”的场景。
  *
  * @see https://bearbin1215.github.io/ooui-react/components/button-menu-select/index.html
@@ -164,7 +164,7 @@ export const ButtonMenuSelectWidget = forwardRef<
     );
     const { values: selectableValues } = useSelectableValues(options);
     // clearOnSelect为false时保留的"粘性"选中值（对齐原版不调selectItem的语义）；
-    // clearOnSelect为true时恒空——选中态由菜单的clearOnChoose通道清零
+    // clearOnSelect为true时始终为空——选中态由菜单的clearOnChoose通道清零
     const [stickyValue, setStickyValue] = useState<string | number | undefined>(
       undefined,
     );
@@ -175,7 +175,7 @@ export const ButtonMenuSelectWidget = forwardRef<
      * （Chromium实测确认：preventDefault后keypress计数为0），此路径为跨浏览器防御；
      * 2. 前缀缓冲活跃时的空格——刻意不preventDefault（否则空格进不了前缀缓冲），
      * 故必须靠本标记挡掉模拟click（见handleKeyDown的SPACE分支）。
-     * keyup即手势结束，据此复位（不会卡死鼠标点击）
+     * keyup表示手势结束，据此复位（不会让鼠标点击失效）
      */
     const keyboardGestureRef = useRef(false);
 
@@ -218,7 +218,7 @@ export const ButtonMenuSelectWidget = forwardRef<
      * 落回Button的keypress激活通道模拟click开合菜单），←→/Home/End/翻页/Tab由
      * consumeNavigationKey统一消费。
      * 空格另带前缀缓冲守卫（本组件启用前缀跳转，空格可能是多词选项标签的一部分），
-     * 与Dropdown同口径——见dev-docs/DEVIATIONS.md「增强」
+     * 与Dropdown规则一致——见dev-docs/DEVIATIONS.md「增强」
      */
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
       onKeyDown?.(event);
@@ -290,7 +290,7 @@ export const ButtonMenuSelectWidget = forwardRef<
             ...anchorProps,
             "aria-haspopup": "true",
             "aria-expanded": open,
-            // 展开时声明所拥有的菜单（收起即移除，对齐原版MenuSelectWidget.onToggle
+            // 展开时声明所拥有的菜单（收起时移除，对齐原版MenuSelectWidget.onToggle
             // 对$focusOwner的attr/removeAttr）
             "aria-owns": open ? menuId : undefined,
           }}
@@ -322,13 +322,13 @@ export const ButtonMenuSelectWidget = forwardRef<
           // 原版floatable菜单不设width：宽度随内容自适应，不与按钮同宽（Dropdown的
           // 贴输入框宽语义不适用于按钮形态）
           matchAnchorWidth={false}
-          // clearOnSelect时选中态由clearOnChoose清零（菜单内从不出现选中态），stickyValue恒空
+          // clearOnSelect时选中态由clearOnChoose清零（菜单内从不出现选中态），stickyValue始终为空
           value={stickyValue}
           clearOnChoose={clearOnSelect}
           highlightedValue={highlightedValue}
           onHighlightedChange={setHighlightedValue}
           onChoose={chooseOption}
-          // 高亮项的aria-activedescendant落在按钮锚点上（对齐原版setFocusOwner(widget.$tabIndexed)）
+          // 高亮项的aria-activedescendant写在按钮锚点上（对齐原版setFocusOwner(widget.$tabIndexed)）
           focusOwnerRef={anchorRef}
         />
       </>

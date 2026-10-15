@@ -30,7 +30,7 @@ export function useLabelPadding(
   rtl: boolean,
 ): CSSProperties {
   const [paddingWidth, setPaddingWidth] = useState(0);
-  // label是否实际渲染内容：与labelElementClasses的hasLabel同口径（0等有效节点也计量，
+  // label是否实际渲染内容：与labelElementClasses的hasLabel同规则（0等有效节点也计量，
   // 避免类名输出与内边距预留分叉）；取布尔量入依赖——依赖数组写表达式无法通过静态检查
   const hasLabelContent = hasLabel(label);
 

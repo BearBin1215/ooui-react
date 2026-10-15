@@ -2,11 +2,11 @@ import { describe, expect, it } from "vitest";
 import { normalizeViewportSpacing } from "./config";
 
 /**
- * 全局配置的纯函数契约测试。normalizeViewportSpacing把OOUIProvider.viewportSpacing的
- * 两种入参形态归一化为四边数值，缺省边回落VIEWPORT_SPACING——缺省各边0，与原版
+ * 全局配置的纯函数规则测试。normalizeViewportSpacing把OOUIProvider.viewportSpacing的
+ * 两种入参形态规范化为四边数值，缺省边回落VIEWPORT_SPACING——缺省各边0，与原版
  * OO.ui.getViewportSpacing一致（见dev-docs/comparison-guide.md全局能力映射）。
  */
-describe("normalizeViewportSpacing（viewportSpacing归一化）", () => {
+describe("normalizeViewportSpacing（viewportSpacing规范化）", () => {
   it("数值形态四边同值", () => {
     expect(normalizeViewportSpacing(12)).toEqual({
       top: 12,

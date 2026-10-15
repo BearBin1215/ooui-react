@@ -1,6 +1,6 @@
 ---
 title: Global configuration
-description: "Global settings on OOUIProvider: messages and i18n, the popup container, mobile mode, text direction, viewport spacing, access-key labels, and the two channels for imperative dialogs."
+description: "Global settings on OOUIProvider: messages and i18n, the popup container, mobile mode, text direction, viewport spacing, access-key labels, and where imperative dialogs take their config from."
 ---
 
 # Global configuration
@@ -127,7 +127,7 @@ export default App;
 
 Language packs follow the languages of the original OOUI `dist/i18n`: 222 in total, imported by MediaWiki language code (`ooui-react/locales/<code>`); language packs are loaded on demand and don't affect each other's bundle size. `en` is the built-in default baseline, always part of the main bundle, and doesn't need importing; any key missing from a pack falls back to its English default, key by key.
 
-Languages without an upstream translation for the messages this library uses (`crh-cyrl` / `crh-latn` / `vo`) and the translation-documentation pseudo-language `qqq` are not included. The full set of codes lives in the installed package under `ooui-react/dist/locales/`.
+Languages without an upstream translation for the messages this library uses (`crh-cyrl` / `crh-latn` / `vo`) and the translation-documentation pseudo-language `qqq` are not included. The full set of codes is in the installed package under `ooui-react/dist/locales/`.
 
 For right-to-left languages such as Arabic, Hebrew and Persian, the page or container text direction is covered in [Text direction](#text-direction).
 

@@ -20,7 +20,7 @@ export interface InputProps<
   /**
    * Form field name (lands on `<input>`)
    *
-   * 表单提交字段名（落在 `<input>`）
+   * 表单提交字段名（写在 `<input>`）
    */
   name?: string;
 

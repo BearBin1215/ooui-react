@@ -22,17 +22,17 @@ import { useLatestRef } from "./refs";
 type PanelAlignSide = "start" | "end" | "center" | "fill";
 
 /**
- * 面板三个对齐侧的可用宽度（`resolvePanelAlignSide` 的入参口径，px）。`bounds`为**已内缩的
+ * 面板三个对齐侧的可用宽度（`resolvePanelAlignSide` 的入参规则，px）。`bounds`为**已内缩的
  * clip边界**（原始可视边界计入视口留白与clip buffer，见utils的`getClipBounds`）。
  * `start`/`end` 为逻辑侧：以锚点相应缘为基准、向该侧展开可用的宽度（LTR 的 start 自锚点左缘
  * 向右展开、RTL 的 start 自锚点右缘向左展开）；`center` 为居中时的可用总宽。
  *
- * `center`按原版center步骤经`clip()`的单侧口径取：center以`left`定位（`computePosition().right`
- * 为空）、`getHorizontalAnchorEdge()`恒落`'left'`，itemRect右缘扩到容器右界后可用宽即
+ * `center`按原版center步骤经`clip()`的单侧规则取：center以`left`定位（`computePosition().right`
+ * 为空）、`getHorizontalAnchorEdge()`始终为`'left'`，itemRect右缘扩到容器右界后可用宽即
  * `far − max(near, 面板左缘)`（`oojs-ui.js:5857-5870`）——面板左缘在容器内时等价于
  * `2×(far − centerX)`，越出容器左界时退化为整段可视跨距`far − near`。故`panelWidth`是入参
  *
- * start/end两侧空间按锚点相应缘在容器内收口——该缘已在容器外时计 0（放置不做钳制，越出容器的
+ * start/end两侧空间按锚点相应缘在容器内限制边界——该缘已在容器外时计 0（放置不做钳制，越出容器的
  * 对齐侧交由末步「铺满容器」承接）：若只按「锚点缘到容器边」的距离估算，容器外的空间会被算进来，
  * 面板放到容器外仍被判为放得下，从而永远轮不到填充末步
  */
@@ -85,7 +85,7 @@ export function resolvePanelAlignSide(
  * 按上下两侧可用空间选择浮层的展开方向（对齐原版`MenuSelectWidget.toggle`的翻转：
  * 首选方向放不下就切`static.flippedPositions`的对侧，对侧也放不下时取更高的那一侧
  * ——`dist/oojs-ui.js:8940-8957`）。
- * 定侧内核收敛为utils的`resolveFlipSide`（与`Popup`的`resolvePopupPosition`共用）：
+ * 定侧逻辑统一用utils的`resolveFlipSide`（与`Popup`的`resolvePopupPosition`共用）：
  * 一次按预计算空间定侧，不做「先定位再测量」
  * @param spaces 上下两侧的可用高（锚点缘到可视边界，已扣视口留白与offset）
  * @param panelHeight 面板自然高（未钳高）
@@ -127,7 +127,7 @@ interface AnchoredPanelLayout {
  * 开启/滚动/缩放及面板尺寸变化（ResizeObserver观察panelRef，覆盖工具增减、文案换行等
  * 内容驱动的尺寸变化）时重算。
  * `flip`开启时按上下两侧可用空间改选展开方向，与对齐侧一样在打开时定一次、滚动重算沿用
- * （与Popup的滚动重判口径不同，见dev-docs/DEVIATIONS.md「增强」的Popup条）。
+ * （与Popup的滚动重判规则不同，见dev-docs/DEVIATIONS.md「增强」的Popup条）。
  * 返回布局供调用方写入style（React受控渲染或命令式均可）
  */
 export function useAnchoredPanelLayout({
@@ -170,7 +170,7 @@ export function useAnchoredPanelLayout({
   preferredSide?: Exclude<PanelAlignSide, "center" | "fill">;
   /**
    * 空间不足时是否改选上下方向（对齐原版MenuSelectWidget的翻转，缺省false）。
-   * 菜单类传true；工具栏面板按原版`PopupToolGroup.setAutoFlip(false)`的口径不传
+   * 菜单类传true；工具栏面板按原版`PopupToolGroup.setAutoFlip(false)`的规则不传
    */
   flip?: boolean;
 }): AnchoredPanelLayout | null {
@@ -232,7 +232,7 @@ export function useAnchoredPanelLayout({
       // 自然高取scrollHeight + border——max-height钳制不改变scrollHeight，无需清除内联样式
       // 后重测；清除会让DOM与React持有的style失配，重算结果与上一轮相同（值不变）时React
       // 比对后跳过写回，已清除的钳高会静默丢失。borderHeight = offsetHeight − clientHeight
-      // （钳高只作用于content box，该差值恒为上下border）
+      // （钳高只作用于content box，该差值始终为上下border）
       const borderHeight = el.offsetHeight - el.clientHeight;
       const naturalHeight = el.scrollHeight + borderHeight;
       // 两侧可用高（锚点缘到clip边界，已扣视口留白、buffer与offset——翻转与钳高同源于
@@ -316,7 +316,7 @@ export function useAnchoredPanelLayout({
     };
 
     // 高频重算（document捕获级scroll监听下任何滚动容器的每个滚动事件都会触发）的等值跳过：
-    // compute()恒产出新对象，直接setLayout会让布局值未变的滚动也重渲染整个浮层子树；逐字段
+    // compute()始终产出新对象，直接setLayout会让布局值未变的滚动也重渲染整个浮层子树；逐字段
     // 比对后沿用上一引用，React按Object.is跳过重渲染，下游style也因值不变跳过写回
     const applyLayout = (next: AnchoredPanelLayout | null) => {
       setLayout((prev) => (isEqual(prev, next) ? prev : next));

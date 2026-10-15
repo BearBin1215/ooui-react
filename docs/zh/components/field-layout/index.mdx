@@ -1,6 +1,6 @@
 ---
 title: FieldLayout 字段布局
-description: "FieldLayout 组件的属性说明：给字段控件配标签的对齐方向、标签与控件的点击/聚焦联动、title 落点，以及 disabled 的样式语义。"
+description: "FieldLayout 组件的属性说明：给字段控件配标签的对齐方向、标签与控件的点击/聚焦联动、title 写入位置，以及 disabled 的样式语义。"
 ---
 
 # FieldLayout 字段布局
@@ -11,7 +11,7 @@ description: "FieldLayout 组件的属性说明：给字段控件配标签的对
 
 ## 基本用法
 
-标签与控件的关联由组件自动完成：放进 `FieldLayout` 的输入类控件会认领一个 `id`，标签的 `htmlFor` 指向它，支持点击标签聚焦控件，和读屏器。字段控件自身不需要再写 `label`。
+标签与控件的关联由组件自动完成：放进 `FieldLayout` 的输入类控件会认领一个 `id`，标签的 `htmlFor` 指向它，因此点击标签可以聚焦控件，也便于读屏器朗读。字段控件自身不需要再写 `label`。
 
 ```tsx preview
 import { TextInput, FieldLayout } from "ooui-react";
@@ -62,7 +62,7 @@ export default App;
 
 - `label` 是标签内容（`ReactNode`）。
 - `invisibleLabel` 把标签视觉隐藏，但保留可访问名称；此时 `title` 未显式给出会以标签文本兜底。
-- `title` 落在标签元素上（对齐原版 `$titled = $label`），而不是布局根。
+- `title` 写在标签元素上（对齐原版 `$titled = $label`），不写在布局根上。
 - 字段控件登记了自己的 `accessKey` 时，标签提示末尾附上键位（组合键文案可经 [OOUIProvider](../../guide/configuration.mdx) 本地化）。
 
 ```tsx preview
@@ -86,7 +86,7 @@ export default App;
 
 ## 禁用
 
-`FieldLayout` 的 `disabled` 只给布局根加 `oo-ui-fieldLayout-disabled` 样式类，让字段区域呈禁用态外观，不会替你禁用 `children` 里的控件。要真正禁用，请在控件自身设置 `disabled`；需要整组一起禁用时改用走原生 `<fieldset disabled>` 的 `FieldsetLayout`。
+`FieldLayout` 的 `disabled` 只给布局根加 `oo-ui-fieldLayout-disabled` 样式类，让字段区域呈禁用态外观，不会替你禁用 `children` 里的控件。要真正禁用，请在控件自身设置 `disabled`；需要整组一起禁用时改用基于原生 `<fieldset disabled>` 的 `FieldsetLayout`。
 
 ```tsx preview
 import { FieldLayout, TextInput } from "ooui-react";
@@ -112,12 +112,12 @@ export default App;
 | `label` | 标签内容 | `ReactNode` | — |
 | `invisibleLabel` | 标签视觉隐藏（保留可访问名称） | `boolean` | `false` |
 | `align` | 标签对齐方向 | `'left' \| 'right' \| 'top' \| 'inline'` | `'left'` |
-| `title` | 标签的提示文本（落在标签元素上） | `string` | — |
+| `title` | 标签的提示文本（写在标签元素上） | `string` | — |
 | `disabled` | 给布局加禁用样式类（不下发给控件） | `boolean` | `false` |
 | `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
 
 ## 另见
 
 - 包裹多个 `FieldLayout` 的表单容器：[FormLayout](../form-layout/index.mdx)
-- 各控件的属性与落点：[TextInput](../text-input/index.mdx)、[CheckboxInput](../checkbox-input/index.mdx)
+- 各控件的属性与写入位置：[TextInput](../text-input/index.mdx)、[CheckboxInput](../checkbox-input/index.mdx)
 - 所有组件共有的 `disabled`、`title`、`accessKey` 语义：[通用属性](../../guide/basics.mdx)

@@ -34,13 +34,13 @@ export default App;
 
 ## 步进
 
-三个步进通道，日常步距都是 `buttonStep`：
+步进有以下通道，日常步距都是 `buttonStep`：
 
 - **加减按钮**：`showButtons`（默认开启）渲染两侧按钮，是纯装饰元素（`aria-hidden`、不参与 Tab 序），点击不会抢走输入框焦点；`disabled` 或 `readOnly` 时一并禁用。
 - **键盘**：↑/↓ 按 `buttonStep` 步进，PgUp/PgDn 按 `pageStep`（默认 `buttonStep` 的 10 倍）。
 - **滚轮**：仅输入框聚焦时生效（上滚加、下滚减），并阻止页面滚动；悬停未聚焦时不拦截，避免滚动页面误改数值。
 
-步进时数值会收敛：结果钳制到 `[min, max]` 区间并取 `step` 的倍数；当前无值（`''`）时步进从 0 起步。收敛只发生在步进时——直接键入的越界值或非 `step` 倍数原样保留，由软校验标红。
+步进时数值会被规整：结果钳制到 `[min, max]` 区间并取 `step` 的倍数；当前无值（`''`）时步进从 0 起步。规整只发生在步进时——直接键入的越界值或非 `step` 倍数原样保留，由软校验标红。
 
 ## 范围与步距
 
@@ -53,7 +53,7 @@ export default App;
 
 内置合法性判定，值不满足时输入元素输出 `aria-invalid`、根元素叠加 invalid 标志类，**但不改写值**：
 
-- 空值：`required` 时非法，且挂载时即校验（空值 + 必填，加载就标红）；
+- 空值：`required` 时非法，且挂载时就校验（空值 + 必填，加载就标红）；
 - 非有限数值、不是 `step` 的倍数、超出 `[min, max]` 区间。
 
 触发时机与 TextInput 的软校验一致：值变更（防抖）、失焦即校验、聚焦时清除；`min`/`max`/`step`/`required` 变化后立即重新校验。
@@ -92,19 +92,19 @@ function App() {
 export default App;
 ```
 
-## 属性落点
+## 属性写入位置
 
-组件根是不可聚焦的 `<div>`，输入元素是 `<input type="number">`（包在 `oo-ui-numberInputWidget-field` 容器里；开启按钮时根元素带 `oo-ui-numberInputWidget-buttoned` 类）。落点规则与 [TextInput](../text-input/index.mdx) 相同：
+组件根是不可聚焦的 `<div>`，输入元素是 `<input type="number">`（包在 `oo-ui-numberInputWidget-field` 容器里；开启按钮时根元素带 `oo-ui-numberInputWidget-buttoned` 类）。写入规则与 [TextInput](../text-input/index.mdx) 相同：
 
-- props 的 `...rest` 落在根 div 上；要写到原生 `<input>` 的属性（如 `role`、`aria-*`、`autoComplete`）走 `inputProps` 通道，其 `onChange`/`onBlur`/`onFocus` 串联在组件自身逻辑之后。
+- props 的 `...rest` 写在根 div 上；要写到原生 `<input>` 的属性（如 `role`、`aria-*`、`autoComplete`）走 `inputProps` 通道，其 `onChange`/`onBlur`/`onFocus` 串联在组件自身逻辑之后。
 - `inputRef` 指向内部 `<input>`（组件 `ref` 指向根 div），聚焦输入框用 `inputRef`。
-- `tabIndex`、`title`、`dir`、`accessKey`、`name` 由组件接管，直接落在 `<input>` 上（对齐原版落点），不走 `rest`。
+- `tabIndex`、`title`、`dir`、`accessKey`、`name` 由组件接管，直接写在 `<input>` 上（与原版写入位置一致），不走 `rest`。
 
 ## API
 
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `value` | 输入值（受控，传入即受控模式）；`''` 表示无值 | `number \| ''` | — |
+| `value` | 输入值（受控，传入后即进入受控模式）；`''` 表示无值 | `number \| ''` | — |
 | `defaultValue` | 非受控初始值 | `number \| ''` | — |
 | `onChange` | 值变化回调（值优先，含原生事件） | `ChangeHandler<number \| '', HTMLInputElement>` | — |
 | `showButtons` | 是否显示两侧步进按钮 | `boolean` | `true` |
@@ -112,7 +112,7 @@ export default App;
 | `step` | 合法性步距（值需为其倍数），缺省不限制小数 | `number` | — |
 | `buttonStep` | 按钮 / ↑↓ / 滚轮的步距 | `number` | `step ?? 1` |
 | `pageStep` | PgUp/PgDn 的步距 | `number` | `buttonStep × 10` |
-| `allowInteger` / `isInteger` | 废弃兼容配置：仅允许整数（强制 `step={1}`），置位有开发期告警 | `boolean` | — |
+| `allowInteger` / `isInteger` | 废弃兼容配置：仅允许整数（强制 `step={1}`），设置后有开发期告警 | `boolean` | — |
 | `placeholder` | 输入提示 | `string` | — |
 | `label` / `invisibleLabel` | 字段标签 / 标签视觉隐藏（保留可访问名称） | `ReactNode` / `boolean` | — / `false` |
 | `labelPosition` | 标签位置 | `'before' \| 'after'` | `'after'` |
@@ -122,8 +122,8 @@ export default App;
 | `readOnly` | 只读（保留聚焦，禁止修改与步进） | `boolean` | `false` |
 | `disabled` | 是否禁用 | `boolean` | `false` |
 | `flags` | 根元素附加标志（invalid 标志叠加其上） | `string \| string[]` | — |
-| `name` | 表单提交字段名（落在 `<input>`） | `string` | — |
-| `accessKey` | 快捷键（落在 `<input>`） | `string` | — |
+| `name` | 表单提交字段名（写在 `<input>`） | `string` | — |
+| `accessKey` | 快捷键（写在 `<input>`） | `string` | — |
 | `inputRef` | 内部 `<input>` 的引用 | `Ref<HTMLInputElement>` | — |
 | `inputProps` | 原生 `<input>` 的附加属性通道；`onChange`/`onBlur`/`onFocus` 串联在组件逻辑之后 | `object` | — |
 | `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
@@ -131,7 +131,7 @@ export default App;
 ## 与原版的差异
 
 - `step` / `buttonStep` / `pageStep` 传非正值时，原版在构造期直接抛错；本工程开发期告警一次，并按给定值照常渲染。{/* deviations: dev-numberinput-step */}
-- `allowInteger` / `isInteger` 兼容收编：置位等价于强制 `step={1}`，开发期告警提示迁移（原版静默采纳），新代码请直接用 `step`。{/* deviations: dev-allow-integer */}
+- `allowInteger` / `isInteger` 作为兼容项保留：设置后等价于强制 `step={1}`，开发期告警提示迁移（原版静默采纳），新代码请直接用 `step`。{/* deviations: dev-allow-integer */}
 
 ## 另见
 

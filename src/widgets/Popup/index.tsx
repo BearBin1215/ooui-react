@@ -89,7 +89,7 @@ export interface PopupProps
   /**
    * Alignment (logical values flip with RTL; `force-*` stay physical).
    *
-   * 对齐方向（逻辑值随 RTL 换侧，`force-*` 恒为物理侧）
+   * 对齐方向（逻辑值随 RTL 换侧，`force-*` 始终为物理侧）
    */
   align?: PopupAlign;
 
@@ -156,7 +156,7 @@ export interface PopupProps
    */
   padded?: boolean;
 
-  // 实现说明：width/height落在内容盒.oo-ui-popupWidget-popup上（原版config.width的落点），
+  // 实现说明：width/height写在内容盒.oo-ui-popupWidget-popup上（原版config.width的写入位置），
   // 弹层根.oo-ui-popupWidget的style.width不改变视觉宽度
   /**
    * Popup width (px)
@@ -246,7 +246,7 @@ export const Popup = forwardRef<HTMLDivElement, PopupProps>(
     },
     ref,
   ) => {
-    // 打开态受控/非受控统一管线：显隐由调用方驱动（open传入即受控），弹层内部的关闭
+    // 打开态受控/非受控共用同一套流程：显隐由调用方驱动（open传入即受控），弹层内部的关闭
     // 请求（关闭按钮/点外部/Escape/焦点圈闭）经setOpen发出并回调onOpenChange
     const { value: open, commit: setOpen } = useControlledValue<boolean>(
       { value: openProp, defaultValue: defaultOpen },
@@ -280,7 +280,7 @@ export const Popup = forwardRef<HTMLDivElement, PopupProps>(
     // 对齐原版FloatableElement.position()：重定位、滚出隐藏（hideWhenOutOfView）与裁剪
     // （ClippableElement.clip）由同一监听集（滚动/缩放/壳尺寸变化）触发、按序完成——
     // 先切换滚出类、再写computePosition()结果、最后clip（`oojs-ui.js:5364-5380`），监听分别
-    // 绑在togglePositioning（`:5241-5244`）与toggleClipping（`:5636-5638`）。本工程同型收敛为
+    // 绑在togglePositioning（`:5241-5244`）与toggleClipping（`:5636-5638`）。本工程将上述监听归并为
     // 单个effect：每轮回调内「重算布局→应用可视边界」，布局以compute()返回值就地传递、不经
     // layout state接力（state接力的旧形态会让滚动先按过期布局裁剪一轮、重渲染后再算一遍）。
     // 影响布局的props变化时须重新计算（含open期间切换container/anchor），对齐原版
@@ -296,13 +296,13 @@ export const Popup = forwardRef<HTMLDivElement, PopupProps>(
       }
       const containerEl = resolveElement(container);
       // 弹层方向：本组件声明的dir（原版Element config.dir的对应物）> Provider.dir > 锚点继承方向。
-      // dir prop按HTMLAttributes收为string，非ltr/rtl的取值（如auto）不参与解析、交回下层来源
+      // dir prop按HTMLAttributes改为string，非ltr/rtl的取值（如auto）不参与解析、交回下层来源
       const dir =
         (dirProp === "ltr" || dirProp === "rtl" ? dirProp : configDir) ??
         getElementDir(containerEl);
       // 就近滚动容器：翻转/钳制/裁剪/滚出判定的公共基准，随container在本effect运行期内不变
       const scroller = findScrollableContainer(containerEl);
-      // body内联裁剪样式的复位：测量前清基、可整显时清除、effect清理，三处同型收敛
+      // body内联裁剪样式的复位：测量前清基、可整显时清除、effect清理，这三处统一处理
       const resetBodyClip = () => {
         const body = popupRef.current?.querySelector<HTMLElement>(
           ".oo-ui-popupWidget-body",
@@ -331,7 +331,7 @@ export const Popup = forwardRef<HTMLDivElement, PopupProps>(
 
         // 翻转判定：常态方向放不下时翻转到对侧（autoFlip关闭时保持声明方位）。
         // 基准与钳制同源（锚点就近滚动容器，对齐原版翻转判定走isClipped*的
-        // $clippableScrollableContainer），并按原版clip()口径取内缩后的clip边界
+        // $clippableScrollableContainer），并按原版clip()的规则取内缩后的clip边界
         const clipBounds = getClipBounds(getVisibleBounds(scroller), scroller, spacing);
         const position = autoFlip
           ? resolvePopupPosition(positionProp, getPositionSpaces(base, clipBounds, rtl), {
@@ -339,7 +339,7 @@ export const Popup = forwardRef<HTMLDivElement, PopupProps>(
               height: ph,
             })
           : positionProp;
-        // 箭头两处几何量运行时实测（随主题自适应）：占位量与箭头盒，见popupLayout的
+        // 箭头这两处几何量运行时实测（随主题自适应）：占位量与箭头盒，见popupLayout的
         // measureAnchorShift / measureArrowBoxSize
         const anchorEl = anchor
           ? rootRef.current?.querySelector<HTMLElement>(".oo-ui-popupWidget-anchor")
@@ -368,8 +368,8 @@ export const Popup = forwardRef<HTMLDivElement, PopupProps>(
           ? base.left + base.width / 2 + scrollX - popupStart
           : base.top + base.height / 2 + scrollY - popupStart;
 
-        // 对齐原版两段positionAdjustment：1) 锚点距弹层两端不足2*箭头盒尺寸时平移弹层为其腾出空间
-        // （anchored的backwards以'before'起手，靠这一步拉到「锚点中线距终止端2×箭头盒」的稳态）；
+        // 对齐原版positionAdjustment：1) 锚点距弹层两端不足2*箭头盒尺寸时平移弹层为其腾出空间
+        // （anchored的backwards以'before'初始位置，靠这一步拉到「锚点中线距终止端2×箭头盒」的稳态）；
         // 2) 容器边界钳制（就近滚动容器，缺省视口）内缩containerPadding
         const arrowBoxSize = measureArrowBoxSize(anchorEl, anchorAxisX);
         const arrowAdjust = anchor
@@ -409,7 +409,7 @@ export const Popup = forwardRef<HTMLDivElement, PopupProps>(
           ".oo-ui-popupWidget-body",
         );
         // 可视区边界统一经getVisibleBounds解析（元素容器扣滚动条沟槽、RTL在左，视口为
-        // clientWidth/Height口径），与useAnchoredPanelLayout同一口径
+        // clientWidth/Height取值），与useAnchoredPanelLayout同一规则
         const visible = getVisibleBounds(scroller);
         // 滚出隐藏：锚定容器与可视区（就近滚动容器，缺省视口）无交集时隐藏
         if (hideWhenOutOfView && containerEl) {
@@ -431,7 +431,7 @@ export const Popup = forwardRef<HTMLDivElement, PopupProps>(
         }
         // 裁剪：body超出可视区时压至可用尺寸。
         // itemRect以未裁剪自然尺寸为基准（实际rect会随裁剪收缩，直接使用会逐轮振荡）。
-        // vp取内缩后的clip边界（视口留白仅视口分支、buffer恒计，见getClipBounds）；
+        // vp取内缩后的clip边界（视口留白仅视口分支、buffer始终计入，见getClipBounds）；
         // 前述滚出隐藏判定用的visible保持原始边界（不内缩）
         const vp = getClipBounds(visible, scroller, spacing);
         const popupRect = popup.getBoundingClientRect();
@@ -458,7 +458,7 @@ export const Popup = forwardRef<HTMLDivElement, PopupProps>(
           ? popupRect.height - bodyRect.height
           : popupRect.width - bodyRect.width;
         // 钳0：锚点贴近视口边缘时availSize不足以覆盖弹层壳，alloted为负是非法CSS值
-        // 会被浏览器丢弃导致裁剪静默失效（与MenuSelect的钳0口径一致）
+        // 会被浏览器丢弃导致裁剪静默失效（与MenuSelect的钳0规则一致）
         const alloted = Math.max(0, Math.ceil(availSize - extraSize));
         const natural = verticalClip ? body.scrollHeight : body.scrollWidth;
         if (alloted < natural) {

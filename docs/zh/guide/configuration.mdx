@@ -1,11 +1,11 @@
 ---
 title: 全局配置
-description: "OOUIProvider 的全局配置：消息与国际化、浮层容器、移动端形态、文本方向、视口留白、快捷键文案，以及命令式弹窗的双通道。"
+description: "OOUIProvider 的全局配置：消息与国际化、浮层容器、移动端形态、文本方向、视口留白、快捷键文案，以及命令式弹窗的配置来源。"
 ---
 
 # 全局配置
 
-`OOUIProvider` 承载跨组件的全局设定：文案、浮层去向、移动端形态、快捷键显示等。包一层即可，未包裹时组件按缺省值工作。组件文案的语言包与站点消息接入见[文案与国际化](#文案与国际化)。
+`OOUIProvider` 承载跨组件的全局设定：文案、浮层挂载位置、移动端形态、快捷键显示等。包一层即可，未包裹时组件按缺省值工作。组件文案的语言包与站点消息接入见[文案与国际化](#文案与国际化)。
 
 ## 用法
 
@@ -18,7 +18,7 @@ root.render(
 );
 ```
 
-不包裹也能正常使用：英文文案、浮层挂到 `document.body`、非移动端形态、文本方向按锚点元素自动解析、视口留白为 0。
+不包裹也能正常使用：英文文案、浮层挂载到 `document.body`、非移动端形态、文本方向按锚点元素自动解析、视口留白为 0。
 
 ## 配置项
 
@@ -28,14 +28,14 @@ root.render(
 | `getPortalContainer` | 浮层的挂载容器，入参为浮层锚点元素 | `(trigger: HTMLElement) => HTMLElement` | `document.body` |
 | `isMobile` | 移动端形态开关 | `boolean` | `false` |
 | `dir` | 浮层的文本方向 | `'ltr' \| 'rtl'` | 按锚点自动解析 |
-| `viewportSpacing` | 浮层贴边与钳高时计入的视口留白 | `number` 或逐边对象 | 各边 0 |
+| `viewportSpacing` | 浮层贴边与限制高度时计入的视口留白 | `number` 或逐边对象 | 各边 0 |
 | `getAccessKeyLabel` | 快捷键的显示文案 | `(accessKey: string) => string \| undefined` | 原键值 |
 
 ## 浮层挂载位置
 
-`getPortalContainer` 决定浮层（下拉菜单、弹出面板、`Popup`）挂到哪。默认挂到 `document.body`；**弹窗内的浮层**挂到该弹窗的容器，随弹窗一起层叠与隔离。
+`getPortalContainer` 决定浮层（下拉菜单、弹出面板、`Popup`）挂载到哪个容器。默认挂载到 `document.body`；**弹窗内的浮层**挂载到该弹窗的容器，随弹窗一起层叠与隔离。
 
-给了本配置后恒以它为准——包括弹窗内的浮层，此时浮层不再随弹窗被隔离，层叠交给容器自行承担。容器不应建立新的定位上下文（浮层按页面坐标绝对定位）。{/* deviations: dev-float-portal */}
+配置该项后始终以它为准——包括弹窗内的浮层，此时浮层不再随弹窗被隔离，层叠交给容器自行承担。容器不应建立新的定位上下文（浮层按页面坐标绝对定位）。{/* deviations: dev-float-portal */}
 
 ## 移动端形态
 
@@ -45,11 +45,11 @@ root.render(
 
 缺省按锚点元素的文本方向解析，因此**把 `dir="rtl"` 设在页面或容器即可**，多数场景无需配置本项。
 
-只有浮层挂出内容区、锚点方向不代表浮层方向时（例如浮层要挂到站点内容区之外的容器里）才需要显式指定 `dir`。
+只有浮层挂载到内容区之外、锚点方向不能代表浮层方向时（例如浮层要挂载到站点内容区之外的容器里）才需要显式指定 `dir`。
 
 ## 视口留白
 
-`viewportSpacing` 是浮层贴边、钳高与翻转判定计入的四周留白。站点有固定头栏一类悬浮元素时可用它避开，例如 `viewportSpacing={{ top: 48 }}`。缺省各边 0。
+`viewportSpacing` 是浮层贴边、限制高度与翻转判定时计入的四周留白。站点有固定头栏一类悬浮元素时可用它避开，例如 `viewportSpacing={{ top: 48 }}`。缺省各边 0。
 
 ## 快捷键文案
 
@@ -139,7 +139,7 @@ export default App;
 <OOUIProvider messages={{ "ooui-dialog-message-accept": "好嘞" }}>
 ```
 
-键名沿用 OOUI 的消息名，完整键名可查看内建语言包（npm 包内 `ooui-react/locales/en`）。嵌套 `OOUIProvider` 时内层优先，可以外层挂语言包、内层只改个别文案。
+键名沿用 OOUI 的消息名，完整键名可查看内建语言包（npm 包内 `ooui-react/locales/en`）。嵌套 `OOUIProvider` 时内层优先，可以外层传语言包、内层只改个别文案。
 
 ### 在 MediaWiki 站点使用
 
@@ -189,7 +189,7 @@ registerMessages({ "ooui-dialog-message-accept": "确定" });
 
 ## 嵌套
 
-内层覆盖外层，`messages` 逐键合并：可以外层挂语言包、内层只改个别文案。
+内层覆盖外层，`messages` 逐键合并：可以外层传语言包、内层只改个别文案。
 
 ## 常见问题
 

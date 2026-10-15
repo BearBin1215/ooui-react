@@ -12,14 +12,14 @@ import {
 
 /**
  * 对齐原版OO.ui.mixin的纯函数层：每个导出对应原版一个Element mixin的「类名贡献」或
- * 「元素级状态解析」，与Element.ts的契约类型（同样按mixin组织）配套；少数通用归一化工具
+ * 「元素级状态解析」，与Element.ts的类型定义（同样按mixin组织）配套；少数通用规范化工具
  * （toFlagArray/hasLabel/mergeInvalidFlag）作为贡献器的共用输入处理也放在此处。
  * 与具体mixin无关的选择集派生、DOM查询与常量放utils.ts。
- * 类名贡献器即站点上OOUI主题CSS的选择器契约，改动前先核对原版对应mixin
- * （各导出的职责与落点见dev-docs/comparison-guide.md「共享抽象」）。
+ * 类名贡献器即站点上OOUI主题CSS选择器规则，改动前先核对原版对应mixin
+ * （各导出的职责与位置见dev-docs/comparison-guide.md「共享抽象」）。
  */
 
-/** 归一化标志参数：单个标志、标志数组与`undefined`统一为数组 */
+/** 规范化标志参数：单个标志、标志数组与`undefined`统一为数组 */
 export function toFlagArray<T extends string>(flags?: T | T[]): T[] {
   return typeof flags === "string" ? [flags] : (flags ?? []);
 }
@@ -28,7 +28,7 @@ export function toFlagArray<T extends string>(flags?: T | T[]): T[] {
  * label是否实际渲染内容（`null`/`undefined`/`''`与布尔均视为无标签）。
  * 布尔按无标签处理：React 不渲染布尔 children，`label={true}` 若判为有标签会输出
  * `oo-ui-labelElement` 类与一个空标签元素（类声称有标签、实际无内容）。数字等可渲染
- * 节点（如 `0`）判为有标签，与原版只认非空字符串的口径差异见 dev-docs/DEVIATIONS.md「增强」
+ * 节点（如 `0`）判为有标签，与原版只认非空字符串的规则差异见 dev-docs/DEVIATIONS.md「增强」
  */
 export function hasLabel(label: unknown): boolean {
   return (
@@ -79,7 +79,7 @@ export function mergeAriaLabelledBy(
  * ②组件同时是AccessKeyedElement时在title末尾附快捷键提示，键位文案由宿主经
  * `OOUIProvider.getAccessKeyLabel` 解析（见`useAccessKeyLabel`）。
  * 返回undefined表示不输出title属性（对齐原版removeAttr('title')）。
- * 各组件的title落点见dev-docs/comparison-guide.md「共享抽象」
+ * 各组件的title位置见dev-docs/comparison-guide.md「共享抽象」
  */
 export function resolveTitle({
   title,
@@ -98,7 +98,7 @@ export function resolveTitle({
   accessKey?: string;
   /**
    * 快捷键的显示文案（已由宿主解析，见`useAccessKeyLabel`）：给出时替代原键值，形成
-   * `title [Alt+Shift+k]`；给出空串时按原版不加后缀（原版此时走不到拼接分支）
+   * `title [Alt+Shift+k]`；给出空字符串时按原版不加后缀（原版此时走不到拼接分支）
    */
   accessKeyLabel?: string;
 }): string | undefined {
@@ -117,7 +117,7 @@ export function resolveTitle({
  * RequiredElement mixin的指示器缺省（对齐原版`setRequired`对indicatorElement的改写）：
  * 未显式声明indicator时，required为真输出`required`指示器。
  * 原版只在“当前指示器是对应位”时才改写（required为真时null→'required'，为假时
- * 'required'→null），以免破坏无关指示器；声明式下显式indicator恒优先，二者等价。
+ * 'required'→null），以免破坏无关指示器；声明式下显式indicator始终优先，二者等价。
  * 需要“显式无指示器”的通道由调用方在传入前自行判定（如TextInput的indicatorOverride）
  */
 export function resolveRequiredIndicator(
@@ -161,7 +161,7 @@ export function labelElementClasses({ label, invisibleLabel }: LabelElement): st
 }
 
 /**
- * LabelElement的label元素类贡献（落在承载标签文本的$label元素上）：`oo-ui-labelElement-label`
+ * LabelElement的label元素类贡献（写在承载标签文本的$label元素上）：`oo-ui-labelElement-label`
  * 根类 + invisible时的`oo-ui-labelElement-invisible`裁剪类（对齐原版setLabelElement给$label
  * 加类与setInvisibleLabel对$label的toggleClass）。独立Label的根元素（原版
  * `LabelWidget.static.tagName='label'`）与各组件内嵌的标签元素（原版缺省`$('<span>')`）共用
@@ -205,7 +205,7 @@ export function getWidgetClassName(
 
 /**
  * SelectWidget根的按压态类贡献（对齐原版SelectWidget构造期初始unpressed与togglePressed
- * 的互斥切换）：拖拽按压期间输出pressed类、其余输出unpressed类，落点为组根元素。
+ * 的互斥切换）：拖拽按压期间输出pressed类、其余输出unpressed类，写在组根元素上。
  * Select/RadioSelect与直选族脚手架useDirectSelect共用
  */
 export function selectWidgetStateClasses(pressed: boolean): string {
@@ -216,11 +216,11 @@ export function selectWidgetStateClasses(pressed: boolean): string {
  * TextInput继承线（TextInput/MultilineTextInput/NumberInput/ComboBoxInput）根类的折叠层，
  * 对齐原版TextInputWidget的类派生规则：在getWidgetClassName之上叠加labelPosition类、type类
  * 与flagged变体（软校验invalid经mergeInvalidFlag叠加在配置flags之上）。labelPosition类的
- * 门槛用hasLabel（非invisibleLabel），对齐原版positionLabel恒按labelPosition落位。
+ * 门槛用hasLabel（非invisibleLabel），对齐原版positionLabel始终根据labelPosition设置标签位置。
  * 形态专属状态类经extraStateClasses插在type类与flagged类之间，使各继承线的类序一致
  * （详见dev-docs/comparison-guide.md「共享抽象」）
  * @param props 组件属性，仅读取本继承线相关字段
- * @param extraStateClasses 形态专属状态类（落在type类与flagged类之间）
+ * @param extraStateClasses 形态专属状态类（写在type类与flagged类之间）
  * @param widgetNames 组件名，按原版继承链顺序叠加`oo-ui-{name}Widget`
  */
 export function getTextInputClassName(
@@ -239,7 +239,7 @@ export function getTextInputClassName(
     IndicatorElement &
     LabelElement & {
       /**
-       * 标签落位（缺省after）：仅在hasLabel时输出`oo-ui-textInputWidget-labelPosition-*`，
+       * 标签位置（缺省after）：仅在hasLabel时输出`oo-ui-textInputWidget-labelPosition-*`，
        * 不做invisibleLabel判定（对齐原版updatePosition的`!!this.label`开关）
        */
       labelPosition?: "before" | "after";
@@ -287,7 +287,7 @@ export function imageVariantClasses(flags: readonly string[]): string {
 /**
  * 按wikimediaui主题规则生成按钮内图标/指示器变体类（Button/ButtonInput/ButtonOption共用）：
  * 边框按钮在激活（选中）、禁用或primary时整体反色；禁用且非反色场景不出变体；
- * 其余按标志叠加image变体。返回空串表示无变体
+ * 其余按标志叠加image变体。返回空字符串表示无变体
  */
 export function getButtonIconClasses({
   framed,
@@ -417,7 +417,7 @@ export function optionWidgetClasses({
 
 /**
  * PendingElement mixin的类贡献（对齐原版setPendingElement输出`oo-ui-pendingElement-pending`）。
- * pending的来源由调用方各自持有（缩略图加载、动作执行、弹窗流程计数），本函数只统一类口径
+ * pending的来源由调用方各自持有（缩略图加载、动作执行、弹窗流程计数），本函数只统一类规则
  */
 export function pendingElementClasses(pending?: boolean): string {
   return pending ? "oo-ui-pendingElement-pending" : "";
@@ -425,7 +425,7 @@ export function pendingElementClasses(pending?: boolean): string {
 
 /**
  * Element显隐的类贡献（对齐原版Element#toggle的`toggleClass('oo-ui-element-hidden')`）：
- * 隐藏时输出`oo-ui-element-hidden`。各浮层/菜单/布局组件经此统一口径，
+ * 隐藏时输出`oo-ui-element-hidden`。各浮层/菜单/布局组件经此统一规则，
  * 命令式DOM操作（如autosize的classList）除外
  */
 export function elementHiddenClasses(hidden?: boolean): string {

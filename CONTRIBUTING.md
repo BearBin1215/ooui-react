@@ -19,10 +19,10 @@ ooui-react/
 │  ├─ locales/              # 语言包（en为内建英文默认基线，始终参与产物）
 │  ├─ testing/              # 测试共享工具（仅测试引用，不进导出面与产物）
 │  ├─ hooks/                # 共享hook，按能力域拆分
-│  ├─ Element.ts            # 元素mixin的契约类型（仅类型，无渲染组件）
+│  ├─ Element.ts            # 元素mixin的类型定义（仅类型，无渲染组件）
 │  ├─ mixins.ts             # 对齐OO.ui.mixin的纯函数层（类名贡献/元素级状态解析）
 │  ├─ utils.ts              # 共享工具（选择集/DOM工具/常量/ChangeHandler）
-│  ├─ i18n.ts               # 消息契约（消息键/值类型、msg系列）
+│  ├─ i18n.ts               # 消息约定（消息键/值类型、msg系列）
 │  ├─ config.tsx            # OOUIProvider与全局配置hook
 │  └─ index.ts              # 导出面
 ├─ playground/              # 本地演示工程
@@ -61,11 +61,11 @@ docs/ 目录为本工程的文档工程，基于 Rspress 构建，托管到 GitH
 文档编写原则如下：
 
 - **面向消费端**：除了特定面向开发者的页面或章节，不过度描述实现细节和原理。
-- **写明差异（双层契约）**：与原版的差异全量记入 `dev-docs/DEVIATIONS.md`（维护者台账）。文档站只承载消费方可感知的子集，只写「现象 + 迁移动作」。
+- **写明差异（双层约定）**：与原版的差异全量记入 `dev-docs/DEVIATIONS.md`（维护者明细）。文档站只承载消费方可感知的子集，只写「现象 + 迁移动作」。
   - 单组件差异写进组件页，跨组件差异写进 OOUI 对照页，一个差异的展开叙述在消费方侧只出现一次。
-  - 文档侧差异内容行尾加 `{/* deviations: <id> */}` 标记，与台账元数据经 `src/docs-contract.node.test.ts` 双向校验。
+  - 文档侧差异内容行尾加 `{/* deviations: <id> */}` 标记，与明细元数据经 `src/docs-contract.node.test.ts` 双向校验。
 - **中英双语**：同步修改两种语言。
-- **组件序言**：以一两句功能定位与适用场景为度，变体多的组件可列举变体与关键差异（参考 Dialog 页），非显而易见的使用前提与契约可保留。不写实现原理、不复述 API。
+- **组件序言**：以一两句功能定位与适用场景为度，变体多的组件可列举变体与关键差异（参考 Dialog 页），非显而易见的使用前提与约定可保留。不写实现原理、不复述 API。
 - **新增组件页**：若该页预览含「首帧即访问 `document`」的组件（浮层 / portal / ResizeObserver 测量），须把路由加进 `docs/rspress.config.ts` 的 `ssg.experimentalExcludeRoutePaths` 白名单，否则 SSG 阶段构建失败。
 
 ## 测试

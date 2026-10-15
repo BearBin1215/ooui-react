@@ -4,7 +4,7 @@ import { NumberInput } from ".";
 import { getRoot, pressKey, snapshotHTML, tick, typeValue } from "../../testing";
 
 /**
- * NumberInput（对齐原版OO.ui.NumberInputWidget）的浏览器渲染契约：
+ * NumberInput（对齐原版OO.ui.NumberInputWidget）的浏览器渲染约定：
  * number输入元素与三段类链、非法文本归空、按钮步进（空值从0起步、min/max钳制、step取整）、
  * 数值合法性软校验（step倍数/min/max/required空值，挂载期即校验）。
  */
@@ -22,7 +22,7 @@ it("常规：number输入元素+numberInput类链，缺省输出步进按钮", a
   expect(root.querySelector(".oo-ui-numberInputWidget-plusButton")).toBeTruthy();
 });
 
-it("非法文本解析为空值：不提交NaN（type=number对非法输入消毒为空串）", async () => {
+it("非法文本解析为空值：不提交NaN（type=number对非法输入消毒为空字符串）", async () => {
   const onChange = vi.fn<(value: number | "", event?: unknown) => void>();
   const screen = await render(<NumberInput defaultValue="" onChange={onChange} />);
   const input = screen.container.querySelector<HTMLInputElement>("input")!;
@@ -65,7 +65,7 @@ it("按钮步进按buttonStep；超max钳制后不再提交", async () => {
   expect(onChange).toHaveBeenLastCalledWith(9);
 });
 
-it("按钮步进：减到min后不再提交（下界钳制与上界同口径）", async () => {
+it("按钮步进：减到min后不再提交（下界钳制与上界同一规则）", async () => {
   const onChange = vi.fn<(value: number | "", event?: unknown) => void>();
   const screen = await render(
     <NumberInput defaultValue={2} min={1} max={10} onChange={onChange} />,
@@ -95,7 +95,7 @@ it("键盘步进：↑↓按buttonStep、PageUp/PageDown按10倍，并阻止默�
   // 阻止默认：否则方向键会把光标移到输入框首/末
   expect(keyEvent("ArrowUp").defaultPrevented).toBe(true);
   expect(onChange).toHaveBeenLastCalledWith(6);
-  // 每次步进后须落一轮渲染：步进量基于已提交值（经ref读取），同帧连按会读到旧值
+  // 每次步进后须走一轮渲染：步进量基于已提交值（经ref读取），同帧连按会读到旧值
   await tick();
   keyEvent("ArrowDown");
   await tick();
@@ -170,7 +170,7 @@ it("受控：显示值随value prop，步进只回调不改写", async () => {
   expect(input.value).toBe("5");
 });
 
-it("step取整：步进结果收敛到step倍数（buttonStep显式取1）", async () => {
+it("step取整：步进结果取整为step的倍数（buttonStep显式取1）", async () => {
   const onChange = vi.fn<(value: number | "", event?: unknown) => void>();
   const screen = await render(
     <NumberInput defaultValue={4} step={5} buttonStep={1} onChange={onChange} />,
@@ -178,7 +178,7 @@ it("step取整：步进结果收敛到step倍数（buttonStep显式取1）", asy
   const plus = getRoot(screen)
     .querySelector(".oo-ui-numberInputWidget-plusButton")!
     .querySelector("a")!;
-  // 4+1=5，收敛到step=5的倍数
+  // 4+1=5，取整为step=5的倍数
   await plus.click();
   expect(onChange).toHaveBeenLastCalledWith(5);
 });
@@ -197,7 +197,7 @@ it("required且空值在挂载期即输出invalid标志（对齐原版构造期�
 });
 
 describe("HTML快照", () => {
-  // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）
+  // 固定快照结构：差异应明确更新，不要依赖 -u 反推（以原版DOM为准，见comparison-guide「断言基准」）
   it("带步进按钮", async () => {
     const screen = await render(<NumberInput defaultValue={5} min={0} max={10} />);
     expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(

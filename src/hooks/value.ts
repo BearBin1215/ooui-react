@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLatestRef } from "./refs";
 
-/** 受控/非受控值态与布局激活选择（统一"内部state + 回写通知"管线） */
+/** 受控/非受控值态与布局激活选择（统一"内部state + 回写通知"流程） */
 
 /**
  * 受控/非受控通用值状态（对齐React受控组件惯例，原版通过setters维护无对应物）：
@@ -60,7 +60,7 @@ export function useControlledValue<T, E = never>(
 
 /**
  * 受控值非法时的回写：受控值不在可用值集合内（组件实际显示的是生效值）时，
- * 经`onNotify`把生效值交还父级，使父级state与显示值收敛，避免两者漂移。
+ * 经`onNotify`把生效值交还父级，使父级state与显示值保持一致，避免两者漂移。
  * 对齐原版受控语义：`DropdownInput`/`RadioSelectInput`的`setValue`会对非法值回退到
  * 首个可选值并写回组件值，React受控模式下该写回只能经回调交还父级。
  * 同一非法值只回写一次：父级未采纳时不会因外部重渲染反复触发；闩锁在受控值回到合法
@@ -96,7 +96,7 @@ export function useControlledValueNotify<T>(
 /**
  * 失效（激活值不在options内）时的回退策略，按原版各自的实现分两种：
  * - `firstSelectable`：首个非禁用项（对齐原版`IndexLayout.removeTabPanels`的
- *   `selectFirstSelectableTabPanel()`，构造期首次选页同此口径）
+ *   `selectFirstSelectableTabPanel()`，构造期首次选页同此规则）
  * - `nextThenLast`：旧列表原位置向后的首个幸存项（= 原版「下一个未被移除项」，批量移除
  *   时按旧列表而非新列表定位）→ 新末项（对齐原版基类`StackLayout.removeItems`）；
  *   BookletLayout的显示由stack驱动，故随它
@@ -151,7 +151,7 @@ export function resolveLayoutSelection<T extends string | number>(
  * 布局类组件的激活项选择（IndexLayout/BookletLayout共用），统一"派生 + 失效补选"策略：
  * 激活值缺失（首次无值）或失效（不在options内，如页被移除）时按`fallback`回退，
  * 有效值原样返回。
- * 非受控模式提交回退值使内部state收敛；受控模式经onChange把生效的回退值回写父级，
+ * 非受控模式提交回退值使内部state统一处理；受控模式经onChange把生效的回退值回写父级，
  * 同一非法值只回写一次，由父级决定是否采纳
  */
 export function useLayoutSelection<T extends string | number>({

@@ -28,7 +28,7 @@ const BOX_STYLE = { border: "1px solid #a2a9b1", padding: 4 };
 const readHiddenClass = (hasClass: (cls: string) => boolean) =>
   `隐藏类=${hasClass("oo-ui-element-hidden") ? "有" : "无"}`;
 
-/** 原版侧：Layout的隐藏通道只有Element#toggle的类隐藏（命令式）；属性隐藏手动attr模拟，仅示意属性落点 */
+/** 原版侧：Layout的隐藏通道只有Element#toggle的类隐藏（命令式）；属性隐藏手动attr模拟，仅示意属性写入位置 */
 function OriginalLayouts() {
   const { containerRef } = useOriginalWidgets((oo, container, register) => {
     const ui = oo.ui as unknown as LayoutBaseUi;
@@ -53,7 +53,7 @@ function OriginalLayouts() {
     append("toggle(false)（类隐藏）", unwrapJQuery(classHidden.$element));
     register(classHidden);
 
-    // 原版无hidden属性通道，手动attr模拟本工程hidden=true的属性落点（类与aria-hidden为本工程补齐）
+    // 原版无hidden属性通道，手动attr模拟本工程hidden=true的属性写入位置（类与aria-hidden为本工程补齐）
     const attrHidden = new ui.Layout();
     attrHidden.$element.append("<p>hidden属性隐藏（手动attr模拟）。</p>");
     attrHidden.$element.attr("style", "border:1px solid #a2a9b1;padding:4px");
@@ -133,7 +133,7 @@ function ReactLayouts() {
   );
 }
 
-/** 交互行：循环切换hidden三态，读实际DOM落点（属性值/aria-hidden/隐藏类） */
+/** 交互行：循环切换hidden三态，读实际DOM位置（属性值/aria-hidden/隐藏类） */
 function ReactLayoutToggle() {
   const [state, setState] = useState<HiddenState>("visible");
   const ref = useRef<HTMLDivElement>(null);

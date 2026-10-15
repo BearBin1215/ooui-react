@@ -16,7 +16,7 @@ import { useLatestRef } from "./refs";
  * document级capture监听mouseup/keyup复位（释放可能发生在目标外）；按压流可能在上一流
  * 结束前再次开始（鼠标→键盘混用），以集合管理document监听，卸载时兜底全量移除。
  * 按压目标经`resolveTarget`从事件target解析（组内委托场景如Tool组经data-tool-name反查），
- * 缺省为单元素按压；释放落在发起目标上时经`onTrigger`触发（Tool组的onSelect位，Button系
+ * 缺省为单元素按压；释放在发起目标上时经`onTrigger`触发（Tool组的onSelect位，Button系
  * 依赖原生click触发无需传）
  */
 export function usePressedState<T = boolean, E extends HTMLElement = HTMLElement>({
@@ -36,7 +36,7 @@ export function usePressedState<T = boolean, E extends HTMLElement = HTMLElement
   resolveTarget?: (node: EventTarget | null) => T | null;
   /** 按下准入校验（如Tool组排除disabled工具）；缺省全部可按 */
   canPress?: (target: T) => boolean;
-  /** 释放（mouseup/keyup）落在发起目标上时触发 */
+  /** 释放（mouseup/keyup）在发起目标上时触发 */
   onTrigger?: (target: T) => void;
   /** 按下被接受时阻止默认行为（Tool组防拖动选中文本/焦点转移；Button不阻止以保留点击聚焦） */
   preventDefaultOnPress?: boolean;
@@ -54,7 +54,7 @@ export function usePressedState<T = boolean, E extends HTMLElement = HTMLElement
 }): {
   /** 是否处于按压中 */
   pressed: boolean;
-  /** 按压中的目标；null为无按压（单元素按压时恒为真值） */
+  /** 按压中的目标；null为无按压（单元素按压时始终为真值） */
   pressedTarget: T | null;
   /** 根元素mousedown：进入按压态并挂载document级mouseup监听 */
   onMouseDown: MouseEventHandler<E>;
@@ -121,7 +121,7 @@ export function usePressedState<T = boolean, E extends HTMLElement = HTMLElement
     document.addEventListener("keyup", handler, true);
   };
 
-  /** 解析按压目标：未提供resolveTarget时为单元素按压（恒定目标）；不可按压时返回null */
+  /** 解析按压目标：未提供resolveTarget时为单元素按压（固定不变目标）；不可按压时返回null */
   const resolvePressTarget = (node: EventTarget | null): T | null => {
     const { resolveTarget: resolve, canPress: canPressNow } = configRef.current;
     const target = resolve ? resolve(node) : (true as T);
@@ -147,7 +147,7 @@ export function usePressedState<T = boolean, E extends HTMLElement = HTMLElement
     setPressedTarget(target);
     armDocumentMouseUp((ev) => {
       const { resolveTarget: resolve, onTrigger: trigger } = configRef.current;
-      // 释放落在发起目标上时触发（原版onDocumentMouseKeyUp的目标匹配语义）
+      // 释放在发起目标上时触发（原版onDocumentMouseKeyUp的目标匹配语义）
       if (trigger && resolve && resolve(ev.target) === target) {
         trigger(target);
       }
@@ -278,7 +278,7 @@ export function useOptionRegistry<T extends string | number>(values: T[]) {
 /**
  * Select系组件的拖拽选择，对齐原版SelectWidget.onMouseDown/onDocumentMouseMove/
  * onDocumentMouseUp（TabSelectWidget继承SelectWidget）：左键在可选项上按下进入拖拽态，
- * 拖动跨项时按压项随之移动，mouseup时选中目标项（拖拽未落在选项上时，mouseup落在的
+ * 拖动跨项时按压项随之移动，mouseup时选中目标项（拖拽未写在选项上时，mouseup发生在的
  * 可选项也参与选择）；pointercancel仅清理不提交
  */
 export function useOptionDrag<T extends string | number>({
@@ -293,7 +293,7 @@ export function useOptionDrag<T extends string | number>({
   isValueSelectable: (value: T) => boolean;
   /** 从事件target定位选项值（见useOptionRegistry） */
   findItemFromNode: (node: EventTarget | null) => T | null;
-  /** mouseup落在可选项上时提交选择 */
+  /** 在可选项上触发mouseup时提交选择 */
   onCommit: (value: T) => void;
 }) {
   const [pressed, setPressed] = useState(false);
@@ -306,7 +306,7 @@ export function useOptionDrag<T extends string | number>({
   useEffect(() => () => cleanupDragRef.current?.(), []);
 
   const handleMouseDown: MouseEventHandler<HTMLDivElement> = (e) => {
-    // 原版onMouseDown恒返回false：阻止拖动过程中选中文本
+    // 原版onMouseDown始终返回false：阻止拖动过程中选中文本
     e.preventDefault();
     if (disabled || e.button !== 0) {
       return;

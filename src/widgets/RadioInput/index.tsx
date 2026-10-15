@@ -74,7 +74,7 @@ export const RadioInput = forwardRef<HTMLSpanElement, RadioInputProps>(
       boolean,
       ChangeEvent<HTMLInputElement>
     >({ value: checked, defaultValue: defaultChecked ?? false }, onChange);
-    // 原生input公共落点属性（id/name/键位title/accessKey/tabIndex/dir/禁用态/类名）；
+    // 写入原生input的公共属性（id/name/键位title/accessKey/tabIndex/dir/禁用态/类名）；
     // 本组件无标签元素，不做invisibleLabel兜底
     const nativeInputProps = useNativeInputProps({
       inputId,
@@ -100,7 +100,7 @@ export const RadioInput = forwardRef<HTMLSpanElement, RadioInputProps>(
         <input
           {...nativeInputProps}
           type="radio"
-          // 提交值同CheckboxInput：原版InputWidget构造期恒写value（未配置时为空串）；
+          // 提交值同CheckboxInput：原版InputWidget构造期始终写value（未配置时为空字符串）；
           // 此处不写会使浏览器隐式值变为"on"，与原版的表单提交值不等
           value={value === undefined ? "" : String(value)}
           checked={isChecked}

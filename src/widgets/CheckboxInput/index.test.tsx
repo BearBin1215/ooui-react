@@ -4,8 +4,8 @@ import { getRoot, snapshotHTML, tick } from "../../testing";
 import { CheckboxInput } from ".";
 
 /**
- * CheckboxInput（对齐原版OO.ui.CheckboxInputWidget）的浏览器渲染契约：
- * 原生checkbox勾选管线、value的表单提交值语义、indeterminate手动同步、禁用态。
+ * CheckboxInput（对齐原版OO.ui.CheckboxInputWidget）的浏览器渲染约定：
+ * 原生checkbox勾选流程、value的表单提交值语义、indeterminate手动同步、禁用态。
  */
 it("常规：根span输出input/checkboxInput类链，内含checkIcon", async () => {
   const screen = await render(<CheckboxInput name="agree" />);
@@ -70,7 +70,7 @@ it("disabled：input禁用+tabIndex=-1，根输出禁用类，点击无效", asy
 });
 
 describe("HTML快照", () => {
-  // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）
+  // 固定快照结构：差异应明确更新，不要依赖 -u 反推（以原版DOM为准，见comparison-guide「断言基准」）
   it("选中态+提交值", async () => {
     const screen = await render(
       <CheckboxInput name="agree" value="yes" defaultChecked />,

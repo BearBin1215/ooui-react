@@ -13,7 +13,7 @@ const getInput = (screen: { container: Element }) =>
   getRoot(screen).querySelector<HTMLInputElement>(".oo-ui-searchWidget-query input")!;
 
 /**
- * SearchWidget（对齐原版OO.ui.SearchWidget）的浏览器渲染契约：
+ * SearchWidget（对齐原版OO.ui.SearchWidget）的浏览器渲染约定：
  * searchWidget根 + results结果列表 + query查询框、查询变化回调、键盘在结果间移动高亮
  * （环绕）与Enter选定、结果/查询变化清除高亮、
  * disabled下发（根/结果列表/查询框）与非受控defaultValue的初始查询值。
@@ -35,7 +35,7 @@ it("结构：searchWidget根下results列表与query查询框，列表不作Tab�
   expect(input.getAttribute("placeholder")).toBe("搜索");
 });
 
-it("查询区↑↓在结果间移动高亮并环绕（跳过禁用项），activedescendant落在查询框", async () => {
+it("查询区↑↓在结果间移动高亮并环绕（跳过禁用项），activedescendant写在查询框", async () => {
   const screen = await render(<SearchWidget results={[...RESULTS]} />);
   const root = getRoot(screen);
   const input = getInput(screen);
@@ -44,7 +44,7 @@ it("查询区↑↓在结果间移动高亮并环绕（跳过禁用项），acti
   await tick();
   const highlighted = root.querySelector(".oo-ui-optionWidget-highlighted")!;
   expect(highlighted.textContent).toContain("甲");
-  // 列表根不作activedescendant落点，统一写在持有焦点的查询框上（focusOwnerRef）
+  // 列表根不作activedescendant写入位置，统一写在持有焦点的查询框上（focusOwnerRef）
   expect(input.getAttribute("aria-activedescendant")).toBe(
     highlighted.getAttribute("id"),
   );

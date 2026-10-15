@@ -19,7 +19,7 @@ import { Dialog, type DialogProps } from "../Dialog";
 const ACTIONS_HORIZONTAL_CLASS = "oo-ui-messageDialog-actions-horizontal";
 const ACTIONS_VERTICAL_CLASS = "oo-ui-messageDialog-actions-vertical";
 
-// bodyFitFoot由本组件恒开（竖向动作布局的foot让位），故从可传prop中剔除
+// bodyFitFoot由本组件始终开启（竖向动作布局的foot让位），故从可传prop中剔除
 export interface MessageDialogProps extends Omit<DialogProps, "title" | "bodyFitFoot"> {
   /**
    * Dialog title.

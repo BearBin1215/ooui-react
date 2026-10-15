@@ -18,7 +18,7 @@ const getOption = (screen: { container: Element }, name: string) =>
   )!;
 
 /**
- * RadioSelectInput（对齐原版OO.ui.RadioSelectInputWidget）的浏览器渲染契约：
+ * RadioSelectInput（对齐原版OO.ui.RadioSelectInputWidget）的浏览器渲染约定：
  * RadioSelect展示 + 隐藏input承载表单提交、始终存在选中项（非法值回退首个可选值）、
  * 改选同步隐藏input的值、禁用下发。
  */

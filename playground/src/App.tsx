@@ -70,7 +70,7 @@ function App() {
   // 文本方向开关：切换根元素dir与对应方向的样式表，令两侧控件（含portal浮层）按RTL重排
   const [dir, setDir] = useState<OOUIDirection>(DEFAULT_DIR);
   // 移动端形态开关（OOUIProvider.isMobile）：驱动React侧的移动端分支（DropdownInput原生select、
-  // TabSelect居中滚动等）。原版dist的OO.ui.isMobile为恒false的桩，对照页原版侧不受影响
+  // TabSelect居中滚动等）。原版dist的OO.ui.isMobile为始终false的桩，对照页原版侧不受影响
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -106,7 +106,7 @@ function App() {
       {/* antd壳层方向：ConfigProvider.direction令头部/侧栏等antd组件自身也正确镜像 */}
       <ConfigProvider direction={dir}>
         {/* 文案语言经OOUIProvider下发：切换后声明式组件默认文案响应式更新（无需remount），
-            对照原版控件恒为英文（dist仅烘焙en），供对比i18n效果。
+            对照原版控件始终为英文（dist仅烘焙en），供对比i18n效果。
             方向不传Provider.dir：根元素dir已令浮层经锚点继承方向自动解析，顺带验证该路径 */}
         <OOUIProvider messages={messages} isMobile={isMobile}>
           <Layout className="playground">

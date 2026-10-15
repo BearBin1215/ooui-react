@@ -4,8 +4,8 @@ import { getRoot, snapshotHTML } from "../../testing";
 import { Button } from ".";
 
 /**
- * Button（对齐原版OO.ui.ButtonWidget/ButtonElement）的浏览器渲染契约：
- * span>a[role=button]双层结构与类链落点、aria-disabled/tabIndex双落点、
+ * Button（对齐原版OO.ui.ButtonWidget/ButtonElement）的浏览器渲染约定：
+ * span>a[role=button]双层结构与类链写入位置、aria-disabled/tabIndex两处写入位置、
  * flags与反色变体、title兜底、禁用拦截。
  */
 it("常规按钮：根span输出widget/button类链，锚点a[role=button]承载label", async () => {
@@ -25,7 +25,7 @@ it("常规按钮：根span输出widget/button类链，锚点a[role=button]承载
   expect(anchor.querySelector(".oo-ui-labelElement-label")?.textContent).toBe("确定");
 });
 
-it("disabled：aria-disabled同时落根span与锚点（ChromeVox/NVDA不继承aria-disabled），tabIndex=-1且href移除", async () => {
+it("disabled：aria-disabled同时写在根span与锚点上（ChromeVox/NVDA不继承aria-disabled），tabIndex=-1且href移除", async () => {
   const screen = await render(
     <Button disabled href="https://example.com">
       链接
@@ -40,7 +40,7 @@ it("disabled：aria-disabled同时落根span与锚点（ChromeVox/NVDA不继承a
   expect(anchor).not.toHaveAttribute("href");
 });
 
-it("href按钮：href/target/rel落锚点（rel缺省nofollow）", async () => {
+it("href按钮：href/target/rel写在锚点上（rel缺省nofollow）", async () => {
   const screen = await render(
     <Button href="https://example.com" target="_blank">
       外链
@@ -79,7 +79,7 @@ it("active与pressed输出对应buttonElement态类", async () => {
   expect(root).toHaveClass("oo-ui-buttonElement-pressed");
 });
 
-it("invisibleLabel时title以label兜底落锚点（对齐原版TitledElement的fallback）", async () => {
+it("invisibleLabel时title以label兜底，写在锚点上（对齐原版TitledElement的fallback）", async () => {
   const screen = await render(<Button invisibleLabel>删除</Button>);
   const anchor = getRoot(screen).firstElementChild!;
   expect(anchor).toHaveAttribute("title", "删除");
@@ -105,7 +105,7 @@ it("启用时点击触发onClick", async () => {
 });
 
 describe("HTML快照", () => {
-  // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）
+  // 固定快照结构：差异应明确更新，不要依赖 -u 反推（以原版DOM为准，见comparison-guide「断言基准」）
   it("图标+标签+指示器", async () => {
     const screen = await render(
       <Button icon="check" indicator="down">

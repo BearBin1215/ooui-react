@@ -20,7 +20,7 @@ export interface WindowManagerProps extends ElementProps<HTMLDivElement> {
  * 输出管理器尺寸/满屏类供主题CSS定位弹窗；本工程仅承担容器职责，不含原版的开窗队列管理。
  *
  * 另承担浮层portal宿主的职责——把自身根元素下发给子树（见hooks/portal.ts）：弹窗内的浮层
- * portal到此处，从而落在弹窗的同一子树内。根元素是静止/无裁剪的普通div（主题对
+ * portal到此处，从而写在弹窗的同一子树内。根元素是静止/无裁剪的普通div（主题对
  * `.oo-ui-windowManager` 没有任何自身规则），故浮层的页面坐标绝对定位不受影响
  */
 export const WindowManager = forwardRef<HTMLDivElement, WindowManagerProps>(

@@ -4,8 +4,8 @@ import { getRoot, tick } from "../../testing";
 import { Layout } from ".";
 
 /**
- * Layout（对齐原版OO.ui.Layout）的浏览器渲染契约：
- * oo-ui-layout根类与hidden三态（隐藏 / until-found / 不隐藏）及随之的aria-hidden落点。
+ * Layout（对齐原版OO.ui.Layout）的浏览器渲染结果：
+ * oo-ui-layout根类与hidden三态（隐藏 / until-found / 不隐藏）及随之的aria-hidden位置。
  */
 it("缺省：仅输出layout根类，无hidden属性与aria-hidden", async () => {
   const screen = await render(<Layout className="custom">内容</Layout>);

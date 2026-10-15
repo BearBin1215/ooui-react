@@ -54,9 +54,9 @@ export default App;
 This component is just a search box with clear capability. To show dropdown results live as you type, use `SearchWidget` (a search box combined with a results list).
 :::
 
-## Where props land
+## Attribute placement
 
-Same as TextInput: `...rest` lands on the root `<div>`, props for the native `<input>` go through `inputProps`, and `inputRef` focuses the input. The clear indicator is taken over by the component, so `type` (always `search`), `indicator` and `indicatorProps` are **not exposed**.
+Same as TextInput: `...rest` goes on the root `<div>`, props for the native `<input>` go through `inputProps`, and `inputRef` focuses the input. The clear indicator is taken over by the component, so `type` (always `search`), `indicator` and `indicatorProps` are **not exposed**.
 
 ## API
 

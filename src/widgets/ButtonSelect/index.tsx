@@ -46,7 +46,7 @@ export interface ButtonSelectProps extends Omit<WidgetProps<HTMLDivElement>, "on
 }
 
 // 实现说明：对齐原版OO.ui.ButtonSelectWidget——选项不可高亮（static.highlightable=false），
-// ↑↓←→即环绕改选、Enter重申当前项，容器逻辑经useDirectSelect共用；aria-activedescendant
+// ↑↓←→键环绕改选、Enter重申当前项，容器逻辑经useDirectSelect共用；aria-activedescendant
 // 指向选中项；拖拽选择与Select共用useOptionDrag
 /**
  * A button select: a set of mutually exclusive options shown as a row of buttons.
@@ -74,7 +74,7 @@ export const ButtonSelect = forwardRef<HTMLDivElement, ButtonSelectProps>(
     },
     ref,
   ) => {
-    // 直选族共用容器脚手架（受控值/可选值派生/拖拽/直选键盘/选项id）
+    // 直选族共享容器实现（受控值/可选值派生/拖拽/直选键盘/选项id）
     const {
       value: currentValue,
       registerItem,
@@ -96,7 +96,7 @@ export const ButtonSelect = forwardRef<HTMLDivElement, ButtonSelectProps>(
       onMouseDown,
       onMouseUp,
       onMouseLeave,
-      // 点击选项后焦点收进组根，方向键立即可用（对齐ARIA APG，见useDirectSelect）
+      // 点击选项后焦点移入组根，方向键立即可用（对齐ARIA APG，见useDirectSelect）
       focusRoot: () => rootRef.current?.focus(),
     });
     // FieldLayout标签联动（通道B）：点击标签聚焦容器（对齐原版TabIndexedElement.simulateLabelClick

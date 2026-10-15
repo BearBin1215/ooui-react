@@ -1,6 +1,6 @@
 ---
 title: CheckboxMultiselect 复选组
-description: "CheckboxMultiselect 组件的属性说明：复选组的 value/defaultValue/onChange 数组通道、Shift+点击范围选择、方向键焦点导航与禁用下发。"
+description: "CheckboxMultiselect 组件的属性说明：复选组用 value/defaultValue/onChange 传递数组值、Shift+点击范围选择、方向键焦点导航与禁用下发。"
 ---
 
 # CheckboxMultiselect 复选组
@@ -11,7 +11,7 @@ description: "CheckboxMultiselect 组件的属性说明：复选组的 value/def
 
 ## 基本用法
 
-选中值是**数组**，走 `value` / `defaultValue` / `onChange` 三条通道，`onChange` 携带完整的值数组。传 `name` 时每个选项的 checkbox 同名，勾选项随表单以多个同名字段提交。
+选中值是**数组**，通过 `value` / `defaultValue` / `onChange` 传递，`onChange` 携带完整的值数组。传 `name` 时每个选项的 checkbox 同名，勾选项随表单以多个同名字段提交。
 
 ```tsx preview
 import { useState } from "react";
@@ -133,7 +133,7 @@ export default App;
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | `options` | 选项集，按展示顺序渲染；每项含 `value` 与 `children`（选项文本），支持 `disabled`，另有 `inputRef`（内层 checkbox 引用）、`checkboxProps`（透传内层 checkbox，如 `inputId`）与选项级 `onChange` | `CheckboxMultiselectOptionProps[]` | — |
-| `value` | 当前选中值集合（受控，传入即受控模式） | `(string \| number)[]` | — |
+| `value` | 当前选中值集合（受控，传入后即进入受控模式） | `(string \| number)[]` | — |
 | `defaultValue` | 非受控初始选中值集合 | `(string \| number)[]` | `[]` |
 | `onChange` | 选中值集合变更回调，携带完整的值数组与原生事件 | `ChangeHandler<(string \| number)[], HTMLInputElement>` | — |
 | `name` | 表单字段名，透传给每个选项的 `checkbox` | `string` | — |

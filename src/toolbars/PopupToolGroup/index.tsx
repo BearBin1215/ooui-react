@@ -39,21 +39,21 @@ export interface PopupToolGroupBaseProps extends ToolGroupBaseProps {
   /**
    * Handle label.
    *
-   * 把手标签。
+   * handle标签。
    */
   label?: ReactNode;
 
   /**
    * Handle icon.
    *
-   * 把手图标。
+   * handle图标。
    */
   icon?: string;
 
   /**
    * Handle label visually hidden but kept as the accessible name.
    *
-   * 把手标签视觉隐藏（保留可访问名称）。
+   * handle标签视觉隐藏（保留可访问名称）。
    */
   invisibleLabel?: boolean;
 
@@ -61,7 +61,7 @@ export interface PopupToolGroupBaseProps extends ToolGroupBaseProps {
    * Narrow-mode overrides: when the toolbar is narrow, the **defined** keys replace
    * the handle's `invisibleLabel` / `label` / `icon`; restored on leaving narrow mode.
    *
-   * 窄栏配置：工具栏处于窄栏时以其**已定义**字段替换把手的
+   * 窄栏配置：工具栏处于窄栏时以其**已定义**字段替换handle的
    * `invisibleLabel` / `label` / `icon`，退出窄栏还原。
    */
   narrowConfig?: {
@@ -74,14 +74,14 @@ export interface PopupToolGroupBaseProps extends ToolGroupBaseProps {
    * Handle indicator (defaults flip with toolbar position: `up` for a bottom
    * toolbar, `down` otherwise).
    *
-   * 把手指示器（缺省随工具栏位置翻转：bottom 时 up、其余 down）。
+   * handle指示器（缺省随工具栏位置翻转：bottom 时 up、其余 down）。
    */
   indicator?: Indicators;
 
   /**
    * Handle tooltip.
    *
-   * 把手 tooltip。
+   * handle tooltip。
    */
   title?: string;
 
@@ -132,18 +132,18 @@ export interface PopupToolGroupBaseProps extends ToolGroupBaseProps {
    * Open-state change callback (handle toggle, choosing a tool that closes the
    * panel, outside click and Escape all fire it).
    *
-   * 打开态变化回调（把手切换、选中工具收起、点外部、Escape 均触发）。
+   * 打开态变化回调（handle切换、选中工具收起、点外部、Escape 均触发）。
    */
   onOpenChange?: (open: boolean) => void;
 }
 
 /**
  * 弹出工具组基类（对齐原版OO.ui.PopupToolGroup，List/Menu组的公共实现，不对外导出）：
- * 把手（图标+标签+指示器）点击开合工具面板，面板portal出控件子树后定位在把手正下方，
+ * handle（图标+标签+指示器）点击开合工具面板，面板portal出控件子树后定位在handle正下方，
  * 宽度放不下时按原版setActive的降级顺序处理——首选侧→对侧→居中→铺满容器
  * （见useAnchoredPanelLayout的horizontalFit），视口下方空间不足时钳高内部滚动；
  * 面板开合经`open`/`defaultOpen`/`onOpenChange`受控（库内浮层统一通道）；
- * 点击面板与把手之外或选中工具（keepOpenToolNames除外）收起
+ * 点击面板与handle之外或选中工具（keepOpenToolNames除外）收起
  */
 export const PopupToolGroupBase = forwardRef<HTMLDivElement, PopupToolGroupBaseProps>(
   (
@@ -171,7 +171,7 @@ export const PopupToolGroupBase = forwardRef<HTMLDivElement, PopupToolGroupBaseP
     },
     ref,
   ) => {
-    // 面板开合受控/非受控统一管线（库内浮层统一通道）：内部各关闭路径经setOpen发出并回调onOpenChange
+    // 面板开合受控/非受控共用同一套流程（库内浮层统一通道）：内部各关闭路径经setOpen发出并回调onOpenChange
     const { value: open, commit: setOpen } = useControlledValue<boolean>(
       { value: openProp, defaultValue: defaultOpen },
       onOpenChange,
@@ -186,7 +186,7 @@ export const PopupToolGroupBase = forwardRef<HTMLDivElement, PopupToolGroupBaseP
     const toolsRef = useRef<HTMLDivElement>(null);
     const groupDisabled = isGroupAutoDisabled(tools, disabled);
     const effectiveIndicator = indicator ?? (position === "bottom" ? "up" : "down");
-    // 窄栏配置：窄栏时替换把手字段（对齐原版PopupToolGroup.onToolbarResize），退出窄栏即还原
+    // 窄栏配置：窄栏时替换handle字段（对齐原版PopupToolGroup.onToolbarResize），退出窄栏即还原
     const {
       icon: effectiveIcon,
       label: effectiveLabel,
@@ -213,7 +213,7 @@ export const PopupToolGroupBase = forwardRef<HTMLDivElement, PopupToolGroupBaseP
 
     // 定位与钳高（open变化/滚动/缩放/面板尺寸变化时重算）：bottom工具栏的面板向上展开
     // （对齐原版verticalPosition:'above'），其余向下；面板portal至body（宿主配置的容器，
-    // 或弹窗子树内为该弹窗的管理器根，锚点为把手），经页面坐标定位
+    // 或弹窗子树内为该弹窗的管理器根，锚点为handle），经页面坐标定位
     const { getContainer, dialogZIndex } = useFloatPortal();
     const portalTarget = getContainer(handleRef.current);
     const layout = useAnchoredPanelLayout({
@@ -236,7 +236,7 @@ export const PopupToolGroupBase = forwardRef<HTMLDivElement, PopupToolGroupBaseP
       }
     }, [groupDisabled, open, setOpen]);
 
-    // 点击面板与把手之外、或按Escape时收起（Escape捕获阶段处理，嵌套于Dialog时不误关弹窗）。
+    // 点击面板与handle之外、或按Escape时收起（Escape捕获阶段处理，嵌套于Dialog时不误关弹窗）。
     // 弹层类同时监听click：iOS Safari所需，见useDismissablePopover的dismissOnClick
     useDismissablePopover({
       enabled: open,
@@ -290,7 +290,7 @@ export const PopupToolGroupBase = forwardRef<HTMLDivElement, PopupToolGroupBaseP
       <div
         {...rest}
         className={classes}
-        // title落在组根元素：对齐原版PopupToolGroup混入的TitledElement（$titled为$element）；
+        // title写在组根元素：对齐原版PopupToolGroup混入的TitledElement（$titled为$element）；
         // 标签不可见（含窄栏替换）时以label兜底，使窄栏下仍有tooltip
         title={resolveTitle({
           title,
@@ -302,9 +302,9 @@ export const PopupToolGroupBase = forwardRef<HTMLDivElement, PopupToolGroupBaseP
       >
         <span
           ref={handleRef}
-          // 双类对齐原版构造期的$handle.addClass：主题的把手尺寸/内边距规则均挂在
+          // 双类对齐原版构造期的$handle.addClass：主题的handle尺寸/内边距规则均挂在
           // .oo-ui-popupToolGroup .oo-ui-toolGroup-handle后代选择器上，缺toolGroup-handle
-          // 会全部不命中（把手塌缩、内容溢出重叠）
+          // 会全部不命中（handle塌缩、内容溢出重叠）
           className="oo-ui-toolGroup-handle oo-ui-popupToolGroup-handle"
           role="button"
           aria-expanded={open}
@@ -328,7 +328,7 @@ export const PopupToolGroupBase = forwardRef<HTMLDivElement, PopupToolGroupBaseP
           <div className={clsx(narrow && "oo-ui-toolbar-narrow")}>
             <div
               ref={toolsRef}
-              // dir取把手有效方向（RTL站点/Provider.dir配置下面板文本方向正确）
+              // dir取handle有效方向（RTL站点/Provider.dir配置下面板文本方向正确）
               dir={layout?.dir}
               className={clsx(
                 "oo-ui-toolGroup-tools",
@@ -356,8 +356,8 @@ export const PopupToolGroupBase = forwardRef<HTMLDivElement, PopupToolGroupBaseP
                 zIndex: dialogZIndex,
               }}
               onKeyDown={(e) => {
-                // 对齐原版onMouseKeyDown的Tab流转：首项Shift+Tab回把手；末项Tab回把手并收起
-                // （末项不preventDefault：焦点已移至把手，浏览器默认Tab自把手继续）
+                // 对齐原版onMouseKeyDown的Tab流转：首项Shift+Tab回handle；末项Tab回handle并收起
+                // （末项不preventDefault：焦点已移至handle，浏览器默认Tab自handle继续）
                 if (e.key === "Tab") {
                   const focusables = getPanelFocusables();
                   const index = focusables.indexOf(e.target as HTMLElement);

@@ -28,7 +28,7 @@ export const Indicator = forwardRef<HTMLSpanElement, IndicatorProps>(
       className,
       getWidgetClassName({ disabled, indicator }, "indicator"),
       // 单元素组件：根元素即label元素（原版IndicatorWidget混入LabelElement时$label指向根），
-      // invisibleLabel的裁剪类按原版落在label（根）上
+      // invisibleLabel的裁剪类按原版写在label（根）上
       "oo-ui-labelElement-invisible",
     );
 

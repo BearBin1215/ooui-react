@@ -17,7 +17,7 @@ const DISABLED_TOOLS = [
 
 const getHandle = (screen: { container: Element }) =>
   getRoot(screen).querySelector<HTMLElement>(".oo-ui-popupToolGroup-handle")!;
-/** data-tool-name就落在工具链接自身（a.oo-ui-tool-link），面板内可聚焦项即它 */
+/** data-tool-name就位于工具链接自身（a.oo-ui-tool-link），面板内可聚焦项即它 */
 const getToolLink = (name: string) => getTool(name)!;
 /** 面板Tab流转三分支都靠keydown驱动，故需cancelable事件以断言preventDefault */
 const tabOn = (el: Element, shiftKey = false) => {
@@ -32,12 +32,12 @@ const tabOn = (el: Element, shiftKey = false) => {
 };
 
 /**
- * PopupToolGroupBase（MenuToolGroup/ListToolGroup的公共实现）的浏览器渲染契约：
- * 把手Enter/空格开合、面板Tab流转（Tab入面板首项、首项Shift+Tab回把手、末项Tab回把手并
+ * PopupToolGroupBase（MenuToolGroup/ListToolGroup的公共实现）的浏览器渲染结果：
+ * handleEnter/空格开合、面板Tab流转（Tab入面板首项、首项Shift+Tab回handle、末项Tab回handle并
  * 收起）、禁用时自动收起面板、点击外部与Escape关闭。
  * 面板经portal出容器子树，故面板与工具的定位复用`src/testing/toolGroups.ts`。
  */
-it("把手Enter/空格开合：aria-expanded与面板显隐随之切换", async () => {
+it("handleEnter/空格开合：aria-expanded与面板显隐随之切换", async () => {
   const screen = await render(<PopupToolGroupBase label="更多" tools={[...TOOLS]} />);
   const handle = getHandle(screen);
   pressKey(handle, "Enter");
@@ -51,24 +51,24 @@ it("把手Enter/空格开合：aria-expanded与面板显隐随之切换", async 
   expect(getPanel()).toHaveClass("oo-ui-element-hidden");
 });
 
-it("面板Tab流转：Tab入首项、首项Shift+Tab回把手、末项Tab回把手并收起", async () => {
+it("面板Tab流转：Tab入首项、首项Shift+Tab回handle、末项Tab回handle并收起", async () => {
   const screen = await render(<PopupToolGroupBase label="更多" tools={[...TOOLS]} />);
   const handle = getHandle(screen);
   pressKey(handle, "Enter");
   await tick();
 
-  // 开启期在把手上按Tab：焦点送入面板首个可聚焦工具（并阻止默认移焦）
+  // 开启期在handle上按Tab：焦点送入面板首个可聚焦工具（并阻止默认移焦）
   expect(tabOn(handle).defaultPrevented).toBe(true);
   await tick();
   expect(document.activeElement).toBe(getToolLink("a"));
 
-  // 首项Shift+Tab：焦点回到把手（面板保持展开）
+  // 首项Shift+Tab：焦点回到handle（面板保持展开）
   tabOn(getToolLink("a"), true);
   await tick();
   expect(document.activeElement).toBe(handle);
   expect(handle).toHaveAttribute("aria-expanded", "true");
 
-  // 末项Tab：焦点回到把手并收起面板（不preventDefault：此后Tab自把手继续）
+  // 末项Tab：焦点回到handle并收起面板（不preventDefault：此后Tab自handle继续）
   getToolLink("b").focus();
   tabOn(getToolLink("b"));
   await tick();

@@ -43,7 +43,7 @@ export const OutlineSelect = forwardRef<HTMLDivElement, OutlineSelectProps>(
         // 可聚焦），与不混入该mixin的SelectWidget相反；故补回0缺省（Select缺省不写tabindex）
         tabIndex={tabIndex ?? 0}
         {...rest}
-        // outline置于spread之后：OutlineSelect恒为大纲样式，调用方不可覆盖
+        // outline置于spread之后：OutlineSelect始终为大纲样式，调用方不可覆盖
         outline
       />
     );

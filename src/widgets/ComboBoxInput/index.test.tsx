@@ -39,7 +39,7 @@ const getDropdownButton = (screen: { container: Element }) =>
   )!;
 
 /**
- * ComboBoxInput（对齐原版OO.ui.ComboBoxInputWidget）的浏览器渲染契约：
+ * ComboBoxInput（对齐原版OO.ui.ComboBoxInputWidget）的浏览器渲染约定：
  * 根类链与combobox语义（role/aria-expanded/aria-owns随开合、装饰落根级）、输入即展开菜单、
  * 下拉按钮开合并把焦点交还输入框、↑↓+Enter选定写入输入框、
  * readOnly同步禁用下拉通道、空选项的-empty类。
@@ -55,7 +55,7 @@ it("结构：input/inputText/comboBoxInput类链，input承载combobox语义，�
   expect(input).toHaveAttribute("aria-autocomplete", "list");
   expect(input).toHaveAttribute("aria-expanded", "false");
   // 收起期不声明aria-owns（对齐原版MenuSelectWidget.onToggle的removeAttr；原版构造期
-  // 先向$input写一次，该口径差异已记DEVIATIONS「增强」节）
+  // 先向$input写一次，该行为差异已记DEVIATIONS「增强」节）
   expect(input).not.toHaveAttribute("aria-owns");
   expect(input).toHaveAttribute("autocomplete", "off");
   // 图标/指示器为根级直接子节点且在-field之前（主题装饰规则为直接子选择器）
@@ -68,7 +68,7 @@ it("结构：input/inputText/comboBoxInput类链，input承载combobox语义，�
   expect(button).toHaveAttribute("title", "Toggle options");
   // 原版不给该按钮aria-haspopup（菜单归属由输入框的aria-owns声明）
   expect(button).not.toHaveAttribute("aria-haspopup");
-  // aria-controls恒指向菜单（收起期菜单隐藏但存在），且与后续aria-owns同源
+  // aria-controls始终指向菜单（收起期菜单隐藏但存在），且与后续aria-owns同源
   const menu = document.getElementById(button.getAttribute("aria-controls")!)!;
   expect(menu).toHaveClass("oo-ui-menuSelectWidget");
 });
@@ -228,10 +228,10 @@ it("readOnly：下拉按钮同步禁用（类/tabIndex/aria-disabled），输入
   const screen = await render(<ComboBoxInput options={[...OPTIONS]} readOnly />);
   const root = getRoot(screen);
   expect(root).not.toHaveClass("oo-ui-widget-disabled");
-  // widget级禁用类在外层dropdownButton容器，tabIndex/aria-disabled落在可聚焦的按钮锚点上
+  // widget级禁用类在外层dropdownButton容器，tabIndex/aria-disabled写在可聚焦的按钮锚点上
   const buttonWrap = root.querySelector(".oo-ui-comboBoxInputWidget-dropdownButton")!;
   expect(buttonWrap).toHaveClass("oo-ui-widget-disabled");
-  // Widget.setElementAccessibility的双落点：容器与锚点各写一次aria-disabled
+  // Widget.setElementAccessibility的两处写入位置：容器与锚点各写一次aria-disabled
   expect(buttonWrap).toHaveAttribute("aria-disabled", "true");
   const button = getDropdownButton(screen);
   expect(button).toHaveAttribute("aria-disabled", "true");

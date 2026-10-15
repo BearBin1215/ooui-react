@@ -10,12 +10,12 @@ const OPTIONS = [
 
 const getAnchor = (screen: { container: Element }) =>
   getRoot(screen).querySelector<HTMLElement>(".oo-ui-buttonElement-button")!;
-/** 经锚点的aria-owns取porta至body的菜单元素（同时锁定关联关系） */
+/** 经锚点的aria-owns取portal至body的菜单元素（同时锁定关联关系） */
 const getMenu = (screen: { container: Element }) =>
   document.getElementById(getAnchor(screen).getAttribute("aria-owns")!)!;
 
 /**
- * ButtonMenuSelectWidget（对齐原版OO.ui.ButtonMenuSelectWidget）的浏览器渲染契约：
+ * ButtonMenuSelectWidget（对齐原版OO.ui.ButtonMenuSelectWidget）的浏览器渲染约定：
  * 按钮锚点的菜单aria关联与按压态、portal菜单的开合、选定回调与收起、
  * clearOnSelect的粘性选中态、键盘展开与选定。
  */
@@ -105,7 +105,7 @@ it("键盘：Enter展开、↑↓移动高亮、Enter选定（收起态方向键
   const menu = getMenu(screen);
   const highlighted = menu.querySelector(".oo-ui-optionWidget-highlighted")!;
   expect(highlighted.textContent).toContain("甲");
-  // 高亮项的activedescendant落在按钮锚点上（对齐原版setFocusOwner(widget.$tabIndexed)）
+  // 高亮项的activedescendant写在按钮锚点上（对齐原版setFocusOwner(widget.$tabIndexed)）
   expect(getAnchor(screen).getAttribute("aria-activedescendant")).toBe(
     highlighted.getAttribute("id"),
   );
@@ -215,7 +215,7 @@ it("展开后Home/End取首末项，PageUp/PageDown按10跨度移动且端点钳
   pressKey(root, "Home");
   await tick();
   expect(highlighted()).toContain("甲");
-  // 起点在首项：PageDown按10跨度翻页，落点只能是末项（若该键未被处理会仍停在甲）
+  // 起点在首项：PageDown按10跨度翻页，只能移到末项（若该键未被处理会仍停在甲）
   pressKey(root, "PageDown");
   await tick();
   expect(highlighted()).toContain("乙");

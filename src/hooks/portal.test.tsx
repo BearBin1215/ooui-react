@@ -23,7 +23,7 @@ function Harness({
 /**
  * portal.ts的useFloatPortal：浮层容器的三级回落与弹窗层值。
  * 宿主配置的`getPortalContainer` → 弹窗子树内的portal宿主（管理器根）→ `document.body`；
- * 层值只在真正落到弹窗宿主时给出（宿主自配容器时层叠安排交回宿主）。
+ * 层值只在真正写入弹窗宿主时给出（宿主自配容器时层叠安排交回宿主）。
  */
 it("缺省回落document.body；锚点未挂载（null）时不调用宿主回调", async () => {
   const apiRef: MutableRefObject<PortalApi | null> = { current: null };
@@ -35,7 +35,7 @@ it("缺省回落document.body；锚点未挂载（null）时不调用宿主回�
       <Harness apiRef={apiRef} />
     </OOUIProvider>,
   );
-  // 锚点未挂载时宿主回调无从解析（恒回落到body）
+  // 锚点未挂载时宿主回调无从解析（始终回退到body）
   expect(apiRef.current!.getContainer(null)).toBe(document.body);
   expect(getPortalContainer).not.toHaveBeenCalled();
 });
@@ -54,7 +54,7 @@ it("宿主getPortalContainer优先，且此时不给出弹窗层值", async () =
     );
     expect(apiRef.current!.getContainer(anchorRef.current)).toBe(host);
     expect(getPortalContainer).toHaveBeenCalledWith(anchorRef.current);
-    // 浮层去向由宿主决定：层值交回宿主容器与主题CSS，本库不猜测宿主的层叠安排
+    // 浮层位置由宿主决定：层值交回宿主容器与主题CSS，本库不猜测宿主的层叠安排
     expect(apiRef.current!.dialogZIndex).toBeUndefined();
   } finally {
     host.remove();

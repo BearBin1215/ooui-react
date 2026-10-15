@@ -14,15 +14,15 @@ export type MenuToolGroupProps = PopupToolGroupBaseProps;
  * a dropdown panel; the handle label is composed from the active tool's visible
  * text, falling back to `label` when none is active.
  *
- * 菜单工具组（对齐原版 OO.ui.MenuToolGroup）：工具以标签横向排布收进下拉面板，
- * 组把手标签按激活工具的可见文本合成，无激活工具时回落 `label`。
+ * 菜单工具组（对齐原版 OO.ui.MenuToolGroup）：工具以标签横向排布放入下拉面板，
+ * 组handle标签按激活工具的可见文本合成，无激活工具时回落 `label`。
  *
  * @see https://bearbin1215.github.io/ooui-react/components/toolbar/index.html
  */
 export const MenuToolGroup = forwardRef<HTMLDivElement, MenuToolGroupProps>(
   ({ tools, label, toolsClassName, className, ...rest }, ref) => {
     // 原版onUpdateState由toolbar的updateState事件驱动，把激活工具的getTitle()以', '拼接；
-    // 本工程可见文本已收为label（ReactNode），故以', '分隔符间插而非字符串join
+    // 本工程可见文本已改为label（ReactNode），故以', '分隔符间插而非字符串join
     const activeLabels = tools.filter((tool) => tool.active).map((tool) => tool.label);
     const groupLabel =
       activeLabels.length > 0

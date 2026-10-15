@@ -32,7 +32,7 @@ export default App;
 
 ## 帮助文本
 
-`help` 两种呈现：`helpInline={false}`（缺省）在头部渲染 ⓘ 图标，点击弹出说明；`helpInline={true}` 以内联文本显示在头部之后。
+`help` 的呈现方式由 `helpInline` 决定：`helpInline={false}`（缺省）在头部渲染 ⓘ 图标，点击弹出说明；`helpInline={true}` 以内联文本显示在头部之后。
 
 ```tsx preview
 import { CheckboxInput, FieldLayout, FieldsetLayout } from "ooui-react";
@@ -56,7 +56,7 @@ function App() {
 export default App;
 ```
 
-两种形态并排——缺省的 ⓘ 弹出说明与 `helpInline={true}` 的内联文本：
+下面把缺省的 ⓘ 弹出说明与 `helpInline={true}` 的内联文本并排放在一起：
 
 ```tsx preview
 import { FieldLayout, FieldsetLayout, TextInput } from "ooui-react";
@@ -87,7 +87,7 @@ export default App;
 
 ## 组级禁用
 
-`disabled` 落在原生 `<fieldset>` 上，组内所有输入控件随浏览器机制一并禁用，无需逐项传递。
+`disabled` 写在原生 `<fieldset>` 上，组内所有输入控件随浏览器机制一并禁用，无需逐项传递。
 
 ```tsx preview
 import { CheckboxInput, FieldLayout, FieldsetLayout, TextInput } from "ooui-react";

@@ -23,15 +23,15 @@ import {
 } from "./mixins";
 
 /**
- * 主题 CSS 契约守卫（node 组）：本库不自带样式，`oo-ui-*` 类名即与原版 oojs-ui 主题 CSS
- * 选择器的契约（见 mixins.ts 顶部注释）。上游若重命名类名，本库会静默失效——本测试从已装的
- * 原版主题 CSS 抽取类 token，核对本库贡献器产出的类仍存在于契约中，把「人工对照」升级为
+ * 主题 CSS 规则检查（node 组）：本库不自带样式，`oo-ui-*` 类名即与原版 oojs-ui 主题 CSS
+ * 选择器的约定（见 mixins.ts 顶部注释）。上游若重命名类名，本库会静默失效——本测试从已装的
+ * 原版主题 CSS 抽取类 token，核对本库贡献器产出的类仍存在于约定中，把「人工对照」升级为
  * 「测试断言」。
  *
  * 【范围】mixins.ts 各贡献器产出的「元素级状态/变体类」加输入框折叠层 `getTextInputClassName`
- * 的 labelPosition/type 落位类（跨组件共享、上游改名会一次性击穿多组件的高价值目标）。经调用
+ * 的 labelPosition/type 对应类（跨组件共享，上游改名会一次性击穿多组件的高价值目标）。经调用
  * 真实贡献器构造「使用集」，故本守卫随 mixins.ts 变化自动跟随。另有两项不含类名、但同样以主题
- * 声明为准的契约：`dialogs/scrollLock.ts` 写在 body/html 上的模块级状态类（不经理贡献器），
+ * 声明为准的约定：`dialogs/scrollLock.ts` 写在 body/html 上的模块级状态类（不经理贡献器），
  * 与 `hooks/portal.ts` 的 `DIALOG_FLOAT_Z_INDEX`（取自主题给弹窗的层值，上游改数值无类名变化）。
  * 【不覆盖】widget 名类（`oo-ui-{name}Widget`）与组件内散落的结构类：名类在两主题的规则覆盖不均
  * （实测 `oo-ui-selectWidget`/`oo-ui-multiselectWidget` 是纯后代选择器钩子、0 条独立规则，而
@@ -57,10 +57,10 @@ function cssTokens(theme: string): Set<string> {
   return new Set(matches.map((token) => token.slice(1)));
 }
 
-/** 两主题类 token 的并集：一个类只要在任一支持主题里有规则即视为「契约内」（主题间覆盖不同，见 {@link THEMES} 注释） */
+/** 两主题类 token 的并集：一个类只要在任一支持主题里有规则即视为「规则范围内」（主题间覆盖不同，见 {@link THEMES} 注释） */
 const contractTokens = new Set<string>(THEMES.flatMap((theme) => [...cssTokens(theme)]));
 
-/** 把贡献器返回的空格分隔类串拆成 token 收进使用集 */
+/** 把贡献器返回的空格分隔类串拆成 token 加入使用集 */
 function collect(used: Set<string>, classString: string): void {
   for (const token of classString.split(/\s+/)) {
     if (token) {
@@ -134,7 +134,7 @@ function contributorClasses(): Set<string> {
 
 /**
  * 白名单：本库确实产出、但主题 CSS 无对应规则的类，均属有意——登记在此避免断言失败，理由如下：
- * - type-text/type-number：输入框的 type 落位类，两主题只给 type-search 写了规则，另两态无规则
+ * - type-text/type-number：输入框的 type 对应类，两主题只给 type-search 写了规则，另两态无规则
  * - invert：经 `oo-ui-image-invert` 反色（有 image 规则），无 flaggedElement 色规则
  * - safe/back/close：ProcessDialog 动作的语义标志，经按钮结构/位置着色，无独立 flaggedElement 规则
  */
@@ -147,9 +147,9 @@ const ALLOWLIST = new Set<string>([
   "oo-ui-flaggedElement-close",
 ]);
 
-describe("主题 CSS 契约守卫（贡献器与输入框折叠层类名）", () => {
+describe("主题 CSS 规则检查（贡献器与输入框折叠层类名）", () => {
   it("原版两主题 CSS 均可定位，且抽出的 token 含锚点类", () => {
-    // 断言锚点类而非 token 数量：抽 token 的链路一旦失效（如 CSS 被预处理吞成空串），
+    // 断言锚点类而非 token 数量：抽 token 的链路一旦失效（如 CSS 被预处理吞成空字符串），
     // 「数量 > 阈值」这类宽松守卫可能照样通过，锚点类缺失则立即红
     const anchors = ["oo-ui-widget-enabled", "oo-ui-windowManager-modal-active"];
     for (const theme of THEMES) {
@@ -160,18 +160,18 @@ describe("主题 CSS 契约守卫（贡献器与输入框折叠层类名）", ()
     }
   });
 
-  it("贡献器产出的每个状态/变体类都存在于主题契约（并集，白名单除外）", () => {
+  it("贡献器产出的每个状态/变体类都存在于主题约定（并集，白名单除外）", () => {
     const missing = [...contributorClasses()].filter(
       (token) => !contractTokens.has(token) && !ALLOWLIST.has(token),
     );
     // 断言为空：非空即上游可能已重命名对应类，需核对原版对应 mixin 并更新贡献器或白名单
-    expect(missing, "以下类不在任一支持主题的 CSS 契约内").toEqual([]);
+    expect(missing, "以下类不在任一支持主题的 CSS 规则内").toEqual([]);
   });
 
-  it("白名单条目确实不在契约内（否则应从白名单移除，避免掩盖真实回归）", () => {
+  it("白名单条目确实不在规则范围内（否则应从白名单移除，避免掩盖真实回归）", () => {
     // 白名单是「已知无规则」的记录；一旦上游补上规则，白名单即成噪音，应清理
     for (const token of ALLOWLIST) {
-      expect(contractTokens.has(token), `${token} 已进入契约，应移出白名单`).toBe(false);
+      expect(contractTokens.has(token), `${token} 已进入规则范围，应移出白名单`).toBe(false);
     }
   });
 });
@@ -180,12 +180,12 @@ describe("主题 CSS 契约守卫（贡献器与输入框折叠层类名）", ()
  * 弹窗写在 body/html 上的模块级状态类守卫：`dialogs/scrollLock.ts` 的类表是普通字面量、
  * 不经理 mixins.ts 的贡献器，上面的使用集覆盖不到。这些类的规则同样由主题CSS承接，
  * 上游改名会让滚动锁与iOS触摸滚动兜底**双双静默失效**（页面上没有任何可见线索），
- * 故把类表的实际取值一并纳入契约核对（直取类表，不在测试里另抄字面量）。
+ * 故把类表的实际取值一并纳入约定核对（直取类表，不在测试里另抄字面量）。
  */
-describe("主题 CSS 契约守卫（弹窗的模块级状态类）", () => {
-  it("scrollLock 写入 body/html 的类都在主题契约内", () => {
+describe("主题 CSS 规则检查（弹窗的模块级状态类）", () => {
+  it("scrollLock 写入 body/html 的类都在主题规则范围内", () => {
     for (const token of Object.values(SCROLL_LOCK_CLASSES)) {
-      expect(contractTokens.has(token), `${token} 不在主题CSS契约内`).toBe(true);
+      expect(contractTokens.has(token), `${token} 不在主题CSS规则内`).toBe(true);
     }
   });
 });
@@ -200,7 +200,7 @@ describe("主题 CSS 契约守卫（弹窗的模块级状态类）", () => {
  * 集合断言发现不了，而后果是弹层被压到弹窗之下（`.oo-ui-popupWidget` 的主题层值只有 1），
  * 故按数值直接锁定。
  */
-describe("主题 CSS 契约守卫（弹窗层值）", () => {
+describe("主题 CSS 规则检查（弹窗层值）", () => {
   /** 从主题 CSS 抽 `.oo-ui-windowManager-modal > .oo-ui-dialog` 规则内的 z-index 声明 */
   function dialogZIndex(theme: string): string | undefined {
     const cssPath = require.resolve(`oojs-ui/dist/oojs-ui-${theme}.css`);

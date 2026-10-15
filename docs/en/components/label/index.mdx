@@ -11,12 +11,12 @@ A standalone form label, for when you need to place a label on its own.
 
 ## Associating a form control
 
-Clicking the label to focus/activate the control relies on the native `<label>`'s `htmlFor` association. The channel depends on the component — an `id` landed on the wrong element fails silently: {/* deviations: dev-label-input */}
+Clicking the label to focus/activate the control relies on the native `<label>`'s `htmlFor` association. The channel depends on the component — an `id` written to the wrong element fails silently: {/* deviations: dev-label-input */}
 
-- **TextInput family** (including MultilineTextInput, NumberInput, ComboBoxInput, etc.): `id` lands on the root div; to reach the native input, pass it through `inputProps={{ id }}`.
-- **CheckboxInput / RadioInput**: there is no `inputProps` channel — use the dedicated `inputId` prop, which lands directly on the native `<input>`.
+- **TextInput family** (including MultilineTextInput, NumberInput, ComboBoxInput, etc.): `id` is written to the root div; to reach the native input, pass it through `inputProps={{ id }}`.
+- **CheckboxInput / RadioInput**: there is no `inputProps` channel — use the dedicated `inputId` prop, which is written directly to the native `<input>`.
 
-Inside a form, [FieldLayout](../field-layout/index.mdx) wires this automatically; no hand wiring needed.
+Inside a form, [FieldLayout](../field-layout/index.mdx) handles this automatically; no manual wiring needed.
 
 :::note Prefer FieldLayout in forms
 In a form, the layout, alignment and click-to-focus linkage of "label + control" are usually handled by [FieldLayout](../field-layout/index.mdx); writing `htmlFor`/`id` by hand suits free-form composition.

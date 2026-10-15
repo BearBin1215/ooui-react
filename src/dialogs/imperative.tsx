@@ -15,7 +15,7 @@ const CLOSE_UNMOUNT_MARGIN = 50;
 /** 命令式弹窗的卸载延时：Dialog关闭动画时长 + 裕量 */
 const CLOSE_DURATION = DIALOG_ANIMATION.closeDuration + CLOSE_UNMOUNT_MARGIN;
 
-/** body兜底host的深度哨兵：任一真实OOUIProvider的host（有限深度）都比它更靠外、恒优先 */
+/** body兜底host的深度哨兵：任一真实OOUIProvider的host（有限深度）都比它更靠外、始终优先 */
 const FALLBACK_DEPTH = Number.MAX_SAFE_INTEGER;
 
 /**
@@ -70,7 +70,7 @@ const listeners = new Set<() => void>();
 const hosts = new Map<symbol, { depth: number; seq: number }>();
 let hostSeq = 0;
 
-/** 空队列常量：非主机host的快照恒返回它，保证引用稳定（useSyncExternalStore要求getSnapshot幂等） */
+/** 空队列常量：非主机host的快照始终返回它，保证引用稳定（useSyncExternalStore要求getSnapshot幂等） */
 const NO_ENTRIES: readonly DialogEntry[] = [];
 
 /** body兜底host的挂载点：无OOUIProvider时懒挂，空闲时卸载（见ensureFallbackHost/maybeTeardownFallback） */
@@ -109,7 +109,7 @@ function primaryToken(): symbol | null {
 
 /**
  * 某host的渲染快照：仅主机返回真实队列，其余返回稳定空常量。
- * 两个分支各自引用稳定（队列未变即同一entries引用，非主机恒NO_ENTRIES），满足
+ * 两个分支各自引用稳定（队列未变即同一entries引用，非主机始终NO_ENTRIES），满足
  * useSyncExternalStore对getSnapshot的幂等要求，仅主机易主/队列增删时才触发重渲染
  */
 function getHostSnapshot(token: symbol): readonly DialogEntry[] {
@@ -298,7 +298,7 @@ function ManagedDialog({ entry }: { entry: DialogEntry }) {
  * depth为所属Provider的嵌套深度；body兜底host以FALLBACK_DEPTH登记、永居最内
  */
 export function ImperativeDialogHost({ depth }: { depth: number }) {
-  // token与本host实例一一对应且跨渲染恒定：作注册表键与快照订阅的身份
+  // token与本host实例一一对应且跨渲染固定不变：作注册表键与快照订阅的身份
   const tokenRef = useRef<symbol | null>(null);
   const token = (tokenRef.current ??= Symbol("ooui-dialog-host"));
 
@@ -310,7 +310,7 @@ export function ImperativeDialogHost({ depth }: { depth: number }) {
     return () => unregisterHost(token);
   }, [token, depth]);
 
-  // 服务端快照恒为空队列：命令式API只在客户端入队，SSR/SSG 下 host 不渲染任何弹窗
+  // 服务端快照始终为空队列：命令式API只在客户端入队，SSR/SSG 下 host 不渲染任何弹窗
   // （缺省该参数时 React 对服务端渲染直接抛错）
   const activeEntries = useSyncExternalStore(
     subscribeStore,

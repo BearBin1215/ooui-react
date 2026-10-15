@@ -7,7 +7,7 @@ description: "Props for the Dropdown component: the options list, controlled/unc
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Dropdown) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.DropdownWidget.html "OO.ui.DropdownWidget")
 
-A dropdown select. The option data contract is in [Selection and options](../../guide/options.mdx).
+A dropdown select. The option data format is described in [Selection and options](../../guide/options.mdx).
 
 ## Basic usage
 
@@ -106,14 +106,14 @@ With the menu open, **Space**: the original never feeds Space to the menu — a 
 
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
-| `options` | The option set; see [Selection and options](../../guide/options.mdx) for the contract | `DropdownOptionProps[]` | — |
-| `value` | Current selected value (controlled; passing it enables control) | `string \| number` | — |
+| `options` | The option set; see [Selection and options](../../guide/options.mdx) for the format | `DropdownOptionProps[]` | — |
+| `value` | Current selected value (controlled; passing it enables controlled mode) | `string \| number` | — |
 | `defaultValue` | Initial selected value for uncontrolled use | `string \| number` | — |
 | `onChange` | Selection-change callback (fires when the value changes) | `ChangeHandler<string \| number>` | — |
 | `label` | Placeholder text when nothing is selected; also part of the accessible name | `ReactNode` | — |
 | `icon` | Icon name at the front of the handle | `string` | — |
 | `disabled` | Whether the trigger is disabled (won't open, keyboard off) | `boolean` | `false` |
-| `tabIndex` | Tab order; lands on the handle (the root is not focusable) | `number \| null` | `0` |
+| `tabIndex` | Tab order; goes on the handle (the root is not focusable) | `number \| null` | `0` |
 | `...rest` | Native `div` props (`className`, `id`, `data-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
 
 There is no `children` slot — the handle and menu are a fixed structure, and the display text comes from the selected option or `label`.

@@ -7,7 +7,7 @@ description: "Props for the PopupButton component: a button that toggles a Popup
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/PopupButton) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.PopupButtonWidget.html "OO.ui.PopupButtonWidget")
 
-A popup button: clicking the [Button](../button/index.mdx) toggles a [Popup](../popup/index.mdx) anchored to it, with built-in close on clicking outside the button and popup. For most "click a button, show a floating panel" cases use this instead of hand-wiring Popup's anchoring and open state.
+A popup button: clicking the [Button](../button/index.mdx) toggles a [Popup](../popup/index.mdx) anchored to it, with built-in close on clicking outside the button and popup. For most "click a button, show a floating panel" cases use this instead of setting up Popup's anchoring and open state by hand.
 
 ## Basic usage
 
@@ -66,7 +66,7 @@ export default App;
 
 ## Popup positioning
 
-The floating props `position` / `align` / `anchor` / `autoFlip` / `width` / `height` / `padded` / `head` / `footer` / `container` are forwarded to the inner Popup (same meaning as [Popup](../popup/index.mdx)). By default the button is the anchor and the popup opens below.
+The popup props `position` / `align` / `anchor` / `autoFlip` / `width` / `height` / `padded` / `head` / `footer` / `container` are forwarded to the inner Popup (same meaning as [Popup](../popup/index.mdx)). By default the button is the anchor and the popup opens below.
 
 ## API
 
@@ -82,7 +82,7 @@ The floating props `position` / `align` / `anchor` / `autoFlip` / `width` / `hei
 | `icon` / `flags` / `framed` / `title` / `accessKey` / `invisibleLabel` / `disabled` | Button-side props, same meaning as [Button](../button/index.mdx) | — | — |
 | `position` / `align` / `anchor` / `autoFlip` / `head` / `hideCloseButton` / `padded` / `width` / `height` / `footer` / `container` / `hideWhenOutOfView` / `containerPadding` | Popup-side props forwarded to the inner [Popup](../popup/index.mdx) | — | — |
 
-Besides the button border, `framed` also switches the popup's framed / frameless appearance. `label` routes to the popup head and `invisibleLabel` applies to the button side only — in the original `PopupButtonWidget` both belong to the button, with the popup configured independently. `active`, `autoClose` and `autoCloseIgnore` are managed internally and cannot be overridden.
+Besides the button border, `framed` also switches the popup's framed / frameless appearance. `label` is passed to the popup head and `invisibleLabel` applies to the button side only — in the original `PopupButtonWidget` both belong to the button, with the popup configured independently. `active`, `autoClose` and `autoCloseIgnore` are managed internally and cannot be overridden.
 
 ## See also
 

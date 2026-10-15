@@ -1,6 +1,6 @@
 ---
 title: TextInput
-description: "Props for the TextInput component: controlled/uncontrolled, the type whitelist, label and icon/indicator, soft validation, and where props land via the inputProps/inputRef channels."
+description: "Props for the TextInput component: controlled/uncontrolled, the type whitelist, label and icon/indicator, soft validation, and attribute placement via the inputProps/inputRef channels."
 ---
 
 # TextInput
@@ -98,7 +98,7 @@ export default App;
 
 `validate` is soft feedback: when the value fails, the input element gets `aria-invalid` and the root gets an invalid flag class, **but the value is not rewritten**. By default only native browser constraints (e.g. `required`) take part in submit validation. It fires on value change (debounced 250ms), on blur, and clears on focus.
 
-`validate` accepts three forms: a regular expression (tested with `test`), a function (returning a boolean or `Promise<boolean>`), or the symbolic names `'non-empty'` (non-empty) and `'integer'` (digits only).
+`validate` accepts a regular expression (tested with `test`), a function (returning a boolean or `Promise<boolean>`), or the symbolic names `'non-empty'` (non-empty) and `'integer'` (digits only).
 
 ```tsx preview
 import { TextInput } from "ooui-react";
@@ -135,15 +135,15 @@ function App() {
 export default App;
 ```
 
-## Where props land
+## Attribute placement
 
-The root is a `<div>` and the input element is an `<input>`. Three landing rules (common to all input components):
+The root is a `<div>` and the input element is an `<input>`. Placement rules (common to all input components):
 
-- `...rest` from props (undeclared attributes like `id`, `className`, `data-*`) lands on the root div; attributes that must go on the native `<input>` (such as `role`, `aria-*`, `autoComplete`) must go through the `inputProps` channel.
+- `...rest` from props (undeclared attributes like `id`, `className`, `data-*`) goes on the root div; attributes that must go on the native `<input>` (such as `role`, `aria-*`, `autoComplete`) must go through the `inputProps` channel.
 - `inputRef` points to the inner `<input>` (the component `ref` points to the root div); use `inputRef` to focus the input.
-- `tabIndex`, `title`, `dir` and `accessKey` are taken over by the component and land directly on the `<input>` (matching the original's landing spots), not via `rest`.
+- `tabIndex`, `title`, `dir` and `accessKey` are taken over by the component and go directly on the `<input>` (matching the original's placement), not via `rest`.
 
-`onChange` / `onBlur` / `onFocus` in `inputProps` are **chained after** the component's own logic, so they don't truncate the value pipeline or soft validation.
+`onChange` / `onBlur` / `onFocus` in `inputProps` are **chained after** the component's own logic, so they don't interrupt the value flow or soft validation.
 
 ```tsx preview
 import { useRef } from "react";
@@ -186,14 +186,14 @@ export default App;
 | `readOnly` | Read-only | `boolean` | `false` |
 | `disabled` | Whether disabled | `boolean` | `false` |
 | `flags` | Extra flags on the root (the invalid flag from soft validation is layered on top) | `string \| string[]` | — |
-| `name` | Form field name (lands on `<input>`) | `string` | — |
-| `accessKey` | Access key (lands on `<input>`) | `string` | — |
+| `name` | Form field name (goes on `<input>`) | `string` | — |
+| `accessKey` | Access key (goes on `<input>`) | `string` | — |
 | `inputRef` | Ref to the inner `<input>` | `Ref<HTMLInputElement>` | — |
 | `inputProps` | Extra-props channel for the native `<input>`; `onChange`/`onBlur`/`onFocus` are chained after the component logic | `object` | — |
 | `indicatorProps` | Extra props for the indicator element | `object` | — |
 | `...rest` | Native `div` props (`className`, `id`, `data-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
 
-When `required` is true, this library also outputs `aria-required` on the native `<input>` (the original only writes the native `required` attribute). This covers the TextInput inheritance line (MultilineTextInput, NumberInput and ComboBoxInput alike); non-text forms (Dropdown, Checkbox, Radio, SelectFile) do not output it.{/* deviations: dev-aria-required */}
+When `required` is true, this library also outputs `aria-required` on the native `<input>` (the original only writes the native `required` attribute). This covers the components that inherit from TextInput (MultilineTextInput, NumberInput and ComboBoxInput alike); non-text forms (Dropdown, Checkbox, Radio, SelectFile) do not output it.{/* deviations: dev-aria-required */}
 
 ## See also
 

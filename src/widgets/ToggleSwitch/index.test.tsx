@@ -4,7 +4,7 @@ import { ToggleSwitch } from ".";
 import { getRoot, pressKey, snapshotHTML, tick } from "../../testing";
 
 /**
- * ToggleSwitch（对齐原版OO.ui.ToggleSwitchWidget）的浏览器渲染契约：
+ * ToggleSwitch（对齐原版OO.ui.ToggleSwitchWidget）的浏览器渲染结果：
  * role=switch与aria-checked、on/off形态类、glow/grip结构、左键与Space/Enter切换、禁用态。
  */
 it("常规：role=switch + aria-checked，内含glow/grip装饰元素", async () => {
@@ -70,7 +70,7 @@ it("disabled：点击无效、tabIndex=-1", async () => {
 });
 
 describe("HTML快照", () => {
-  // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）。
+  // 固定快照结构：差异应明确更新，不要依赖 -u 反推（以原版DOM为准，见comparison-guide「断言基准」）。
   // 根为div对齐原版（ToggleSwitchWidget未覆写getTagName），内层glow/grip仍为span
   it("关", async () => {
     const screen = await render(<ToggleSwitch />);

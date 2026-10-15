@@ -178,7 +178,7 @@ export { BarToolGroup, type BarToolGroupProps } from "./toolbars/BarToolGroup";
 export { ListToolGroup, type ListToolGroupProps } from "./toolbars/ListToolGroup";
 export { MenuToolGroup, type MenuToolGroupProps } from "./toolbars/MenuToolGroup";
 export { LabelToolGroup, type LabelToolGroupProps } from "./toolbars/LabelToolGroup";
-// tools数组的项类型即ToolProps，随工具栏系列共同构成声明式工具配置；
+// tools数组的项类型即ToolProps，与工具栏系列的其他类型一起构成声明式工具配置；
 // ToolPopupProps为ToolProps.popup的类型（工具的弹出浮层，对齐原版PopupTool）
 export type { ToolProps, ToolPopupProps } from "./toolbars/Tool";
 
@@ -239,7 +239,7 @@ export { sanitizeUrl } from "./utils";
 
 // #region Types
 
-// 元素mixin契约类型（含Indicators等紧邻类型）集中于Element.ts
+// 元素mixin类型定义（含Indicators等紧邻类型）集中于Element.ts
 export type { AccessKeyedElement, FlaggedElement, Indicators } from "./Element";
 export type { ChangeHandler } from "./utils";
 

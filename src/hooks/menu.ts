@@ -19,7 +19,7 @@ import { useLatestRef } from "./refs";
 
 /**
  * 菜单选项文本查找器（前缀跳转getItemText的共用实现）：读菜单面板DOM文本，
- * 对齐原版按键匹配读选项textContent的口径。依赖"Select根children与options按下标
+ * 对齐原版按键匹配读选项textContent的规则。依赖"Select根children与options按下标
  * 一一对应（分组标题也占一个子节点）"的DOM结构不变量——Select渲染结构变化时须同步本实现。
  * Dropdown与ButtonMenuSelectWidget等无输入框形态经此提供getItemText，不要各自手写
  */
@@ -91,7 +91,7 @@ export function useMenuPopup<T extends string | number>({
   isSelectedValue?: (value: T) => boolean;
   /** 选定回调：Tab提交高亮所需（原版TAB分支的chooseItem）；不传时Tab仅收起并放行 */
   onChoose?: (value: T) => void;
-  /** 取选项显示文本：传入即启用前缀跳转（原版读DOM textContent，调用方按同口径提供） */
+  /** 取选项显示文本：传入即启用前缀跳转（原版读DOM textContent，调用方按同规则提供） */
   getItemText?: (value: T) => string;
   /**
    * 收起态也接管键盘通道并直接改选（对齐原版DropdownWidget聚焦期开启的
@@ -106,7 +106,7 @@ export function useMenuPopup<T extends string | number>({
   const prefixSearch = usePrefixSearchBuffer();
 
   /** 导航起点（对齐原版currentItem）：高亮项（须在可选集内）优先，无高亮回退选中项。
-   * 用显式比较而非`&&`/`||`链：合法值可能是0或空串，不可按真值短路 */
+   * 用显式比较而非`&&`/`||`链：合法值可能是0或空字符串，不可按真值短路 */
   const highlightedNavigation =
     highlightedValue !== undefined && values.includes(highlightedValue)
       ? highlightedValue
@@ -278,7 +278,7 @@ export function useMenuPopup<T extends string | number>({
         return;
       }
       // 导航起点对齐原版onDocumentKeyPress（`(isVisible()&&highlighted)||(!multiselect&&selected)`）：
-      // 菜单可见时为高亮项、无高亮回退选中项；收起态高亮项被isVisible门控排除、恒为选中项
+      // 菜单可见时为高亮项、无高亮回退选中项；收起态高亮项被isVisible门控排除、始终为选中项
       const current = liveOpen ? highlighted : selected;
       const next = prefixSearch.advance(
         String.fromCodePoint(event.charCode),

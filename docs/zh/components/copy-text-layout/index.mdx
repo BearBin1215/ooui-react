@@ -1,6 +1,6 @@
 ---
 title: CopyTextLayout 复制文本
-description: "CopyTextLayout 组件的属性说明：只读文本框加复制按钮，聚焦自动全选，copyText 待复制文本、multiline 多行形态与 onCopyResult 结果回调。"
+description: "CopyTextLayout 组件的属性说明：只读文本框加复制按钮，聚焦时自动全选，copyText 待复制文本、multiline 多行形态与 onCopyResult 结果回调。"
 ---
 
 # CopyTextLayout 复制文本
@@ -81,7 +81,7 @@ export default App;
 ```
 
 :::note 与原版的差异
-复制优先走 `navigator.clipboard`，不可用或被权限拒绝时回落到 `document.execCommand('copy')`（原版只用后者，该 API 已废弃、失败时无从感知）。{/* deviations: dev-copy-clipboard */}
+复制优先使用 `navigator.clipboard`，不可用或被权限拒绝时回退到 `document.execCommand('copy')`（原版只用后者，该 API 已废弃、失败时无从感知）。{/* deviations: dev-copy-clipboard */}
 :::
 
 ## API
@@ -99,4 +99,4 @@ export default App;
 ## 另见
 
 - 字段排布与标签关联：[FieldLayout](../field-layout/index.mdx)
-- 输入字段旁挂普通操作按钮：[ActionFieldLayout](../action-field-layout/index.mdx)
+- 输入字段旁放普通操作按钮：[ActionFieldLayout](../action-field-layout/index.mdx)

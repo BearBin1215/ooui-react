@@ -4,7 +4,7 @@ import type { ChangeEvent, RefObject } from "react";
  * 与具体mixin无关的共享工具：选择集的判定与派生（对齐原版SelectWidget/ItemWidget的方法）、
  * DOM与浮层通用工具（对齐原版Element.static与FloatableElement/ClippableElement的辅助逻辑）、
  * 以及跨组件共用的常量。
- * 对齐原版OO.ui.mixin的类名贡献与元素级状态解析见src/mixins.ts，契约类型见src/Element.ts
+ * 对齐原版OO.ui.mixin的类名贡献与元素级状态解析见src/mixins.ts，类型定义见src/Element.ts
  */
 
 /**
@@ -28,7 +28,7 @@ export type ElementOrRef = RefObject<HTMLElement | null> | HTMLElement | null | 
 
 /**
  * 开发期一次性告警（同一key只告警一次；生产环境静默）。用于已废弃别名的使用、无法满足
- * 契约的配置组合等「能用但不对」的场景——对齐原版OO.ui.warnDeprecation的用途
+ * 约定的配置组合等「能用但不对」的场景——对齐原版OO.ui.warnDeprecation的用途
  * （该全局工具本身不映射，见dev-docs/DEVIATIONS.md「舍弃」），但不进公开导出面
  */
 const warnedKeys = new Set<string>();
@@ -81,7 +81,7 @@ export function findRelativeSelectableItem<T extends string | number>(
   const startIndex = start === undefined ? -1 : selectableValues.indexOf(start);
   const outOfRangeStart = offset > 0 ? -1 : length;
   let index = startIndex === -1 ? outOfRangeStart : startIndex;
-  // 移动段：不环绕时越界即停在端点，翻页键因此近端点时收敛到端点项而非原地不动
+  // 移动段：不环绕时越界即停在端点，翻页键因此近端点时取到端点项而非原地不动
   for (let i = 0; i < Math.abs(offset); i++) {
     let next = index + step;
     if (next < 0 || next >= length) {
@@ -120,7 +120,7 @@ interface OptionLike {
 
 /**
  * 可选项判定（带value且未禁用）：分组标题（无value）与禁用项均不可选。
- * Select/Dropdown/ComboBoxInput/RadioSelect 等经此统一口径
+ * Select/Dropdown/ComboBoxInput/RadioSelect 等经此统一规则
  */
 function isSelectableOption<O extends OptionLike>(
   option: O,
@@ -169,14 +169,14 @@ export const KEY_PRESS_BUFFER_MS = 1500;
 
 /**
  * 是否为键盘"激活键"（Enter/空格）——对齐原版多处`onKeyPress`经`e.which === 13 || 32`
- * 触发点击/切换的口径
+ * 触发点击/切换的规则
  */
 export function isActivationKey(key: string): boolean {
   return key === "Enter" || key === " ";
 }
 
 /**
- * 匹配文本归一化（对齐原版SelectWidget.static.normalizeForMatching）：trim、折叠连续空白
+ * 匹配文本规范化（对齐原版SelectWidget.static.normalizeForMatching）：trim、折叠连续空白
  * （nbsp等空白符一并折叠）、小写、Unicode NFC。原版的replace无g标志、只折叠第一段连续
  * 空白，此处照抄该行为；返回值再经startsWith比较（原版getItemMatcher同）
  */
@@ -193,7 +193,7 @@ interface PrefixSearchState {
 /**
  * 前缀跳转单字符推进（对齐原版onDocumentKeyPress的字符分支）：连打同一字符时先在同前缀项间
  * 向后循环步进、否则把字符并入缓冲；当前项不存在或不匹配新缓冲时，自其向后环绕找首个文本
- * 命中项。文本口径对齐原版getItemMatcher(prefix)：两侧归一化后startsWith
+ * 命中项。文本规则对齐原版getItemMatcher(prefix)：两侧规范化后startsWith
  * @param state 缓冲状态（原地更新buffer）
  * @param char 本次输入的单个可打印字符
  * @param values 可选值序列（按展示顺序）
@@ -217,7 +217,7 @@ export function advancePrefixSearch<T extends string | number>(
   } else {
     state.buffer += char;
   }
-  // 缓冲在一次扫描内不变，归一化提到闭包外只算一次
+  // 缓冲在一次扫描内不变，规范化提到闭包外只算一次
   const needle = normalizeForMatching(state.buffer);
   const matches = (value: T) => normalizeForMatching(getText(value)).startsWith(needle);
   if (item === undefined || !matches(item)) {
@@ -239,7 +239,7 @@ export const OFFSCREEN_POSITION = -9999;
 /**
  * 就近可滚动容器（对齐原版`getClosestScrollableElementContainer`：自父链向上取第一个
  * overflow 为 auto/scroll 的祖先），无则回退根元素。浮层的裁剪/钳高与滚出判定以此为
- * 可视区，视口即根元素。与原版的口径差异（只认 auto/scroll、恒查两轴、未命中回落
+ * 可视区，视口即根元素。与原版的规则差异（只认 auto/scroll、始终检查两轴、未命中回落
  * documentElement）见dev-docs/DEVIATIONS.md「等效替代」
  */
 export function findScrollableContainer(el: HTMLElement | null): HTMLElement {
@@ -257,20 +257,20 @@ export function findScrollableContainer(el: HTMLElement | null): HTMLElement {
 /**
  * 将选项滚入其就近可滚动容器的可视区（`block:"nearest"` 语义：最小纵向位移使其完全可见），
  * 只对该容器施加位移、不冒泡到文档根。对齐原版 `SelectWidget.scrollItemIntoView` 经
- * `OO.ui.Element.static.scrollIntoView`「只对就近可滚动容器施加计算位移」的口径
+ * `OO.ui.Element.static.scrollIntoView`「只对就近可滚动容器施加计算位移」的规则
  * （`oojs-ui.js:1347`、`:7642`）——而非原生 `Element.scrollIntoView`（后者会递归滚动含
  * window 在内的每一层可滚动祖先）。
  *
- * **就近容器落到文档根时不滚动**：菜单收起时面板停到屏外哨兵位（见 {@link OFFSCREEN_POSITION}），
+ * **就近容器到达文档根时不滚动**：菜单收起时面板停到屏外哨兵位（见 {@link OFFSCREEN_POSITION}），
  * 此刻对屏外选项做文档级滚动会把整页拽到顶部；而菜单选项导航本就只应在菜单自身的溢出区内
- * 滚动，从不需要滚动页面（放得下的菜单其选项恒可见、放不下的菜单自身即滚动容器）。原版靠
+ * 滚动，从不需要滚动页面（放得下的菜单其选项始终可见、放不下的菜单自身即滚动容器）。原版靠
  * 「收起菜单仍留在锚点附近」（`togglePositioning(false)` 清空内联定位，`oojs-ui.js:5259`）使
- * 文档级位移约等于 0 而无副作用，本工程收起统一停到屏外，故在此收敛。代价：独立 `Select`
+ * 文档级位移约等于 0 而无副作用，本工程收起统一停到屏外，故在此统一处理。代价：独立 `Select`
  * 若唯一可滚动祖先是页面本身，键盘导航不再滚动页面（deviations 见 dev-docs/DEVIATIONS.md）
  */
 export function scrollOptionIntoView(option: HTMLElement): void {
   const container = findScrollableContainer(option);
-  // 就近可滚动容器即文档根 → 位移只会滚动整页，按上述口径不做
+  // 就近可滚动容器即文档根 → 位移只会滚动整页，按上述规则不做
   if (container === document.documentElement) {
     return;
   }
@@ -335,8 +335,8 @@ export interface VisibleBounds {
 /**
  * 滚动容器的可视区边界（viewport-relative，px）：视口为`documentElement.clientWidth/Height`
  * 矩形（不含滚动条沟槽，对齐原版clip的viewportRect与computePosition钳制的`$container.innerWidth()`
- * 口径），元素容器扣除滚动条沟槽（RTL时沟槽在左，对齐原版clip的方向分支，oojs-ui.js:5826-5835）。
- * 纯几何口径：视口留白与clip buffer由调用方按原版对应机制计入（见{@link getClipBounds}），
+ * 规则），元素容器扣除滚动条沟槽（RTL时沟槽在左，对齐原版clip的方向分支，oojs-ui.js:5826-5835）。
+ * 纯几何规则：视口留白与clip buffer由调用方按原版对应机制计入（见{@link getClipBounds}），
  * 需要未内缩的原始边界时才直接用本函数（如滚出判定）。
  * useAnchoredPanelLayout与Popup的裁剪/钳高/滚出/翻转判定共用
  */
@@ -370,7 +370,7 @@ export const CLIP_BUFFER = 7;
 /**
  * 裁剪/翻转/选侧判定的内缩可视边界（viewport-relative，px）：在给定可视边界之上计入视口留白
  * 与{@link CLIP_BUFFER}，对齐原版`clip()`的可视矩形——viewportSpacing只作用于html容器
- * （本工程的视口回落值即`documentElement`，`oojs-ui.js:5813-5829`），buffer四边恒计
+ * （本工程的视口回落值即`documentElement`，`oojs-ui.js:5813-5829`），buffer四边始终计入
  * （`:5837-5844`）。
  * 边界经传入而非内部重测：滚动/缩放回调里调用方通常已持有一份（滚出判定要用未内缩的原始
  * 边界），重复测量会在高频路径上多一次rect与computed style读取
@@ -424,7 +424,7 @@ export function resolveFlipSide<A extends string>(
  * `iframe`、不含`object`与`area[href]`）：已排除`tabIndex=-1`与表单控件的`disabled`。
  * 选择器表达不了的两项——非表单控件的`disabled`与「不可见」——由
  * {@link isFocusableElement}在运行期兜底。Dialog的焦点陷阱、布局切换的自动聚焦与
- * Popup的Tab边界共用同一口径
+ * Popup的Tab边界共用同一规则
  */
 const FOCUSABLE_SELECTOR = [
   "a[href]",
@@ -558,7 +558,7 @@ const SAFE_URL_PROTOCOLS = [
  *
  * 净化 URL：协议不在白名单内、且不是相对 / 查询 / 片段前缀时，加 `./` 前缀
  * 中和成相对路径，使 `javascript:` / `data:` 一类危险协议在 `href` / `action`
- * 上失效。空串视为安全。本工程组件不自动改写 URL，来源不可信的 URL 须由
+ * 上失效。空字符串视为安全。本工程组件不自动改写 URL，来源不可信的 URL 须由
  * 调用方或后端筛过，需要时显式使用本函数。
  */
 export function sanitizeUrl(url: string): string {

@@ -5,10 +5,10 @@ import { getPanel, getTool } from "../../testing/toolGroups";
 import { MenuToolGroup } from ".";
 
 /**
- * MenuToolGroup（对齐原版OO.ui.MenuToolGroup）的浏览器渲染契约：
- * 菜单组类链与面板、把手标签按激活工具合成（无激活工具回落label）、把手开合。
+ * MenuToolGroup（对齐原版OO.ui.MenuToolGroup）的浏览器渲染结果：
+ * 菜单组类链与面板、handle标签按激活工具合成（无激活工具回落label）、handle开合。
  */
-it("结构：menuToolGroup类链，工具进菜单面板，无激活工具时把手回落label", async () => {
+it("结构：menuToolGroup类链，工具进菜单面板，无激活工具时handle回落label", async () => {
   const screen = await render(
     <MenuToolGroup
       label="格式"
@@ -32,7 +32,7 @@ it("结构：menuToolGroup类链，工具进菜单面板，无激活工具时把
   expect(getTool("italic")).toBeTruthy();
 });
 
-it("把手标签按激活工具标题合成（多个以逗号连接）", async () => {
+it("handle标签按激活工具标题合成（多个以逗号连接）", async () => {
   const screen = await render(
     <MenuToolGroup
       label="格式"
@@ -48,7 +48,7 @@ it("把手标签按激活工具标题合成（多个以逗号连接）", async (
   );
 });
 
-it("把手点击开合面板：aria-expanded与active类随之切换", async () => {
+it("handle点击开合面板：aria-expanded与active类随之切换", async () => {
   const screen = await render(
     <MenuToolGroup label="格式" tools={[{ name: "bold", label: "粗体" }]} />,
   );

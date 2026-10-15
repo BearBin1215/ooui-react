@@ -12,7 +12,7 @@ export type DecoratedOptionProps = WidgetProps<HTMLDivElement> &
      * Label / value carried with the option object; swallowed so they never land
      * as DOM attributes (the render uses `children` / the parent's value).
      *
-     * 随选项对象透入的标签 / 值，组件吞掉以避免落成 DOM 属性（渲染用 `children`）。
+     * 随选项对象透入的标签 / 值，组件吞掉以避免写成 DOM 属性（渲染用 `children`）。
      */
     label?: ReactNode;
     value?: string | number;

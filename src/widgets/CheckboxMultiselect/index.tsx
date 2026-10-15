@@ -99,7 +99,7 @@ export const CheckboxMultiselect = forwardRef<HTMLDivElement, CheckboxMultiselec
     // FieldLayout标签联动（通道B）：点击标签聚焦首个非禁用选项的checkbox（对齐原版
     // CheckboxMultiselectWidget覆写的simulateLabelClick→focus()→getRelativeFocusableItem(null, 1)；
     // 该组件不是TabIndexedElement，原版focus()在禁用时也不聚焦）。
-    // 落点是选项input而非根元素，故经activate覆盖默认的根元素聚焦
+    // 写入位置是选项input而非根元素，故经activate覆盖默认的根元素聚焦
     const { setRef, fieldLabelId } = useFieldLabelFocus<HTMLDivElement>({
       ref,
       disabled,

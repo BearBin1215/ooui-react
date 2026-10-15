@@ -1,15 +1,15 @@
 ---
 title: Coming from OOUI
-description: "Coming from OOUI (oojs-ui)? How its mental model, classes and APIs map to ooui-react — plus dropped capabilities and behavioral differences at a glance."
+description: "Coming from OOUI (oojs-ui)? How its concepts, classes and APIs map to ooui-react — plus dropped capabilities and behavioral differences at a glance."
 ---
 
 # Coming from OOUI
 
-ooui-react reimplements OOUI's interaction semantics and DOM contract while reusing the original theme CSS, but its API is idiomatic React.
+ooui-react reimplements OOUI's interaction semantics and DOM structure while reusing the original theme CSS, but its API is idiomatic React.
 
-Whether you know OOUI and want to lean on that experience in a new script, or are rewriting an old, complex OOUI script, this page maps the two APIs: start with the mental model mapping, locate components by their original class names, then check the dropped capabilities and behavioral differences.
+Whether you know OOUI and want to lean on that experience in a new script, or are rewriting an old, complex OOUI script, this page maps the two APIs: start with the concept mapping, locate components by their original class names, then check the dropped capabilities and behavioral differences.
 
-## Mental model mapping
+## Concept mapping
 
 The original imperative API is uniformly expressed as declarative props in this library; see [Controlled and uncontrolled](./controlled.mdx) for the rules:
 
@@ -29,11 +29,11 @@ The original imperative API is uniformly expressed as declarative props in this 
 
 ## Locating components and classes
 
-Component names = original class names minus the `Widget` suffix (`ButtonWidget` → `Button`, `TextInputWidget` → `TextInput`). Four names do not survive the suffix removal and keep their original form: `SearchWidget`, `HiddenInputWidget`, `SelectFileInputWidget`, `ButtonMenuSelectWidget`.
+Component names = original class names minus the `Widget` suffix (`ButtonWidget` → `Button`, `TextInputWidget` → `TextInput`). A few names do not work after the suffix is removed and keep their original form: `SearchWidget`, `HiddenInputWidget`, `SelectFileInputWidget`, `ButtonMenuSelectWidget`.
 
-Some original classes do not map to standalone components:
+Some original classes do not map to standalone components; here is how they are handled:
 
-| Original class | Where it went |
+| Original class | How it is handled |
 | --- | --- |
 | `OO.ui.WindowManager` | Each Dialog component owns its open/close state (controlled `open`); content isolation and stacking are built in. Imperative `confirm` / `alert` / `prompt` need no manager |
 | `OO.ui.ActionWidget` / `ActionSet` / `OO.ui.Error` | Inlined into `ProcessDialog`: the action array, mode filtering and the error panel, see [Process dialog](../components/process-dialog/index.mdx) |
@@ -41,7 +41,7 @@ Some original classes do not map to standalone components:
 | `OO.ui.OutlineControlsWidget` | Inlined into `BookletLayout`'s outline panel, see [Booklet layout](../components/booklet-layout/index.mdx) |
 | `OO.ui.SelectWidget` | [`Select`](../components/select/index.mdx) |
 | `OO.ui.PopupTagMultiselectWidget` (deprecated upstream) | Not provided; use [MenuTagMultiselect](../components/menu-tag-multiselect/index.mdx) |
-| `OO.ui` host-environment utilities (`bind` / `infuse` / `getUserLanguages` / `generateElementId` / `debounce` / `Keys` / `MouseButtons` etc.) | Not mapped: React capabilities, `useId` and es-toolkit cover these scenarios |
+| `OO.ui` host-environment utilities (`bind` / `infuse` / `getUserLanguages` / `generateElementId` / `debounce` / `Keys` / `MouseButtons` etc.) | Not mapped: React's own capabilities, `useId` and es-toolkit cover these scenarios |
 
 {/* deviations: dev-popup-tag-multiselect */}
 {/* deviations: dev-oo-ui-globals */}
@@ -73,8 +73,8 @@ These behaviors differ from the original in ways that will break or surprise you
 | `confirm` / `alert` / `prompt` | The original silently drops the second call while a window is open; this library stacks them, each independently interactive | [Imperative dialogs](../components/imperative-dialogs/index.mdx) |
 | `prompt` | `textInput.value` is initial-only; it cannot be changed externally while the dialog is alive | [Imperative dialogs](../components/imperative-dialogs/index.mdx) |
 | `Toolbar` tools | Visible text and tooltip split from one `title` key into `label` + `title` (pass the old `narrowConfig.title` value as `label`) | [Toolbar](../components/toolbar/index.mdx) |
-| `Toolbar` | Do not put popup tools inside List / Menu groups: the popup anchor dies with the collapsed panel and ends up misplaced at the viewport's top-left corner | [Toolbar](../components/toolbar/index.mdx) |
-| `TagMultiselect` | Tag identity is a scalar `value`; carry objects via the `data` field and look them up by value | [Tag multiselect](../components/tag-multiselect/index.mdx) |
+| `Toolbar` | Do not put popup tools inside List / Menu groups: the popup anchor becomes invalid once the panel collapses, and the popup ends up misplaced at the viewport's top-left corner | [Toolbar](../components/toolbar/index.mdx) |
+| `TagMultiselect` | Tag identity is a scalar `value`; carry objects in the `data` field and look them up by value | [Tag multiselect](../components/tag-multiselect/index.mdx) |
 | `Dropdown` / `ButtonMenuSelectWidget` | Space selects the highlighted option while open (the original ignored Space and only closed the menu via key-press click emulation) | [Dropdown](../components/dropdown/index.mdx) |
 | `Popup` | Re-evaluates the flip direction when scrolling changes clipping (the original freezes it until reopened); the popup may jump while scrolling | [Popup](../components/popup/index.mdx) |
 
@@ -86,6 +86,6 @@ These behaviors differ from the original in ways that will break or surprise you
 
 `en` is the built-in default baseline; 222 more language packs (`ooui-react/locales/<code>`) are available as optional imports. On a MediaWiki site you can wire `mw.msg` into `messages` to follow the site language. See [Messages and i18n](./configuration.mdx#messages-and-i18n) for the language list and setup.
 
-## Full deviation ledger
+## Full list of deviations
 
-This page lists only the differences that affect usage. The complete ledger (including implementation-level trade-offs and rationale) lives in the repository's [`dev-docs/DEVIATIONS.md`](https://github.com/BearBin1215/ooui-react/blob/main/dev-docs/DEVIATIONS.md).
+This page lists only the differences that affect usage. The complete list (including implementation-level trade-offs and rationale) is in the repository's [`dev-docs/DEVIATIONS.md`](https://github.com/BearBin1215/ooui-react/blob/main/dev-docs/DEVIATIONS.md).

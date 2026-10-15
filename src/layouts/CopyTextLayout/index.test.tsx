@@ -23,7 +23,7 @@ const restoreClipboard = () => {
 };
 
 /**
- * CopyTextLayout（对齐原版OO.ui.CopyTextLayout）的浏览器渲染契约：
+ * CopyTextLayout（对齐原版OO.ui.CopyTextLayout）的浏览器渲染结果：
  * FieldLayout上的输入区+按钮结构、只读文本与copyText初值、聚焦全选、
  * 复制通道（navigator.clipboard→execCommand回落）与结果上报、多行形态的包装类改写。
  */
@@ -73,7 +73,7 @@ it("点击复制按钮：全选后写入剪贴板并上报onCopyResult(true)", a
   }
 });
 
-it("剪贴板被拒时回落到execCommand；两者皆失败则上报onCopyResult(false)", async () => {
+it("剪贴板被拒时使用execCommand；两者皆失败则上报onCopyResult(false)", async () => {
   stubClipboard(() => Promise.reject(new Error("denied")));
   const execCommand = vi.spyOn(document, "execCommand").mockReturnValue(false);
   try {

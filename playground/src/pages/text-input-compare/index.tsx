@@ -196,7 +196,7 @@ function ReactTextInputs() {
 
 /**
  * 仅React侧的能力：
- * - `inputProps`把属性写到原生input上（组件props的...rest落在根元素），`inputRef`获取
+ * - `inputProps`把属性写到原生input上（组件props的...rest写在根元素），`inputRef`获取
  *   input引用（聚焦/选区操作）。原版经jQuery命令式实现，没有对应的声明式通道。
  * - `validate`可传返回Promise的函数：决议true为合法，决议false或rejected视为非法
  *   （见src/hooks/input.ts的useValidityFlag）。原版校验仅同步，无对照形态。
@@ -208,7 +208,7 @@ function ReactOnlyDemos() {
     <div>
       <div>
         <TextInput
-          placeholder="aria-describedby经inputProps落到input"
+          placeholder="aria-describedby经inputProps写在input"
           inputProps={{ "aria-describedby": "text-input-compare-hint" }}
         />
         <span id="text-input-compare-hint">输入框下方的说明文字</span>

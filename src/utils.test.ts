@@ -15,7 +15,7 @@ import {
 } from "./utils";
 
 /**
- * utils.ts纯函数的契约测试：相对导航（键盘导航公共口径，对齐原版SelectWidget）、
+ * utils.ts纯函数的约定测试：相对导航（键盘导航公共规则，对齐原版SelectWidget）、
  * 选择集的判定与派生、非法受控值回退、选项禁用的组继承（以上为Select/Dropdown/
  * DropdownInput/ComboBoxInput/RadioSelect系/TabSelect/CheckboxMultiselect等选择族
  * 组件共用）、浮层锚点解析。
@@ -86,7 +86,7 @@ describe("findRelativeSelectableItem", () => {
 });
 
 describe("advancePrefixSearch（前缀跳转单字符推进）", () => {
-  /** 文本口径直接用值本身（值即选项label的替身） */
+  /** 文本规则直接用值本身（值即选项label的替身） */
   const values = ["apple", "banana", "avocado"];
   const identity = (value: string) => value;
 
@@ -130,7 +130,7 @@ describe("advancePrefixSearch（前缀跳转单字符推进）", () => {
     expect(state.buffer).toBe("a");
   });
 
-  it("匹配按原版normalizeForMatching归一化：大小写、两侧trim、连续空白折叠与NFC", () => {
+  it("匹配按原版normalizeForMatching规范化：大小写、两侧trim、连续空白折叠与NFC", () => {
     const texts: Record<string, string> = { apple: "  Apple  " };
     expect(
       advancePrefixSearch(
@@ -141,7 +141,7 @@ describe("advancePrefixSearch（前缀跳转单字符推进）", () => {
         undefined,
       ),
     ).toBe("apple");
-    // 选项文本含nbsp（\s覆盖）与NFD形式的é，归一化后仍可命中
+    // 选项文本含nbsp（\s覆盖）与NFD形式的é，规范化后仍可命中
     const nbspTexts: Record<string, string> = {
       café: "caf\u00A0\u00E9".normalize("NFD"),
     };
@@ -180,11 +180,11 @@ describe("getSelectableValues（可选值序列）", () => {
     expect(getSelectableValues([])).toEqual([]);
   });
 
-  it("数值型value原样保留（不做String归一化）", () => {
+  it("数值型value原样保留（不做String规范化）", () => {
     expect(getSelectableValues([{ value: 1 }, { value: 2 }])).toEqual([1, 2]);
   });
 
-  it("仅undefined视为无value：0与空串都是合法可选值（按!== undefined判定，不走真值）", () => {
+  it("仅undefined视为无value：0与空字符串都是合法可选值（按!== undefined判定，不走真值）", () => {
     expect(getSelectableValues([{ value: 0 }, { value: "" }])).toEqual([0, ""]);
   });
 });
@@ -245,7 +245,7 @@ describe("getVisibleBounds（滚动容器可视区边界）", () => {
   // 本组跑在browser环境（真实DOM）：useAnchoredPanelLayout与Popup的裁剪/滚出判定共用。
   // 滚动条沟槽在classic/overlay滚动条下宽度不同，断言按自洽关系写，不假定具体沟槽宽度
 
-  it("视口为documentElement的clientWidth/Height矩形（不含滚动条沟槽，对齐原版clip口径）", () => {
+  it("视口为documentElement的clientWidth/Height矩形（不含滚动条沟槽，对齐原版clip规则）", () => {
     expect(getVisibleBounds(document.documentElement)).toEqual({
       top: 0,
       left: 0,
@@ -294,7 +294,7 @@ describe("getVisibleBounds（滚动容器可视区边界）", () => {
 });
 
 describe("scrollOptionIntoView（选项滚入就近可滚动容器，不触达window）", () => {
-  // browser环境（真实布局）：菜单高亮滚动的落点。核心回归——收起菜单停到屏外哨兵位时
+  // browser环境（真实布局）：菜单高亮滚动的位置。核心回归——收起菜单停到屏外哨兵位时
   // 不得把整页拽到顶部（就近容器为文档根即不滚，见函数注释与DEVIATIONS dev-select-scroll-into-view）
 
   /** 造一个可纵向滚动的容器（60px高）内含6个30px选项（内容180px、可滚） */
@@ -416,7 +416,7 @@ describe("sanitizeUrl（URL协议白名单净化）", () => {
     expect(sanitizeUrl("vbscript:msgbox(1)")).toBe("./vbscript:msgbox(1)");
   });
 
-  it("空串视为安全（对齐原版）", () => {
+  it("空字符串视为安全（对齐原版）", () => {
     expect(sanitizeUrl("")).toBe("");
   });
 });

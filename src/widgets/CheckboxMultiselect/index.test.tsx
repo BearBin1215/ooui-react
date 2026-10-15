@@ -19,7 +19,7 @@ const getInput = (screen: { container: Element }, name: string) =>
   getOption(screen, name).querySelector<HTMLInputElement>("input")!;
 
 /**
- * CheckboxMultiselect（对齐原版OO.ui.CheckboxMultiselectWidget）的浏览器渲染契约：
+ * CheckboxMultiselect（对齐原版OO.ui.CheckboxMultiselectWidget）的浏览器渲染约定：
  * multiselect根类链与$group容器、点击勾选的值数组语义（受控/非受控）、
  * Shift+点击范围选择（禁用项跳过）、方向键焦点导航（环绕、跳过禁用项）。
  */

@@ -23,7 +23,7 @@ const makeOptions = (): BookletLayoutProps["options"] => [
 ];
 
 /**
- * BookletLayout（对齐原版OO.ui.BookletLayout）的浏览器渲染契约：
+ * BookletLayout（对齐原版OO.ui.BookletLayout）的浏览器渲染结果：
  * 未开启outlined时不下挂大纲子树、outlined时的大纲面板与OutlineSelect、
  * editable的大纲控制控件（禁用规则与回调）、激活页被移除时的邻近补选。
  */
@@ -136,7 +136,7 @@ it("editable：激活页不可移动也不可移除时三个控制按钮全禁�
   }
 });
 
-it("激活页被移除：按原版stack口径补选（下一个未被移除项→新末项）并回调onChange", async () => {
+it("激活页被移除：按原版stack规则补选（下一个未被移除项→新末项）并回调onChange", async () => {
   const onChange = vi.fn<(value: string | number) => void>();
   const options = makeOptions();
   const screen = await render(

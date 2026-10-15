@@ -8,7 +8,7 @@ import { TextInput } from "../../widgets/TextInput";
 import { ActionFieldLayout } from ".";
 
 /**
- * ActionFieldLayout（对齐原版OO.ui.ActionFieldLayout）的浏览器渲染契约：
+ * ActionFieldLayout（对齐原版OO.ui.ActionFieldLayout）的浏览器渲染结果：
  * 组合FieldLayout的类链与标签联动，输入区/按钮区两槽位、fieldInline决定输入区包装元素。
  */
 it("结构：fieldLayout类链 + actionFieldLayout类，输入区为div、按钮区为span", async () => {

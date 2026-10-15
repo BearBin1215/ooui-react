@@ -53,10 +53,10 @@ export default App;
 - When space is tight the popup is clipped/clamped to the visible area (or nearest scroll container); `containerPadding` sets the clamp inset (default 10px), and `hideWhenOutOfView` (on by default) hides the popup while the anchor scrolls out of view (without changing `open`).
 
 :::note Differences from OOUI
-The flip direction is re-evaluated when scrolling changes the clipping (the original freezes it until the popup is reopened), so the popup may jump while scrolling. {/* deviations: dev-popup-scroll-reflip */}
+The flip direction is re-evaluated when scrolling changes the clipping (the original keeps it fixed until the popup is reopened), so the popup may jump while scrolling. {/* deviations: dev-popup-scroll-reflip */}
 :::
 
-The two most common tweaks: `position` for the popup direction, and `anchor={false}` to drop the arrow.
+The most common tweaks: `position` for the popup direction, and `anchor={false}` to drop the arrow.
 
 ```tsx preview
 import { useRef, useState, type ReactNode } from "react";
@@ -158,7 +158,7 @@ export default App;
 
 ## Hover trigger
 
-Hover tips (term explanations, hover cards) are a common Popup scenario: open/close is driven entirely by the anchor's `mouseenter` / `mouseleave`, with `autoClose={false}` turning off the outside-click and Escape channels. Two implementation points: the popup portals out of the anchor's subtree, so moving the mouse toward it fires the anchor's `mouseleave` first — delay the close briefly and cancel it once the pointer enters the popup; and wrap the popup content in an element with its own mouse handlers so hovering the popup keeps it open.
+Hover tips (term explanations, hover cards) are a common Popup scenario: open/close is driven entirely by the anchor's `mouseenter` / `mouseleave`, with `autoClose={false}` turning off the outside-click and Escape channels. Implementation points: the popup is portalled out of the anchor's subtree, so moving the mouse toward it fires the anchor's `mouseleave` first — delay the close briefly and cancel it once the pointer enters the popup; and wrap the popup content in an element with its own mouse handlers so hovering the popup keeps it open.
 
 ```tsx preview
 import { useRef, useState } from "react";

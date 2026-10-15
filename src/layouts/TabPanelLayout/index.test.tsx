@@ -4,7 +4,7 @@ import { getRoot } from "../../testing";
 import { TabPanelLayout } from ".";
 
 /**
- * TabPanelLayout（对齐原版OO.ui.TabPanelLayout）的浏览器渲染契约：
+ * TabPanelLayout（对齐原版OO.ui.TabPanelLayout）的浏览器渲染结果：
  * tabpanel角色 + tabPanelLayout类链、active输出激活类、
  * 页签集透入的label/value/disabled被吞掉不落成DOM属性。
  */

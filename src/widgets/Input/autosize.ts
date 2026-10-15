@@ -55,13 +55,13 @@ interface AutosizeConfig {
   /** 是否开启自动高度（对应原版 config.autosize） */
   enabled: boolean;
 
-  /** 真实输入框引用（测量对象与高度的最终落点） */
+  /** 真实输入框引用（测量对象与高度的最终写入位置） */
   textareaRef: RefObject<HTMLTextAreaElement | null>;
 
   /** 测量用克隆元素引用（由调用方渲染，与真实输入框同类名同源样式） */
   cloneRef: RefObject<HTMLTextAreaElement | null>;
 
-  /** 最小行数；未指定时以空串取浏览器的缺省行数（对齐原版 minRows） */
+  /** 最小行数；未指定时以空字符串取浏览器的缺省行数（对齐原版 minRows） */
   rows?: number;
 
   /** 最大行数（已含原版缺省规则：max(2×rows, 10)） */
@@ -75,11 +75,11 @@ interface AutosizeConfig {
  * 多行输入框的自动高度：返回应写入输入框的内联高度样式。
  * 高度经 state 回到渲染流程（而非命令式写 DOM），使 autosize 与标签让位的内边距
  * 共用一个 style 来源，避免两处分别写 style 互相覆盖。
- * 触发时机两类：值或行数配置变化后同步重测（对应原版 change→adjustSize，paint 前完成
+ * 触发时机：值或行数配置变化后同步重测（对应原版 change→adjustSize，paint 前完成
  * 无闪烁）；盒模型或宽度变化经 ResizeObserver 兜底重测——首帧测量早于标签让位内边距
  * 生效，字体加载与窗口缩放也不走值变更，仅靠前一路径会滞留过期高度。
  * 测量过程逐步对齐原版（各步的理由见measure内联注释与其中的T133347/T1799404锚点）；
- * 内容未超出自然高度时清空内联高度，回落到rows的原生布局
+ * 内容未超出自然高度时清空内联高度，回到rows的原生布局
  */
 export function useAutosize({
   enabled,
@@ -133,7 +133,7 @@ export function useAutosize({
     clone.classList.add("oo-ui-element-hidden");
     clone.style.overflow = "";
 
-    // 内容未超出自然高度时不写内联高度（回落到 rows 布局），超出时锁定高度
+    // 内容未超出自然高度时不写内联高度（回到 rows 布局），超出时锁定高度
     setHeight(
       idealHeight > innerHeight ? `${idealHeight + (outerHeight - innerHeight)}px` : "",
     );
@@ -189,8 +189,8 @@ interface ScrollbarOffset {
  * right（RTL 下为 left）。滚动条的出现/消失经 ResizeObserver 跟踪
  * （滚动条会改变 content-box 宽度，故尺寸变化即可捕获）。
  * 让位偏移仅在其落侧与主题 CSS 锚定侧（根/样式表方向）一致时生效——指示器/标签由主题
- * CSS 按根方向锚定在某一物理侧，输入元素自身方向（`dir` 按原版只落 input）使滚动条落到
- * 对侧时，内联偏移会把绝对定位元素两端钉住而拉伸变形，此时放弃让位（见 DEVIATIONS 增强节）
+ * CSS 按根方向锚定在某一物理侧，输入元素自身方向（`dir` 按原版只写在 input）使滚动条出现在
+ * 对侧时，内联偏移会把绝对定位元素两端固定住而拉伸变形，此时放弃让位（见 DEVIATIONS 增强节）
  */
 export function useScrollbarOffset({
   inputRef,
@@ -217,7 +217,7 @@ export function useScrollbarOffset({
     }
     const measure = () => {
       const width = input.offsetWidth - input.clientWidth;
-      // 滚动条物理所在侧跟随输入元素自身的有效方向（dir 按原版落点在 input 上）；
+      // 滚动条物理所在侧跟随输入元素自身的有效方向（dir 按原版写在 input 上）；
       // 主题CSS锚定浮动元素的一侧（根方向）与宽度同批测量并入状态，使方向随测量周期更新
       const property = getComputedStyle(input).direction === "rtl" ? "left" : "right";
       const anchor = getElementDir(rootRef.current) === "rtl" ? "left" : "right";
@@ -236,7 +236,7 @@ export function useScrollbarOffset({
   const rootRtl = offset.anchor === "left";
   return useMemo(() => {
     // 无滚动条（宽度为0）本无让位可言；根方向与输入元素方向分叉时同样退回稳态——
-    // 主题CSS按根（样式表）方向把指示器/标签锚定在某侧，内联偏移须落在同侧才是平移让位，
+    // 主题CSS按根（样式表）方向把指示器/标签锚定在某侧，内联偏移须在同一侧才是平移让位，
     // 二者异侧的偏移会致元素拉伸，故撤回让位（含并入同侧内边距的 scrollbarWidth）
     if (!offset.width || offset.anchor !== offset.property) {
       return {

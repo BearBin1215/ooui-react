@@ -15,7 +15,7 @@ import { useOptionDrag, useOptionRegistry } from "./press";
 
 /**
  * 选择族共用的可选值派生：非禁用且带value的选项值序列（按展示顺序，经getSelectableValues
- * 统一口径），附`has`命中判定（Set实现，O(1)——拖拽逐帧与键盘导航的高频路径用）。
+ * 统一规则），附`has`命中判定（Set实现，O(1)——拖拽逐帧与键盘导航的高频路径用）。
  * Select引擎族/直选族/菜单族的全部消费方经此取值
  */
 export function useSelectableValues<T extends string | number>(
@@ -30,7 +30,7 @@ export function useSelectableValues<T extends string | number>(
 /**
  * 选项元素id生成（对齐原版OptionWidget.getElementId的「无显式id则生成稳定唯一id供aria
  * 引用」语义）：显式id优先，缺省按展示下标生成——React useId适配（useCleanId去`:`）加
- * 下标后缀；原版是`ooui-`前缀全局自增计数，机制不同、契约等价。Select引擎族
+ * 下标后缀；原版是`ooui-`前缀全局自增计数，机制不同、对外行为一致。Select引擎族
  * （aria-activedescendant指向高亮项）与直选族（指向选中项）共用
  */
 export function useOptionElementIds(
@@ -54,7 +54,7 @@ interface DirectSelectOption {
 }
 
 /**
- * 直选型选择组（ButtonSelect/TabSelect）的共用容器脚手架，收敛两者逐字重复的部分：
+ * 直选型选择组（ButtonSelect/TabSelect）的共享容器实现，统一处理两者逐字重复的部分：
  * 受控值态、可选值序列派生、选项 DOM 双向索引、拖拽选择、直选键盘改选、选项 id 生成与按压态类。
  *
  * 直选族无中间高亮态（对齐原版 static.highlightable=false 的选项）：↑↓←→环绕改选、Enter 重申
@@ -97,7 +97,7 @@ export function useDirectSelect<T extends string | number>({
   /** 调用方透传的 keydown（在导航键处理之前调用） */
   onKeyDown?: KeyboardEventHandler<HTMLDivElement>;
   /**
-   * 指针按下时把焦点收进组根的回调（右键与禁用组不聚焦）。略优于原版：原版 mousedown 一律
+   * 指针按下时把焦点移入组根的回调（右键与禁用组不聚焦）。略优于原版：原版 mousedown 一律
    * preventDefault，点击后焦点留在原处，方向键无法导航（原版实测复现）；本工程对齐 ARIA APG
    * 的 tablist/listbox 模式「点击选项后焦点应落入组」，组根是导航键的宿主，聚焦后键盘立即可用。
    * 调用方传组根的聚焦动作（root ref 策略不下沉，见上）
@@ -127,7 +127,7 @@ export function useDirectSelect<T extends string | number>({
     onCommit: commitIfChanged,
   });
 
-  // 指针按下即把焦点收进组根（见focusRoot参数注释）：仅左键与可用组，右键/禁用不聚焦
+  // 指针按下即把焦点移入组根（见focusRoot参数注释）：仅左键与可用组，右键/禁用不聚焦
   const handleMouseDown: MouseEventHandler<HTMLDivElement> = (e) => {
     onMouseDown?.(e);
     dragMouseDown(e);
@@ -187,7 +187,7 @@ export function useDirectSelect<T extends string | number>({
     pressedValue,
     /** 组按压态类 */
     pressedStateClass,
-    /** 根元素 mousedown：先透传调用方 onMouseDown，再进入拖拽按压态并把焦点收进组根（focusRoot） */
+    /** 根元素 mousedown：先透传调用方 onMouseDown，再进入拖拽按压态并把焦点移入组根（focusRoot） */
     handleMouseDown,
     /** 根元素 mouseup：先透传调用方 onMouseUp，再退出按压态 */
     handleMouseUp,

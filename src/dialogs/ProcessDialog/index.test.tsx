@@ -9,7 +9,7 @@ const getPrimaryButton = () =>
   getRegion(".oo-ui-processDialog-actions-primary .oo-ui-buttonElement-button");
 
 /**
- * ProcessDialog（对齐原版OO.ui.ProcessDialog）的浏览器渲染契约：
+ * ProcessDialog（对齐原版OO.ui.ProcessDialog）的浏览器渲染结果：
  * 导航区三段（safe左/标题中/primary右）+ foot为other动作区、动作点击与pending态、
  * 错误面板（退出/重试）、不可恢复错误的动作禁用、mode过滤、close/back的纯图标按钮。
  */

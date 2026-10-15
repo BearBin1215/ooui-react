@@ -14,8 +14,8 @@ const getOutlineOptions = (screen: { container: Element }) => [
 ];
 
 /**
- * OutlineSelect（对齐原版OO.ui.OutlineSelectWidget）的浏览器渲染契约：
- * 在Select基础上锁定大纲形态——outline恒开（选项渲染为OutlineOption）、
+ * OutlineSelect（对齐原版OO.ui.OutlineSelectWidget）的浏览器渲染约定：
+ * 在Select基础上锁定大纲形态——outline始终开启（选项渲染为OutlineOption）、
  * level缩进类（超出钳制到主题定义的三级）、选择交互照常。
  */
 it("结构：outlineSelect类 + Select的listbox，选项渲染为OutlineOption", async () => {

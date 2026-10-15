@@ -4,7 +4,7 @@ import { getRoot } from "../../testing";
 import { PageLayout } from ".";
 
 /**
- * PageLayout（对齐原版OO.ui.PageLayout）的浏览器渲染契约：
+ * PageLayout（对齐原版OO.ui.PageLayout）的浏览器渲染结果：
  * active由hidden派生（可显式覆盖以支持continuous模式）、pageLayout类链，
  * 页签集透入的label/value被吞掉不落成DOM属性。
  */

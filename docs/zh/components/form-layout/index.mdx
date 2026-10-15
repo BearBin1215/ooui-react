@@ -64,7 +64,7 @@ export default App;
 | `enctype` | 编码类型，原生 `enctype`（缺省 `application/x-www-form-urlencoded`） |
 
 :::warning 安全提示
-本组件不对 `action` 做 URL 净化（越过原版的 `OO.ui.isSafeUrl`）。`<form action="javascript:...">` 会在提交时执行脚本，浏览器与 React 运行期都不拦截。来源不可信的 `action`（如由用户输入拼接）必须先自行校验协议，否则构成 XSS；需要组件层净化时可用导出的方法 `sanitizeUrl`。{/* deviations: dev-safe-url */}
+本组件不对 `action` 做 URL 净化（未采用原版的 `OO.ui.isSafeUrl`）。`<form action="javascript:...">` 会在提交时执行脚本，浏览器与 React 运行期都不拦截。来源不可信的 `action`（如由用户输入拼接）必须先自行校验协议，否则构成 XSS；需要组件层净化时可用导出的方法 `sanitizeUrl`。{/* deviations: dev-safe-url */}
 :::
 
 ## 随表单提交的控件

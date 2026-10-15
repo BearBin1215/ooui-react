@@ -299,7 +299,7 @@ function ReactCheckboxes({
 type RadioUi = {
   RadioInputWidget: new (config?: Record<string, unknown>) => {
     $element: unknown;
-    /** 原生input的jQuery对象（change事件监听落点，RadioInputWidget自身不跟踪状态） */
+    /** 原生input的jQuery对象（change事件监听位置，RadioInputWidget自身不跟踪状态） */
     $input: unknown;
     setSelected: (state: boolean) => void;
     isSelected: () => boolean;
@@ -674,7 +674,7 @@ function ButtonCheckboxComparePage() {
           对照点：图标/指示器变体类（primary/progressive/destructive/error/invert、激活、禁用）、
           禁用时移除href、target与rel数组拼接、mousedown阻止焦点转移且按钮外松开复位、
           Enter/空格触发click（keypress时机）、图标/指示器title提示、半选indeterminate、
-          required落点、FieldLayout标签联动（for关联字段id）、
+          required写入位置、FieldLayout标签联动（for关联字段id）、
           indicator其余取值（required/clear）与pressed静态按压态（原版无声明式通道，
           经addClass静态演示）。RadioSelect/CheckboxMultiselect：radiogroup聚焦与方向键导航、
           Shift+点击范围选择、整组禁用（选项未声明disabled随组禁用、键盘导航跳过）、

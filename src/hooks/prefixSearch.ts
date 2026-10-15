@@ -23,7 +23,7 @@ export function usePrefixSearchBuffer() {
    * 单个可打印字符推进：续期计时器并经advancePrefixSearch求命中值
    * @param char 本次输入的单个可打印字符
    * @param values 可选值序列（按展示顺序）
-   * @param getText 取选项显示文本（对齐原版读渲染后textContent的口径）
+   * @param getText 取选项显示文本（对齐原版读渲染后textContent的规则）
    * @param current 导航起点
    * @returns 命中的值；无命中时undefined
    */

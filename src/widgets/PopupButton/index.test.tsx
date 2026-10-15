@@ -11,7 +11,7 @@ const getPopupRoot = () =>
   document.querySelector<HTMLElement>(".oo-ui-popupButtonWidget-popup")!;
 
 /**
- * PopupButton（对齐原版OO.ui.PopupButtonWidget）的浏览器渲染契约：
+ * PopupButton（对齐原版OO.ui.PopupButtonWidget）的浏览器渲染约定：
  * 按钮与弹层的双向aria关联（haspopup/owns、describedby）、点击切换与onOpenChange、
  * autoClose忽略按钮自身（按下按钮不触发外点关闭，只走开合逻辑）、
  * popupContent与children的分置、framed变体类。
@@ -31,7 +31,7 @@ it("结构：按钮输出popupButtonWidget类，anchor声明haspopup/owns，弹�
   expect(root.getAttribute("aria-describedby")).toBe(button.id);
   expect(root).toHaveClass("oo-ui-popupButtonWidget-framed-popup");
   expect(root).toHaveClass("oo-ui-element-hidden");
-  // 不在弹窗内：portal回落到document.body，且不写弹窗同层的层值（层级交回主题CSS）
+  // 不在弹窗内：portal回退到document.body，且不写弹窗同层的层值（层级交回主题CSS）
   expect(root.parentElement).toBe(document.body);
   expect(root.style.zIndex).toBe("");
 });

@@ -89,7 +89,7 @@ export function useFieldAccessKey(accessKey?: string): void {
  * 通道B的标签点击激活（对齐原版`TabIndexedElement.simulateLabelClick`的默认实现）：
  * 点击FieldLayout标签时聚焦组件根元素，禁用时不聚焦（原版`focus()`内含isDisabled判断）。
  * 内部持有根元素ref并与外部转发的ref合并，返回合并后的ref回调、内部ref与标签元素id。
- * 落点不是根元素或需附带副作用的组件传`activate`覆盖默认的聚焦：
+ * 作用对象不是根元素或需附带副作用的组件传`activate`覆盖默认的聚焦：
  * Dropdown聚焦handle、ToggleButton经内部锚点聚焦、ToggleSwitch额外翻转值、
  * CheckboxMultiselect聚焦首个可用选项（不经根元素）
  */
@@ -114,7 +114,7 @@ export function useFieldLabelFocus<T extends HTMLElement>({
 } {
   const rootRef = useRef<T>(null);
   const setRef = useMergedRefs(ref, rootRef);
-  // 激活回调经useFieldLabelActivate的ref读取，闭包里的disabled/activate恒为最新值
+  // 激活回调经useFieldLabelActivate的ref读取，闭包里的disabled/activate始终为最新值
   const fieldLabelId = useFieldLabelActivate(() => {
     if (disabled) {
       return;

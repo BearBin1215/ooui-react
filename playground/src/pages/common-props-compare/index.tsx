@@ -133,7 +133,7 @@ function OriginalElementProps() {
       tabIndex: 5,
       disabled: true,
     });
-    // dir落在内部input而非根元素（InputWidget#setDir写$input），可在DOM中核对
+    // dir写在内部input而非根元素（InputWidget#setDir写$input），可在DOM中核对
     row(ui.TextInputWidget, "dir=rtl", { dir: "rtl", label: "标签" });
   });
 
@@ -194,11 +194,11 @@ function ReactElementProps() {
   );
 }
 
-/** 原版侧：aria命名。原版无声明式aria通道，经$button.attr写入（与React的aria落点同为锚点） */
+/** 原版侧：aria命名。原版无声明式aria通道，经$button.attr写入（与React的aria写入位置同为锚点） */
 function OriginalAriaNaming() {
   const { containerRef } = useOriginalWidgets((oo, container, register) => {
     const ui = oo.ui as unknown as CommonPropsUi;
-    // aria属性写入$button而非$element，与原版可访问名落点一致
+    // aria属性写入$button而非$element，与原版可访问名位置一致
     const append = (name: string, widget: { $element: unknown }) => {
       register(widget);
       const el = document.createElement("div");
@@ -413,12 +413,12 @@ function CommonPropsComparePage() {
           对照点：flags全集（warning/success/invert图标变体、数组形态与TextInput的
           progressive）、invisibleLabel
           （仅图标按钮保留可访问名）、accessKey（title附键位后缀）、tabIndex
-          （禁用时覆盖为-1）、dir（TextInput的dir落在内部input而非根元素）、
+          （禁用时覆盖为-1）、dir（TextInput的dir写在内部input而非根元素）、
           aria-label/aria-labelledby命名（含role=switch开关的命名，
           原版开关靠FieldLayout关联）、FieldLayout标签联动双通道（通道A
           htmlFor聚焦输入框、
           通道B点击标签激活无input控件）、classes/id/style/ref透传。全局dir/RTL用页面顶部的
-          方向开关整体切换，元素级dir落点在本页accessKey/dir所在区块演示。
+          方向开关整体切换，元素级dir写入位置在本页accessKey/dir所在区块演示。
         </>
       }
     >

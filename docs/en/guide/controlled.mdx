@@ -1,13 +1,13 @@
 ---
 title: Controlled and uncontrolled
-description: "ooui-react's value contract: the value, open and checked channels, how control is determined and the callback signatures, and the convention that dialogs are controlled-only."
+description: "ooui-react's value convention: the value, open and checked channels, how control is determined and the callback signatures, and the convention that dialogs are controlled-only."
 ---
 
 # Controlled and uncontrolled
 
 Most components' "current value" can be held by you (controlled) or kept by the component itself (uncontrolled).
 
-## Three channels
+## Controlled channels
 
 | Channel | Props | Used by |
 | --- | --- | --- |
@@ -15,7 +15,7 @@ Most components' "current value" can be held by you (controlled) or kept by the 
 | Open state | `open` / `defaultOpen` / `onOpenChange` | `Popup`, `PopupButton`, `ButtonMenuSelectWidget`, toolbar popups and a tool's `popup` config |
 | Checked | `checked` / `defaultChecked` / `onChange` | `CheckboxInput`, `RadioInput`, `ToggleButton`, `ToggleSwitch` |
 
-For the option data contract shared by the select family (`value`, group headings, `labelText`, disabled propagation, etc.), see [Selection and options](./options.mdx). {/* deviations: dev-layout-controlled-api */}
+For the option data convention shared by the select family (`value`, group headings, `labelText`, disabled propagation, etc.), see [Selection and options](./options.mdx). {/* deviations: dev-layout-controlled-api */}
 
 ## How control is decided
 
@@ -30,7 +30,7 @@ function App() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 12 }}>
-      {/* Controlled: the value lives outside */}
+      {/* Controlled: the value is held outside */}
       <ToggleSwitch checked={on} onChange={(checked) => setOn(checked)} />
       {/* Uncontrolled: the component remembers its own state */}
       <ToggleSwitch defaultChecked />
@@ -68,7 +68,7 @@ Callbacks that don't follow this signature:
 | `SearchWidget` | `onQueryChange` / `onChoose` | The query value / the chosen result |
 | `Message` | `onClose` | `() => void`, fired when the close button is clicked |
 
-Two "choose" callbacks that are easy to confuse:
+"Choose" callbacks that are easy to confuse:
 
 - The `Select` family offers both `onChange` (the selected value changed; re-selecting the same item doesn't fire) and `onChoose` (fires on every choice, including repeats). When `clearOnChoose` is true, only `onChoose` fires and the selected value doesn't change — handy for command menus.
 - `SearchWidget` has no `onChange`; query changes go through `onQueryChange`.
@@ -87,7 +87,7 @@ Two "choose" callbacks that are easy to confuse:
 
 ## When the controlled value isn't among the options
 
-The `value` you pass in sometimes matches no entry in `options`, for example when an option is removed, the initial value is wrong, or the options load asynchronously and aren't there yet on the first render. How components respond falls into two groups:
+The `value` you pass in sometimes matches no entry in `options`, for example when an option is removed, the initial value is wrong, or the options load asynchronously and aren't there yet on the first render. How components respond:
 
 | Components | When no option matches | Write back via `onChange`? |
 | --- | --- | --- |
@@ -108,4 +108,4 @@ const options = [
 
 The component shows `a` (the fallback) and calls `onChange("a")` to tell you "this is what actually took effect". Update your state to `a` and `value` and the UI line up again. The same invalid value is written back only once, so ignoring the callback won't cause it to fire repeatedly. {/* deviations: dev-layout-autoselect dev-controlled-writeback */}
 
-The second group follows your `value` exactly: no match means nothing is selected, the UI honestly reflects "no match for the current value", and you decide whether to correct it yourself.
+The second group follows your `value` exactly: no match means nothing is selected, and the UI shows that the current value has no match; whether to correct it is up to you.

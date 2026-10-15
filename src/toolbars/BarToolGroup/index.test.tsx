@@ -23,11 +23,11 @@ const press = (link: Element, type: "mousedown" | "mouseup" | "mouseout") =>
   link.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true }));
 
 /**
- * BarToolGroup（对齐原版OO.ui.BarToolGroup）的浏览器渲染契约：
+ * BarToolGroup（对齐原版OO.ui.BarToolGroup）的浏览器渲染结果：
  * barToolGroup类链与工具容器、工具链接的图标/标题/快捷键槽位、
  * 组禁用与空组的下发、Bar专属的tooltip拼接（titleTooltips与accelTooltips皆true）、
  * displayBothIconAndLabel的标签类、符号名类与按压流。
- * 工具链接的键盘/指针语义由Toolbar与Tool的共享按压流承担，此处只覆盖Bar组自身的契约。
+ * 工具链接的键盘/指针语义由Toolbar与Tool的共享按压流承担，此处只覆盖Bar组自身的约定。
  */
 it("结构：barToolGroup类链与工具容器，工具链接输出图标/标题/快捷键槽位", async () => {
   const screen = await render(
@@ -90,7 +90,7 @@ it("Bar组tooltip：title与快捷键拼为「标题 快捷键」，label不入t
   );
   // BarToolGroup的titleTooltips与accelTooltips皆为true（oojs-ui-toolbars.js:2026、2032）
   expect(getLink(screen, "a")).toHaveAttribute("title", "提示 Ctrl+K");
-  // 两者都为空时不输出title属性（label恒为可见文本，不参与tooltip）
+  // 两者都为空时不输出title属性（label始终为可见文本，不参与tooltip）
   expect(getLink(screen, "b").getAttribute("title")).toBeNull();
 });
 
@@ -178,7 +178,7 @@ it("按压流：按下进入tool-active、移出仅清视觉、松开仍触发on
   await tick();
   expect(toolSpan).not.toHaveClass("oo-ui-tool-active");
 
-  // 松开仍落在发起工具上：onSelect照常触发
+  // 松开时指针仍在发起工具上：onSelect照常触发
   press(link, "mouseup");
   await tick();
   expect(onSelect).toHaveBeenCalledOnce();

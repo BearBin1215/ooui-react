@@ -36,7 +36,7 @@ export interface MenuTagMultiselectProps extends Omit<
 
 // 实现说明：对齐原版OO.ui.MenuTagMultiselectWidget——输入即过滤菜单、↑↓移动高亮、Enter选定
 // 高亮项、点击切换标签；已添加标签对应的菜单项呈选中态。未开启allowArbitrary时菜单选项构成
-// 标签的合法值域。与OutlineSelect之于Select同构：具名组件锁定基础组件的组合通道
+// 标签的合法值域。与OutlineSelect之于Select结构相同：具名组件锁定基础组件的组合通道
 /**
  * A tag input with a candidate menu. Props match TagMultiselect, plus the required
  * `options`.

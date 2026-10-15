@@ -117,9 +117,9 @@ export interface TextInputProps<
    * div, so attributes for the input itself (e.g. `role`, `aria-*`, `autoComplete`)
    * go here; `onChange` / `onBlur` / `onFocus` are chained after the component logic.
    *
-   * 原生 `<input>` 的附加属性通道：`...rest` 落在根 div，需写到原生 input 上的属性
+   * 原生 `<input>` 的附加属性通道：`...rest` 写在根 div，需写到原生 input 上的属性
    * （如 `role`/`aria-*`/`autoComplete`）经此通道；`onChange`/`onBlur`/`onFocus`
-   * 串联在组件自身逻辑之后（值管线与软校验不会被截断）
+   * 串联在组件自身逻辑之后（值处理流程与软校验不会被截断）
    */
   inputProps?: UserInputProps<T>;
 }
@@ -138,7 +138,7 @@ export interface TextInputInternalProps extends TextInputProps {
 }
 
 /**
- * 将validate入参归一化为校验函数（符号名对齐原版static.validationPatterns）
+ * 将validate入参规范化为校验函数（符号名对齐原版static.validationPatterns）
  */
 export const resolveValidate = (validate: TextInputValidate | undefined) => {
   if (validate instanceof RegExp) {
@@ -157,7 +157,7 @@ export const resolveValidate = (validate: TextInputValidate | undefined) => {
 };
 
 // 实现说明：对齐原版OO.ui.TextInputWidget，type限定在主题有样式的几种（text/search/password等），
-// title/dir/tabIndex/aria-disabled按原版落点写在input上，软校验标记经validate给出
+// title/dir/tabIndex/aria-disabled按原版位置写在input上，软校验标记经validate给出
 /**
  * A single-line text input, and also the base for input components such as
  * MultilineTextInput, NumberInput and SearchInput.
@@ -190,7 +190,7 @@ export const TextInput = forwardRef<HTMLDivElement, TextInputInternalProps>(
       inputRef,
       inputProps,
       required,
-      // tabIndex落在input上（组件根为不可聚焦的div）；title/dir对齐原版InputWidget的落点
+      // tabIndex写在input上（组件根为不可聚焦的div）；title/dir对齐原版InputWidget的位置
       // （TitledElement的$titled与setDir均为$input），同样不放外层div
       tabIndex,
       title,
@@ -212,7 +212,7 @@ export const TextInput = forwardRef<HTMLDivElement, TextInputInternalProps>(
     >({ value, defaultValue: defaultValue ?? "" }, onChange);
     const internalInputRef = useRef<HTMLInputElement>(null);
     const setInputRef = useMergedRefs(inputRef, internalInputRef);
-    // 输入元素的公共属性派生：属性落点、字段id、标签让位、指示器回退、装饰聚焦、软校验
+    // 输入元素的公共属性派生：属性写入位置、字段id、标签让位、指示器回退、装饰聚焦、软校验
     const {
       inputProps: commonInputProps,
       invalid,

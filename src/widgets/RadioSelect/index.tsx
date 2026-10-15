@@ -111,7 +111,7 @@ export const RadioSelect = forwardRef<HTMLDivElement, RadioSelectProps>(
       ref,
       disabled,
     });
-    // 通道A屏蔽：组内每个radio都会认领同一字段id（重复id且label误切首个选项），禁用之
+    // 通道A屏蔽：组内每个radio都会绑定同一字段id（重复id且label误切首个选项），禁用之
     const groupLink = useFieldGroupLabelLink();
 
     const classes = clsx(

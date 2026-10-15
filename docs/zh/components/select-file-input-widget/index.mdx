@@ -11,7 +11,7 @@ description: "SelectFileInputWidget 组件的属性说明：文件集走 value/d
 
 ## 基本用法
 
-文件集是**数组**，走 `value` / `defaultValue` / `onChange` 三条通道；非多选时只保留首个文件。信息框中的**清除指示器是唯一的清除入口**（点击或按 Enter 清空）。
+文件集是**数组**，走 `value` / `defaultValue` / `onChange` 通道；非多选时只保留首个文件。信息框中的**清除指示器是唯一的清除入口**（点击或按 Enter 清空）。
 
 ```tsx preview
 import { useState } from "react";
@@ -55,7 +55,7 @@ export default App;
 
 ## 拖放区形态
 
-`showDropTarget` 把整个组件变成拖放区：空态时整块可点击开选择器，拖入文件时按能否接收给出反馈，落放即选中。单选且选中图片文件时展示**缩略图**——`thumbnailSizeLimit`（MB，缺省 20）以内才加载，超限或解码失败时回退为附件图标。
+`showDropTarget` 把整个组件变成拖放区：空态时整块可点击开选择器，拖入文件时按能否接收给出反馈，放下即选中。单选且选中图片文件时展示**缩略图**——`thumbnailSizeLimit`（MB，缺省 20）以内才加载，超限或解码失败时回退为附件图标。
 
 拖放能力依赖浏览器的 `DataTransfer` 构造器（Safari 14.1+），不支持时拖放自动关闭、选择按钮照常可用；`droppable={false}` 可显式关闭拖放。
 
@@ -144,15 +144,15 @@ export default App;
 
 ## 焦点与键盘
 
-- `Tab` 停靠点是**选择按钮**，信息框不进 Tab 序；清除指示器键盘可达（聚焦后按 Enter 清空）。
+- 按 `Tab` 时焦点进入**选择按钮**，信息框不进入 Tab 顺序；清除指示器键盘可达（聚焦后按 Enter 清空）。
 - 信息框是只读的 `type="search"` 输入框，手改文件名不会改变文件集——清空一律走清除指示器。
-- `required`、`name` 落在内部文件 `<input>` 上，随 [FormLayout](../form-layout/index.mdx) 原生提交。
+- `required`、`name` 写在内部文件 `<input>` 上，随 [FormLayout](../form-layout/index.mdx) 原生提交。
 
 ## API
 
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `value` | 当前文件集（受控，传入即受控模式；空数组即未选择），非多选时只保留首个 | `File[]` | — |
+| `value` | 当前文件集（受控，传入后即进入受控模式；空数组表示未选择），非多选时只保留首个 | `File[]` | — |
 | `defaultValue` | 非受控初始文件集 | `File[]` | `[]` |
 | `onChange` | 文件集变化回调；文件集与原值等价（同名同大小同类型同修改时间）时不触发 | `(files: File[]) => void` | — |
 | `accept` | 接受的文件类型（MIME 或 `image/*` 形态），写入 `accept` 属性并过滤选择结果与拖放 | `string[]` | — |
@@ -163,16 +163,16 @@ export default App;
 | `thumbnailSizeLimit` | 缩略图大小上限（MB，超过则不加载） | `number` | `20` |
 | `placeholder` | 信息框占位文案（缺省取内建消息） | `string` | — |
 | `icon` | 信息框图标（缺省无图标） | `string` | — |
-| `required` | 必填（原生 `required`，落在文件 `<input>` 上） | `boolean` | `false` |
-| `name` | 文件字段名（落在文件 `<input>` 上，随表单提交） | `string` | — |
+| `required` | 必填（原生 `required`，写在文件 `<input>` 上） | `boolean` | `false` |
+| `name` | 文件字段名（写在文件 `<input>` 上，随表单提交） | `string` | — |
 | `buttonLabel` | 选择按钮文案（缺省按 `multiple` 取内建消息） | `ReactNode` | — |
 | `buttonProps` | 选择按钮属性覆盖（`disabled` / `onClick` 由组件接管） | `Omit<ButtonProps, "children" \| "disabled" \| "onClick" \| "anchorContent" \| "anchorRef">` | — |
 | `inputRef` | 内部文件 `<input>` 的引用 | `Ref<HTMLInputElement>` | — |
-| `accessKey` | 快捷键（落在文件 `<input>` 上） | `string` | — |
+| `accessKey` | 快捷键（写在文件 `<input>` 上） | `string` | — |
 | `disabled` | 是否禁用（按钮、信息框、拖放一并停用） | `boolean` | `false` |
 | `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
 
-`title` 落在文件 `<input>` 上，`tabIndex` 落在选择按钮上；组件 `ref` 指向根元素（`buttonOnly` 形态下根元素即按钮）。
+`title` 写在文件 `<input>` 上，`tabIndex` 写在选择按钮上；组件 `ref` 指向根元素（`buttonOnly` 形态下根元素即按钮）。
 
 ## 另见
 

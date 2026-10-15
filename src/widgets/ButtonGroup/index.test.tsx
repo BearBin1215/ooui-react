@@ -5,7 +5,7 @@ import { Button } from "../Button";
 import { ButtonGroup } from ".";
 
 /**
- * ButtonGroup（对齐原版OO.ui.ButtonGroupWidget）的浏览器渲染契约：
+ * ButtonGroup（对齐原版OO.ui.ButtonGroupWidget）的浏览器渲染约定：
  * 根类链、组级disabled经Context下发到组内按钮（含ToggleButton等组合形态——
  * 这里以自身disabled的按钮验证取或语义）、组禁用时点击不触发onClick。
  */

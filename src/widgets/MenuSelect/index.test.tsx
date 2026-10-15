@@ -27,9 +27,9 @@ function Anchor(props: Omit<Parameters<typeof MenuSelect>[0], "options">) {
 const getMenu = () => document.querySelector<HTMLElement>(".oo-ui-menuSelectWidget")!;
 
 /**
- * MenuSelect（对齐原版OO.ui.MenuSelectWidget）的浏览器渲染契约：
+ * MenuSelect（对齐原版OO.ui.MenuSelectWidget）的浏览器渲染约定：
  * 菜单根输出有效文本方向（Provider.dir覆盖锚点继承方向），无可见项时整个面板隐藏。
- * 其余交互契约在其调用方（Dropdown/MenuTagMultiselect）的用例内覆盖，此处不重复。
+ * 其余交互约定在其调用方（Dropdown/MenuTagMultiselect）的用例内覆盖，此处不重复。
  */
 it("无可见项：菜单根输出oo-ui-menuSelectWidget-invisible（对齐原版updateItemVisibility的anyVisible）", async () => {
   const screen = await render(<MenuSelect open options={[]} />);

@@ -196,7 +196,7 @@ function ReactVariants() {
         <NumberInput name="number-name" />
       </div>
       <div>
-        {/* inputProps/inputRef为React侧逃生舱：自定义属性落到input、ref用于聚焦 */}
+        {/* inputProps/inputRef为React侧逃生舱：自定义属性写在input、ref用于聚焦 */}
         inputProps+inputRef（自定义属性落input、按钮编程聚焦）
         <NumberInput
           inputProps={{ id: "number-custom-input", spellCheck: false }}

@@ -43,9 +43,9 @@ export default App;
 ## 层级与分组
 
 - `level` 取 0–2（超出钳制），主题仅提供三级缩进。
-- 不带 `value` 的选项渲染为分组标题，同[选择与选项](../../guide/options.mdx)约定。
+- 不带 `value` 的选项渲染为分组标题，与[选择与选项](../../guide/options.mdx)一致。
 - 带图标槽位的选项支持 `icon` 与 `flags`（给图标着色，见[选择与选项 · 图标与标志](../../guide/options.mdx#图标与标志)）。
-- 键盘：聚焦整组后 ↑↓←→ 移动高亮、Enter 选定；Home/End/PageUp/PageDown 经 `handleNavigationKeys` 打开，`listWrapsAround` 控制是否环绕——与 [Select](../select/index.mdx) 完全一致。
+- 键盘：聚焦整组后 ↑↓←→ 移动高亮、Enter 选定；Home/End/PageUp/PageDown 由 `handleNavigationKeys` 启用，`listWrapsAround` 控制是否环绕——与 [Select](../select/index.mdx) 完全一致。
 
 ```tsx preview
 import { useState } from "react";
@@ -84,7 +84,7 @@ export default App;
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | `options` | 大纲选项集（**必填**），可选项额外支持 `level`（0–2 缩进层级）与 `icon` / `flags` | `OutlineSelectOptionProps[]` | — |
-| `tabIndex` | Tab 序，落在整组（大纲列表可聚焦） | `number \| null` | `0` |
+| `tabIndex` | Tab 序，作用在整组（大纲列表可聚焦） | `number \| null` | `0` |
 
 `outline` 由组件固定开启，不可覆盖。
 

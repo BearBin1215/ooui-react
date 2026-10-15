@@ -11,7 +11,7 @@ An index layout: a [tab select](../tab-select/index.mdx) on top and a stack of [
 
 ## Basic usage
 
-An `options` item is `{ value, label, children }` plus the [TabPanelLayout](../tab-panel-layout/index.mdx) panel fields (with `disabled` to disable a tab); the active tab rides the `value` / `defaultValue` / `onChange` channels. Tabs and panels are wired with `aria-controls` / `aria-labelledby` automatically.
+An `options` item is `{ value, label, children }` plus the [TabPanelLayout](../tab-panel-layout/index.mdx) panel fields (with `disabled` to disable a tab); the active tab is controlled through `value` / `defaultValue` / `onChange`. Tabs and panels are wired with `aria-controls` / `aria-labelledby` automatically.
 
 ```tsx preview
 import { useState } from "react";

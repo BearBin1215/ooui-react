@@ -31,7 +31,7 @@ import { MenuSelect } from "../MenuSelect";
 export type DropdownOptionProps = SelectOptionProps;
 
 export interface DropdownProps
-  // 显示文本取自label或选中项，children无渲染落点（handle与菜单为固定结构），故屏蔽
+  // 显示文本取自label或选中项，children没有渲染位置（handle与菜单为固定结构），故屏蔽
   extends
     Omit<WidgetProps<HTMLDivElement>, "children">,
     AccessKeyedElement,
@@ -87,7 +87,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       options,
       value,
       defaultValue,
-      // tabIndex落在handle上（对齐原版DropdownWidget的$tabIndexed=$handle，根元素不可聚焦）
+      // tabIndex写在handle上（对齐原版DropdownWidget的$tabIndexed=$handle，根元素不可聚焦）
       tabIndex,
       "aria-labelledby": ariaLabelledBy,
       ...rest
@@ -104,7 +104,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     );
     // 菜单面板经MenuSelect portal出控件子树，点击外部关闭时需连同菜单一起排除
     const menuRef = useRef<HTMLDivElement>(null);
-    // handle元素引用：既是标签点击的聚焦落点，也是菜单的焦点归属元素（下方MenuSelect的
+    // handle元素引用：既是标签点击的聚焦目标，也是菜单的焦点归属元素（下方MenuSelect的
     // focusOwnerRef）——屏幕阅读器读的是持有DOM焦点的元素，菜单自身不作Tab停靠点
     const handleRef = useRef<HTMLSpanElement>(null);
     // FieldLayout标签联动（通道B）：点击标签聚焦handle（对齐原版TabIndexedElement.simulateLabelClick
@@ -240,7 +240,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
           aria-disabled={disabled || undefined}
           // 取原版的字面量`'true'`而非语义更precise的`'listbox'`：原版`DropdownWidget`构造期
           // 即写`'aria-haspopup': 'true'`（oojs-ui-core.js:9118），读屏播报与主题行为均以
-          // 该值为靶；本工程不另行改良（`ButtonMenuSelectWidget`同此口径）
+          // 该值为准；本工程不另行改良（`ButtonMenuSelectWidget`同此规则）
           aria-haspopup="true"
           className="oo-ui-dropdownWidget-handle"
           role="combobox"
@@ -249,7 +249,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
           // 展开时声明所拥有的菜单（收起即移除，对齐原版MenuSelectWidget.onToggle
           // 对$focusOwner的attr/removeAttr）
           aria-owns={open ? menuId : undefined}
-          // aria-labelledby落在handle：原版$tabIndexed=$handle且setLabelledBy覆写写$handle，
+          // aria-labelledby写在handle：原版$tabIndexed=$handle且setLabelledBy覆写写$handle，
           // 并入handle内label元素id（构造期setLabelId分配）使名称含当前显示文本
           aria-labelledby={mergeAriaLabelledBy(fieldLabelId, ownLabelId, ariaLabelledBy)}
           onClick={handleClickLabel}
@@ -268,7 +268,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
           ref={menuRef}
           id={menuId}
           container={elementRef}
-          // 高亮项的aria-activedescendant落在handle上（对齐原版setFocusOwner(widget.$tabIndexed)）；
+          // 高亮项的aria-activedescendant写在handle上（对齐原版setFocusOwner(widget.$tabIndexed)）；
           // screenReaderMode取focused：聚焦期即菜单收起时也保持该指向（原版该期highlightItem
           // 照常写aria-activedescendant，并直接改选而不展开菜单）
           focusOwnerRef={handleRef}

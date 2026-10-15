@@ -4,7 +4,7 @@ import { getRoot } from "../../testing";
 import { HorizontalLayout } from ".";
 
 /**
- * HorizontalLayout（对齐原版OO.ui.HorizontalLayout）的浏览器渲染契约：
+ * HorizontalLayout（对齐原版OO.ui.HorizontalLayout）的浏览器渲染结果：
  * 仅叠加oo-ui-horizontalLayout类（排布交主题CSS），hidden等仍由Layout承担。
  */
 it("结构：layout + horizontalLayout类，子项直接平铺", async () => {

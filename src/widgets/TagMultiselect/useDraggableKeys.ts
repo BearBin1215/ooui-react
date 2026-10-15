@@ -6,10 +6,10 @@ export type DragPhase = "clone" | "placeholder";
 
 /**
  * 有序key列表的拖拽重排状态机（对齐原版`mixin.DraggableElement`/`mixin.DraggableGroupElement`的预览换位语义）。
- * 与具体数据类型无关：只吃「当前顺序的key序列」与「哪些key不可动」的判定，吐预览顺序与事件回调，
+ * 与具体数据类型无关：只接受「当前顺序的key序列」与「哪些key不可动」的判定，返回预览顺序与事件回调，
  * 由调用方把预览顺序映射成数据渲染、并在拖拽结束时提交新顺序。
  *
- * 两处与原版不同的实现方式（行为一致）：
+ * 这两处与原版不同的实现方式（行为一致）：
  * - 预览换位走state由React渲染体现，不像原版那样直接搬DOM节点（手改的DOM会被React下次渲染抹掉）；
  * - 拖拽态另存ref同步读取：`dragover`/`drop`可能在同一任务内紧随`dragstart`触发（React尚未回流），
  *   处理器读渲染期闭包会拿到旧值而使整段拖拽静默失效。
@@ -25,7 +25,7 @@ export function useDraggableKeys({
   enabled: boolean;
   /**
    * 该key是否为「屏障项」：屏障项自身不可移动，且非屏障项不得被拖到屏障项之前
-   * （TagMultiselect的固定标签即此；不传则任意位置可落）
+   * （TagMultiselect的固定标签即此；不传则任意位置可放置）
    */
   isBarrier?: (key: string) => boolean;
 }): {
@@ -112,7 +112,7 @@ export function useDraggableKeys({
     if (!dragging || !currentKeys) {
       return;
     }
-    // 恒preventDefault：允许drop并阻止默认行为（原版onDragOver同款）
+    // 始终调用preventDefault：允许drop并阻止默认行为（原版onDragOver同款）
     event.preventDefault();
     const itemEl = (event.target as HTMLElement | null)?.closest<HTMLElement>(
       ".oo-ui-draggableElement",

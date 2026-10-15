@@ -1,13 +1,13 @@
 ---
 title: Select
-description: "Props for the Select component: the listbox that powers dropdowns and menus, a selectable option set, the onChange/onChoose division of labor, the clearOnChoose command-menu form, and keyboard navigation switches."
+description: "Props for the Select component: the listbox that powers dropdowns and menus, a selectable option set, the different roles of onChange and onChoose, the clearOnChoose command-menu form, and keyboard navigation switches."
 ---
 
 # Select
 
 > [Source](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Select) | [Original component](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.SelectWidget.html "OO.ui.SelectWidget")
 
-A selection list: a clickable set of options — the inner list of floating components like [Dropdown](../dropdown/index.mdx), and usable on its own. The option data contract is in [Selection and options](../../guide/options.mdx).
+A selection list: a clickable set of options — the inner list of floating components like [Dropdown](../dropdown/index.mdx), and usable on its own. The option data format is described in [Selection and options](../../guide/options.mdx).
 
 :::note How to interact with it standalone
 Matching the original `SelectWidget`, this component's root is **not focusable by default** (it is not in the Tab order), so it is best suited to mouse selection. For keyboard-reachable single or multiple selection, prefer components that handle focus for you — [Dropdown](../dropdown/index.mdx), [RadioSelect](../radio-select/index.mdx), `ButtonSelect` — all of which use `Select` as their inner list. As a menu's inner layer, keyboard navigation is handled by the outer trigger for you, so you don't have to manage it. {/* deviations: dev-select-tabindex */}
@@ -123,8 +123,8 @@ As a menu's inner layer, keyboard navigation is driven by the outer component. F
 
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
-| `options` | The option set; see [Selection and options](../../guide/options.mdx) for the contract | `SelectOptionProps[]` | — |
-| `value` | Current selected value (controlled; passing it enables control) | `string \| number` | — |
+| `options` | The option set; see [Selection and options](../../guide/options.mdx) for the convention | `SelectOptionProps[]` | — |
+| `value` | Current selected value (controlled; passing it enables controlled mode) | `string \| number` | — |
 | `defaultValue` | Initial selected value for uncontrolled use | `string \| number` | — |
 | `onChange` | Selected-value change callback (value-first, fires only on change) | `ChangeHandler<string \| number>` | — |
 | `onChoose` | Choose callback (fires on every choice, incl. repeats) | `ChangeHandler<string \| number>` | — |

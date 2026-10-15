@@ -44,7 +44,7 @@ const pressEscape = (target: Element) => {
 };
 
 /**
- * dismiss.ts的useDismissablePopover：下列用例逐条覆盖其可观察契约
+ * dismiss.ts的useDismissablePopover：下列用例逐条覆盖其可观察行为
  * （挂监听条件、mousedown/click去重、ignore与滚动条、Escape捕获阶段吞键）
  */
 it("enabled=false时不挂监听：外点与Escape都不请求关闭", async () => {

@@ -1,6 +1,6 @@
 ---
 title: Dialog 弹窗
-description: "弹窗族总览：声明式 MessageDialog 与 Dialog 基类，受控 open 通道、尺寸、动作区与背景隔离等行为；命令式 confirm / alert / prompt 另见专页。"
+description: "弹窗族总览：声明式 MessageDialog 与 Dialog 基类，受控的 open、尺寸、动作区与背景隔离等行为；命令式 confirm / alert / prompt 另见专页。"
 ---
 
 # Dialog 弹窗
@@ -47,7 +47,7 @@ export default App;
 
 `MessageDialog` 就绪后自动聚焦“确定”按钮；按 Ctrl / Cmd + Enter 等效点击“确定”。
 
-`cancelLabel={null}` 隐藏取消按钮后即得单按钮形态——自制一个受控 `alert`（ESC 记得接线 `onEscape`）：
+`cancelLabel={null}` 隐藏取消按钮后即得单按钮形态——自制一个受控 `alert`（ESC 记得接上 `onEscape`）：
 
 ```tsx preview
 import { useState } from "react";
@@ -76,13 +76,13 @@ function App() {
 export default App;
 ```
 
-**按 ESC 触发的是 `onEscape` 而非 `onCancel`**（`escapable` 默认开启）：只接线 `onOk` / `onCancel` 时按 ESC 不会关闭弹窗，需自行在 `onEscape` 里接线（命令式 `confirm` 内部就是把 `onEscape` 桥接为「取消」）。
+**按 ESC 只触发 `onEscape`**（`escapable` 默认开启）：只接上 `onOk` / `onCancel` 时按 ESC 不会关闭弹窗，需自行在 `onEscape` 里处理（命令式 `confirm` 内部就是把 `onEscape` 当作「取消」处理）。
 
-需要三个及以上动作（如「确定 / 取消 / 稍后提醒」）时传 `foot` 整体替换默认动作区：动作布局与关闭接线全部自理；此时不再自动聚焦“确定”按钮，可在 `onReady` 里自行聚焦。
+需要三个及以上动作（如「确定 / 取消 / 稍后提醒」）时传 `foot` 整体替换默认动作区：动作布局与关闭逻辑全部自理；此时不再自动聚焦“确定”按钮，可在 `onReady` 里自行聚焦。
 
 ## Dialog 基类
 
-需要完全自定义内容时用 `Dialog`：`children` 是正文区、`foot` 是底部动作区（`head` 头部主要供带布局类的子类使用，裸基类的正文从顶部铺起、不会自动为 `head` 让位）。它不预设任何按钮，关闭时机与回调都由你接线；有底部动作时用 `bodyFitFoot` 让正文为 `foot` 让出高度。
+需要完全自定义内容时用 `Dialog`：`children` 是正文区、`foot` 是底部动作区（`head` 头部主要供带布局类的子类使用，裸基类的正文从顶部开始排布，不会自动为 `head` 让位）。它不预设任何按钮，关闭时机与回调都由你负责；有底部动作时用 `bodyFitFoot` 让正文为 `foot` 让出高度。
 
 :::warning 与原版的差异
 裸 `Dialog` 没有内置标题槽位：自行渲染标题后把它以 `aria-labelledby` 关联到弹窗，漏传即得到无名 `role="dialog"`（原版基类会自动建立该关联）。{/* deviations: dev-dialog-aria-labelledby */}
@@ -129,13 +129,13 @@ export default App;
 
 ## 尺寸
 
-`size` 取 `small` / `medium` / `large` / `larger` / `full`（`Dialog` 缺省 `medium`，`MessageDialog` 缺省 `small`）。非 `full` 时弹窗按内容撑高、垂直居中；当设定宽度容不进当前视口时自动满屏。`full` 恒为满屏。
+`size` 取 `small` / `medium` / `large` / `larger` / `full`（`Dialog` 缺省 `medium`，`MessageDialog` 缺省 `small`）。非 `full` 时弹窗按内容撑高、垂直居中；当设定宽度容不进当前视口时自动满屏。`full` 始终是满屏。
 
 ## 多窗与背景隔离
 
-同时打开多个弹窗**没有开窗队列**：每个弹窗自带独立的管理器容器，叠放层次按 DOM 顺序（后开的在上），关谁由各自的 `open` 状态决定——流程弹窗之上再叠一个 confirm 是合法的。
+同时打开多个弹窗**不需要排队**：每个弹窗自带独立的管理器容器，叠放层次按 DOM 顺序（后开的在上），关谁由各自的 `open` 状态决定——流程弹窗之上再叠一个 confirm 是合法的。
 
-弹窗打开期间，最上层弹窗路径以外的兄弟节点会被加上 `aria-hidden="true"` 与 `inert`，屏幕阅读器与指针 / 焦点都被挡在弹窗内，关闭后撤销。**不要在自己渲染的背景节点上声明 React 的 `inert` prop**（React 19 起支持该 prop）：隔离撤销时按 DOM 属性直接移除，会与 React 的 DOM 失同步。弹窗内打开的浮层（`Popup`、工具栏面板）会 portal 进所属弹窗的容器、与弹窗同层，层级因此天然正确。{/* deviations: dev-isolation-portal dev-isolation-registry */}
+弹窗打开期间，最上层弹窗路径以外的兄弟节点会被加上 `aria-hidden="true"` 与 `inert`，屏幕阅读器与指针 / 焦点都被挡在弹窗内，关闭后撤销。**不要在自己渲染的背景节点上声明 React 的 `inert` prop**（React 19 起支持该 prop）：隔离撤销时按 DOM 属性直接移除，会与 React 的 DOM 失同步。弹窗内打开的浮层（`Popup`、工具栏面板）会 portal 进所属弹窗的容器、与弹窗同层，层级因此保持正确。{/* deviations: dev-isolation-portal dev-isolation-registry */}
 
 ## API
 

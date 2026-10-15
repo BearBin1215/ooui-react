@@ -50,7 +50,7 @@ export default App;
 
 ## Disabled
 
-Unlike the original: the original's "disable" only toggles style classes and the hidden field is **still** submitted with the form; this implementation lands `disabled` on the native attribute, so a disabled field drops out of submission (as in the demo above). Pass `disabled` only when there is a submission scenario to block.{/* deviations: dev-hidden-input-disabled */}
+Unlike the original: the original's "disable" only toggles style classes and the hidden field is **still** submitted with the form; this implementation writes `disabled` to the native attribute, so a disabled field drops out of submission (as in the demo above). Pass `disabled` only when there is a submission scenario to block.{/* deviations: dev-hidden-input-disabled */}
 
 ## API
 
@@ -61,9 +61,9 @@ Unlike the original: the original's "disable" only toggles style classes and the
 | `disabled` | Whether disabled (drops out of form submission) | `boolean` | `false` |
 | `...rest` | Native `<input>` props (`id`, `className`, `data-*`, etc.) passed straight to the root | `InputHTMLAttributes<HTMLInputElement>` | — |
 
-This component has no wrapper element: the component `ref` and props all land on the `<input type="hidden">` itself.
+This component has no wrapper element: the component `ref` and props all go on the `<input type="hidden">` itself.
 
 ## See also
 
 - The form container: [FormLayout](../form-layout/index.mdx)
-- The value-channel contract: [Controlled and uncontrolled](../../guide/controlled.mdx)
+- The value-channel convention: [Controlled and uncontrolled](../../guide/controlled.mdx)

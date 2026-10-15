@@ -11,7 +11,7 @@ const OPTIONS = [
 ] as const;
 
 /**
- * TagMultiselect（对齐原版OO.ui.TagMultiselectWidget）的浏览器渲染契约：
+ * TagMultiselect（对齐原版OO.ui.TagMultiselectWidget）的浏览器渲染约定：
  * Enter提交输入文本为标签、Backspace移除末尾标签并回填、受控值渲染、
  * 白名单外的invalid标志、onChange派发、输入文本端点按←→转向标签导航（方向按元素有效
  * 方向翻转）、disabled下发（根/输入框/标签项）与禁用下的按键与移除守卫。
@@ -85,7 +85,7 @@ it("受控value渲染标签；白名单外的值以invalid标志呈现", async (
 });
 
 /**
- * MenuTagMultiselect（对齐原版OO.ui.MenuTagMultiselectWidget）的菜单交互契约：
+ * MenuTagMultiselect（对齐原版OO.ui.MenuTagMultiselectWidget）的菜单交互约定：
  * 输入过滤、Enter对高亮项按已选与否切换移除或提交新增、失焦提交输入文本（忽略高亮项）。
  */
 it("菜单模式：输入即过滤候选菜单，Enter提交非标签的高亮项", async () => {
@@ -142,7 +142,7 @@ it("菜单模式：高亮项已是标签时Enter移除该标签（点击标签�
   expect(inputEl.value).toBe("");
 });
 
-it("菜单模式：键入已有标签的值后Enter移除该标签（过滤高亮落在已选标签项）", async () => {
+it("菜单模式：键入已有标签的值后Enter移除该标签（过滤高亮移到已选标签项）", async () => {
   const onChange = vi.fn<(value: (string | number)[]) => void>();
   const screen = await render(
     <MenuTagMultiselect
@@ -299,7 +299,7 @@ it("disabled：Backspace不移除末尾标签（输入框按键整体早退）",
   expect(getRoot(screen).querySelectorAll(".oo-ui-tagItemWidget")).toHaveLength(2);
 });
 
-it("菜单模式：失焦时提交输入文本而非高亮项（先收菜单清高亮再提交）", async () => {
+it("菜单模式：失焦时提交输入文本而非高亮项（先收起菜单清高亮再提交）", async () => {
   const onChange = vi.fn<(value: (string | number)[]) => void>();
   const screen = await render(
     <MenuTagMultiselect options={[...OPTIONS]} onChange={onChange} allowArbitrary />,
@@ -330,7 +330,7 @@ it("菜单模式：带残留文本重开菜单时打开帧显示全量（原版p
   );
   await tick();
   expect(inputEl.value).toBe("香蕉");
-  // 聚焦重开菜单：打开帧恒显示全量，不按残留文本筛空候选（对齐原版toggle(true)先取
+  // 聚焦重开菜单：打开帧始终显示全量，不按残留文本筛空候选（对齐原版toggle(true)先取
   // previouslySelectedValue再showAll）
   inputEl.focus();
   await tick();

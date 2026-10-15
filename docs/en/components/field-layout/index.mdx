@@ -1,6 +1,6 @@
 ---
 title: FieldLayout
-description: "Props for the FieldLayout component: alignment for pairing a label with a field control, the label/control click-and-focus linkage, where title lands, and the styling-only meaning of disabled."
+description: "Props for the FieldLayout component: alignment for pairing a label with a field control, the label/control click-and-focus linkage, where title goes, and the styling-only meaning of disabled."
 ---
 
 # FieldLayout
@@ -62,7 +62,7 @@ export default App;
 
 - `label` is the label content (`ReactNode`).
 - `invisibleLabel` hides the label visually but keeps the accessible name; then `title` falls back to the label text when not given explicitly.
-- `title` lands on the **label element** (matching the original `$titled = $label`), not on the layout root.
+- `title` goes on the **label element** (matching the original `$titled = $label`), not on the layout root.
 - When the field control registers its own `accessKey`, the label tooltip gets the key appended (the chord text can be localized via [OOUIProvider](../../guide/configuration.mdx)).
 
 ```tsx preview
@@ -112,12 +112,12 @@ export default App;
 | `label` | Label content | `ReactNode` | — |
 | `invisibleLabel` | Label visually hidden (kept as accessible name) | `boolean` | `false` |
 | `align` | Label alignment | `'left' \| 'right' \| 'top' \| 'inline'` | `'left'` |
-| `title` | Tooltip text for the label (lands on the label element) | `string` | — |
+| `title` | Tooltip text for the label (goes on the label element) | `string` | — |
 | `disabled` | Adds a disabled style class to the layout (not passed to the control) | `boolean` | `false` |
 | `...rest` | Native `div` props (`className`, `id`, `data-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
 
 ## See also
 
 - The form container that wraps several `FieldLayout`s: [FormLayout](../form-layout/index.mdx)
-- Props and landing spots of the controls: [TextInput](../text-input/index.mdx), [CheckboxInput](../checkbox-input/index.mdx)
+- Props and placement of the controls: [TextInput](../text-input/index.mdx), [CheckboxInput](../checkbox-input/index.mdx)
 - The `disabled`, `title` and `accessKey` semantics shared by all components: [Common props](../../guide/basics.mdx)

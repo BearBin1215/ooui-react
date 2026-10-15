@@ -8,7 +8,7 @@
  */
 
 /**
- * 本模块写入body/html的类名，即主题CSS的选择器契约（勿在别处另抄字面量；
+ * 本模块写入body/html的类名，即主题CSS选择器规则（勿在别处另抄字面量；
  * `theme-contract.node.test.ts`直接消费本表核对上游未改名）
  */
 export const SCROLL_LOCK_CLASSES = {
@@ -16,7 +16,7 @@ export const SCROLL_LOCK_CLASSES = {
   active: "oo-ui-windowManager-modal-active",
   /** 任一弹窗为实际满屏态（比原版getSize()的视口判定更宽松地覆盖叠加场景） */
   activeFullscreen: "oo-ui-windowManager-modal-active-fullscreen",
-  /** iOS触摸滚动兜底（主题：`height:100%;overflow:hidden`，同时落在body与html两处） */
+  /** iOS触摸滚动兜底（主题：`height:100%;overflow:hidden`，同时写在body与html两处） */
   iosModalReady: "oo-ui-windowManager-ios-modal-ready",
 } as const;
 

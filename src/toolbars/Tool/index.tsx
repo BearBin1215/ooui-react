@@ -1,6 +1,6 @@
 /**
  * 工具栏域的共享模块（对齐原版OO.ui.Tool）：承载ToolView/ToolPopupView的渲染与
- * ToolProps/ToolPopupProps契约、ToolGroup按压流（useToolGroupPressed）等跨工具组逻辑。
+ * ToolProps/ToolPopupProps约定、ToolGroup按压流（useToolGroupPressed）等跨工具组逻辑。
  * 与其他组件目录不同，本目录的index.tsx不是单一可独立渲染的组件——Tool在原版即为
  * 「数据+渲染」的抽象基类，由各ToolGroup按声明式配置驱动
  */
@@ -104,7 +104,7 @@ export interface ToolProps {
    *
    * 工具可见文本（渲染进 `oo-ui-tool-title` 槽位）。Bar 组经 `displayBothIconAndLabel`
    * 显示本文本（有图标时为图标 + 文本，无图标时为纯文本按钮；无图标且未开本项会落进
-   * 原版带图标槽的原始形态、标签沉底）；List / Menu 组恒显示。
+   * 原版带图标槽的原始形态、标签沉底）；List / Menu 组始终显示。
    */
   label?: ReactNode;
 
@@ -112,7 +112,7 @@ export interface ToolProps {
    * Tooltip (always a tooltip, never visible text). Bar groups append it to the
    * link's native `title`; List / Menu groups do not.
    *
-   * 工具 tooltip（恒为 tooltip、不作可见文本）。Bar 组把它拼进链接的 title
+   * 工具 tooltip（始终为 tooltip、不作可见文本）。Bar 组把它拼进链接的 title
    * 属性；List / Menu 组不拼。
    */
   title?: string;
@@ -195,7 +195,7 @@ export interface ToolProps {
    * `group` wins.
    *
    * 内嵌工具组（对齐原版 `ToolGroupTool`）：工具位渲染为该工具组而非工具链接——
-   * 把手与面板由内嵌组提供，选中与激活态也由其处理，故 `title` / `icon` /
+   * handle与面板由内嵌组提供，选中与激活态也由其处理，故 `title` / `icon` /
    * `active` / `onSelect` 对本工具不生效。须传入带 `tools` 的工具组元素；与
    * `popup` 同时给出时本项优先。
    */
@@ -270,7 +270,7 @@ function ToolPopupView({
     <Popup
       {...popupProps}
       // 窄栏载体：原版浮层挂在$popups（带oo-ui-toolbar-narrow）内，本工程portal出工具栏子树后
-      // 失去该祖先，故把窄栏类落在浮层根上，使浮层内容里的窄栏后代选择器同样命中
+      // 失去该祖先，故把窄栏类写在浮层根上，使浮层内容里的窄栏后代选择器同样命中
       className={clsx(
         "oo-ui-popupTool-popup",
         narrow && "oo-ui-toolbar-narrow",
@@ -293,9 +293,9 @@ function ToolPopupView({
 /**
  * 应用窄栏配置（对齐原版`Tool.onToolbarResize`/`PopupToolGroup.onToolbarResize`）：窄栏时
  * 以`narrowConfig`里**已定义**的字段覆盖`base`的同名字段，退出窄栏即还原。
- * 工具（displayBothIconAndLabel/label/icon）与弹出工具组的把手（invisibleLabel/label/icon）
+ * 工具（displayBothIconAndLabel/label/icon）与弹出工具组的handle（invisibleLabel/label/icon）
  * 共用本函数，两者的窄栏字段集不同故经泛型由调用方给出字段基对象
- * @param base 宽栏态的基础对象（工具自身的props，或把手字段的局部对象）
+ * @param base 宽栏态的基础对象（工具自身的props，或handle字段的局部对象）
  * @param narrowConfig 窄栏配置，键为base字段的子集
  * @param narrow 是否处于窄栏
  */
@@ -324,8 +324,8 @@ export function ToolView({
   const narrow = useToolbarNarrow();
   // 窄栏配置：窄栏时替换icon/label/displayBothIconAndLabel（对齐原版Tool.onToolbarResize）
   const effective = applyNarrowConfig(tool, tool.narrowConfig, narrow);
-  // tooltip按原版Tool.updateTitle拼接：title与快捷键各由对应开关放行、空串不入列，
-  // 两者都不入时移除title属性（title恒为tooltip源，可见文本走children、不参与此处）
+  // tooltip按原版Tool.updateTitle拼接：title与快捷键各由对应开关放行、空字符串不入列，
+  // 两者都不入时移除title属性（title始终为tooltip源，可见文本走children、不参与此处）
   const tooltipParts = [
     tooltip ? effective.title : undefined,
     accelTooltip ? effective.accelerator : undefined,
@@ -338,7 +338,7 @@ export function ToolView({
   );
   const position = useToolbarPosition();
 
-  // 内嵌工具组（ToolGroupTool）：工具位不渲染链接，把手与面板由内嵌工具组自行提供。
+  // 内嵌工具组（ToolGroupTool）：工具位不渲染链接，handle与面板由内嵌工具组自行提供。
   // 内嵌组的禁用态取"内嵌组自身disabled或组内工具全禁用"与"工具自身+外层组禁用"的或，
   // 对齐原版onToolGroupDisable：内嵌组的disable事件回写到工具位（工具随内嵌组呈现禁用）；
   // 该同步是单向的——工具自身的disabled不下发给内嵌组，需在内嵌组的元素上自行声明
@@ -425,7 +425,7 @@ export function ToolView({
 
 /**
  * 组级按压流，对齐原版ToolGroup.onMouseKeyDown/onDocumentMouseKeyUp：
- * 左键在可用工具上按下进入按压态（oo-ui-tool-active），松开仍落在发起工具上时触发onSelect；
+ * 左键在可用工具上按下进入按压态（oo-ui-tool-active），松开时指针仍在发起工具上就触发onSelect；
  * 工具链接的keydown/keyup（Enter/空格）同流程。按压流的进入/复位/document级监听由
  * usePressedState统一承担，本hook仅补充工具组的按压目标解析与视觉抑制
  */

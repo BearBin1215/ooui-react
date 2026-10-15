@@ -1,13 +1,13 @@
 ---
 title: 受控与非受控
-description: "ooui-react 的值契约：value、open、checked 三条通道，受控判定与回调签名，以及弹窗为受控 only 的约定。"
+description: "ooui-react 的取值约定：value、open、checked 各条受控通道，受控判定与回调签名，以及弹窗仅支持受控的约定。"
 ---
 
 # 受控与非受控
 
 多数组件的“当前值”可以由你持有（受控），也可以交给组件自己维护（非受控）。
 
-## 三条通道
+## 受控通道
 
 | 通道 | 属性 | 用于 |
 | --- | --- | --- |
@@ -44,7 +44,7 @@ function App() {
 export default App;
 ```
 
-不要把 `value` 在值与 `undefined` 之间来回切换——那是模式变更，不受支持。
+不要把 `value` 在值与 `undefined` 之间来回切换——这属于模式变更，不受支持。
 
 ## 回调签名
 
@@ -68,7 +68,7 @@ type ChangeHandler<T, P extends EventTarget = HTMLElement> = (
 | `SearchWidget` | `onQueryChange` / `onChoose` | 查询值 / 选定的结果 |
 | `Message` | `onClose` | `() => void`，点击关闭按钮时触发 |
 
-两处容易混淆的“选定”回调：
+容易混淆的“选定”回调：
 
 - `Select` 系列同时提供 `onChange`（选中值变化，重复选同一项不触发）与 `onChoose`（每次选定都触发，含重复）。`clearOnChoose` 为真时只触发 `onChoose`、不改变选中值，适合做命令菜单。
 - `SearchWidget` 不提供 `onChange`，查询变化走 `onQueryChange`。
@@ -87,7 +87,7 @@ type ChangeHandler<T, P extends EventTarget = HTMLElement> = (
 
 ## 受控值不在备选项内时
 
-你传给组件的 `value`，有时在 `options` 里找不到对应项，比如某个选项被移除了、初始值写错，或选项是异步加载、首帧还没到位。这时组件的表现分两类：
+你传给组件的 `value`，有时在 `options` 里找不到对应项，比如某个选项被移除了、初始值写错，或选项是异步加载、首帧还没到位。这时组件的表现如下：
 
 | 组件 | 找不到对应项时 | 会回写 `onChange` 吗 |
 | --- | --- | --- |

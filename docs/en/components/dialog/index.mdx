@@ -1,6 +1,6 @@
 ---
 title: Dialog
-description: "Overview of the dialog family: the declarative MessageDialog and the Dialog base class, the controlled-only open channel, sizes, action areas and background isolation; imperative confirm / alert / prompt live on their own page."
+description: "Overview of the dialog family: the declarative MessageDialog and the Dialog base class, the controlled-only open prop, sizes, action areas and background isolation; imperative confirm / alert / prompt live on their own page."
 ---
 
 # Dialog
@@ -76,7 +76,7 @@ function App() {
 export default App;
 ```
 
-**ESC fires `onEscape`, not `onCancel`** (`escapable` on by default): with only `onOk` / `onCancel` wired, pressing ESC won't close the dialog — wire the close in `onEscape` yourself (the imperative `confirm` internally bridges `onEscape` to "cancel").
+**ESC fires only `onEscape`** (`escapable` on by default): with only `onOk` / `onCancel` wired, pressing ESC won't close the dialog — wire the close in `onEscape` yourself (the imperative `confirm` internally maps `onEscape` to "cancel").
 
 When you need three or more actions (e.g. "OK / Cancel / Remind me later"), pass `foot` to replace the default action area entirely: you own the action layout and the close wiring; the OK button is then no longer focused automatically — focus it yourself in `onReady`.
 
@@ -133,9 +133,9 @@ export default App;
 
 ## Multiple dialogs and background isolation
 
-Opening several dialogs at once has **no open queue**: each dialog carries its own manager container, stacking follows DOM order (later ones on top), and which one closes is decided by its own `open` state — stacking a confirm above a process dialog is legitimate.
+Opening several dialogs at once **requires no queueing**: each dialog carries its own manager container, stacking follows DOM order (later ones on top), and which one closes is decided by its own `open` state — stacking a confirm above a process dialog is legitimate.
 
-While a dialog is open, sibling nodes off the path to the topmost dialog get `aria-hidden="true"` and `inert`, keeping screen readers and pointer / focus inside the dialog; this is undone on close. **Do not declare React's `inert` prop on background nodes you render yourself** (supported as a prop since React 19): isolation removal strips the DOM attribute directly, which desynchronizes React's DOM. Floating layers opened inside a dialog (`Popup`, toolbar panels) portal into the owning dialog's container at the same level, so stacking is correct by construction. {/* deviations: dev-isolation-portal dev-isolation-registry */}
+While a dialog is open, sibling nodes off the path to the topmost dialog get `aria-hidden="true"` and `inert`, keeping screen readers and pointer / focus inside the dialog; this is undone on close. **Do not declare React's `inert` prop on background nodes you render yourself** (supported as a prop since React 19): isolation removal strips the DOM attribute directly, which desynchronizes React's DOM. Floating layers opened inside a dialog (`Popup`, toolbar panels) portal into the owning dialog's container at the same level, so stacking stays correct. {/* deviations: dev-isolation-portal dev-isolation-registry */}
 
 ## API
 

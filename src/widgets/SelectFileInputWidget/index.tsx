@@ -62,7 +62,7 @@ function resolveDropState(
   filterFiles: (list: ArrayLike<File>) => File[],
 ): "canDrop" | "cantDrop" | null {
   // 本组件的拖放路径已由CAN_SET_FILES门控（DataTransfer构造器，Safari 14.1+），该起点上
-  // items/types恒存在，故直接取用、不回退files（原版的老Safari兜底见DEVIATIONS「舍弃」）
+  // items/types始终存在，故直接取用、不回退files（原版的老Safari兜底见DEVIATIONS「舍弃」）
   const { items, types } = dataTransfer;
   const hasFiles = Array.from(items).some(
     (item: DataTransferItem) => item.kind === "file",
@@ -434,7 +434,7 @@ export const SelectFileInputWidget = forwardRef<
 
     /**
      * 信息框值变化：信息框被清空时同步清空文件集（对齐原版onInfoChange，oojs-ui.js:14629：
-     * 值为''即清文件、非空值不改变文件集）。信息框的input恒禁用、不可键入，用户唯一能
+     * 值为''即清文件、非空值不改变文件集）。信息框的input始终禁用、不可键入，用户唯一能
      * 改动信息框值的入口就是清除指示器，指示器把值置''后经此清空文件集
      */
     const handleInfoChange = (next: string) => {
@@ -472,7 +472,7 @@ export const SelectFileInputWidget = forwardRef<
       setDropState(null);
     };
 
-    /** 落放：按accept过滤后入库（对齐原版onDrop） */
+    /** 放下：按accept过滤后入库（对齐原版onDrop） */
     const handleDrop = (event: ReactDragEvent<HTMLDivElement>) => {
       event.preventDefault();
       event.stopPropagation();
@@ -512,8 +512,8 @@ export const SelectFileInputWidget = forwardRef<
         tabIndex={-1}
         name={name}
         accessKey={accessKey}
-        // 空title抑制浏览器对file input的默认提示（原版static.title=''，经TitledElement落在
-        // $input上，调用方title同落此处）；accessKey有值时附加键位后缀，解析见resolveTitle
+        // 空title抑制浏览器对file input的默认提示（原版static.title=''，经TitledElement写在
+        // $input上，调用方title同样写在此处）；accessKey有值时附加键位后缀，解析见resolveTitle
         title={resolveTitle({ title: title ?? "", accessKey, accessKeyLabel })}
         accept={acceptList ? acceptList.join(", ") : undefined}
         multiple={multiple || undefined}
@@ -528,7 +528,7 @@ export const SelectFileInputWidget = forwardRef<
 
     // 信息框为SearchInput组合（对齐原版构造`new OO.ui.SearchInputWidget(...)`，oojs-ui.js:14254）：
     // 展示文件名，清除指示器是唯一的清除入口——指示器的清除交互（点击/Enter）把信息框值
-    // 置''，再经handleInfoChange清空文件集，与原版的change→onInfoChange链同构
+    // 置''，再经handleInfoChange清空文件集，与原版的change→onInfoChange链结构相同
     // （原版info.connect(this, { change: 'onInfoChange' })，oojs-ui.js:14350）
     const infoField = (
       <SearchInput
@@ -541,7 +541,7 @@ export const SelectFileInputWidget = forwardRef<
         // 清除是唯一的清除入口，指示器须键盘可达（对齐原版info.$indicator.attr('tabindex', 0)，
         // oojs-ui.js:14265）
         indicatorTabIndex={0}
-        // input恒禁用：对齐原版setDisabled里无条件的`info.$input.attr('disabled', true)`
+        // input始终禁用：对齐原版setDisabled里无条件的`info.$input.attr('disabled', true)`
         // （oojs-ui.js:14667，借此让findFocusable取不到它）。经inputProps通道承载、不驱动
         // 根元素的禁用类，根禁用态由disabled prop随组件
         inputProps={{ disabled: true }}
@@ -554,7 +554,7 @@ export const SelectFileInputWidget = forwardRef<
 
     const selectButton = (
       <Button
-        // buttonOnly时根元素即按钮：调用方的DOM属性随之落到按钮上（对齐原版把$element替换为按钮）
+        // buttonOnly时根元素即按钮：调用方的DOM属性随之写入按钮上（对齐原版把$element替换为按钮）
         {...(isButtonOnly ? (rest as Partial<ButtonProps>) : {})}
         {...buttonProps}
         ref={isButtonOnly ? (ref as Ref<HTMLSpanElement>) : undefined}

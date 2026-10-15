@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { pickValidTags, tagMatchText } from "./tagModel";
 
 /**
- * TagMultiselect的纯函数契约：tagMatchText的纯文本轴（过滤键与回填分离）与
+ * TagMultiselect的纯函数约定：tagMatchText的纯文本轴（过滤键与回填分离）与
  * pickValidTags的合法子集过滤（对齐原版getValue返回过滤后子集的形态）
  */
 describe("tagMatchText（标签纯文本轴）", () => {

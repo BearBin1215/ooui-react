@@ -87,7 +87,7 @@ function LayoutHarness({
 }
 
 /**
- * value.ts的useControlledValue：受控/非受控值态与"内部state + 回写通知"管线
+ * value.ts的useControlledValue：受控/非受控值态与"内部state + 回写通知"流程
  * （十余个组件的value通道共用，故在此以hook级用例锁定，不依赖任一宿主组件）。
  * 刻意约定：**事件缺省时以单参调用onChange**，不向只声明value参的回调附加undefined尾参。
  */

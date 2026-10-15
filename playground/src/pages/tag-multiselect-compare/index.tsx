@@ -578,7 +578,7 @@ function TagMultiselectComparePage() {
           可用鼠标展开菜单但暂无键盘通道，属对原版的增强而非缺口，见DEVIATIONS「增强」）、
           allowDuplicates、allowEditTags=false、
           icon/indicator、非受控defaultValue与onInvalidTagsChange派生回调（对应原版
-          getValue()只返回合法子集的只读口径）；labelText为React扩展（原版getMatchText
+          getValue()只返回合法子集的只读规则）；labelText为React扩展（原版getMatchText
           无显式matchText通道，作为富内容选项的纯文本匹配键）。
         </>
       }

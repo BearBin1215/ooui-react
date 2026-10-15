@@ -1,6 +1,6 @@
 ---
 title: Layout 布局基类
-description: "Layout 组件的属性说明：布局基类，输出 oo-ui-layout 根类并统一 hidden 三态（true / 'until-found'）与 aria-hidden 落点。"
+description: "Layout 组件的属性说明：布局基类，输出 oo-ui-layout 根类，并统一 hidden 三态（true / 'until-found'）与 aria-hidden 的写入位置。"
 ---
 
 # Layout 布局基类
@@ -11,7 +11,7 @@ description: "Layout 组件的属性说明：布局基类，输出 oo-ui-layout 
 
 ## 隐藏的三态
 
-`hidden` 有三态：`true` 完全隐藏（`hidden` 属性 + `aria-hidden`）；`'until-found'` 视觉隐藏但对浏览器页内查找（Ctrl+F）可见——查找命中时浏览器自动显示该元素并派发 `beforematch` 事件，可在元素上监听做自定义联动（[IndexLayout](../index-layout/index.mdx) 的 `openMatchedPanels` 即此用法）；不传则不隐藏。
+`hidden` 有三态：`true` 完全隐藏（`hidden` 属性 + `aria-hidden`）；`'until-found'` 视觉隐藏但对浏览器页内查找（Ctrl+F）可见——查找命中时浏览器自动显示该元素并派发 `beforematch` 事件，可在元素上监听做自定义联动（[IndexLayout](../index-layout/index.mdx) 的 `openMatchedPanels` 就是这种用法）；不传则不隐藏。
 
 ```tsx preview
 import { useState } from "react";
@@ -50,7 +50,7 @@ React 18 会把 `'until-found'` 一并写成布尔 `hidden`，组件在提交后
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | `hidden` | 是否隐藏：`true` 完全隐藏；`'until-found'` 视觉隐藏但对页内查找可见 | `boolean \| 'until-found'` | — |
-| `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）直传根元素；需要监听 `beforematch` 时经 ref 挂原生监听（React 18 的类型尚未收录该事件） | `HTMLAttributes<HTMLDivElement>` | — |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）直传根元素；需要监听 `beforematch` 时经 ref 添加原生监听（React 18 的类型尚未收录该事件） | `HTMLAttributes<HTMLDivElement>` | — |
 
 ## 另见
 

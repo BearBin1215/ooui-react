@@ -12,12 +12,12 @@ const TOOLS = [
 ] as const;
 
 /**
- * ListToolGroup（对齐原版OO.ui.ListToolGroup）的浏览器渲染契约：
- * 弹出工具组的把手/面板结构、可折叠工具的收起与More/Fewer切换项、
+ * ListToolGroup（对齐原版OO.ui.ListToolGroup）的浏览器渲染结果：
+ * 弹出工具组的handle/面板结构、可折叠工具的收起与More/Fewer切换项、
  * forceExpand/defaultExpanded的名单推导、禁用与空组的下发、
- * 面板开合的受控通道、窄容器下的铺满容器与窄栏配置的把手替换。
+ * 面板开合的受控通道、窄容器下的铺满容器与窄栏配置的handle替换。
  */
-it("结构：listToolGroup类链与把手，工具进portal面板且收起时带hidden类", async () => {
+it("结构：listToolGroup类链与handle，工具进portal面板且收起时带hidden类", async () => {
   const screen = await render(
     <ListToolGroup label="更多" icon="menu" tools={[TOOLS[0]]} />,
   );
@@ -49,7 +49,7 @@ it("非Bar组工具的快捷键：accel槽位输出文案，但不拼tooltip（�
       tools={[{ name: "a", label: "工具甲", accelerator: "Ctrl+K" }]}
     />,
   );
-  // getTool返回的即工具链接（data-tool-name落在a.oo-ui-tool-link上）
+  // getTool返回的即工具链接（data-tool-name写在a.oo-ui-tool-link上）
   const link = getTool("a")!;
   expect(link).toHaveClass("oo-ui-tool-link");
   expect(link.querySelector(".oo-ui-tool-accel")!.textContent).toBe("Ctrl+K");
@@ -91,7 +91,7 @@ it("defaultExpanded：可折叠工具初始即展开，切换项显示Fewer", as
   expect(getTool("more-fewer")!.textContent).toContain("Fewer");
 });
 
-it("全部工具禁用即组禁用：根与把手输出禁用态，把手退出Tab序", async () => {
+it("全部工具禁用即组禁用：根与handle输出禁用态，handle退出Tab序", async () => {
   const screen = await render(
     <ListToolGroup
       label="更多"
@@ -172,7 +172,7 @@ it("窄容器下铺满容器：前几侧都放不下时面板宽取容器可用�
   }
 });
 
-it("窄栏配置：窄栏时以已定义字段替换把手图标/标签/可见性，退出窄栏还原", async () => {
+it("窄栏配置：窄栏时以已定义字段替换handle图标/标签/可见性，退出窄栏还原", async () => {
   const wide = await render(
     <ListToolGroup label="更多" icon="menu" tools={[TOOLS[0]]} />,
   );

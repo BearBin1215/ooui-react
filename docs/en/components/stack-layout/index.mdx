@@ -11,7 +11,7 @@ A stack layout: renders a set of [pages](../page-layout/index.mdx) from `options
 
 ## Basic usage
 
-The active page rides the `value` / `defaultValue` / `onChange` channels; an option is a [PageLayout](../page-layout/index.mdx) prop set plus `value` (which doubles as the match key and the list key).
+The active page is controlled by `value` / `defaultValue` / `onChange`; an option is a [PageLayout](../page-layout/index.mdx) prop set plus `value` (which doubles as the match key and the list key).
 
 ```tsx preview
 import { useState } from "react";
@@ -41,8 +41,8 @@ function App() {
 export default App;
 ```
 
-:::note Form premise
-In the `expanded` form (on by default) the layout fills its parent via absolute positioning, so the parent must be positioned and sized (the demo wrapper above exists for exactly that); the whole-container scrolling of `continuous` rides on the same premise. The `expanded={false}` static form works only for [MenuLayout](../menu-layout/index.mdx)'s own flow content — this component's pages are absolutely positioned panels with no content height in static mode, so don't use it here.
+:::note Form requirement
+In the `expanded` form (on by default) the layout fills its parent via absolute positioning, so the parent must be positioned and sized (the demo wrapper above exists for exactly that); the whole-container scrolling of `continuous` depends on the same requirement. The `expanded={false}` static form works only for [MenuLayout](../menu-layout/index.mdx)'s own flow content — this component's pages are absolutely positioned panels with no content height in static mode, so don't use it here.
 :::
 
 When the active value is missing or stale (e.g. its page was removed), a page is auto-selected: the next surviving page, or the new last page when the last one was removed; when no value was ever given or the value is not among the options, the first usable page is taken.
@@ -98,4 +98,4 @@ Inherits all [PanelLayout](../panel-layout/index.mdx) props, plus:
 
 - The fields of a single page: [PageLayout](../page-layout/index.mdx)
 - The wrapper with an outline menu: [BookletLayout](../booklet-layout/index.mdx)
-- The value-channel contract: [Controlled and uncontrolled](../../guide/controlled.mdx)
+- The controlled-value convention: [Controlled and uncontrolled](../../guide/controlled.mdx)

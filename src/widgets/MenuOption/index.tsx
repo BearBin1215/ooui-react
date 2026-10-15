@@ -38,7 +38,7 @@ export const MenuOption = memo(
           disabled={disabled}
           className={classes}
           // 原版MenuOptionWidget构造期prepend的勾选图标（apex主题选中时显示并隐藏普通图标；
-          // wikimediaui主题恒display:none），落点为ButtonSlots的leading（在图标之前）
+          // wikimediaui主题始终display:none），写入位置为ButtonSlots的leading（在图标之前）
           leading={<Icon icon="check" className="oo-ui-menuOptionWidget-checkIcon" />}
           // 图标着色：选中/按压态progressive + flags变体（对齐wikimediaui主题的选项分支）
           variantClasses={getOptionIconClasses({ selected, pressed, disabled, flags })}

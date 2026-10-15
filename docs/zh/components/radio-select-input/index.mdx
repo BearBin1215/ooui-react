@@ -1,6 +1,6 @@
 ---
 title: RadioSelectInput 单选组字段
-description: "RadioSelectInput 组件的属性说明：RadioSelect 展示加隐藏 input 承载原生提交，组件始终有选中项（值失效回退首个可选），name 仅落隐藏 input。"
+description: "RadioSelectInput 组件的属性说明：RadioSelect 展示加隐藏 input 承载原生提交，组件始终有选中项（值失效回退首个可选），name 只写在隐藏 input 上。"
 ---
 
 # RadioSelectInput 单选组字段
@@ -86,15 +86,15 @@ export default App;
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | `options` | 选项集，每项含 `value` 与 `children`（选项文本），支持 `disabled` | `RadioSelectInputOptionProps[]` | — |
-| `value` | 当前选中值（受控，传入即受控模式） | `string \| number` | — |
+| `value` | 当前选中值（受控，传入后即进入受控模式） | `string \| number` | — |
 | `defaultValue` | 非受控初始选中值 | `string \| number` | — |
 | `onChange` | 选中值变化回调（第二参数为 radio 原生 change 事件，点击改选时携带；键盘改选与聚焦自动选中对应原版的静默更新，无事件） | `ChangeHandler<string \| number, HTMLInputElement>` | — |
-| `name` | 表单字段名（仅落在隐藏 `input` 上） | `string` | — |
+| `name` | 表单字段名（只写在隐藏 `input` 上） | `string` | — |
 | `disabled` | 是否禁用（隐藏 `input` 一并禁用，退出提交） | `boolean` | `false` |
 | `tabIndex` | 转发给内部 RadioSelect 的根 | `number` | — |
 | `...rest` | 原生 `div` 属性直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
 
-原版构造选项时只转发 `data` 与 `label`，`options[].disabled` 被静默丢弃；本工程按声明采纳 `disabled`，与 [CheckboxMultiselectInput](../checkbox-multiselect-input/index.mdx)、[DropdownInput](../dropdown-input/index.mdx) 的口径一致。{/* deviations: dev-radioselectinput-disabled */}
+原版构造选项时只转发 `data` 与 `label`，`options[].disabled` 被静默丢弃；本工程按声明采纳 `disabled`，与 [CheckboxMultiselectInput](../checkbox-multiselect-input/index.mdx)、[DropdownInput](../dropdown-input/index.mdx) 的做法一致。{/* deviations: dev-radioselectinput-disabled */}
 
 ## 另见
 

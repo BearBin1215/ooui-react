@@ -9,8 +9,8 @@ const OPTIONS = [
 ] as const;
 
 /**
- * Dropdown（对齐原版OO.ui.DropdownWidget）的浏览器渲染契约：
- * handle落点（tabIndex/aria状态/combobox角色）、aria-owns随开合增删、
+ * Dropdown（对齐原版OO.ui.DropdownWidget）的浏览器渲染约定：
+ * handle写入位置（tabIndex/aria状态/combobox角色）、aria-owns随开合增删、
  * portal菜单的显隐类、聚焦期键盘直选（screenReaderMode形态）、
  * disabled下handle不可聚焦且不响应点击/按键、受控value随父级更新（点击只回调）。
  */
@@ -22,7 +22,7 @@ it("收起态：handle承载combobox语义与tabIndex，根输出dropdown类链�
   const handle = root.querySelector(".oo-ui-dropdownWidget-handle")!;
   expect(handle).toHaveAttribute("role", "combobox");
   expect(handle).toHaveAttribute("tabIndex", "0");
-  // aria-haspopup取原版字面量'true'（oojs-ui-core.js:9118），不是语义更precise的'listbox'
+  // aria-haspopup取原版字面量'true'（oojs-ui-core.js:9118），而非语义更precise的'listbox'
   expect(handle).toHaveAttribute("aria-haspopup", "true");
   expect(handle).toHaveAttribute("aria-expanded", "false");
   expect(handle).not.toHaveAttribute("aria-owns");

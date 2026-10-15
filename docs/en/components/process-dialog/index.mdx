@@ -221,7 +221,7 @@ export default App;
 ## Keyboard
 
 - `Ctrl` / `Cmd` + `Enter` runs the primary action.
-- `ESC` triggers `onEscape`; closing is wired by the caller.
+- `ESC` triggers `onEscape`; the caller handles closing.
 
 ## API
 
@@ -262,8 +262,8 @@ The error object (`ProcessDialogErrorProps`):
 ## Differences from OOUI
 
 - **Action orchestration collapses into one async `onAction` callback**: the original chains steps via `getActionProcess` returning an `OO.ui.Process`; here you chain the steps inside the callback, and throwing (rejecting) ends the flow into the error panel. {/* deviations: dev-onaction */}
-- **`ActionWidget` / `ActionSet` / `OO.ui.Error` are not provided as standalone classes**: their abilities live in the `actions` array (the `action` / `flags` / `modes` / `pending` fields) and the error object rendered by the error panel. {/* deviations: dev-actionset-inline */}
-- **The "special action" flags are fixed to `safe` / `primary`**: the original lets subclasses extend `ActionSet.static.specialFlags`; there is no class inheritance here — declare those two via `flags` to claim the header positions. {/* deviations: dev-special-flags */}
+- **`ActionWidget` / `ActionSet` / `OO.ui.Error` are not provided as standalone classes**: their abilities are provided through the `actions` array (the `action` / `flags` / `modes` / `pending` fields) and the error object rendered by the error panel. {/* deviations: dev-actionset-inline */}
+- **The "special action" flags are fixed to `safe` / `primary`**: the original lets subclasses extend `ActionSet.static.specialFlags`; there is no class inheritance here — declare `safe` or `primary` via `flags` and the action is placed in the header. {/* deviations: dev-special-flags */}
 - **Passing `mode` filters by `modes` from the first frame** (the original shows all actions until the first `setMode`). {/* deviations: dev-processdialog-mode */}
 
 ## See also

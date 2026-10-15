@@ -55,7 +55,7 @@ const EXPAND_COLLAPSE_TOOL_NAME = "more-fewer";
  * dropdown panel, with an optional More / Fewer toggle at the bottom controlling
  * collapsible tools (choosing the toggle keeps the panel open).
  *
- * 列表工具组（对齐原版 OO.ui.ListToolGroup）：工具以标签文本纵向列表收进下拉
+ * 列表工具组（对齐原版 OO.ui.ListToolGroup）：工具以标签文本纵向列表移入下拉
  * 面板，尾部可出现 More / Fewer 切换项控制可折叠工具的显隐（选中该项不收起面板）。
  *
  * @see https://bearbin1215.github.io/ooui-react/components/toolbar/index.html

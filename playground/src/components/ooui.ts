@@ -5,7 +5,7 @@ import oouiUrl from "oojs-ui/dist/oojs-ui.js?url";
 import oouiThemeUrl from "oojs-ui/dist/oojs-ui-wikimediaui.js?url";
 import oouiApexThemeUrl from "oojs-ui/dist/oojs-ui-apex.js?url";
 
-// 主题CSS以?inline文本导出：走Vite CSS管线，图标相对url已被重写为构建资源URL。
+// 主题CSS以?inline文本导出：由Vite的CSS处理流程处理，图标相对url已被重写为构建资源URL。
 // 每个主题另有.rtl.css整文件翻转版（无[dir]选择器，按方向选用其一）
 import oouiWikimediaCssText from "oojs-ui/dist/oojs-ui-wikimediaui.css?inline";
 import oouiApexCssText from "oojs-ui/dist/oojs-ui-apex.css?inline";

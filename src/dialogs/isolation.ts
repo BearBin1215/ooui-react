@@ -26,7 +26,7 @@ const markedInert = new Set<HTMLElement>();
 
 /** 还原节点的aria-hidden原值并移出登记 */
 function restoreAriaHidden(node: HTMLElement): void {
-  // get对在册节点恒返回string|null（undefined仅在键不存在时出现，而唯一调用点遍历在册键），
+  // get对在册节点始终返回string|null（undefined仅在键不存在时出现，而唯一调用点遍历在册键），
   // 类型层兜底并入null（属性原本不存在）分支
   const previous = ariaHiddenOriginals.get(node) ?? null;
   ariaHiddenOriginals.delete(node);

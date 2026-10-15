@@ -7,10 +7,10 @@ import { PopupButton } from "../../widgets/PopupButton";
 import { Dialog } from ".";
 
 /**
- * Dialog（对齐原版OO.ui.Dialog/Window）的浏览器渲染契约：
+ * Dialog（对齐原版OO.ui.Dialog/Window）的浏览器渲染结果：
  * 经WindowManager portal至body、role=dialog落window根、开关动画类时序、
  * ESC关闭回调、滚动锁的body类与iOS触摸滚动兜底类、内容隔离（背景aria-hidden/inert）与
- * 弹窗内浮层的portal去向（管理器根）与层值。
+ * 弹窗内浮层的portal位置（管理器根）与层值。
  */
 it("open=false：window以hidden类留在manager内，无active类", async () => {
   await render(
@@ -39,7 +39,7 @@ it("open=true：依次进入active/setup/ready动画态，manager输出尺寸类
   const manager = win.parentElement!;
   expect(manager).toHaveClass("oo-ui-windowManager");
   expect(manager).toHaveClass("oo-ui-windowManager-modal");
-  // size='full'恒输出size-full（浏览器默认视口414px下medium等档位会窄屏自动满屏）
+  // size='full'始终输出size-full（浏览器默认视口414px下medium等档位会窄屏自动满屏）
   expect(manager).toHaveClass("oo-ui-windowManager-size-full");
 });
 

@@ -34,14 +34,14 @@ export interface ButtonOptionProps
    * Label carried with the option object; swallowed so it never lands as a DOM
    * attribute (the render uses `children`).
    *
-   * 随选项对象透入的标签，组件吞掉以避免落成 DOM 属性（渲染用 `children`）。
+   * 随选项对象透入的标签，组件吞掉以避免写成 DOM 属性（渲染用 `children`）。
    */
   label?: ReactNode;
 }
 
 /**
  * 按钮式选择的选项（对齐原版 OO.ui.ButtonOptionWidget）：该项不可高亮，
- * 故不复用 DecoratedOption——槽位落在内层按钮里而非容器内（内部中间件，
+ * 故不复用 DecoratedOption——槽位写在内层按钮里而非容器内（内部中间件，
  * 不进公共导出面）。memo化缘由同MenuOption——ButtonSelect逐项渲染，选中/按压态
  * 行变化时其余行浅比较跳过
  */
@@ -68,7 +68,7 @@ export const ButtonOption = memo(
       // 图标/指示器变体：带边框的按钮在激活（选中）或禁用时整体反色，无边框禁用时保持原色
       // （对齐wikimediaui主题getElementClasses的按钮分支，与Button共用同一规则），
       // 其余情形按flags叠加image变体。ButtonOptionWidget在原版继承OptionWidget而非
-      // MenuOptionWidget，故不落主题的「选项选中/按压→progressive」分支
+      // MenuOptionWidget，故不进入主题的「选项选中/按压→progressive」分支
       const iconClasses = getButtonIconClasses({
         framed: isFramed,
         active: selected,
@@ -84,7 +84,7 @@ export const ButtonOption = memo(
           "option",
           "buttonOption",
         ),
-        // 原版ButtonOptionWidget.setSelected连带setActive：选中即按钮激活态（主题按激活态给底色与反色文字）。
+        // 原版ButtonOptionWidget.setSelected连带setActive：选中后按钮进入激活态（主题按激活态给底色与反色文字）。
         // flags同时交根类贡献器输出oo-ui-flaggedElement-*：wikimediaui主题的按钮作用域
         // flagged规则（.oo-ui-buttonElement-framed.oo-ui-flaggedElement-progressive > …，oojs-ui-wikimediaui.css:349）
         // 以根类为命中条件，缺了它只有图标变色、按钮底色/边框不生效
@@ -103,7 +103,7 @@ export const ButtonOption = memo(
         <div
           {...omit(rest, ["value", "highlighted", "label"])}
           className={classes}
-          // accessKey落在根元素：对齐原版OptionWidget的$accessKeyed（$element；根可编程聚焦，
+          // accessKey写在根元素上：对齐原版OptionWidget的$accessKeyed（$element；根可编程聚焦，
           // 快捷键可达）。title不在此——见下方锚点
           accessKey={accessKey}
           aria-disabled={disabled || undefined}
@@ -113,7 +113,7 @@ export const ButtonOption = memo(
           ref={ref}
         >
           {/* role=button：对齐原版setButtonElement对A元素补role；
-            title落锚点：原版ButtonOptionWidget构造末尾setTitledElement($button)把
+            title写在锚点上：原版ButtonOptionWidget构造末尾setTitledElement($button)把
             OptionWidget构造期的$titled（$element）重定向到$button */}
           <a
             className="oo-ui-buttonElement-button"

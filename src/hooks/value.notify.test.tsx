@@ -5,7 +5,7 @@ import { useControlledValueNotify } from "./value";
 
 /**
  * value.ts的useControlledValueNotify：受控值非法时把生效值回写父级。
- * 该hook含useEffect，经vitest-browser-react真实渲染驱动effect。核心契约：
+ * 该hook含useEffect，经vitest-browser-react真实渲染驱动effect。核心约定：
  * 同一非法值只回写一次（父级未采纳时不因重渲染反复触发），但闩锁在受控值回到合法后
  * 解除——父级改传合法值再改回同一非法值是新的变更，须重新回写，否则父级state与
  * 组件显示值就此漂移。

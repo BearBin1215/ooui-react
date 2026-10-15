@@ -4,9 +4,9 @@ import { getRoot } from "../../testing";
 import { Label } from ".";
 
 /**
- * Label（对齐原版OO.ui.LabelWidget）的浏览器渲染契约：
+ * Label（对齐原版OO.ui.LabelWidget）的浏览器渲染约定：
  * 根元素为<label>（原版static.tagName='label'）；根类链（widget+labelWidget+labelElement）、
- * invisibleLabel的裁剪类落点（根不再输出labelElement、label元素保留可访问名）、disabled类链、
+ * invisibleLabel的裁剪类写入位置（根不再输出labelElement、label元素保留可访问名）、disabled类链、
  * title兜底解析。
  */
 it("常规：根label元素输出widget/labelWidget/labelElement类链（对齐原版static.tagName）", async () => {
@@ -20,7 +20,7 @@ it("常规：根label元素输出widget/labelWidget/labelElement类链（对齐�
   expect(root.textContent).toBe("标签文本");
 });
 
-it("invisibleLabel：根不再输出oo-ui-labelElement，裁剪类落在label元素且可访问名保留", async () => {
+it("invisibleLabel：根不再输出oo-ui-labelElement，裁剪类写在label元素且可访问名保留", async () => {
   const screen = await render(<Label invisibleLabel>标签文本</Label>);
   const root = getRoot(screen);
   expect(root).not.toHaveClass("oo-ui-labelElement");

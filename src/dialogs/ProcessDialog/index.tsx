@@ -105,7 +105,7 @@ interface ProcessDialogErrorItem extends ProcessDialogErrorProps {
 /** 标题避让判定的宽度余量（px）：原版fitLabel在相对尺寸下取`$head.width() - 20`，此处以同一余量近似 */
 const LABEL_FIT_GAP = 20;
 
-// bodyFitFoot由本组件恒开（other动作区的foot让位），故从可传prop中剔除
+// bodyFitFoot由本组件始终开启（other动作区的foot让位），故从可传prop中剔除
 export interface ProcessDialogProps extends Omit<
   DialogProps,
   "title" | "head" | "foot" | "bodyFitFoot"
@@ -428,7 +428,7 @@ export const ProcessDialog = forwardRef<HTMLDivElement, ProcessDialogProps>(
                   <Button
                     flags={retryAction?.flags}
                     onClick={() => {
-                      // 重试目标恒为最近一次执行的动作（错误面板仅在执行后出现）
+                      // 重试目标始终为最近一次执行的动作（错误面板仅在执行后出现）
                       if (currentAction !== null) {
                         executeAction(currentAction);
                       }

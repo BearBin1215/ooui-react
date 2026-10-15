@@ -11,7 +11,7 @@ const getLink = (screen: { container: Element }, name: string) =>
   getToolSpan(screen, name).querySelector<HTMLElement>("a.oo-ui-tool-link")!;
 
 /**
- * Tool（对齐原版OO.ui.Tool）模块的浏览器渲染契约。Tool在原版即为「数据+渲染」的抽象基类、
+ * Tool（对齐原版OO.ui.Tool）模块的浏览器渲染结果。Tool在原版即为「数据+渲染」的抽象基类、
  * 不可独立渲染，故经BarToolGroup作为宿主驱动，只覆盖工具自身的两种扩展配置与窄栏配置：
  * 弹层工具（PopupTool，`popup`）、内嵌工具组（ToolGroupTool，`group`）与`narrowConfig`替换。
  * 工具链接的基础结构、类名与按压流见BarToolGroup的用例，此处不重复。

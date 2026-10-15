@@ -5,7 +5,7 @@ import { getRoot } from "../../testing";
 import { FormLayout } from ".";
 
 /**
- * FormLayout（对齐原版OO.ui.FormLayout）的浏览器渲染契约：
+ * FormLayout（对齐原版OO.ui.FormLayout）的浏览器渲染结果：
  * form元素承载layout/formLayout类与原生表单属性、submit事件的onSubmit通道与ref转发。
  */
 it("结构：form元素承载layout/formLayout类与原生表单属性", async () => {

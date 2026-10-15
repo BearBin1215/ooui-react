@@ -21,7 +21,7 @@ export interface LayoutProps extends Omit<ElementProps, "hidden"> {
  * handling (`true` / `'until-found'` / visible) for layout components.
  *
  * 布局基类：为各布局组件统一处理 `hidden` 三态（`true` / `'until-found'` /
- * 可见）与随之的 `aria-hidden` 落点。
+ * 可见）与随之的 `aria-hidden` 位置。
  *
  * @see https://bearbin1215.github.io/ooui-react/components/layout/index.html
  */
@@ -47,7 +47,7 @@ export const Layout = forwardRef<HTMLDivElement, LayoutProps>(
       <div
         {...rest}
         className={classes}
-        // 保留原始值（而非归一化为布尔）传入：React需感知true↔'until-found'切换才会重写DOM属性；
+        // 保留原始值（而非规范化为布尔）传入：React需感知true↔'until-found'切换才会重写DOM属性；
         // 断言仅为绕过React 18类型定义（hidden仅声明为boolean）
         hidden={(hidden || undefined) as boolean | undefined}
         // aria-hidden仅在完全隐藏时输出：'until-found'的语义是对查找可见，持续向辅助技术

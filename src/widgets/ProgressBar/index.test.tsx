@@ -4,7 +4,7 @@ import { getRoot, snapshotHTML } from "../../testing";
 import { ProgressBar } from ".";
 
 /**
- * ProgressBar（对齐原版OO.ui.ProgressBarWidget）的浏览器渲染契约：
+ * ProgressBar（对齐原版OO.ui.ProgressBarWidget）的浏览器渲染约定：
  * progressbar语义、数值进度的width/aria-valuenow、不定进度形态、越界钳制与NaN兜底、
  * disabled下根输出禁用类与aria-disabled（进度语义不受影响）。
  */
@@ -50,7 +50,7 @@ it("progress钳制到0-100（修正原版NaN/越界直出）", async () => {
 });
 
 describe("HTML快照", () => {
-  // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）
+  // 固定快照结构：差异应明确更新，不要依赖 -u 反推（以原版DOM为准，见comparison-guide「断言基准」）
   it("不定进度", async () => {
     const screen = await render(<ProgressBar />);
     expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(

@@ -24,7 +24,7 @@ function PaddingHost({
   );
 }
 
-/** label元素不存在（ref恒空）：不应预留内边距 */
+/** label元素不存在（ref始终为空）：不应预留内边距 */
 function NoLabelHost() {
   const labelRef = useRef<HTMLSpanElement>(null);
   const style = useLabelPadding(labelRef, "字段名", "after", false);

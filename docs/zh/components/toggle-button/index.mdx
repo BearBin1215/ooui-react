@@ -11,7 +11,7 @@ description: "ToggleButton 组件的属性说明：在 Button 形态上叠加开
 
 ## 基本用法
 
-开/关状态走 `checked` / `defaultChecked` / `onChange` 三条通道，`onChange` 的第一个参数是新的开关布尔值。按下时按钮呈激活（高亮）外观。
+开/关状态由 `checked` / `defaultChecked` / `onChange` 控制，`onChange` 的第一个参数是新的开关布尔值。按下时按钮呈激活（高亮）外观。
 
 ```tsx preview
 import { useState } from "react";
@@ -71,7 +71,7 @@ ToggleButton 继承 Button 的外观，但**没有链接能力**：`href` / `tar
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | `children` | 按钮标签 | `ReactNode` | — |
-| `checked` | 是否按下（受控，传入即受控模式） | `boolean` | — |
+| `checked` | 是否按下（受控，传入后即进入受控模式） | `boolean` | — |
 | `defaultChecked` | 非受控初始开关态 | `boolean` | `false` |
 | `onChange` | 开关状态变更回调（仅回传新状态） | `(checked: boolean) => void` | — |
 | `icon` | 前置图标名 | `string` | — |

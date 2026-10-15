@@ -51,7 +51,7 @@ export type ViewportSpacingInput = number | Partial<ViewportSpacing>;
  */
 export type Direction = "ltr" | "rtl";
 
-/** 将viewportSpacing配置归一化为四边数值：缺省边取VIEWPORT_SPACING（缺省0，对齐原版） */
+/** 将viewportSpacing配置规范化为四边数值：缺省边取VIEWPORT_SPACING（缺省0，对齐原版） */
 export function normalizeViewportSpacing(
   input: ViewportSpacingInput | undefined,
 ): ViewportSpacing {
@@ -99,7 +99,7 @@ export interface OOUIConfig {
    *
    * 浮层 portal 容器（Popup / MenuSelect / PopupToolGroup 面板），入参为浮层的
    * 锚点元素。**未配置时**弹窗子树内的浮层 portal 到该弹窗的管理器根，其余
-   * 回落 `document.body`；配置后恒优先。容器不应建立新的定位上下文（浮层按
+   * 回落 `document.body`；配置后始终优先。容器不应建立新的定位上下文（浮层按
    * 页面坐标绝对定位）。
    */
   getPortalContainer?: (trigger: HTMLElement) => HTMLElement;
@@ -109,7 +109,7 @@ export interface OOUIConfig {
    * override). Defaults to `false`; the host can decide via matchMedia and pass
    * the result.
    *
-   * 移动端形态开关，对应原版 `OO.ui.isMobile()`（原版为恒 false 的桩，由宿主
+   * 移动端形态开关，对应原版 `OO.ui.isMobile()`（原版始终返回false的桩函数，由宿主
    * 环境覆写）。缺省 false；宿主可接 matchMedia 等自行判定后传入。
    */
   isMobile?: boolean;
@@ -143,7 +143,7 @@ export interface OOUIConfig {
    * treated as no match and also falls back to the raw key.
    *
    * 快捷键的显示文案解析（如产出本地化的“Alt+Shift+k”）。未提供时 title
-   * 回落为附原键值（`title [k]`）；返回空串不加键位后缀；返回 `undefined`
+   * 回落为附原键值（`title [k]`）；返回空字符串不加键位后缀；返回 `undefined`
    * 视为无结果，同样回落原键值。
    */
   getAccessKeyLabel?: (accessKey: string) => string | undefined;
@@ -153,7 +153,7 @@ const OOUIConfigContext = createContext<OOUIConfig>({});
 
 /**
  * OOUIProvider的嵌套深度（根为0），供命令式弹窗的in-tree宿主判定选主机优先级：
- * 命令式调用（confirm/alert/prompt）无位置信息，恒由**最外层**（最小深度）宿主渲染，
+ * 命令式调用（confirm/alert/prompt）无位置信息，始终由**最外层**（最小深度）宿主渲染，
  * 从而映射到应用根部的配置（见dialogs/imperative.tsx的primaryToken）
  */
 const ProviderDepthContext = createContext(0);
@@ -269,7 +269,7 @@ export function useDir(): Direction | undefined {
  *
  * 读取一个快捷键的显示文案（经 `getAccessKeyLabel` 解析）：无 accessKey、未配置
  * 解析器或解析器返回 undefined 时返回 undefined（`resolveTitle` 回落原键值）；
- * 解析器返回空串时原样返回。组件须无条件调用本 hook（Hook 不可置于条件中）。
+ * 解析器返回空字符串时原样返回。组件须无条件调用本 hook（Hook 不可置于条件中）。
  */
 export function useAccessKeyLabel(accessKey?: string): string | undefined {
   const { getAccessKeyLabel } = useOOUIConfig();
@@ -283,10 +283,10 @@ export function useAccessKeyLabel(accessKey?: string): string | undefined {
  * Reads the normalized viewport spacing (four numeric sides); each side falls back
  * to `VIEWPORT_SPACING` (0) when unset.
  *
- * 读取归一化的视口留白（四边数值），未配置时各边取 `VIEWPORT_SPACING`（0）。
+ * 读取规范化的视口留白（四边数值），未配置时各边取 `VIEWPORT_SPACING`（0）。
  */
 export function useViewportSpacing(): ViewportSpacing {
   const { viewportSpacing } = useOOUIConfig();
-  // 经useMemo稳定引用：配置不变时归一化结果同一对象，浮层定位effect不因引用漂移重挂
+  // 经useMemo稳定引用：配置不变时规范化结果同一对象，浮层定位effect不因引用漂移重挂
   return useMemo(() => normalizeViewportSpacing(viewportSpacing), [viewportSpacing]);
 }

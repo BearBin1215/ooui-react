@@ -4,7 +4,7 @@ import { getRoot } from "../../testing";
 import { MenuLayout } from ".";
 
 /**
- * MenuLayout（对齐原版OO.ui.MenuLayout）的浏览器渲染契约：
+ * MenuLayout（对齐原版OO.ui.MenuLayout）的浏览器渲染结果：
  * expanded/showMenu/menuPosition三段修饰类、menu与content的先后顺序、
  * 收起菜单时不挂menu子树（避免隐形焦点陷阱）。
  */

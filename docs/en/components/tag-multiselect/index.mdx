@@ -110,7 +110,7 @@ export default App;
 
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
-| `value` | Tag value set (controlled; passing it enables control) | `(string \| number)[]` | — |
+| `value` | Tag value set (controlled; passing it enables controlled mode) | `(string \| number)[]` | — |
 | `defaultValue` | Initial value for uncontrolled use | `(string \| number)[]` | — |
 | `onChange` | Add/remove callback (value-first, returns the scalar array) | `ChangeHandler<(string \| number)[]>` | — |
 | `allowedValues` | Legal-value whitelist (the constraint without a menu) | `(string \| number)[]` | — |
@@ -134,4 +134,4 @@ The original allows `tag.data` to be any object; this library always keeps a tag
 ## See also
 
 - Tag input with a candidate menu: [MenuTagMultiselect](../menu-tag-multiselect/index.mdx)
-- The `label` / `labelText` / `data` option contract: [Selection and options](../../guide/options.mdx#options-of-tag-inputs)
+- The `label` / `labelText` / `data` option convention: [Selection and options](../../guide/options.mdx#options-of-tag-inputs)

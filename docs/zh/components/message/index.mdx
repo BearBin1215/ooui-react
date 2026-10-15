@@ -1,13 +1,13 @@
 ---
 title: Message 消息
-description: "Message 组件的属性说明：notice/error/warning/success 四种类型、内联形态、关闭按钮与 onClose 契约（组件不自隐，须在回调中卸载/隐藏）。"
+description: "Message 组件的属性说明：notice/error/warning/success 这些类型、内联形态、关闭按钮与 onClose 约定（组件不自隐，须在回调中卸载/隐藏）。"
 ---
 
 # Message 消息
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/Message) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.MessageWidget.html "OO.ui.MessageWidget")
 
-行内消息提示，提供 `notice` / `error` / `warning` / `success` 四种类型。
+行内消息提示，类型有 `notice` / `error` / `warning` / `success`。
 
 ## 基本用法
 
@@ -55,7 +55,7 @@ export default App;
 ## 关闭按钮
 
 :::warning 与原版的差异
-原版点击关闭按钮即自行隐藏；本工程 `onClose` 只报出「点击了关闭按钮」，组件不持显隐状态——**必须在回调里把消息卸载或隐藏**，漏接时消息点不掉。{/* deviations: dev-message-onclose */}
+原版点击关闭按钮即自行隐藏；本工程 `onClose` 只报告「点击了关闭按钮」，组件不保存显隐状态——**必须在回调里把消息卸载或隐藏**，没有处理回调时消息无法关闭。{/* deviations: dev-message-onclose */}
 :::
 
 ```tsx preview
@@ -100,4 +100,4 @@ export default App;
 ## 另见
 
 - 错误面板中的错误渲染：[ProcessDialog](../process-dialog/index.mdx)
-- 值通道约定（`onClose` 只报意图、显隐归调用方）：[受控与非受控](../../guide/controlled.mdx)
+- 传值约定（`onClose` 只通知关闭、显隐由调用方负责）：[受控与非受控](../../guide/controlled.mdx)

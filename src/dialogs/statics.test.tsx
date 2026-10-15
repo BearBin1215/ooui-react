@@ -14,7 +14,7 @@ const getSafeButton = () =>
   getActions().querySelector<HTMLElement>(".oo-ui-flaggedElement-safe")!;
 
 /**
- * 命令式弹窗API（对齐原版OO.ui.confirm/alert/prompt）的浏览器契约：
+ * 命令式弹窗API（对齐原版OO.ui.confirm/alert/prompt）的浏览器行为约定：
  * 确定/取消/ESC的兑现值、prompt的输入框初值与回车提交。关闭动画结束（closeDuration+裕量）后
  * 卸载并兑现，故断言直接await返回的Promise。
  * 另锁in-tree宿主：弹窗经`OOUIProvider`渲染的宿主挂在其配置子树内，故自动继承该子树的
@@ -117,7 +117,7 @@ it("包了Provider：弹窗自动继承所在子树的配置（如文案）", as
   await expect(promise).resolves.toBe(true);
 });
 
-it("嵌套Provider：命令式弹窗恒由最外层宿主渲染（用最外层配置）", async () => {
+it("嵌套Provider：命令式弹窗始终由最外层宿主渲染（用最外层配置）", async () => {
   await render(
     <OOUIProvider messages={{ "ooui-dialog-message-accept": "外层" }}>
       <OOUIProvider messages={{ "ooui-dialog-message-accept": "内层" }}>
@@ -128,7 +128,7 @@ it("嵌套Provider：命令式弹窗恒由最外层宿主渲染（用最外层�
 
   const promise = confirm("内容");
   await openSettled();
-  // 命令式调用无位置信息，恒映射到最外层Provider的配置（见dialogs/imperative.tsx primaryToken）
+  // 命令式调用无位置信息，始终映射到最外层Provider的配置（见dialogs/imperative.tsx primaryToken）
   expect(getPrimaryButton().textContent).toContain("外层");
   clickElement(getPrimaryButton());
   await expect(promise).resolves.toBe(true);

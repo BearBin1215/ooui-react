@@ -4,7 +4,7 @@ import { getRoot, snapshotHTML } from "../../testing";
 import { Indicator } from ".";
 
 /**
- * Indicator（对齐原版OO.ui.IndicatorWidget）的浏览器渲染契约：
+ * Indicator（对齐原版OO.ui.IndicatorWidget）的浏览器渲染约定：
  * 根span的widget/indicator类链、indicator变体类、noIndicator占位、禁用态。
  */
 it("有indicator：widget根类+indicator类+方向变体类", async () => {
@@ -14,7 +14,7 @@ it("有indicator：widget根类+indicator类+方向变体类", async () => {
   expect(root).toHaveClass("oo-ui-indicatorWidget");
   expect(root).toHaveClass("oo-ui-indicatorElement-indicator");
   expect(root).toHaveClass("oo-ui-indicator-down");
-  // 单元素组件：根元素即label元素，恒携带invisible裁剪类
+  // 单元素组件：根元素即label元素，始终携带invisible裁剪类
   expect(root).toHaveClass("oo-ui-labelElement-invisible");
   expect(root).not.toHaveClass("oo-ui-indicatorElement-noIndicator");
 });
@@ -33,7 +33,7 @@ it("disabled：widget禁用类与aria-disabled", async () => {
   expect(root).toHaveAttribute("aria-disabled", "true");
 });
 
-it("className与id等透传属性落到根元素", async () => {
+it("className与id等透传属性写到根元素", async () => {
   const screen = await render(
     <Indicator indicator="clear" className="cmp-extra" id="cmp-indicator" />,
   );
@@ -43,7 +43,7 @@ it("className与id等透传属性落到根元素", async () => {
 });
 
 describe("HTML快照", () => {
-  // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）
+  // 固定快照结构：差异应明确更新，不要依赖 -u 反推（以原版DOM为准，见comparison-guide「断言基准」）
   it("快照：常规indicator的完整类串与顺序", async () => {
     const screen = await render(<Indicator indicator="down" />);
     expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(

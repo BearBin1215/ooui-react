@@ -47,7 +47,7 @@ describe("resolvePanelSideSpaces（对齐侧可用空间）", () => {
     expect(spaces.end).toBe(48);
   });
 
-  it("锚点越出容器右缘：向左展开与居中均计0/收口", () => {
+  it("锚点越出容器右缘：向左展开与居中均计0/限制边界", () => {
     const spaces = resolvePanelSideSpaces(
       { left: 470, right: 560 },
       CLIP_BOUNDS,
@@ -59,9 +59,9 @@ describe("resolvePanelSideSpaces（对齐侧可用空间）", () => {
     expect(spaces.center).toBe(0);
   });
 
-  it("center按原版单侧口径不随锚点偏侧收缩：偏左锚点两侧余量不等时仍以右侧余量计", () => {
-    // clip边界收口[7,393]，300宽面板居中后左缘−110已越出左界，可用宽退化为整段可视跨距386
-    // （对应原版clip()把itemRect左缘钳到容器左界）；386≥300故停在居中，而对称口径
+  it("center按原版单侧规则不随锚点偏侧收缩：偏左锚点两侧余量不等时仍以右侧余量计", () => {
+    // clip边界为[7,393]，300宽面板居中后左缘−110已越出左界，可用宽退化为整段可视跨距386
+    // （对应原版clip()把itemRect左缘钳到容器左界）；386≥300故停在居中，而对称规则
     // （2×min(两侧余量)=106）会误判为放不下、跳到铺满
     const spaces = resolvePanelSideSpaces(
       { left: 20, right: 60 },

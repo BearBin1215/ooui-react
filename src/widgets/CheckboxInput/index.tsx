@@ -94,7 +94,7 @@ export const CheckboxInput = forwardRef<HTMLSpanElement, CheckboxInputProps>(
       boolean,
       ChangeEvent<HTMLInputElement>
     >({ value: checked, defaultValue: defaultChecked ?? false }, onChange);
-    // 原生input公共落点属性（id/name/键位title/accessKey/tabIndex/dir/禁用态/类名）；
+    // 原生input公共写入属性（id/name/键位title/accessKey/tabIndex/dir/禁用态/类名）；
     // 本组件无标签元素，不做invisibleLabel兜底
     const nativeInputProps = useNativeInputProps({
       inputId,
@@ -133,10 +133,10 @@ export const CheckboxInput = forwardRef<HTMLSpanElement, CheckboxInputProps>(
           ref={setInputRef}
           {...nativeInputProps}
           type="checkbox"
-          // role与RadioInput同落内层input：role="presentation"等调用方语义须命中真实input
-          // 才生效（rest透传的其余属性仍落外层span）
+          // role与RadioInput同写在内层input上：role="presentation"等调用方语义须命中真实input
+          // 才生效（rest透传的其余属性仍写在外层span上）
           role={role}
-          // 提交值缺省为空串（原版InputWidget构造期恒写value）：不写该属性会使浏览器
+          // 提交值缺省为空字符串（原版InputWidget构造期始终写value）：不写该属性会使浏览器
           // 隐式值变为"on"，与原版的表单提交结果不等
           value={value === undefined ? "" : String(value)}
           required={required}

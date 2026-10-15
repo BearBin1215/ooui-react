@@ -24,7 +24,7 @@ export interface ButtonSlotsProps extends IconElement, IndicatorElement {
   /** 标签内容 */
   label?: ReactNode;
 
-  /** 标签不可见（视觉隐藏但保留可访问名称，裁剪类落在label元素上） */
+  /** 标签不可见（视觉隐藏但保留可访问名称，裁剪类写在label元素上） */
   labelInvisible?: boolean;
 
   /** 指示器span附加属性（对齐原版$indicator上的配置能力），className与变体类合并 */
@@ -37,7 +37,7 @@ export interface ButtonSlotsProps extends IconElement, IndicatorElement {
 /**
  * 按钮系内容槽位：图标→标签→指示器的固定顺序（对齐原版ButtonElement的$icon/$label/$indicator
  * 排布，无图标/指示器时照常输出noIcon/noIndicator空占位）。Button/ButtonOption/ButtonInput/
- * DecoratedOption/ComboBoxInput下拉按钮共用，收敛各自手写的三元结构
+ * DecoratedOption/ComboBoxInput下拉按钮共用，归并各自手写的三元结构
  */
 export function ButtonSlots({
   leading,

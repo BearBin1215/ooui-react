@@ -129,7 +129,7 @@ export const CopyTextLayout = forwardRef<HTMLDivElement, CopyTextLayoutProps>(
       input.scrollLeft = scrollLeft;
     };
 
-    /** 写入剪贴板：优先navigator.clipboard，失败或不可用时回落到execCommand（需已选中） */
+    /** 写入剪贴板：优先navigator.clipboard，失败或不可用时使用execCommand（需已选中） */
     const copyToClipboard = async (): Promise<boolean> => {
       const text = getInput()?.value ?? "";
       if (navigator.clipboard?.writeText) {

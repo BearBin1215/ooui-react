@@ -91,7 +91,7 @@ export interface ComboBoxInputProps
   /**
    * Form field name (lands on `<input>`)
    *
-   * 表单提交字段名（落在 `<input>`）
+   * 表单提交字段名（写在 `<input>`）
    */
   name?: string;
 
@@ -152,8 +152,8 @@ export interface ComboBoxInputProps
    * Extra-props channel for the native `<input>`; `onChange` / `onBlur` / `onFocus`
    * are chained after the component logic.
    *
-   * 原生 `<input>` 的附加属性通道（`...rest` 落在根 div）；`onChange`/`onBlur`/`onFocus`
-   * 串联在组件自身逻辑之后（值管线与菜单联动不会被截断）
+   * 原生 `<input>` 的附加属性通道（`...rest` 写在根 div）；`onChange`/`onBlur`/`onFocus`
+   * 串联在组件自身逻辑之后（值处理流程与菜单联动不会被截断）
    */
   inputProps?: UserInputProps<HTMLInputElement>;
 }
@@ -193,10 +193,10 @@ export const ComboBoxInput = forwardRef<HTMLDivElement, ComboBoxInputProps>(
       value,
       defaultValue,
       onChange,
-      // tabIndex/title落在input上（对齐原版ComboBoxInputWidget继承InputWidget的
+      // tabIndex/title写在input上（对齐原版ComboBoxInputWidget继承InputWidget的
       // $tabIndexed与$titled均为$input）
       tabIndex,
-      // dir对齐原版setDir的落点（$input），不放外层div
+      // dir对齐原版setDir的写入位置（$input），不放外层div
       title,
       dir,
       ...rest
@@ -216,7 +216,7 @@ export const ComboBoxInput = forwardRef<HTMLDivElement, ComboBoxInputProps>(
     const elementRef = useRef<HTMLDivElement>(null);
     const internalInputRef = useRef<HTMLInputElement>(null);
     const setInputRef = useMergedRefs(inputRefProp, internalInputRef);
-    // 根元素引用：供useInputProps读取样式表方向，决定标签让位的内边距落在哪一侧
+    // 根元素引用：供useInputProps读取样式表方向，决定标签让位的内边距加在哪一侧
     const internalRootRef = useRef<HTMLDivElement>(null);
     const setRootRef = useMergedRefs(ref, internalRootRef);
     // 菜单面板经MenuSelect portal出控件子树，点击外部关闭时需连同菜单一起排除
@@ -232,7 +232,7 @@ export const ComboBoxInput = forwardRef<HTMLDivElement, ComboBoxInputProps>(
     const toggleOptionsLabel = useMessage("ooui-combobox-button-label");
 
     /**
-     * 选定菜单项：值经String归一化后写入输入框，对齐原版InputWidget.cleanUpValue（强制String），
+     * 选定菜单项：值经String规范化后写入输入框，对齐原版InputWidget.cleanUpValue（强制String），
      * 并收起菜单（对齐原版MenuSelectWidget.hideOnChoose）。注意数值型选项值与原版一致不会
      * 呈现选中态——原版findItemFromData按OO.getHash（JSON.stringify）比较，数字与字符串不等价
      */
@@ -262,10 +262,10 @@ export const ComboBoxInput = forwardRef<HTMLDivElement, ComboBoxInputProps>(
     });
 
     /**
-     * 值管线（挂入useInputProps的onCommitValue，输入即触发）：提交输入文本并展开菜单
+     * 值处理流程（挂入useInputProps的onCommitValue，输入即触发）：提交输入文本并展开菜单
      * （对齐原版onEdit的input事件分支）；已有高亮时按原版onInputChange随输入重定位到
      * 精确匹配项（无匹配则清除高亮），避免残留上一轮高亮。
-     * event随commit透传给onChange，与TextInput/NumberInput/MultilineTextInput同口径
+     * event随commit透传给onChange，与TextInput/NumberInput/MultilineTextInput规则一致
      */
     const handleInputChange = (
       nextValue: string,
@@ -308,7 +308,7 @@ export const ComboBoxInput = forwardRef<HTMLDivElement, ComboBoxInputProps>(
       label,
       labelPosition,
       indicator,
-      // 值管线：提交输入文本并联动菜单展开/高亮重定位（见handleInputChange）
+      // 值处理流程：提交输入文本并联动菜单展开/高亮重定位（见handleInputChange）
       onCommitValue: handleInputChange,
     });
 
@@ -409,7 +409,7 @@ export const ComboBoxInput = forwardRef<HTMLDivElement, ComboBoxInputProps>(
     // emit click→onDropdownButtonClick（toggle+focus，oojs-ui-core.js:12784-12788）并
     // return false（空格不滚动，oojs-ui-core.js:2462-2468）——activate经handleDropdownButtonClick
     // 走同一开合通道。mouseup/keyup经document级capture监听复位（oojs-ui-core.js:2394/2445）。
-    // pressed类落在buttonElement根（span）：主题按压选择器要求其为.oo-ui-buttonElement-button
+    // pressed类写在buttonElement根（span）：主题按压选择器要求其为.oo-ui-buttonElement-button
     // 的父级（oojs-ui-wikimediaui.css:343）
     const {
       pressed: dropdownPressed,
@@ -444,9 +444,9 @@ export const ComboBoxInput = forwardRef<HTMLDivElement, ComboBoxInputProps>(
       >
         {/* 图标与指示器须是根元素（同时带oo-ui-textInputWidget）的直接子节点、且排在-field之前：
             原版TextInputWidget先把input/图标/指示器append到根，ComboBoxInputWidget再新建$field把
-            $input与下拉按钮收进去（oojs-ui-core.js:12700-12704），装饰故留在根级；主题的装饰定位
+            $input与下拉按钮移进去（oojs-ui-core.js:12700-12704），装饰故留在根级；主题的装饰定位
             规则全为`.oo-ui-textInputWidget > .oo-ui-iconElement-icon`一类直接子选择器
-            （oojs-ui-core-wikimediaui.css:1718/1735/1787），收进field即全部失配 */}
+            （oojs-ui-core-wikimediaui.css:1718/1735/1787），移入field即全部失配 */}
         <IconBase icon={icon} {...decorationProps} />
         <IndicatorBase {...indicatorSlotProps} />
         <div ref={elementRef} className="oo-ui-comboBoxInputWidget-field">
@@ -461,7 +461,7 @@ export const ComboBoxInput = forwardRef<HTMLDivElement, ComboBoxInputProps>(
                 "aria-autocomplete": "list",
                 "aria-expanded": open,
                 // 展开时声明所拥有的菜单、收起即移除（对齐原版MenuSelectWidget.onToggle，
-                // 与Dropdown/ButtonMenuSelectWidget同口径；差异见DEVIATIONS「增强」）
+                // 与Dropdown/ButtonMenuSelectWidget规则一致；差异见DEVIATIONS「增强」）
                 "aria-owns": open ? menuId : undefined,
                 // 对齐原版autocomplete:false默认（自定义建议菜单与浏览器原生补全不可叠加）
                 autoComplete: "off",
@@ -490,7 +490,7 @@ export const ComboBoxInput = forwardRef<HTMLDivElement, ComboBoxInputProps>(
               }),
               indicatorElementClasses({ indicator: "down" }),
             )}
-            // Widget.setElementAccessibility的双落点：根与可聚焦锚点各写一次aria-disabled
+            // Widget.setElementAccessibility的两处写入位置：根与可聚焦锚点各写一次aria-disabled
             aria-disabled={controlsDisabled || undefined}
           >
             <a
@@ -523,7 +523,7 @@ export const ComboBoxInput = forwardRef<HTMLDivElement, ComboBoxInputProps>(
           ref={menuRef}
           id={menuId}
           container={elementRef}
-          // 高亮项的aria-activedescendant落在输入框上（对齐原版setFocusOwner(widget.$tabIndexed)，
+          // 高亮项的aria-activedescendant写在输入框上（对齐原版setFocusOwner(widget.$tabIndexed)，
           // 此处$tabIndexed为$input）
           focusOwnerRef={internalInputRef}
           onChoose={selectOption}

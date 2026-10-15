@@ -11,7 +11,7 @@ description: "BookletLayout 组件的属性说明：左侧大纲加右侧页面�
 
 ## 基本用法
 
-`options` 数组项为 `{ value, label, children }` 加 [PageLayout](../page-layout/index.mdx) 的面板字段；激活页走 `value` / `defaultValue` / `onChange` 三条通道。
+`options` 数组项为 `{ value, label, children }` 加 [PageLayout](../page-layout/index.mdx) 的面板字段；激活页由 `value` / `defaultValue` / `onChange` 控制。
 
 ```tsx preview
 import { useState } from "react";
@@ -112,7 +112,7 @@ export default App;
 
 ## 连续模式与自动聚焦
 
-`continuous` 使所有页同时可见、切页时平滑滚动到目标页；连续模式下焦点进入某页（Tab 或点击页内可聚焦元素）会反向把该页选为激活页。`autoFocus`（缺省 `true`）在每次切页后聚焦页内第一个可聚焦元素（首帧不聚焦；焦点已在页内时不重复聚焦，移动端形态下抑制）。两者均可关。
+`continuous` 使所有页同时可见、切页时平滑滚动到目标页；连续模式下焦点进入某页（Tab 或点击页内可聚焦元素）会反过来把该页选为激活页。`autoFocus`（缺省 `true`）在每次切页后聚焦页内第一个可聚焦元素（首帧不聚焦；焦点已在页内时不重复聚焦，移动端形态下抑制）。两者均可关。
 
 激活页被移除时自动补选：取下一个未被移除的页，末页被移除则取新末页——大纲与页面栈保持同步。
 
@@ -123,7 +123,7 @@ export default App;
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | `options` | 页集：`value`、`label`、`movable`、`removable` 加 [PageLayout](../page-layout/index.mdx) 字段 | 数组 | — |
-| `value` | 当前激活页（受控，传入即受控模式） | `string \| number` | — |
+| `value` | 当前激活页（受控，传入后即进入受控模式） | `string \| number` | — |
 | `defaultValue` | 非受控初始激活页 | `string \| number` | — |
 | `onChange` | 激活页变化回调 | `ChangeHandler<string \| number>` | — |
 | `outlined` | 是否显示大纲（`false` 为纯堆叠模式） | `boolean` | `false` |

@@ -271,7 +271,7 @@ export const Button = forwardRef<HTMLSpanElement, ButtonInternalProps>(
       disabled: isDisabled,
       flags: flagList,
     });
-    // title/accessKey同落锚点（原版$titled=$accessKeyed=$button，解析见resolveTitle）；
+    // title/accessKey同写在锚点上（原版$titled=$accessKeyed=$button，解析见resolveTitle）；
     // 快捷键文案由宿主解析（未提供时title附原键值）
     const accessKeyLabel = useAccessKeyLabel(accessKey);
     // 快捷键登记给FieldLayout（原版FieldLayout的label tooltip委托字段控件的accessKey）
@@ -345,7 +345,7 @@ export const Button = forwardRef<HTMLSpanElement, ButtonInternalProps>(
           role="button"
           ref={setAnchorRef}
           tabIndex={resolveTabIndex(tabIndex, isDisabled)}
-          // aria-disabled落在锚点上：原版TabIndexedElement.updateTabIndex写在$tabIndexed
+          // aria-disabled写在锚点上：原版TabIndexedElement.updateTabIndex写在$tabIndexed
           // （ChromeVox/NVDA不继承父元素的aria-disabled，放外层span会读不到）
           aria-disabled={isDisabled || undefined}
           href={isDisabled ? undefined : href}
@@ -353,7 +353,7 @@ export const Button = forwardRef<HTMLSpanElement, ButtonInternalProps>(
           rel={relList.join(" ") || undefined}
           title={resolvedTitle}
           accessKey={accessKey}
-          // aria-label/aria-pressed/aria-labelledby须落在可聚焦的<a>上（外层span为generic
+          // aria-label/aria-pressed/aria-labelledby须写在可聚焦的<a>上（外层span为generic
           // 元素不可命名）：aria-label供显式命名，aria-pressed供ToggleButton等开关形态，
           // aria-labelledby供FieldLayout标签联动与调用方命名（原版$tabIndexed=$button）
           aria-label={ariaLabel}

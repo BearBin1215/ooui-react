@@ -30,7 +30,7 @@ const mount = async () => {
 
 /**
  * prefixSearch.ts的usePrefixSearchBuffer：按键前缀跳转的缓冲生命周期
- * （匹配算法advancePrefixSearch的契约见utils.test.ts）。核心契约：逐字符累积并经同一
+ * （匹配算法advancePrefixSearch的约定见utils.test.ts）。核心约定：逐字符累积并经同一
  * 算法求命中值、退格裁剪缓冲并把"无缓冲"如实报给调用方、导航键/通道停用经clear重置、
  * 缓冲空闲KEY_PRESS_BUFFER_MS后自动清空而字符输入续期、返回对象引用跨渲染稳定。
  */

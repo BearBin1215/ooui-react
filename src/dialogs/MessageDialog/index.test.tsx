@@ -12,10 +12,10 @@ const getCancelButton = () =>
   getActions().querySelector<HTMLElement>(".oo-ui-flaggedElement-safe")!;
 
 /**
- * MessageDialog（对齐原版OO.ui.MessageDialog）的浏览器渲染契约：
+ * MessageDialog（对齐原版OO.ui.MessageDialog）的浏览器渲染结果：
  * 结构（title/message文本区+actions动作区）、ok/cancel按钮的flag变体与回调、
  * Ctrl/Cmd+Enter触发primary、cancelLabel=null隐藏取消按钮（alert形态）、
- * ready后焦点落在primary按钮、缺省按钮文案与size档位。
+ * ready后焦点移到primary按钮、缺省按钮文案与size档位。
  */
 it("结构：messageDialog类链，title/message文本区与actions动作区（horizontal布局）", async () => {
   await render(
@@ -89,7 +89,7 @@ it("cancelLabel=null隐藏取消按钮（alert形态）；自定义okLabel生效
   expect(getOkButton().textContent).toContain("知道了");
 });
 
-it("ready后焦点落在primary按钮（对齐原版getReadyProcess的聚焦）", async () => {
+it("ready后焦点移到primary按钮（对齐原版getReadyProcess的聚焦）", async () => {
   await render(<MessageDialog open>确认内容</MessageDialog>);
   await openSettled();
   expect(document.activeElement).toBe(

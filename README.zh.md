@@ -43,4 +43,4 @@ import { Button } from "ooui-react";
 
 ## 致谢
 
-本项目是 [OOUI](https://github.com/wikimedia/oojs-ui) 的 React 实现，其 API 设计、CSS 类名与行为契约部分衍生自 OOUI。OOUI 基于 [MIT 许可证](https://github.com/wikimedia/oojs-ui/blob/master/LICENSE-MIT)授权，Copyright 2011-2025 OOUI Team and other contributors。
+本项目是 [OOUI](https://github.com/wikimedia/oojs-ui) 的 React 实现，其 API 设计、CSS 类名与行为约定部分衍生自 OOUI。OOUI 基于 [MIT 许可证](https://github.com/wikimedia/oojs-ui/blob/master/LICENSE-MIT)授权，Copyright 2011-2025 OOUI Team and other contributors。

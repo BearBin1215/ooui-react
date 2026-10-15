@@ -86,7 +86,7 @@ export const MenuSelect = forwardRef<HTMLDivElement, MenuSelectProps>(
       matchAnchorWidth,
       hideWhenOutOfView: true,
       offset: spacing,
-      // 对齐原版：菜单空间不足时翻到锚点上方（工具栏面板按setAutoFlip(false)的口径不翻）
+      // 对齐原版：菜单空间不足时翻到锚点上方（工具栏面板按setAutoFlip(false)的规则不翻）
       flip: true,
     });
     // 菜单portal容器：宿主配置优先，弹窗子树内回落该弹窗的管理器根，其余document.body
@@ -115,7 +115,7 @@ export const MenuSelect = forwardRef<HTMLDivElement, MenuSelectProps>(
         options={options}
         ref={mergedRef}
         // 不输出tabindex：对齐原版MenuSelectWidget（只混入ClippableElement/FloatableElement，
-        // 根无tabindex），菜单根既不进Tab序也不可聚焦，焦点恒由触发控件持有。需要编程聚焦菜单
+        // 根无tabindex），菜单根既不进Tab序也不可聚焦，焦点始终由触发控件持有。需要编程聚焦菜单
         // 根的调用方经rest显式传tabIndex（Select按调用方取值）
         handleNavigationKeys={handleNavigationKeys}
         listWrapsAround={listWrapsAround}

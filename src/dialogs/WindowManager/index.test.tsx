@@ -3,7 +3,7 @@ import { render } from "vitest-browser-react";
 import { WindowManager } from ".";
 
 /**
- * WindowManager（对齐原版OO.ui.WindowManager的容器职责）的浏览器渲染契约：
+ * WindowManager（对齐原版OO.ui.WindowManager的容器职责）的浏览器渲染结果：
  * portal至body（或自定义portal目标）、modal类、size/full档位类与floating/fullscreen类。
  */
 it("缺省：portal至body，modal+size-medium+floating类，children在portal内", async () => {

@@ -10,11 +10,11 @@ import {
 } from "./popupLayout";
 
 /**
- * Popup定位纯函数契约，靶心是原版`PopupWidget.computePosition`：
- * - `resolveAlign`把`force-left`/`force-right`按方向归一为等价逻辑值（`alignMap`，`dist/oojs-ui.js:6488-6497`）。
+ * Popup定位纯函数约定，以原版`PopupWidget.computePosition`为准：
+ * - `resolveAlign`把`force-left`/`force-right`按方向统一为等价逻辑值（`alignMap`，`dist/oojs-ui.js:6488-6497`）。
  *   该配置的JSDoc（`:6001-6002`）两行描述的是同一条映射、与代码相悖，以代码为准，见comparison-guide§2.4。
- * - `placePopup`按`hPosMap`/`vPosMap`（`:6504-6513`）给落点：对齐作用于`above/below`的横轴，`before/after`
- *   作用于纵轴（纵轴不读方向、也不读是否有箭头）；终止端对齐带箭头时落到`'before'`，由`resolveAnchorAdjust`
+ * - `placePopup`按`hPosMap`/`vPosMap`（`:6504-6513`）给出位置：对齐作用于`above/below`的横轴，`before/after`
+ *   作用于纵轴（纵轴不读方向、也不读是否有箭头）；终止端对齐带箭头时映射到`'before'`，由`resolveAnchorAdjust`
  *   的腾挪（`:6583-6596`）拉到「锚点中线距终止端2×箭头盒」的稳态。
  */
 describe("resolveAlign", () => {
@@ -38,7 +38,7 @@ describe("resolveAlign", () => {
   });
 });
 
-describe("placePopup：align 的起手落点", () => {
+describe("placePopup：align 的初始位置位置", () => {
   // 锚点位于 (100, 50, 80×20)，弹层 200×100，滚动量置 0
   const base: PopupRect = {
     top: 50,
@@ -92,7 +92,7 @@ describe("placePopup：align 的起手落点", () => {
     expect(place("force-right", true)).toEqual(place("backwards", true));
   });
 
-  it("带箭头：终止端对齐落到'before'（弹层终止端贴锚点起始端），起始端对齐不受影响", () => {
+  it("带箭头：终止端对齐映射到'before'（弹层终止端贴锚点起始端），起始端对齐不受影响", () => {
     expect(place("backwards", false, "below", true)).toEqual({
       top: base.bottom,
       left: base.left - POPUP_WIDTH,
@@ -115,7 +115,7 @@ describe("placePopup：align 的起手落点", () => {
     expect(place("center", false, "below", true)).toEqual(centered);
   });
 
-  it("before/after：对齐改作用纵轴，箭头与否同落点（原版vPosMap不读anchored）", () => {
+  it("before/after：对齐改作用纵轴，箭头与否位置相同（原版vPosMap不读anchored）", () => {
     expect(place("backwards", false, "before")).toEqual({
       top: base.bottom - POPUP_HEIGHT,
       left: base.left - POPUP_WIDTH,
@@ -168,7 +168,7 @@ describe("锚点腾挪后别名的稳态", () => {
     height: 20,
   }));
 
-  it("带箭头的终止端对齐（backwards）：锚点中线距弹层终止端恒为2×箭头盒，与锚点宽度、方向无关", () => {
+  it("带箭头的终止端对齐（backwards）：锚点中线距弹层终止端始终为2×箭头盒，与锚点宽度、方向无关", () => {
     for (const base of anchors) {
       for (const rtl of [false, true]) {
         const { start } = compose(base, "backwards", rtl, true);
@@ -180,7 +180,7 @@ describe("锚点腾挪后别名的稳态", () => {
     }
   });
 
-  it("物理别名落到对应方向的逻辑值（同一物理侧）：LTR force-left≡backwards、RTL force-left≡forwards", () => {
+  it("物理别名映射到对应方向的逻辑值（同一物理侧）：LTR force-left≡backwards、RTL force-left≡forwards", () => {
     for (const base of anchors) {
       for (const rtl of [false, true]) {
         const left = compose(base, "force-left", rtl, true);
@@ -195,7 +195,7 @@ describe("锚点腾挪后别名的稳态", () => {
             ? compose(base, "backwards", rtl, true)
             : compose(base, "forwards", rtl, true),
         );
-        // 弹层体恒在锚点物理左/右侧：force-left 的终止端不越过锚点终止端、起点在锚点中线之左
+        // 弹层体始终在锚点物理左/右侧：force-left 的终止端不越过锚点终止端、起点在锚点中线之左
         const anchorCenter = base.left + base.width / 2;
         expect(left.start + 200 - base.right).toBeLessThanOrEqual(0);
         expect(left.start - anchorCenter).toBeLessThan(0);

@@ -123,7 +123,7 @@ export const SearchWidget = forwardRef<HTMLDivElement, SearchWidgetProps>(
       undefined,
     );
     /**
-     * 查询框input元素：结果列表的焦点归属元素（activedescendant落点），兼顾调用方传入的inputRef
+     * 查询框input元素：结果列表的焦点归属元素（activedescendant写入位置），兼顾调用方传入的inputRef
      */
     const inputRef = useRef<HTMLInputElement>(null);
     const mergedInputRef = useMergedRefs(inputProps?.inputRef, inputRef);
@@ -136,7 +136,7 @@ export const SearchWidget = forwardRef<HTMLDivElement, SearchWidgetProps>(
 
     /**
      * 查询区键盘：↑↓移动结果高亮、Enter选定高亮结果。挂在查询区容器上——
-     * SearchInput的props经TextInput落到其根元素而非input，键盘事件自input冒泡至此处理
+     * SearchInput的props经TextInput写入其根元素而非input，键盘事件自input冒泡至此处理
      */
     const handleQueryKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
       if (disabled) {
@@ -178,7 +178,7 @@ export const SearchWidget = forwardRef<HTMLDivElement, SearchWidgetProps>(
             onHighlightedChange={setHighlightedValue}
             onChoose={onChoose}
             disabled={disabled}
-            // 列表不输出tabindex（同独立Select口径：原版SelectWidget根非TabIndexedElement、
+            // 列表不输出tabindex（同独立Select的规则：原版SelectWidget根非TabIndexedElement、
             // 无tabindex，本组件也没有编程聚焦列表的地方）。activedescendant归属查询框
             // （对齐原版SearchWidget构造期results.setFocusOwner(query.$input)）
             focusOwnerRef={inputRef}

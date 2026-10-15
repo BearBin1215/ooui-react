@@ -82,7 +82,7 @@ export const TabSelect = forwardRef<HTMLDivElement, TabSelectProps>(
     const isMobile = useIsMobile();
     const rootRef = useRef<HTMLDivElement>(null);
     const setRootRef = useMergedRefs(ref, rootRef);
-    // 直选族共用容器脚手架（受控值/可选值派生/拖拽/直选键盘）
+    // 直选族共享容器实现（受控值/可选值派生/拖拽/直选键盘）
     const {
       value: currentValue,
       itemRefs,
@@ -105,7 +105,7 @@ export const TabSelect = forwardRef<HTMLDivElement, TabSelectProps>(
       onMouseDown,
       onMouseUp,
       onMouseLeave,
-      // 点击页签后焦点收进tablist，方向键立即可用（对齐ARIA APG，见useDirectSelect）
+      // 点击页签后焦点移入tablist，方向键立即可用（对齐ARIA APG，见useDirectSelect）
       focusRoot: () => rootRef.current?.focus(),
     });
 
@@ -137,7 +137,7 @@ export const TabSelect = forwardRef<HTMLDivElement, TabSelectProps>(
         option.style.scrollMargin = `0 ${padding}px`;
       }
       option.scrollIntoView({ block: "nearest", inline: "nearest" });
-      // 非移动端未设置过scroll-margin，置空串是无害复位
+      // 非移动端未设置过scroll-margin，置空字符串是无害复位
       option.style.scrollMargin = "";
     }, [currentValue, isMobile, itemRefs]);
 

@@ -1,6 +1,6 @@
 ---
 title: TabPanelLayout
-description: "Props for the TabPanelLayout component: a single tab panel of IndexLayout (role=tabpanel), its active state and swallowed tab fields; usually used indirectly via IndexLayout options."
+description: "Props for the TabPanelLayout component: a single tab panel of IndexLayout (role=tabpanel), its active state and the tab fields it consumes; usually used indirectly via IndexLayout options."
 ---
 
 # TabPanelLayout
@@ -11,7 +11,7 @@ A tab panel: an item of [IndexLayout](../index-layout/index.mdx)'s `options` arr
 
 ## Standalone use
 
-`active` declares the active state (outputs the `oo-ui-tabPanelLayout-active` class). `label` / `value` / `disabled` are fields carried along with the tab-set object — the component swallows them so they never land as DOM attributes. The panel defaults to `expanded` (fills its parent via absolute positioning), so when placed on its own it needs a positioned, sized parent.
+`active` declares the active state (outputs the `oo-ui-tabPanelLayout-active` class). `label` / `value` / `disabled` are fields carried along with the tab-set object — the component consumes them, so they are never written as DOM attributes. The panel defaults to `expanded` (fills its parent via absolute positioning), so when placed on its own it needs a positioned, sized parent.
 
 ```tsx preview
 import { IndexLayout } from "ooui-react";
@@ -62,8 +62,8 @@ Inherits all [PanelLayout](../panel-layout/index.mdx) props, plus:
 | --- | --- | --- | --- |
 | `active` | Whether this is the active panel | `boolean` | `false` |
 | `scrollable` | Whether scrollable (panels scroll by default) | `boolean` | `true` |
-| `label` / `value` / `disabled` | Carried with the tab-set object, swallowed by the component | `ReactNode` / `string \| number` / `boolean` | — |
+| `label` / `value` / `disabled` | Carried with the tab-set object, consumed by the component | `ReactNode` / `string \| number` / `boolean` | — |
 
 ## See also
 
-- The tab container (with the tabpanel wiring): [IndexLayout](../index-layout/index.mdx)
+- The tab container (with the tabpanel association): [IndexLayout](../index-layout/index.mdx)

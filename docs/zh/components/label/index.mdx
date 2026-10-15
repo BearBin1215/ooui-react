@@ -11,12 +11,12 @@ description: "Label 组件的属性说明：独立摆放的表单标签、htmlFo
 
 ## 关联表单控件
 
-点击标签聚焦/激活控件依赖原生 `<label>` 的 `htmlFor` 关联。关联通道按组件分派，`id` 写错落点会静默失效：{/* deviations: dev-label-input */}
+点击标签聚焦/激活控件依赖原生 `<label>` 的 `htmlFor` 关联。关联方式因组件而异，`id` 的写入位置不对会静默失效：{/* deviations: dev-label-input */}
 
-- **TextInput 系**（含 MultilineTextInput、NumberInput、ComboBoxInput 等）：`id` 落在根 div 上，要落到原生输入元素须经 `inputProps={{ id }}` 写入。
-- **CheckboxInput / RadioInput**：没有 `inputProps` 通道，用专用的 `inputId` prop——它直接落在原生 `<input>` 上。
+- **TextInput 系**（含 MultilineTextInput、NumberInput、ComboBoxInput 等）：`id` 写在根 div 上；要写在原生输入元素上，须经 `inputProps={{ id }}` 写入。
+- **CheckboxInput / RadioInput**：没有 `inputProps` 通道，用专用的 `inputId` prop——它直接写在原生 `<input>` 上。
 
-表单里这类关联由 [FieldLayout](../field-layout/index.mdx) 自动接线，无需手写。
+表单里这类关联由 [FieldLayout](../field-layout/index.mdx) 自动处理，无需手写。
 
 :::note 表单里更推荐用 FieldLayout
 表单中「标签 + 控件」的布局、对齐与关联激活通常交给 [FieldLayout](../field-layout/index.mdx) 统一处理，标签与控件各自单独书写 `htmlFor`/`id` 适合自由拼装的场景。

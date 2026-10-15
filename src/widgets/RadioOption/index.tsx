@@ -7,7 +7,7 @@ import type { ChangeHandler } from "../../utils";
 import type { OptionProps } from "../Option";
 
 // highlighted不适用：radio选项无键盘高亮态（对齐原版RadioOptionWidget.static.highlightable=false），
-// Omit避免其随props落入<label>
+// Omit避免其随props写入<label>
 export interface RadioOptionProps extends Omit<
   OptionProps<HTMLLabelElement>,
   "highlighted"

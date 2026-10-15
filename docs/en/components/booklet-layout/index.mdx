@@ -11,7 +11,7 @@ A booklet layout: with `outlined`, an [outline select](../outline-select/index.m
 
 ## Basic usage
 
-An `options` item is `{ value, label, children }` plus the [PageLayout](../page-layout/index.mdx) panel fields; the active page rides the `value` / `defaultValue` / `onChange` channels.
+An `options` item is `{ value, label, children }` plus the [PageLayout](../page-layout/index.mdx) panel fields; the active page is controlled through `value` / `defaultValue` / `onChange`.
 
 ```tsx preview
 import { useState } from "react";
@@ -112,7 +112,7 @@ export default App;
 
 ## Continuous mode and auto-focus
 
-`continuous` makes all pages visible and smooth-scrolls to the target page when switching; in continuous mode, focus entering a page (via Tab or clicking a focusable element inside it) selects that page in reverse. `autoFocus` (default `true`) focuses the first focusable element inside the page after every switch (the first frame does not grab focus; skipped when focus is already inside the page, and suppressed in the mobile form). Both can be turned off.
+`continuous` makes all pages visible and smooth-scrolls to the target page when switching; in continuous mode, focus entering a page (via Tab or clicking a focusable element inside it) conversely selects that page as the active one. `autoFocus` (default `true`) focuses the first focusable element inside the page after every switch (the first frame does not grab focus; skipped when focus is already inside the page, and suppressed in the mobile form). Both can be turned off.
 
 When the active page is removed, a page is auto-selected: the next surviving page, or the new last page when the last one was removed — the outline and the page stack stay in sync.
 

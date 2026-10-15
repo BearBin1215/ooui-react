@@ -96,7 +96,7 @@ export const PopupButton = forwardRef<HTMLSpanElement, PopupButtonProps>(
       // framed在本组件内消费：它决定弹层的-framed-popup/-frameless-popup类（对齐原版isFramed()）
       framed = true,
       // Popup专属参数经单次解构归组后整体转发（而非逐个手抄），
-      // 避免新增Popup prop时遗漏其落入buttonRest被误传给Button
+      // 避免新增Popup prop时遗漏而混入buttonRest、被误传给Button
       position,
       align,
       anchor,

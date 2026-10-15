@@ -19,7 +19,7 @@ const getTagCloseButton = (screen: { container: Element }) =>
   )!;
 
 /**
- * MenuTagMultiselect（对齐原版OO.ui.MenuTagMultiselectWidget）的浏览器渲染契约：
+ * MenuTagMultiselect（对齐原版OO.ui.MenuTagMultiselectWidget）的浏览器渲染约定：
  * 候选菜单portal至body、菜单项选中态与标签集合双向同步
  * （已添加标签的菜单项呈选中态，移除标签同步取消选中）。
  * 输入过滤/Enter选定/失焦提交见TagMultiselect用例（两组件共用同一实现）。

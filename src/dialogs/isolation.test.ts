@@ -2,10 +2,10 @@ import { afterEach, expect, it } from "vitest";
 import { acquireIsolation, releaseIsolation } from "./isolation";
 
 /**
- * isolation（对齐原版`WindowManager.toggleIsolation`）的浏览器侧契约：
+ * isolation（对齐原版`WindowManager.toggleIsolation`）的浏览器侧行为约定：
  * 标记范围（管理器根路径以外的兄弟节点）、弹窗内浮层不在范围内（它是管理器根的子节点）、
  * 多层嵌套的逐层标记、注销时只撤销自己写入的属性、叠加时的层位与恢复。
- * 标记落在手搭的DOM上，不经组件渲染——组件侧的接入见Dialog的用例。
+ * 标记写在手动创建的DOM上，不经组件渲染——组件侧的接入见Dialog的用例。
  */
 const created: HTMLElement[] = [];
 const handles: object[] = [];

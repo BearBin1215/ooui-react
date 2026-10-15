@@ -41,7 +41,7 @@ type InputElementAttributes<T extends HTMLInputElement | HTMLTextAreaElement> = 
  * chained after the component's own logic rather than replacing it.
  *
  * 调用方可经 `inputProps` 传入的输入元素属性。`value` / `defaultValue` 由组件
- * 的值管线管理、已从本通道剔除；`onChange` 可传入，但串联在组件自身逻辑之后、
+ * 的值处理流程管理、已从本通道剔除；`onChange` 可传入，但串联在组件自身逻辑之后、
  * 不替代。泛型不约束元素类型。
  */
 export type UserInputProps<T = HTMLInputElement | HTMLTextAreaElement> = Partial<
@@ -50,8 +50,8 @@ export type UserInputProps<T = HTMLInputElement | HTMLTextAreaElement> = Partial
 
 /**
  * 输入类组件的公共派生配置（TextInput/MultilineTextInput/NumberInput/ComboBoxInput共用）。
- * 以下七项在原版同属 InputWidget/TextInputWidget 的行为分层，由 useInputProps 统一派生：
- * 属性落点（title/accessKey/tabIndex/dir 均落输入元素）、字段id（FieldLayout的通道A）、
+ * 以下各项在原版同属 InputWidget/TextInputWidget 的行为分层，由 useInputProps 统一派生：
+ * 属性写入位置（title/accessKey/tabIndex/dir 均写在输入元素）、字段id（FieldLayout的通道A）、
  * 标签让位的内边距、required 指示器的缺省回退、图标与指示器的 mousedown 聚焦、软校验的
  * aria-invalid、指示器槽位的属性合并
  */
@@ -65,7 +65,7 @@ interface InputCommonConfig<
   /** 组件根元素引用：内边距落侧按其样式表方向解析（规则见useRootDirection） */
   rootRef: RefObject<HTMLElement | null>;
 
-  /** 当前值（受控/非受控已由调用方收敛），用于软校验与输入框的value属性 */
+  /** 当前值（受控/非受控已由调用方统一处理），用于软校验与输入框的value属性 */
   value: V;
 
   /** 是否禁用 */
@@ -74,7 +74,7 @@ interface InputCommonConfig<
   /** 显式tabIndex（禁用时被覆盖为-1） */
   tabIndex?: number;
 
-  /** 快捷键（与原版 AccessKeyedElement 一致落在输入元素上） */
+  /** 快捷键（与原版 AccessKeyedElement 一致写在输入元素上） */
   accessKey?: string;
 
   /** 表单字段名 */
@@ -92,13 +92,13 @@ interface InputCommonConfig<
   /** 最大长度（原版经 maxlength 属性生效） */
   maxLength?: number;
 
-  /** 原始title（与label/invisibleLabel/accessKey一并经resolveTitle解析后落输入元素） */
+  /** 原始title（与label/invisibleLabel/accessKey一并经resolveTitle解析后写在输入元素上） */
   title?: string;
 
   /** 标签不可见（tooltip兜底到title的判定入参，见resolveTitle） */
   invisibleLabel?: boolean;
 
-  /** 文本方向（原版 setDir 落在 $input，故同样落输入元素而非根元素） */
+  /** 文本方向（原版 setDir 写在 $input，故同样写在输入元素而非根元素） */
   dir?: string;
 
   /** 标签元素引用，用于按标签宽度给输入框预留内边距 */
@@ -107,7 +107,7 @@ interface InputCommonConfig<
   /** 标签内容（同时用于标签让位的内边距测量与title兜底） */
   label?: ReactNode;
 
-  /** 标签位置，决定预留内边距落在哪一侧 */
+  /** 标签位置，决定预留内边距加在哪一侧 */
   labelPosition?: LabelPosition;
 
   /** 组件指示器 */
@@ -122,7 +122,7 @@ interface InputCommonConfig<
   /** 指示器的附加属性（其 onMouseDown 与装饰聚焦串联，聚焦在前） */
   indicatorProps?: Omit<IndicatorBaseProps, "indicator">;
 
-  /** 软校验（已归一化的判定函数）；缺省仅浏览器原生约束 */
+  /** 软校验（已规范化的判定函数）；缺省仅浏览器原生约束 */
   validate?: (value: V) => boolean | Promise<boolean>;
 
   /**
@@ -133,7 +133,7 @@ interface InputCommonConfig<
 
   /**
    * 值变更提交：输入框原生字符串值→调用方的值形态（如NumberInput的数值解析）。
-   * 该管线挂在onChange内最先执行，调用方经inputProps传入的onChange串联其后、无法截断
+   * 该处理流程挂在onChange内最先执行，调用方经inputProps传入的onChange串联其后、无法截断
    */
   onCommitValue?: (value: string, event: ChangeEvent<T>) => void;
 
@@ -158,7 +158,7 @@ interface InputCommonConfig<
  * 合并组件内部与调用方的同名事件处理器：两者皆为函数且键以`on`开头时串联为一个处理器，
  * **内部逻辑在前、调用方在后**，并把该键从调用方属性中移除（避免其后展开时覆盖串联结果）。
  * 其余键原样保留。用于`useInputProps`的`inputProps`通道——事件处理器不采用"调用方覆盖"
- * 语义，调用方传入处理器不应截断组件自身的交互管线
+ * 语义，调用方传入处理器不应截断组件自身的交互处理流程
  * @param own 组件内部（形态专属）属性
  * @param user 调用方通道属性，返回的对象中已移除被串联消费掉的键
  */
@@ -187,9 +187,9 @@ export function chainEventHandlers(
 }
 
 /**
- * 原生输入元素的公共落点属性（落点六件套：id/name/title/accessKey/tabIndex/dir，
+ * 原生输入元素的公共写入属性（id/name/title/accessKey/tabIndex/dir，
  * 外加disabled/aria-disabled与input类名）。对齐原版InputWidget的$titled/$accessKeyed
- * 均落$input的口径；由`useInputProps`与无标签槽位、不走完整输入管线的
+ * 均写在$input的规则；由`useInputProps`与无标签槽位、不走完整输入处理流程的
  * CheckboxInput/RadioInput共用，避免各组件手工重写同一套派生
  * @param inputId 显式input元素id（优先于FieldLayout认领的字段id，配合label的htmlFor）
  * @param label 标签内容（title解析的兜底入参，Checkbox/Radio等无标签槽位场景不传）
@@ -219,7 +219,7 @@ export function useNativeInputProps({
   const fieldInputId = useFieldInputId(inputId);
   // 快捷键登记给FieldLayout（原版委托字段控件的accessKey给label的tooltip）
   useFieldAccessKey(accessKey);
-  // 快捷键文案由宿主解析（未提供时title附原键值），title/accessKey同落input
+  // 快捷键文案由宿主解析（未提供时title附原键值），title/accessKey同写在input
   const accessKeyLabel = useAccessKeyLabel(accessKey);
   return {
     id: fieldInputId,
@@ -237,7 +237,7 @@ export function useNativeInputProps({
 /**
  * 组件根元素（样式表）的有效方向：标签由主题CSS以物理left/right定位，故内边距取侧须
  * 跟随样式表方向（对齐原版`positionLabel`读`$element.css('direction')`），不读输入元素
- * 自身的`dir`——按原版`dir`只落在输入元素上、仅影响文本方向。
+ * 自身的`dir`——按原版`dir`只写在输入元素上、仅影响文本方向。
  * `override`为调用方已测得的同一方向（如useScrollbarOffset随测量周期更新的那一份）：给出时
  * 本处不再自读，避免同一运行期出现两个各自为政的方向来源；缺省时挂载期读一次
  * （无测量周期的形态不做重读——原版每次调`positionLabel`都重读方向，本工程以测量周期近似）
@@ -257,11 +257,11 @@ function useRootDirection(
 
 /**
  * 派生输入元素的公共属性与周边联动。
- * 值的 state 与 onChange 由调用方各自持有（值解析管线经 config.onCommitValue 注入），
+ * 值的 state 与 onChange 由调用方各自持有（值解析处理流程经 config.onCommitValue 注入），
  * 形态差异经返回的 `inputProps(overrides, userProps)` 传入，合并规则：
  * - className/style/id：公共项与两侧属性合并（公共项在前）；
  * - 事件处理器：两侧同名者一律串联（组件内部逻辑在前、调用方通道在后），调用方无法
- *   截断组件自身的交互管线（如ComboBoxInput的菜单导航、NumberInput的方向键步进）；
+ *   截断组件自身的交互处理流程（如ComboBoxInput的菜单导航、NumberInput的方向键步进）；
  * - 其余非事件属性：overrides先展开、userProps（调用方通道）后展开覆盖，
  *   作为声明过的逃生舱（如aria-*透传）
  */
@@ -338,12 +338,12 @@ export function useInputProps<
       ? indicatorOverride
       : resolveRequiredIndicator(indicator, required);
 
-  // 输入框内边距的单一来源：以labelPadding为基准（对齐positionLabel的叠加口径），其上合入
+  // 输入框内边距的单一来源：以labelPadding为基准（对齐positionLabel的叠加规则），其上合入
   // inputStyle，出现滚动条时再**覆写**该侧padding——故经inputStyle传同侧padding会在有
   // 滚动条时被丢弃；overrides与userProps的style在本memo之后展开（见finalStyle），可再覆盖
   const mergedStyle = useMemo<CSSProperties>(() => {
     const base = { ...labelPadding, ...inputStyle };
-    // 与useLabelPadding同口径经hasLabel判定（0等有效节点同样并入滚动条让位）
+    // 与useLabelPadding同一规则经hasLabel判定（0等有效节点同样并入滚动条让位）
     if (!hasLabel(label) || !scrollbarWidth || labelPosition !== "after") {
       return base;
     }
@@ -369,8 +369,8 @@ export function useInputProps<
     userProps?: UserInputProps<T>,
   ) => {
     // 需三方合并的 className/style/id 单独取出；on* 统一经 chainEventHandlers 串联——
-    // 值管线与软校验的自身包装器（onChange/onBlur/onFocus）恒在，即便调用方未给同名处理器
-    // 也须输出以驱动管线，故作为 own 侧一并交给串联；其余形态专属属性按"覆盖"展开
+    // 值处理流程与软校验的自身包装器（onChange/onBlur/onFocus）始终存在，即便调用方未给同名处理器
+    // 也须输出以驱动这条流程，故作为 own 侧一并交给串联；其余形态专属属性按"覆盖"展开
     const { className, style, id, onChange, onBlur, onFocus, ...rest } =
       overrides ?? ({} as O);
     const {
@@ -400,8 +400,8 @@ export function useInputProps<
       userRest as Record<string, unknown>,
     );
     // 三键单独取出以显式声明类型；串联只改写运行时值，键与值类型未变。onChange/onBlur/
-    // onFocus 因自身包装器恒在而恒有值（onChange 在无值管线的极端场景退化为 no-op 包装，
-    // 对恒受控的 input 反而免去 React 的 value-without-onChange 告警）
+    // onFocus 因自身包装器始终存在而始终有值（onChange 在无值处理流程的极端场景退化为 no-op 包装，
+    // 对始终受控的 input 反而免去 React 的 value-without-onChange 告警）
     const {
       onChange: chainedOnChange,
       onBlur: chainedOnBlur,
@@ -411,7 +411,7 @@ export function useInputProps<
     // 显式注解CSSProperties：推断类型会携带csstype的海量属性类型，声明产物不可移植（TS2883）
     const finalStyle: CSSProperties = { ...mergedStyle, ...style, ...userStyle };
     return {
-      // 公共落点项（id/name/accessKey/title/dir/tabIndex/disabled/aria-disabled/类名）来自子hook，
+      // 公共写入项（id/name/accessKey/title/dir/tabIndex/disabled/aria-disabled/类名）来自子hook，
       // 仅id与className在本工厂参与三方合并
       ...nativeProps,
       id: userId ?? id ?? nativeProps.id,

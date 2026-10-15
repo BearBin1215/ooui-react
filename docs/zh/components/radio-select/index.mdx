@@ -11,7 +11,7 @@ description: "RadioSelect 组件的属性说明：单选组（role=radiogroup）
 
 ## 基本用法
 
-选中值走 `value` / `defaultValue` / `onChange` 三条通道。取消当前选中不会自动产生新值——`onChange` 的参数始终是新的选中项 `value`。
+选中值走 `value` / `defaultValue` / `onChange` 通道。取消当前选中不会自动产生新值——`onChange` 的参数始终是新的选中项 `value`。
 
 ```tsx preview
 import { useState } from "react";
@@ -94,7 +94,7 @@ export default App;
 
 ## 键盘与焦点
 
-- 焦点停在**整组**上（各选项本身不进 Tab 序）。↑↓←→ 在非禁用项间**环绕移动并直接改选**，Enter 重申当前项。
+- 焦点停在**整组**上（各选项本身不进入 Tab 顺序）。↑↓←→ 在非禁用项间**环绕移动并直接改选**，Enter 重申当前项。
 - 首次以 Tab 聚焦到组、且当前无任何选中项时，自动选中首个非禁用项（与原生单选组行为一致）。
 - `onChange` 的第二个参数是原生 `change` 事件；经键盘方向键改选时不发原生 `change`（对齐原版），因此第二参数可能缺省。
 
@@ -103,7 +103,7 @@ export default App;
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | `options` | 选项集，每项含 `value` 与 `children`（选项文本） | `RadioSelectOptionProps[]` | — |
-| `value` | 当前选中值（受控，传入即受控模式） | `string \| number` | — |
+| `value` | 当前选中值（受控，传入后即进入受控模式） | `string \| number` | — |
 | `defaultValue` | 非受控初始选中值 | `string \| number` | — |
 | `onChange` | 选中值变更回调（值优先，含原生事件） | `ChangeHandler<string \| number \| undefined, HTMLInputElement>` | — |
 | `name` | 表单提交字段名，透传给每个选项的原生 `radio`（同名即互斥） | `string` | — |

@@ -4,9 +4,9 @@ import { getRoot } from "../../testing";
 import { LabelToolGroup } from ".";
 
 /**
- * LabelToolGroup（对齐原版OO.ui.LabelToolGroup）的浏览器渲染契约：
- * 只保留handle的静态文本块（无工具容器、不可交互）、把手图标与指示器槽位、
- * title落在根元素、禁用态与align不透传。
+ * LabelToolGroup（对齐原版OO.ui.LabelToolGroup）的浏览器渲染结果：
+ * 只保留handle的静态文本块（无工具容器、不可交互）、handle图标与指示器槽位、
+ * title写在根元素、禁用态与align不透传。
  */
 it("结构：labelToolGroup类链与handle，不渲染工具容器", async () => {
   const screen = await render(
@@ -20,7 +20,7 @@ it("结构：labelToolGroup类链与handle，不渲染工具容器", async () =>
   expect(root).toHaveClass("oo-ui-labelElement");
   expect(root).toHaveClass("oo-ui-iconElement");
   expect(root).toHaveClass("oo-ui-indicatorElement");
-  // 原版TitledElement的$titled即$element：title落在根元素
+  // 原版TitledElement的$titled即$element：title写在根元素
   expect(root.getAttribute("title")).toBe("tooltip");
 
   const handle = root.querySelector(

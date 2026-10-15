@@ -17,9 +17,9 @@ const getPanels = (screen: { container: Element }) => [
 ];
 
 /**
- * IndexLayout（对齐原版OO.ui.IndexLayout）的浏览器渲染契约：
+ * IndexLayout（对齐原版OO.ui.IndexLayout）的浏览器渲染结果：
  * MenuLayout顶部页签 + stack容器内面板的两段结构、页签与面板的aria互指、
- * 非激活面板的until-found隐藏（禁用页签恒完全隐藏）、切换与continuous/autoFocus。
+ * 非激活面板的until-found隐藏（禁用页签始终完全隐藏）、切换与continuous/autoFocus。
  */
 it("结构：indexLayout根 + 顶部菜单容器（TabSelect）+ 面板栈容器", async () => {
   const screen = await render(<IndexLayout options={OPTIONS} />);
@@ -53,7 +53,7 @@ it("缺省选中首个页签：aria互指、until-found隐藏与禁用页完全�
   // openMatchedPanels缺省true：普通未激活面板以until-found隐藏（对浏览器查找可见）
   expect(panels[1]).not.toHaveClass("oo-ui-tabPanelLayout-active");
   expect(panels[1]!.getAttribute("hidden")).toBe("until-found");
-  // 禁用页签的面板不参与查找定位，恒完全隐藏
+  // 禁用页签的面板不参与查找定位，始终完全隐藏
   expect(panels[2]!.getAttribute("hidden")).not.toBe("until-found");
 });
 

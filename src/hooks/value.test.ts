@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { resolveLayoutSelection } from "./value";
 
 /**
- * value.ts纯函数的契约测试。resolveLayoutSelection是IndexLayout/BookletLayout共用的
+ * value.ts纯函数的约定测试。resolveLayoutSelection是IndexLayout/BookletLayout共用的
  * 激活值派生：有效值原样、缺失（首次无值）或失效（不在新options内，如页被移除）时按
  * `fallback`给定的**原版**语义回退（IndexLayout首个可选 / BookletLayout随stack的
  * 后一项→末项），且失效回退须以**上一轮**的options为定位依据（失效值可能已不在新列表中）。
@@ -42,7 +42,7 @@ describe("resolveLayoutSelection（布局激活值的缺失/失效回退）", ()
 
   describe("fallback=firstSelectable（IndexLayout：对齐selectFirstSelectableTabPanel）", () => {
     it("失效时取首个非禁用项，而非邻近项", () => {
-      // 移除乙后剩甲/丙：首个可选是甲（原「原位置」口径也会取丙，已按原版改为甲）
+      // 移除乙后剩甲/丙：首个可选是甲（原「原位置」规则也会取丙，已按原版改为甲）
       expect(
         resolveLayoutSelection(
           "b",

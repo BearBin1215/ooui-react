@@ -24,7 +24,7 @@ function MergeHarness({
   );
 }
 
-/** useLatestRef的契约是"渲染期即同步为最新值"，故把读取结果渲染进DOM */
+/** useLatestRef的约定是"渲染期即同步为最新值"，故把读取结果渲染进DOM */
 function LatestHarness({ value }: { value: string }) {
   const latest = useLatestRef(value);
   return <span data-testid="latest">{latest.current}</span>;

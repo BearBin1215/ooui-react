@@ -4,16 +4,16 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 /**
- * 「双层文档契约」守卫：dev-docs/DEVIATIONS.md（维护者台账）与 docs/（消费方文档）之间的同步契约。
+ * 「双层文档约定」守卫：dev-docs/DEVIATIONS.md（维护者明细）与 docs/（消费方文档）之间的同步约定。
  *
- * 本测试不测组件，而是读仓库内的台账与文档文件做契约校验；按文件名约定落 node 组——
+ * 本测试不测组件，而是读仓库内的明细与文档文件做约定校验；按文件名约定落 node 组——
  * 这是对「进 node 组判据」（全新模块实例 / 重定义全局）的一条例外，动机同
- * theme-contract.node.test.ts：把跨文件契约从「静默漂移」变为测试断言。
+ * theme-contract.node.test.ts：把跨文件约定从「静默漂移」变为测试断言。
  *
- * 契约内容见 dev-docs/DEVIATIONS.md 的「双层文档契约」节：
- * - 台账每条带元数据行：`> id：<dev-*> ｜ 组件：<组件列表> ｜ 文档：<路由列表>｜无需（<理由>）`
+ * 差异规则见 dev-docs/DEVIATIONS.md 的「双层文档约定」节：
+ * - 明细每条带元数据行：`> id：<dev-*> ｜ 组件：<组件列表> ｜ 文档：<路由列表>｜无需（<理由>）`
  * - 文档侧差异内容行尾带 deviations 标记注释（`deviations: <id...>`），中英两侧标记集合一致
- * - 台账「文档」路由指向的页面必须携带对应标记（双向对齐）
+ * - 明细「文档」路由指向的页面必须携带对应标记（双向对齐）
  * - 差异容器只用 warning（迁移陷阱）/ note（通知性）；tip 仅供与差异无关的通知性提示；每页差异容器 ≤3 个
  */
 
@@ -24,14 +24,14 @@ interface Entry {
   id: string;
   component: string;
   doc: string;
-  /** 元数据行在台账中的行号（1 起），报错时定位用 */
+  /** 元数据行在明细中的行号（1 起），报错时定位用 */
   line: number;
 }
 
 const ledgerText = readFileSync(join(ROOT, "dev-docs", "DEVIATIONS.md"), "utf8");
 const ledgerLines = ledgerText.split(/\r?\n/);
 
-/** 只解析四个差异分节（`###` 之后），避免把头部契约说明里的要点列表当条目 */
+/** 只解析四个差异分节（`###` 之后），避免把头部约定说明里的要点列表当条目 */
 const sectionStarts = ledgerLines
   .map((line, i) => (line.startsWith("### ") ? i : -1))
   .filter((i) => i >= 0);
@@ -115,8 +115,8 @@ const walkMdx = (dir: string): string[] =>
 const zhFiles = walkMdx(join(ROOT, "docs", "zh"));
 const enFiles = walkMdx(join(ROOT, "docs", "en"));
 
-describe("双层文档契约：dev-docs/DEVIATIONS.md ↔ docs/", () => {
-  it("台账每条都有格式合法且唯一的元数据行", () => {
+describe("双层文档约定：dev-docs/DEVIATIONS.md ↔ docs/", () => {
+  it("明细每条都有格式合法且唯一的元数据行", () => {
     expect(entryProblems).toEqual([]);
     const problems: string[] = [];
     const seen = new Map<string, number>();
@@ -148,7 +148,7 @@ describe("双层文档契约：dev-docs/DEVIATIONS.md ↔ docs/", () => {
     expect(problems).toEqual([]);
   });
 
-  it("台账「文档」路由在中英两侧都存在对应页面", () => {
+  it("明细「文档」路由在中英两侧都存在对应页面", () => {
     const problems: string[] = [];
     for (const entry of entries) {
       const routes = parseRoutes(entry.doc);
@@ -169,7 +169,7 @@ describe("双层文档契约：dev-docs/DEVIATIONS.md ↔ docs/", () => {
     expect(problems).toEqual([]);
   });
 
-  it("文档侧标记引用的 id 都在台账中（无孤儿标记）", () => {
+  it("文档侧标记引用的 id 都在明细中（无孤儿标记）", () => {
     const known = new Set(entries.map((e) => e.id));
     const problems: string[] = [];
     for (const file of [...zhFiles, ...enFiles]) {
@@ -182,7 +182,7 @@ describe("双层文档契约：dev-docs/DEVIATIONS.md ↔ docs/", () => {
     expect(problems).toEqual([]);
   });
 
-  it("台账每个文档路由都由对应页面的标记承载（双向对齐）", () => {
+  it("明细每个文档路由都由对应页面的标记承载（双向对齐）", () => {
     const problems: string[] = [];
     for (const entry of entries) {
       const routes = parseRoutes(entry.doc);
@@ -197,7 +197,7 @@ describe("双层文档契约：dev-docs/DEVIATIONS.md ↔ docs/", () => {
           }
           if (!markerOf(file).has(entry.id)) {
             problems.push(
-              `${entry.id} 记录的落点 ${route} 在 ${lang} 侧缺少标记 {/* deviations: ${entry.id} */}（或内容未同步）`,
+              `${entry.id} 记录的路由 ${route} 在 ${lang} 侧缺少标记 {/* deviations: ${entry.id} */}（或内容未同步）`,
             );
           }
         }
@@ -208,7 +208,7 @@ describe("双层文档契约：dev-docs/DEVIATIONS.md ↔ docs/", () => {
 
   it("每个页面的中英两侧标记集合一致", () => {
     const problems: string[] = [];
-    // 以 docs/zh 或 docs/en 之后的相对路径为镜像键（分隔符归一为 /，兼容 Windows）
+    // 以 docs/zh 或 docs/en 之后的相对路径为镜像键（分隔符统一为 /，兼容 Windows）
     const mirrorKey = (f: string): string | null => {
       const m = f.match(/[/\\]docs[/\\](?:zh|en)[/\\](.+)$/);
       return m ? m[1].replace(/\\/g, "/") : null;

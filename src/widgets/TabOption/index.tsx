@@ -17,7 +17,7 @@ export type TabOptionProps = OptionProps & {
    * Label carried with the option object; swallowed so it never lands as a DOM
    * attribute (the render uses `children`).
    *
-   * 随选项对象透入的标签，组件吞掉以避免落成 DOM 属性（渲染用 `children`）。
+   * 随选项对象透入的标签，组件吞掉以避免成为 DOM 属性（渲染用 `children`）。
    */
   label?: ReactNode;
 };

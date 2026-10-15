@@ -165,7 +165,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
     },
     ref,
   ) => {
-    // size='full'时恒为满屏；窄屏自动满屏在measureFrame内判定
+    // size='full'时始终为满屏；窄屏自动满屏在measureFrame内判定
     const [full, setFull] = useState(size === "full");
     // body底部让位的高度（foot实测），仅bodyFitFoot开启时写入body的style
     const [footHeight, setFootHeight] = useState(0);
@@ -182,7 +182,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
     const managerRef = useRef<HTMLDivElement>(null);
     // 打开前的焦点元素，关闭teardown后归还焦点
     const returnFocusRef = useRef<HTMLElement | null>(null);
-    // 滚动锁登记句柄：实例内恒定的空对象，作为scrollLock登记表的key
+    // 滚动锁登记句柄：实例内固定不变的空对象，作为scrollLock登记表的key
     const scrollLockHandleRef = useRef({});
     // 内容隔离登记句柄，同scrollLock
     const isolationHandleRef = useRef({});
@@ -210,7 +210,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
       size === "full" ? false : DIALOG_FRAME_WIDTHS[size];
 
     // 测量读取的渲染期状态（active/setup/size/frameWidth/bodyFitFoot）：经ref读取，
-    // 使测量函数与监听恒为最新闭包（不必用依赖数组驱动重挂）
+    // 使测量函数与监听始终为最新闭包（不必用依赖数组驱动重挂）
     const frameStateRef = useLatestRef({ active, setup, size, frameWidth, bodyFitFoot });
 
     /**
@@ -231,7 +231,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
       }
       // body底部让位（对齐原版`$body.css('bottom', $foot.outerHeight(true))`）：foot绝对定位、
       // 高度由内容（含换行）决定，与frame高度同一次测量读出，经state回到渲染。
-      // 取offsetHeight即原版outerHeight(true)的口径——foot为纯定位壳、主题与其调用方均不设外边距
+      // 取offsetHeight即原版outerHeight(true)的规则——foot为纯定位壳、主题与其调用方均不设外边距
       if (bodyFitFootNow && footRef.current) {
         setFootHeight(footRef.current.offsetHeight);
       }
@@ -288,7 +288,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
       }
     }, [active, setup, frameWidth, bodyFitFoot, measureFrame]);
 
-    // 键盘行为，对齐原版Dialog.prototype.onDialogKeyDown：keydown落在弹窗根（焦点须在弹窗内
+    // 键盘行为，对齐原版Dialog.prototype.onDialogKeyDown：keydown事件发生在弹窗根（焦点须在弹窗内
     // 才生效），故不会与Popup的document级捕获ESC监听（如弹窗内FieldsetLayout帮助弹层）互相触发。
     // ESC触发onEscape（配合escapable），Ctrl/Cmd+Enter触发primary action
     const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (ev) => {
@@ -321,7 +321,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
     /**
      * 焦点陷阱重定向，对齐原版Window.prototype.onFocusTrapFocused/focus：
      * Tab到达前/后陷阱时把焦点送回content内末/首个可聚焦元素；content内无可聚焦元素时
-     * 回退聚焦content自身（tabIndex=-1可编程聚焦），使Tab在弹窗内闭环
+     * 回退聚焦content自身（tabIndex=-1可编程聚焦），使Tab在弹窗内循环
      */
     const focusIntoContent = (backwards: boolean) => {
       const content = contentRef.current;
@@ -397,7 +397,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
 
     // 内容隔离：打开周期（open||active）内给管理器根路径以外的兄弟节点加aria-hidden/inert，
     // 使屏幕阅读器与焦点都留在弹窗内。上锁窗口与滚动锁同源（对齐原版openWindow上锁、
-    // teardown完成解锁）；本组件的管理器恒为modal（WindowManager的modal缺省true），故不另设开关。
+    // teardown完成解锁）；本组件的管理器始终为modal（WindowManager的modal缺省true），故不另设开关。
     // 管理器根在提交期即由ref回调置入，本effect运行时已可读。与滚动锁同形不做依赖清理：
     // acquireIsolation幂等（重复登记仅触发一次全量重算），「先注销再登记」的清理式写法
     // 只会在active翻转时平白多出注销、登记各一次的重算

@@ -219,7 +219,7 @@ function ReactVariants() {
         />
       </div>
       <div>
-        {/* inputProps/inputRef为React侧逃生舱：自定义属性落到textarea、ref用于聚焦 */}
+        {/* inputProps/inputRef为React侧逃生舱：自定义属性写在textarea、ref用于聚焦 */}
         inputProps+inputRef（自定义属性落textarea、按钮编程聚焦）
         <MultilineTextInput
           rows={3}
@@ -277,7 +277,7 @@ function OriginalLinebreaks() {
 }
 
 /**
- * React侧：Enter恒插入换行。本工程不提供allowLinebreaks配置与enter事件回调
+ * React侧：Enter始终插入换行。本工程不提供allowLinebreaks配置与enter事件回调
  * （已登记为「舍弃」，见dev-docs/DEVIATIONS.md），本区块确认换行行为与原版allowLinebreaks=true一致
  */
 function ReactLinebreaks() {
@@ -294,7 +294,7 @@ function ReactLinebreaks() {
           onChange={setValue}
         />
       </div>
-      <p>本工程不提供 allowLinebreaks 与 enter 事件回调，Enter恒插入换行。</p>
+      <p>本工程不提供 allowLinebreaks 与 enter 事件回调，Enter始终插入换行。</p>
     </div>
   );
 }
@@ -311,7 +311,7 @@ function MultilineComparePage() {
           <br />
           差异：原版<code>allowLinebreaks</code>
           （缺省true）可禁止换行并把Ctrl/Cmd+Enter改作enter事件，
-          本工程不提供该配置与enter事件，React侧恒等价于allowLinebreaks=true（见dev-docs/DEVIATIONS.md「舍弃」节）。
+          本工程不提供该配置与enter事件，React侧始终等价于allowLinebreaks=true（见dev-docs/DEVIATIONS.md「舍弃」节）。
         </>
       }
     >

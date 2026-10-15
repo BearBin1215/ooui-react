@@ -117,17 +117,17 @@ export default App;
 | `defaultChecked` | Uncontrolled initial checked state | `boolean` | — |
 | `onChange` | Checked-change handler (new state first, includes the native event) | `ChangeHandler<boolean, HTMLInputElement>` | — |
 | `value` | Form submission value (written to `<input>`'s `value`, does not affect checked state) | `string \| number` | `''` |
-| `name` | Form field name (lands on `<input>`; same name = same exclusive group) | `string` | — |
+| `name` | Form field name (written to `<input>`; same name = same exclusive group) | `string` | — |
 | `inputId` | The inner `<input>`'s id (pairs with a label's `htmlFor`) | `string` | — |
 | `required` | Required (native `required`) | `boolean` | `false` |
 | `disabled` | Whether disabled | `boolean` | `false` |
-| `accessKey` | Access key (lands on `<input>`) | `string` | — |
+| `accessKey` | Access key (written to `<input>`) | `string` | — |
 | `...rest` | Native `span` props (`className`, `id`, `data-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLSpanElement>` | — |
 
-`title`, `dir` and `tabIndex` are taken over by the component and land on the inner `<input>`; `role` lands there too (semantics like `role="presentation"` must hit the real input to work). The component `ref` points to the outer `<span>`.
+`title`, `dir` and `tabIndex` are taken over by the component and written to the inner `<input>`; `role` is written there too (semantics like `role="presentation"` must hit the real input to work). The component `ref` points to the outer `<span>`.
 
 ## See also
 
-- Where the checked channel sits among the three value channels: [Controlled and uncontrolled](../../guide/controlled.mdx)
+- Where the checked channel sits among the value channels: [Controlled and uncontrolled](../../guide/controlled.mdx)
 - Layout for a labeled field: [FieldLayout](../field-layout/index.mdx)
 - The radio group (exclusive items in one group, arrow keys select directly): [RadioSelect](../radio-select/index.mdx)

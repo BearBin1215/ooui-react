@@ -9,7 +9,7 @@ const TOOLS = [
 ] as const;
 
 /**
- * Toolbar（对齐原版OO.ui.Toolbar）的浏览器渲染契约：
+ * Toolbar（对齐原版OO.ui.Toolbar）的浏览器渲染结果：
  * position类、align=after工具组分发到右侧after容器、actions动作区、
  * 空白处按下的事件拦截（对齐原版onPointerDown，防焦点转移与文本选择）、
  * 工具上的按下不拦截且选择回调经按压流触发。

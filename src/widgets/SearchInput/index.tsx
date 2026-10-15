@@ -30,7 +30,7 @@ export type SearchInputProps = Omit<
 
 /**
  * SearchInput的内部组合形态参数（SelectFileInputWidget等库内组合经相对路径使用，
- * 不进公开导出面）。两条通道都对应原版SelectFileInputWidget构造后对其info
+ * 不进公开导出面）。这两条通道都对应原版SelectFileInputWidget构造后对其info
  * （SearchInputWidget实例）的属性调整。
  */
 export interface SearchInputInternalProps extends SearchInputProps {
@@ -45,7 +45,7 @@ export interface SearchInputInternalProps extends SearchInputProps {
   /**
    * 不注入缺省search图标（缺省false，图标仍可经icon显式给出）：SelectFileInputWidget
    * 的信息框图标由其icon参数决定、未传时无图标（对齐原版`setIcon(config.icon)`，
-   * config.icon缺省null，oojs-ui.js:14259），不得落回'search'缺省
+   * config.icon缺省null，oojs-ui.js:14259），不得回退到'search'缺省
    */
   noDefaultIcon?: boolean;
 }
@@ -121,7 +121,7 @@ export const SearchInput = forwardRef<HTMLDivElement, SearchInputInternalProps>(
         onChange={commit}
         disabled={disabled}
         readOnly={readOnly}
-        // role/tabIndex为原版$indicator的固定属性（初始化即挂，不随指示器显隐；
+        // role/tabIndex为原版$indicator的固定属性（初始化时即挂载，不随指示器显隐；
         // tabIndex的缺省值可经indicatorTabIndex内部通道覆写）
         indicatorProps={{
           role: "button",

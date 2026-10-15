@@ -1,6 +1,6 @@
 ---
 title: CheckboxMultiselect
-description: "Props for the CheckboxMultiselect component: the value/defaultValue/onChange array channels of a checkbox group, Shift+click range selection, arrow-key focus navigation and disabled propagation."
+description: "Props for the CheckboxMultiselect component: the array value passed via value/defaultValue/onChange, Shift+click range selection, arrow-key focus navigation and disabled propagation."
 ---
 
 # CheckboxMultiselect
@@ -11,7 +11,7 @@ A checkbox group: several checkbox items in one group, multiple selections allow
 
 ## Basic usage
 
-The selected value is an **array**, driven by the `value` / `defaultValue` / `onChange` channels; `onChange` carries the full value array. With `name`, every option's checkbox shares it and the checked ones submit as multiple same-name fields.
+The selected value is an **array**, passed through `value` / `defaultValue` / `onChange`; `onChange` carries the full value array. With `name`, every option's checkbox shares it and the checked ones submit as multiple same-name fields.
 
 ```tsx preview
 import { useState } from "react";

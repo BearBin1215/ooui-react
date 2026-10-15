@@ -4,8 +4,8 @@ import { getRoot, snapshotHTML } from "../../testing";
 import { RadioInput } from ".";
 
 /**
- * RadioInput（对齐原版OO.ui.RadioInputWidget）的浏览器渲染契约：
- * 原生radio勾选管线、已选中项再点击不取消（radio语义）、禁用态、表单提交值。
+ * RadioInput（对齐原版OO.ui.RadioInputWidget）的浏览器渲染约定：
+ * 原生radio勾选流程、已选中项再点击不取消（radio语义）、禁用态、表单提交值。
  */
 it("常规：根span输出input/radioInput类链，内含radio元素", async () => {
   const screen = await render(<RadioInput name="pick" />);
@@ -58,7 +58,7 @@ it("disabled：input禁用+tabIndex=-1，点击无效", async () => {
 });
 
 describe("HTML快照", () => {
-  // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）
+  // 固定快照结构：差异应明确更新，不要依赖 -u 反推（以原版DOM为准，见comparison-guide「断言基准」）
   it("单选框", async () => {
     const screen = await render(<RadioInput name="pick" />);
     expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(

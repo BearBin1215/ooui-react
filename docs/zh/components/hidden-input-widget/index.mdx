@@ -50,7 +50,7 @@ export default App;
 
 ## 禁用
 
-与原版不同：原版的「禁用」只切换样式类，隐藏字段**仍会**随表单提交；本工程把 `disabled` 落到原生属性上，禁用后该字段退出提交（如上方演示）。没有需要屏蔽的提交场景时，不必传 `disabled`。{/* deviations: dev-hidden-input-disabled */}
+与原版不同：原版的「禁用」只切换样式类，隐藏字段**仍会**随表单提交；本工程把 `disabled` 写在原生属性上，禁用后该字段退出提交（如上方演示）。没有需要屏蔽的提交场景时，不必传 `disabled`。{/* deviations: dev-hidden-input-disabled */}
 
 ## API
 
@@ -61,7 +61,7 @@ export default App;
 | `disabled` | 是否禁用（禁用后退出表单提交） | `boolean` | `false` |
 | `...rest` | 原生 `<input>` 属性（`id`、`className`、`data-*` 等）直传根元素 | `InputHTMLAttributes<HTMLInputElement>` | — |
 
-本组件没有包裹元素：组件 `ref` 与属性都落在 `<input type="hidden">` 本身。
+本组件没有包裹元素：组件 `ref` 与属性都写在 `<input type="hidden">` 本身。
 
 ## 另见
 

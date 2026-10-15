@@ -67,7 +67,7 @@ export interface DropdownInputProps extends Omit<
   /**
    * Form field name (lands on the hidden `select`).
    *
-   * 表单提交字段名（落在隐藏的 `select` 上）。
+   * 表单提交字段名（写在隐藏的 `select` 上）。
    */
   name?: string;
 
@@ -186,7 +186,7 @@ export const DropdownInput = forwardRef<HTMLDivElement, DropdownInputProps>(
           disabled={disabled}
           value={effectiveValue === undefined ? "" : String(effectiveValue)}
           onChange={(event) => {
-            // select的value恒为字符串，映射回选项原值类型再提交，与Dropdown路径一致；
+            // select的value始终为字符串，映射回选项原值类型再提交，与Dropdown路径一致；
             // 事件为原生change，随commit透传
             const match = selectableValues.find((v) => String(v) === event.target.value);
             if (match !== undefined) {

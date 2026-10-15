@@ -1,6 +1,6 @@
 ---
 pageType: home
-description: "ooui-react is a React reimplementation of OOUI: it ships no styles, outputs DOM structure, class names and attributes identical to OOUI, and folds OOUI's imperative API into controlled props."
+description: "ooui-react is a React reimplementation of OOUI: it ships no styles, outputs DOM structure, class names and attributes identical to OOUI, and turns OOUI's imperative API into controlled props."
 hero:
   name: ooui-react
   tagline: OOUI for React
@@ -24,7 +24,7 @@ features:
     details: Keyboard, focus, a11y and edge cases are checked one by one against OOUI, so interaction semantics match.
   - icon: /feature-icons/react.svg
     title: Declarative API
-    details: OOUI's imperative setters and events are folded into controlled props such as value and onChange, matching React conventions.
+    details: OOUI's imperative setters and events are turned into controlled props such as value and onChange, matching React conventions.
   - icon: /feature-icons/typescript.svg
     title: Type support
     details: Written entirely in TypeScript, with complete type definitions.
@@ -74,7 +74,7 @@ React ≥ 18 is required; SSR is not supported yet. For loading styles, MediaWik
 
 ## Why this library?
 
-Back in 2023, while writing [my own Moegirlpedia gadget](https://github.com/BearBin1215/MoegirlPedia), I found that keeping state in a loop with jQuery alone was painful in more complex scenarios, so I wanted to bring in a modern framework. At the time:
+Back in 2023, while writing [my own Moegirlpedia gadget](https://github.com/BearBin1215/MoegirlPedia), I found that managing state with jQuery alone got painful in more complex scenarios, so I wanted to bring in a modern framework. At the time:
 
 - MediaWiki was on 1.31, which shipped neither Vue nor Codex.
 - Bundling Vue myself started at 60 KB, and writing a little more would push the bundle past what could be uploaded to the site without timing out.

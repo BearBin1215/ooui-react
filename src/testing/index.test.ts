@@ -9,12 +9,12 @@ const mount = (html: string): HTMLElement => {
 };
 
 /**
- * snapshotHTML 的归一化契约。HTML 快照必须与 React 版本无关，否则换一次 React 版本
- * 就会整批失败；归一化两项——起始标签的属性顺序、id 类属性值。
+ * snapshotHTML 的规范化约定。HTML 快照必须与 React 版本无关，否则换一次 React 版本
+ * 就会整批失败；规范化两项——起始标签的属性顺序、id 类属性值。
  */
 describe("snapshotHTML", () => {
-  it("属性按名排序：属性顺序不同的等价 DOM 归一化后一致", () => {
-    // 同一份 DOM 在 React 18 / 19 下序列化出的属性顺序不同（19 起 name、type 落在末尾）
+  it("属性按名排序：属性顺序不同的等价 DOM 规范化后一致", () => {
+    // 同一份 DOM 在 React 18 / 19 下序列化出的属性顺序不同（19 起 name、type 写在末尾）
     const react18 = `<input name="agree" tabindex="0" class="x" type="checkbox">`;
     const react19 = `<input tabindex="0" class="x" type="checkbox" name="agree">`;
     expect(snapshotHTML(mount(react18))).toBe(
@@ -33,7 +33,7 @@ describe("snapshotHTML", () => {
     expect(snapshotHTML(mount(`<span><br></span>`))).toBe(`<span><br></span>`);
   });
 
-  it("id 类属性值归一化为 r#，且引用关系保留", () => {
+  it("id 类属性值规范化为 r#，且引用关系保留", () => {
     expect(snapshotHTML(mount(`<div id="r3" aria-labelledby="r3 r7"></div>`))).toBe(
       `<div aria-labelledby="r# r#" id="r#"></div>`,
     );

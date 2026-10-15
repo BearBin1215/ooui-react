@@ -11,9 +11,9 @@ description: "ProcessDialog 组件的属性说明：actions 动作集与 safe/pr
 
 ## 基本用法
 
-动作经 `actions` 数组声明：**每类特殊动作只取第一个可见的动作**——`flags` 含 `safe` 的第一个可见动作落在头部左侧（取消/关闭一类），含 `primary` 的第一个可见动作落在头部右侧（继续/保存一类），其余动作（含第二个及以后的 `safe` / `primary`）都排在底部动作区；`flags` 含 `close` / `back` 的动作渲染为纯图标按钮。
+动作经 `actions` 数组声明：**每类特殊动作只取第一个可见的动作**——`flags` 含 `safe` 的第一个可见动作位于头部左侧（取消/关闭一类），含 `primary` 的第一个可见动作位于头部右侧（继续/保存一类），其余动作（含第二个及以后的 `safe` / `primary`）都排在底部动作区；`flags` 含 `close` / `back` 的动作渲染为纯图标按钮。
 
-`onAction` 收到动作的 `action` 符号名；返回 `Promise` 期间头部显示 pending 条纹，Promise 结束即流程结束。
+`onAction` 收到动作的 `action` 符号名；返回 `Promise` 期间头部显示 pending 条纹，Promise 结束后流程即结束。
 
 ```tsx preview
 import { useState } from "react";
@@ -217,7 +217,7 @@ export default App;
 ## 键盘
 
 - `Ctrl` / `Cmd` + `Enter` 执行 primary 动作。
-- `ESC` 触发 `onEscape`，关闭由调用方接线。
+- `ESC` 触发 `onEscape`，关闭由调用方处理。
 
 ## API
 
@@ -257,9 +257,9 @@ export default App;
 
 ## 与原版的差异
 
-- **动作编排收为一个 `onAction` 异步回调**：原版经 `getActionProcess` 串联 `OO.ui.Process` 多步链；本工程在回调内串联流程，步骤内部抛错（reject）即结束并进入错误面板。{/* deviations: dev-onaction */}
-- **`ActionWidget` / `ActionSet` / `OO.ui.Error` 不作为独立类提供**：能力收进 `actions` 数组（`action` / `flags` / `modes` / `pending` 等字段）与错误对象，由错误面板渲染。{/* deviations: dev-actionset-inline */}
-- **「特殊动作」标志固定为 `safe` / `primary`**：原版允许子类扩展 `ActionSet.static.specialFlags`，本工程没有类继承，经 `flags` 声明这两个即可落位头部。{/* deviations: dev-special-flags */}
+- **动作编排归并为一个 `onAction` 异步回调**：原版经 `getActionProcess` 串联 `OO.ui.Process` 多步链；本工程在回调内串联流程，步骤内部抛错（reject）即结束并进入错误面板。{/* deviations: dev-onaction */}
+- **`ActionWidget` / `ActionSet` / `OO.ui.Error` 不作为独立类提供**：能力归并进 `actions` 数组（`action` / `flags` / `modes` / `pending` 等字段）与错误对象，由错误面板渲染。{/* deviations: dev-actionset-inline */}
+- **「特殊动作」标志固定为 `safe` / `primary`**：原版允许子类扩展 `ActionSet.static.specialFlags`，本工程没有类继承，动作只要经 `flags` 声明为 `safe` 或 `primary` 即可出现在头部。{/* deviations: dev-special-flags */}
 - **传 `mode` 即从首帧按 `modes` 过滤**（原版首次 `setMode` 前混显全部动作）。{/* deviations: dev-processdialog-mode */}
 
 ## 另见

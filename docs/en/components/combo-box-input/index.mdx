@@ -66,7 +66,7 @@ export default App;
 
 ## Keyboard and choosing
 
-Typing only **opens the menu** and re-anchors the highlight to the option exactly matching the input (no match clears the highlight); the candidate list itself is not filtered by the input — to "filter as you type", narrow `options` yourself. Clicking the input also re-opens the menu. With `readOnly` the component is fully read-only: none of the three open paths (arrow keys, the dropdown button, clicking the input) can expand the menu (the original would still expand a fully disabled menu on click; here read-only means no expansion).{/* deviations: dev-combobox-readonly */}
+Typing only **opens the menu** and re-anchors the highlight to the option exactly matching the input (no match clears the highlight); the candidate list itself is not filtered by the input — to "filter as you type", narrow `options` yourself. Clicking the input also re-opens the menu. With `readOnly` the component is fully read-only: none of the open paths (arrow keys, the dropdown button, clicking the input) can expand the menu (the original would still expand a fully disabled menu on click; here read-only means no expansion).{/* deviations: dev-combobox-readonly */}
 
 Choosing (clicking an option, Enter, the dropdown button) writes the option text into the input and the value is always a string: **options with a numeric `value` never show as selected** (matching the original, which compares serialized text — `1` and `'1'` are not equal); use string values when you need the selected state.
 
@@ -80,9 +80,9 @@ Choosing (clicking an option, Enter, the dropdown button) writes the option text
 
 The highlight does not wrap at the ends (unlike `SearchWidget`'s wrap-around); Escape or clicking outside closes the menu (handled in the capture phase, so nested in a [Dialog](../dialog/index.mdx) it won't close the dialog by mistake). Focus stays on the input and the highlighted option is announced via `aria-activedescendant`; the common model is in [Selection and options](../../guide/options.mdx).
 
-## Where props land
+## Attribute placement
 
-Same as [TextInput](../text-input/index.mdx): `...rest` lands on the root `<div>`, props for the native `<input>` go through `inputProps`, `inputRef` focuses the input; `tabIndex`, `title`, `dir`, `accessKey` and `name` are taken over and land on the `<input>`.
+Same as [TextInput](../text-input/index.mdx): `...rest` goes on the root `<div>`, props for the native `<input>` go through `inputProps`, `inputRef` focuses the input; `tabIndex`, `title`, `dir`, `accessKey` and `name` are taken over and go on the `<input>`.
 
 ## API
 

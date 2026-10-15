@@ -5,7 +5,7 @@ description: "ooui-react 所有组件共有的属性规则：未声明属性透�
 
 # 通用属性
 
-本页是各组件页的公共前提，说明所有组件共有的属性规则与落点。组件特有的属性见对应组件页。
+本页是各组件页的公共前提，说明所有组件共有的属性规则与写入位置。组件特有的属性见对应组件页。
 
 ## 属性透传
 
@@ -29,7 +29,7 @@ export default App;
 ```
 
 - 如果组件本身会往根元素固定写入同名属性，透传会失效，例如绝大多数组件的 `aria-disabled` 由 `disabled` 参数计算，手动指定无效。
-- 原生 `defaultValue` / `defaultChecked` 不随透传落到 DOM。
+- 原生 `defaultValue` / `defaultChecked` 不随透传写入 DOM。
 
 ## ref 与内部元素
 
@@ -43,7 +43,7 @@ export default App;
 | `textInputProps` | 文本框的属性 | `CopyTextLayout` |
 | `menuProps` | 菜单的属性 | `ButtonMenuSelectWidget` |
 | `iconProps` / `indicatorProps` | 图标 / 指示器元素的属性 | `Button`、`TextInput` |
-| `anchorRef` / `anchorProps` | 内部可聚焦的 `<a>`（Button 系的根是 `<span>`，聚焦要经过） | `Button` |
+| `anchorRef` / `anchorProps` | 内部可聚焦的 `<a>`（Button 系的根是 `<span>`，聚焦需经过它） | `Button` |
 
 ## 通用属性
 
@@ -55,7 +55,7 @@ export default App;
 | `id` | 根元素 id | `string` | — |
 | `title` | 提示文本；标签视觉隐藏时以标签文本兜底 | `string` | — |
 | `accessKey` | 快捷键，写入元素并在 `title` 末尾附 `[键]` | `string` | — |
-| `tabIndex` | Tab 序；传 `null` 表示彻底不可聚焦（不输出 `tabindex` 属性） | `number \| null` | `0` |
+| `tabIndex` | Tab 序；传 `null` 表示完全不可聚焦（不输出 `tabindex` 属性） | `number \| null` | `0` |
 | 其余 | `aria-*`、`data-*`、`style`、各类事件 | 原生属性 | — |
 
 含标签的组件（`Button`、`TextInput` 等）另有 `label`（标签文本）与 `invisibleLabel`（视觉隐藏但保留可访问名称），语义见下方说明。
@@ -66,10 +66,10 @@ export default App;
 - **部分布局容器的 `disabled` 另有语义**：
   - `FieldLayout` 只作用于字段本身；`FieldsetLayout` 走原生 `<fieldset disabled>`，会连带禁用整组内的控件；
   - 纯布局容器（`PanelLayout`、`StackLayout` 等）没有 `disabled`。
-- **`title` 与 `accessKey` 的落点因组件而异**：多数落在根元素，`Button` 系落在内部锚点，输入框系落在内部 `<input>` 上。要给 `title` 配 `aria-*` 时先看组件页的落点说明。
+- **`title` 与 `accessKey` 的写入位置因组件而异**：多数写在根元素上，`Button` 系写在内部锚点，输入框系写在内部 `<input>` 上。要给 `title` 配 `aria-*` 时先看组件页的写入位置说明。
 - **`title` 的标签兜底随标签变化重算**：标签视觉隐藏且未显式给 `title` 时以标签文本兜底；本工程每次渲染按当前 `label` / `invisibleLabel` 重算该兜底，后续改标签会联动更新。{/* deviations: dev-resolve-title-rerender */}
 - **`label` 接受任意可渲染的 ReactNode**：`0` 等可渲染节点按有标签处理，布尔值按无标签处理。{/* deviations: dev-label-reactnode */}
-- **`tabIndex={null}` 彻底移除 `tabindex` 属性**：元素彻底不可聚焦，连编程聚焦也不成立——区别于 `-1` 的不进 Tab 序但仍可编程聚焦。{/* deviations: dev-tabindex-null */}
+- **`tabIndex={null}` 会移除 `tabindex` 属性**：元素完全不可聚焦，编程聚焦也不生效——区别于 `-1` 的不进 Tab 序但仍可编程聚焦。{/* deviations: dev-tabindex-null */}
 - **`flags` 不是每个组件都有**：各组件按其形态接受不同的标志（如 `Button` 的 `primary` / `progressive`、`Icon` 的色彩变体），具体见组件页。
 
 ## 键盘与无障碍

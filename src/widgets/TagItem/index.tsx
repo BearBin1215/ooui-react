@@ -79,7 +79,7 @@ export const TagItem = memo(
       ref,
     ) => {
       const removeLabel = useMessage("ooui-item-remove");
-      // draggable的DOM类型为Booleanish（含字符串），统一归一化后再决定撤下拖拽类
+      // draggable的DOM类型为Booleanish（含字符串），统一规范化后再决定撤下拖拽类
       const isDraggable = draggable === true || draggable === "true";
 
       const classes = clsx(
@@ -148,7 +148,7 @@ export const TagItem = memo(
       };
 
       /**
-       * mousedown恒阻止冒泡（对齐原版TagItemWidget对$element的mousedown监听）：
+       * mousedown始终阻止冒泡（对齐原版TagItemWidget对$element的mousedown监听）：
        * 标签位于TagMultiselect的handle可点击区内，handle靠mousedown聚焦输入框，
        * 标签上的mousedown不应触发该行为
        */

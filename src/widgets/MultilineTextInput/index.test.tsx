@@ -4,13 +4,13 @@ import { MultilineTextInput } from ".";
 import { getRoot, snapshotHTML, typeValue } from "../../testing";
 
 /**
- * MultilineTextInput（对齐原版OO.ui.MultilineTextInputWidget）的浏览器渲染契约：
- * textarea元素与rows属性、autosize类、值管线、多行输入不折叠换行。
+ * MultilineTextInput（对齐原版OO.ui.MultilineTextInputWidget）的浏览器渲染约定：
+ * textarea元素与rows属性、autosize类、值处理流程、多行输入不折叠换行。
  */
 it("textarea元素：rows属性与autosized类", async () => {
   const screen = await render(<MultilineTextInput rows={3} autosize />);
   const root = getRoot(screen);
-  // 多行输入恒输出type-text类（对齐原版继承TextInputWidget的type类）
+  // 多行输入始终输出type-text类（对齐原版继承TextInputWidget的type类）
   expect(root).toHaveClass("oo-ui-textInputWidget-type-text");
   const textarea = root.querySelector("textarea")!;
   expect(textarea).toHaveAttribute("rows", "3");
@@ -44,7 +44,7 @@ it("disabled：textarea禁用+tabIndex=-1，根输出禁用类", async () => {
 });
 
 describe("HTML快照", () => {
-  // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）
+  // 固定快照结构：差异应明确更新，不要依赖 -u 反推（以原版DOM为准，见comparison-guide「断言基准」）
   it("多行文本框", async () => {
     const screen = await render(
       <MultilineTextInput rows={3} defaultValue={"第一行\n第二行"} />,

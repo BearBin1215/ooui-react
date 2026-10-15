@@ -45,7 +45,7 @@ export default App;
 两个“选定”回调分工不同：
 
 - `onChange`：**选中值发生变化**时触发，重复点选当前项不触发。
-- `onChoose`：**每一次选定**（点击 / 拖拽 / Enter）都触发，含重复选定。浮层组件用它来“选定即收起”。
+- `onChoose`：**每一次选定**（点击 / 拖拽 / Enter）都触发，含重复选定。浮层组件用它来实现“选定后立即收起”。
 
 ```tsx
 <Select options={options} onChange={setValue} onChoose={() => setOpen(false)} />
@@ -53,7 +53,7 @@ export default App;
 
 ## 命令菜单形态
 
-`clearOnChoose` 置真时，选定只触发 `onChoose`、不改变选中值——展示上从不出现“已选中某项”，适合做点了就执行、不保留选中态的命令菜单。
+`clearOnChoose` 为 `true` 时，选定只触发 `onChoose`、不改变选中值——展示上从不出现“已选中某项”，适合做点了就执行、不保留选中态的命令菜单。
 
 ```tsx preview
 import { useState } from "react";
@@ -117,14 +117,14 @@ export default App;
 - `handleNavigationKeys`：是否处理 Home / End / PageUp / PageDown。
 - `listWrapsAround`：方向键导航到端点后是否环绕（默认 `true`）。
 - **前缀跳转**：列表获得焦点后直接键入字符，按选项文本的前缀循环跳转（1.5 秒缓冲）。
-- **悬停高亮**：鼠标悬停的选项即成为高亮项，移开即清除（与键盘高亮共用同一状态）。
+- **悬停高亮**：鼠标悬停的选项成为高亮项，鼠标移开后清除（与键盘高亮共用同一状态）。
 
 ## API
 
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | `options` | 选项集，书写约定见[选择与选项](../../guide/options.mdx) | `SelectOptionProps[]` | — |
-| `value` | 当前选中值（受控，传入即受控模式） | `string \| number` | — |
+| `value` | 当前选中值（受控，传入后即进入受控模式） | `string \| number` | — |
 | `defaultValue` | 非受控初始选中值 | `string \| number` | — |
 | `onChange` | 选中值变化回调（值优先，仅变化时触发） | `ChangeHandler<string \| number>` | — |
 | `onChoose` | 选定回调（每次选定都触发，含重复） | `ChangeHandler<string \| number>` | — |
@@ -138,7 +138,7 @@ export default App;
 | `disabled` | 是否禁用（一并禁用组内全部选项） | `boolean` | `false` |
 | `...rest` | 原生 `div` 属性（`className`、`id`、`aria-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
 
-组件没有 `children` 落点，选项全部由 `options` 声明。
+组件没有 `children` 写入位置，选项全部由 `options` 声明。
 
 ## 另见
 

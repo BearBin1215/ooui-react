@@ -2,8 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import { chainEventHandlers } from "./props";
 
 /**
- * chainEventHandlers：inputProps通道的事件处理器合并契约。
- * 组件内部逻辑在前、调用方通道在后串联（调用方不能截断交互管线）；单侧处理器与非事件键
+ * chainEventHandlers：inputProps通道的事件处理器合并约定。
+ * 组件内部逻辑在前、调用方通道在后串联（调用方不能截断交互处理流程）；单侧处理器与非事件键
  * 原样保留；被串联消费掉的键须从调用方属性中移除，否则其后的展开会覆盖串联结果。
  */
 describe("chainEventHandlers（inputProps通道的事件处理器串联）", () => {

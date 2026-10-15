@@ -107,16 +107,16 @@ export default App;
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | `options` | 选项集，书写约定见[选择与选项](../../guide/options.mdx) | `DropdownOptionProps[]` | — |
-| `value` | 当前选中值（受控，传入即受控模式） | `string \| number` | — |
+| `value` | 当前选中值（受控，传入后即进入受控模式） | `string \| number` | — |
 | `defaultValue` | 非受控初始选中值 | `string \| number` | — |
 | `onChange` | 选中值变更回调（值变化时触发） | `ChangeHandler<string \| number>` | — |
 | `label` | 无选中项时的占位文本，并参与可访问名称 | `ReactNode` | — |
 | `icon` | handle 前端的图标名 | `string` | — |
 | `disabled` | 是否禁用触发端（不可展开、键盘不可用） | `boolean` | `false` |
-| `tabIndex` | Tab 序，落在 handle 上（根元素不可聚焦） | `number \| null` | `0` |
+| `tabIndex` | Tab 序，写在 handle 上（根元素不可聚焦） | `number \| null` | `0` |
 | `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
 
-组件没有 `children` 落点——handle 与菜单是固定结构，显示文本取自选中项或 `label`。
+组件没有 `children` 的写入位置——handle 与菜单是固定结构，显示文本取自选中项或 `label`。
 
 ## 另见
 

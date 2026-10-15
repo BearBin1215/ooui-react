@@ -33,9 +33,9 @@ const dragFiles = (target: Element, type: "dragenter" | "drop", files: File[]) =
 };
 
 /**
- * SelectFileInputWidget（对齐原版OO.ui.SelectFileInputWidget）的浏览器渲染契约：
+ * SelectFileInputWidget（对齐原版OO.ui.SelectFileInputWidget）的浏览器渲染约定：
  * 信息框 + ActionFieldLayout排布的选择按钮（file input覆盖在按钮锚点内）、空态类、
- * 选择/清除/拖放三条入库通道与accept过滤、受控值写回input.files、buttonOnly与拖放区形态。
+ * 选择/清除/拖放这三条入库通道与accept过滤、受控值写回input.files、buttonOnly与拖放区形态。
  */
 it("结构：input/selectFileInput类链与空态类，信息框只读展示、file input覆盖在按钮锚点内", async () => {
   const screen = await render(
@@ -50,7 +50,7 @@ it("结构：input/selectFileInput类链与空态类，信息框只读展示、f
 
   const infoInput = getInfoInput(screen);
   expect(infoInput.getAttribute("placeholder")).toBe("No file is selected");
-  // 信息框恒disabled且移出Tab序（原版借此让findFocusable取不到它）
+  // 信息框始终disabled且移出Tab序（原版借此让findFocusable取不到它）
   expect(infoInput.disabled).toBe(true);
   expect(infoInput.getAttribute("tabindex")).toBe("-1");
   // 信息框无缺省search图标（对齐原版setIcon(config.icon)，config.icon缺省null）
@@ -191,7 +191,7 @@ it("buttonOnly：根元素即选择按钮，无信息框与ActionFieldLayout", a
   expect(getFileInput(screen).closest(".oo-ui-buttonElement-button")).toBeTruthy();
 });
 
-it("拖放区：形态类与dropLabel文案，拖入置canDrop、落放提交文件", async () => {
+it("拖放区：形态类与dropLabel文案，拖入置canDrop、放下提交文件", async () => {
   const onChange = vi.fn<(files: File[]) => void>();
   const screen = await render(
     <SelectFileInputWidget showDropTarget onChange={onChange} />,

@@ -7,7 +7,7 @@ description: "ButtonMenuSelectWidget 组件的属性说明：由按钮触发的�
 
 > [源代码](https://github.com/BearBin1215/ooui-react/tree/main/src/widgets/ButtonMenuSelectWidget) | [原版组件](https://doc.wikimedia.org/oojs-ui/master/js/OO.ui.ButtonMenuSelectWidget.html "OO.ui.ButtonMenuSelectWidget")
 
-按钮触发的命令菜单：选定即执行并收起菜单。与 [Dropdown](../dropdown/index.mdx) 记“当前选中项”不同，适合工具栏里“点了就执行一项命令”的场景。
+按钮触发的命令菜单：选定后立即执行并收起菜单。与 [Dropdown](../dropdown/index.mdx) 记“当前选中项”不同，适合工具栏里“点了就执行一项命令”的场景。
 
 ## 基本用法
 
@@ -81,9 +81,9 @@ export default App;
 
 焦点在按钮上：Enter / 空格展开菜单；展开后 ↑↓ 移动高亮、Enter / 空格选定，键入字符按前缀跳转；Escape 或点外部收起。注意与 [Dropdown](../dropdown/index.mdx) 不同——本组件收起态聚焦时键入不会直接改选。
 
-与原版有两处差异：
+与原版有以下差异：
 
-- 键盘展开同样输出按钮按压态——原版经键盘展开时按压类会被复位流清掉。
+- 键盘展开同样输出按钮按压态——原版经键盘展开时按压态类会被复位流程清除。
 - 前缀缓冲活跃时空格属于继续搜索，不会误开合菜单；展开态的空格与 Enter 同分支，直接选定高亮项（与按钮以空格激活的 ARIA 惯例一致）。{/* deviations: dev-bmsw-pressed dev-bmsw-gesture-guard dev-menu-space-select */}
 
 ## API

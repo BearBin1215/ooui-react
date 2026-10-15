@@ -89,13 +89,13 @@ function App() {
 export default App;
 ```
 
-## Where props land
+## Attribute placement
 
-The component root is a non-focusable `<div>` and the input element is a `<textarea>`. The landing rules are the same as [TextInput](../text-input/index.mdx):
+The component root is a non-focusable `<div>` and the input element is a `<textarea>`. The placement rules are the same as [TextInput](../text-input/index.mdx):
 
-- `...rest` from props lands on the root div; attributes that must go on the native `<textarea>` (such as `role`, `aria-*`) go through the `inputProps` channel, whose `onChange`/`onBlur`/`onFocus` are chained after the component's own logic.
+- `...rest` from props goes on the root div; attributes that must go on the native `<textarea>` (such as `role`, `aria-*`) go through the `inputProps` channel, whose `onChange`/`onBlur`/`onFocus` are chained after the component's own logic.
 - `inputRef` points to the inner `<textarea>` (the component `ref` points to the root div); use `inputRef` to focus the input.
-- `tabIndex`, `title`, `dir`, `accessKey` and `name` are taken over by the component and land directly on the `<textarea>` (matching the original's landing spots), not via `rest`.
+- `tabIndex`, `title`, `dir`, `accessKey` and `name` are taken over by the component and written directly to the `<textarea>` (matching the original's placement), not via `rest`.
 
 ## API
 
@@ -118,8 +118,8 @@ The component root is a non-focusable `<div>` and the input element is a `<texta
 | `readOnly` | Read-only (keeps focus and selection/copying) | `boolean` | `false` |
 | `disabled` | Whether disabled | `boolean` | `false` |
 | `flags` | Extra flags on the root (the invalid flag is layered on top) | `string \| string[]` | — |
-| `name` | Form field name (lands on `<textarea>`) | `string` | — |
-| `accessKey` | Access key (lands on `<textarea>`) | `string` | — |
+| `name` | Form field name (written to `<textarea>`) | `string` | — |
+| `accessKey` | Access key (written to `<textarea>`) | `string` | — |
 | `inputRef` | Ref to the inner `<textarea>` | `Ref<HTMLTextAreaElement>` | — |
 | `inputProps` | Extra-props channel for the native `<textarea>`; `onChange`/`onBlur`/`onFocus` are chained after the component logic | `object` | — |
 | `indicatorProps` | Extra props for the indicator element | `object` | — |

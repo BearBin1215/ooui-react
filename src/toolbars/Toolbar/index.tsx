@@ -45,7 +45,7 @@ export interface ToolbarProps extends ElementProps<HTMLDivElement> {
   actions?: ReactNode;
 }
 
-// 实现说明：对齐原版OO.ui.Toolbar——窄栏模式下按narrowConfig切换把手与工具的图标/文本
+// 实现说明：对齐原版OO.ui.Toolbar——窄栏模式下按narrowConfig切换handle与工具的图标/文本
 // （对齐setNarrow/onToolbarResize）。工具组经声明式props传入，不经原版的
 // ToolFactory/ToolGroupFactory注册，见dev-docs/DEVIATIONS.md「舍弃」
 /**
@@ -109,7 +109,7 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(
           return;
         }
         // narrow类会压缩工具组宽度（主题CSS有多处.narrow规则），以压缩后宽度为基准会
-        // 误判；且窄栏态下narrowConfig已替换把手/工具文本，重测会以窄栏内容为基准导致
+        // 误判；且窄栏态下narrowConfig已替换handle/工具文本，重测会以窄栏内容为基准导致
         // 无法退出窄栏（退出须以宽栏内容宽度为准）。故仅宽栏态重测基准（测量期临时
         // 移除该类取自然宽度，withTemporaryClasses保证恢复），窄栏态复用缓存
         if (!narrowRef.current || thresholdRef.current === null) {

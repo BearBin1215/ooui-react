@@ -24,7 +24,7 @@ export interface FieldLayoutProps extends WidgetProps<HTMLDivElement>, LabelElem
    * Tooltip text for the label (lands on the label element, not the layout root;
    * falls back to the label text when the label is visually hidden).
    *
-   * 标签的提示文本（落在标签元素上；标签不可见时以 label 兜底）
+   * 标签的提示文本（写在标签元素上；标签不可见时以 label 兜底）
    */
   title?: string;
 }
@@ -103,7 +103,7 @@ export const FieldLayout = forwardRef<HTMLDivElement, FieldLayoutProps>(
       </span>,
       <span className="oo-ui-fieldLayout-header" key="header">
         {/* 原版label为LabelWidget（static.tagName='label'）：带for的原生label元素承载
-          联动；invisibleLabel的裁剪类与title均落在label元素上（原版$titled=$label） */}
+          联动；invisibleLabel的裁剪类与title均写在label元素上（原版$titled=$label） */}
         <label
           htmlFor={fieldId}
           id={labelId}

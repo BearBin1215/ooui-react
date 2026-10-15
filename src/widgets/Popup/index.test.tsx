@@ -26,9 +26,9 @@ function Anchor(props: Omit<Parameters<typeof Popup>[0], "container">) {
 }
 
 /**
- * Popup（对齐原版OO.ui.PopupWidget）的浏览器渲染契约：
+ * Popup（对齐原版OO.ui.PopupWidget）的浏览器渲染约定：
  * 关闭态hidden类与屏外定位、打开后的anchored类与实位定位、head关闭按钮、
- * autoClose三通道（外点/Escape/焦点圈闭）与ignore豁免、autoFlip翻转、
+ * autoClose的关闭通道（外点/Escape/焦点圈闭）与ignore豁免、autoFlip翻转、
  * 滚出视口的表现层隐藏（不改open态）与body裁剪、浮层根输出有效文本方向。
  */
 it("关闭态：portal至body、element-hidden类、屏外兜底定位、无anchored类", async () => {
@@ -57,13 +57,13 @@ it("打开：移除hidden类、输出anchored-top（默认below，箭头在上�
   expect(root.style.top).not.toBe("-9999px");
   expect(Number.parseFloat(root.style.top)).toBeGreaterThan(0);
   const anchor = root.querySelector<HTMLElement>(".oo-ui-popupWidget-anchor")!;
-  // 箭头指向锚点容器中线（偏移随钳制修正，恒为有限数值）
+  // 箭头指向锚点容器中线（偏移随钳制修正，始终为有限数值）
   expect(Number.isFinite(Number.parseFloat(anchor.style.left ?? "0"))).toBe(true);
   expect(root.querySelector(".oo-ui-popupWidget-body")?.textContent).toContain("内容");
 });
 
-it("align=backwards：带箭头时以'before'起手再腾挪，锚点中线距弹层终止端为2×箭头盒", async () => {
-  // 靶心：原版hPosMap的 backwards: this.anchored ? 'before' : 'end'（dist/oojs-ui.js:6507）
+it("align=backwards：带箭头时以'before'初始位置再腾挪，锚点中线距弹层终止端为2×箭头盒", async () => {
+  // 基准：原版hPosMap的 backwards: this.anchored ? 'before' : 'end'（dist/oojs-ui.js:6507）
   // 与 positionAdjustment 的锚点腾挪（:6583-6596）。锚点宽100、弹层宽320（缺省），
   // 故锚点中线距终止端的稳态值只由箭头盒决定，与锚点宽度无关
   function Host() {
@@ -337,7 +337,7 @@ it("调用方style透传：非定位键生效，定位键仍为组件每轮重�
   await tick(30);
   const root = getPopupRoot();
   expect(root.style.maxWidth).toBe("123px");
-  // top为组件的定位结果（锚点下缘+占位），不是调用方给的7px
+  // top为组件的定位结果（锚点下缘+占位），而非调用方给的7px
   expect(Number.parseFloat(root.style.top)).toBeGreaterThan(0);
   expect(Number.parseFloat(root.style.top)).not.toBe(7);
 });

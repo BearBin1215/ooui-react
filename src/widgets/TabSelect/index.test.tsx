@@ -16,7 +16,7 @@ const getOption = (screen: { container: Element }, name: string) =>
   )!;
 
 /**
- * TabSelect（对齐原版OO.ui.TabSelectWidget）的浏览器渲染契约：
+ * TabSelect（对齐原版OO.ui.TabSelectWidget）的浏览器渲染约定：
  * tablist根与framed/frameless类、点击与键盘直选（环绕、跳过禁用项）、组禁用、
  * aria-activedescendant（指向选中页签）。
  */
@@ -85,7 +85,7 @@ it("键盘直选：←→环绕改选并跳过禁用项", async () => {
   expect(onChange.mock.calls[2]?.[0]).toBe("d");
 });
 
-it("点击页签后焦点收进组根：无需先聚焦即可方向键改选（略优于原版）", async () => {
+it("点击页签后焦点移入组根：无需先聚焦即可方向键改选（略优于原版）", async () => {
   const onChange = vi.fn<(value: string | number) => void>();
   const screen = await render(
     <TabSelect options={[...OPTIONS]} defaultValue="a" onChange={onChange} />,

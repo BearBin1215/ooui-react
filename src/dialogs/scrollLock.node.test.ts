@@ -2,10 +2,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { acquireScrollLock, releaseScrollLock } from "./scrollLock";
 
 /**
- * 滚动锁的契约测试：登记计数与类同步即主题CSS的选择器契约
+ * 滚动锁的约定测试：登记计数与类同步即主题CSS选择器规则
  * （body/html的oo-ui-windowManager-modal-active(-fullscreen)），逐项对齐原版
  * WindowManager.toggleGlobalEvents的栈语义；iOS触摸滚动兜底（原版togglePreventIosScrolling）
- * 的施加条件、类落点与滚动位置还原同在此锁定。vitest为node环境，以桩document/navigator承载断言。
+ * 的施加条件、类位置与滚动位置还原同在此锁定。vitest为node环境，以桩document/navigator承载断言。
  * 登记表是模块级单例——每个用例经vi.resetModules + 动态import拿到全新模块实例，
  * 用例间顺序无关（静态import下前序用例的登记会泄漏到后续用例）。
  */
@@ -48,7 +48,7 @@ function lockState() {
   };
 }
 
-/** 从桩document读取iOS兜底类是否落在body与html两处（主题规则须同时命中两者） */
+/** 从桩document读取iOS兜底类是否写在body与html两处（主题规则须同时命中两者） */
 function iosState() {
   const body = (document as unknown as { body: ReturnType<typeof createFakeElement> })
     .body;

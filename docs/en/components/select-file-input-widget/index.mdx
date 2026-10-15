@@ -1,6 +1,6 @@
 ---
 title: SelectFileInputWidget
-description: "Props for the SelectFileInputWidget component: the file set rides the value/defaultValue/onChange array channels, with accept type filtering, the showDropTarget drop-zone form (with thumbnail) and the buttonOnly form."
+description: "Props for the SelectFileInputWidget component: the file set uses the value/defaultValue/onChange array channels, with accept type filtering, the showDropTarget drop-zone form (with thumbnail) and the buttonOnly form."
 ---
 
 # SelectFileInputWidget
@@ -146,7 +146,7 @@ export default App;
 
 - The **select button** is the `Tab` stop; the info field is out of the Tab order. The clear indicator is keyboard-reachable (focus it and press Enter to clear).
 - The info field is a read-only `type="search"` input — typing in it never changes the file set; clearing always goes through the clear indicator.
-- `required` and `name` land on the inner file `<input>` and submit natively with [FormLayout](../form-layout/index.mdx).
+- `required` and `name` are written to the inner file `<input>` and submit natively with [FormLayout](../form-layout/index.mdx).
 
 ## API
 
@@ -168,14 +168,14 @@ export default App;
 | `buttonLabel` | Select-button text (defaults to the built-in message depending on `multiple`) | `ReactNode` | — |
 | `buttonProps` | Select-button props override (`disabled` / `onClick` are taken over by the component) | `Omit<ButtonProps, "children" \| "disabled" \| "onClick" \| "anchorContent" \| "anchorRef">` | — |
 | `inputRef` | Ref to the inner file `<input>` | `Ref<HTMLInputElement>` | — |
-| `accessKey` | Access key (lands on the file `<input>`) | `string` | — |
+| `accessKey` | Access key (written to the file `<input>`) | `string` | — |
 | `disabled` | Whether disabled (button, info field and dragging all off) | `boolean` | `false` |
 | `...rest` | Native `div` props (`className`, `id`, `data-*`, etc.) passed straight to the root | `HTMLAttributes<HTMLDivElement>` | — |
 
-`title` lands on the file `<input>` and `tabIndex` on the select button; the component `ref` points to the root element (the button itself in the `buttonOnly` form).
+`title` is written to the file `<input>` and `tabIndex` to the select button; the component `ref` points to the root element (the button itself in the `buttonOnly` form).
 
 ## See also
 
-- The value-channel contract: [Controlled and uncontrolled](../../guide/controlled.mdx)
+- The value-channel convention: [Controlled and uncontrolled](../../guide/controlled.mdx)
 - Replacing built-in messages with a language pack: [Global configuration](../../guide/configuration.mdx#messages-and-i18n)
 - The form submission container: [FormLayout](../form-layout/index.mdx)

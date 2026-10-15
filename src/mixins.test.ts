@@ -27,7 +27,7 @@ import {
 } from "./mixins";
 
 /**
- * mixin纯函数层的契约测试：各mixin贡献器与折叠层的输出即站点上OOUI主题CSS的选择器契约，
+ * mixin纯函数层的约定测试：各mixin贡献器与折叠层的输出即站点上OOUI主题CSS选择器规则，
  * 逐项对齐原版oojs-ui的类派生规则（见dev-docs/comparison-guide.md共享抽象一节）。
  * 修改任何期望值前先核对原版对应mixin的实现。
  */
@@ -51,7 +51,7 @@ describe("iconElementClasses（IconElement mixin贡献）", () => {
     expect(iconElementClasses({ icon: "help" })).toBe("oo-ui-iconElement");
   });
 
-  it("icon缺省或空串不输出", () => {
+  it("icon缺省或空字符串不输出", () => {
     expect(iconElementClasses({})).toBe("");
     expect(iconElementClasses({ icon: "" })).toBe("");
   });
@@ -92,7 +92,7 @@ describe("labelElementClasses（LabelElement mixin贡献）", () => {
 });
 
 describe("labelElementLabelClasses（LabelElement的$label元素类贡献）", () => {
-  it("恒输出-label根类，invisible时叠加裁剪类（对齐原版setLabelElement与setInvisibleLabel）", () => {
+  it("始终输出-label根类，invisible时叠加裁剪类（对齐原版setLabelElement与setInvisibleLabel）", () => {
     expect(labelElementLabelClasses()).toBe("oo-ui-labelElement-label");
     expect(labelElementLabelClasses(false)).toBe("oo-ui-labelElement-label");
     expect(labelElementLabelClasses(true)).toBe(
@@ -112,7 +112,7 @@ describe("flaggedElementClasses（FlaggedElement mixin贡献）", () => {
     );
   });
 
-  it("无flag输出空串", () => {
+  it("无flag输出空字符串", () => {
     expect(flaggedElementClasses()).toBe("");
     expect(flaggedElementClasses([])).toBe("");
   });
@@ -186,7 +186,7 @@ describe("pendingElementClasses（PendingElement mixin贡献）", () => {
     expect(pendingElementClasses(true)).toBe("oo-ui-pendingElement-pending");
   });
 
-  // 类名"不应常驻"是真实主题契约（oo-ui-pendingElement-pending常驻即动画不停），
+  // 类名"不应常驻"是真实主题约定（oo-ui-pendingElement-pending常驻即动画不停），
   // 故保留否定分支；false与undefined对三元完全等价，合为一条参数化用例
   it.each([false, undefined] as const)("pending=%p不输出", (pending) => {
     expect(pendingElementClasses(pending)).toBe("");
@@ -269,7 +269,7 @@ describe("widgetNameClasses（组件名称类）", () => {
     );
   });
 
-  it("无名称输出空串", () => {
+  it("无名称输出空字符串", () => {
     expect(widgetNameClasses()).toBe("");
   });
 });
@@ -376,7 +376,7 @@ describe("getTextInputClassName（输入框族折叠层）", () => {
     expect(result).contain("oo-ui-textInputWidget-labelPosition-after");
   });
 
-  it("extraStateClasses落在type类与flagged类之间，保持手写类序", () => {
+  it("extraStateClasses写在type类与flagged类之间，保持手写类序", () => {
     expect(
       getTextInputClassName(
         { type: "number", flags: "progressive", invalid: true },
@@ -483,7 +483,7 @@ describe("resolveTitle（TitledElement + AccessKeyedElement mixin）", () => {
     expect(resolveTitle({ accessKey: "d" })).toBeUndefined();
   });
 
-  it('空串title照原样输出（对齐原版setTitle的title=""），并参与键位后缀', () => {
+  it('空字符串title照原样输出（对齐原版setTitle的title=""），并参与键位后缀', () => {
     expect(resolveTitle({ title: "" })).toBe("");
     expect(resolveTitle({ title: "", accessKey: "d" })).toBe(" [d]");
   });
@@ -494,7 +494,7 @@ describe("resolveTitle（TitledElement + AccessKeyedElement mixin）", () => {
     ).toBe("删除 [Alt+Shift+d]");
   });
 
-  it("解析器给出空串时不加键位后缀（对齐原版：解析器存在但返回空串即不拼接）", () => {
+  it("解析器给出空字符串时不加键位后缀（对齐原版：解析器存在但返回空字符串即不拼接）", () => {
     expect(resolveTitle({ title: "删除", accessKey: "d", accessKeyLabel: "" })).toBe(
       "删除",
     );
@@ -525,7 +525,7 @@ describe("getOptionIconClasses（主题对选项选中/按压态的图标着色�
 });
 
 describe("基础工具（贡献器的依赖）", () => {
-  // 布尔与null/undefined/空串同为无标签：React不渲染布尔children，判为有标签会输出
+  // 布尔与null/undefined/空字符串同为无标签：React不渲染布尔children，判为有标签会输出
   // oo-ui-labelElement类加一个空标签元素（见dev-docs/DEVIATIONS.md「增强」的标签条）
   it.each([undefined, null, false, true, ""] as const)(
     "hasLabel将%p视为无标签",
@@ -538,7 +538,7 @@ describe("基础工具（贡献器的依赖）", () => {
     expect(hasLabel(label)).toBe(true);
   });
 
-  it("toFlagArray归一化字符串/数组/undefined", () => {
+  it("toFlagArray规范化字符串/数组/undefined", () => {
     expect(toFlagArray("progressive")).toEqual(["progressive"]);
     expect(toFlagArray(["progressive", "destructive"])).toEqual([
       "progressive",

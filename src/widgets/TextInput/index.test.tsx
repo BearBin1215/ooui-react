@@ -5,9 +5,9 @@ import { TextInput } from ".";
 import { getRoot, snapshotHTML, tick, typeValue } from "../../testing";
 
 /**
- * TextInput（对齐原版OO.ui.TextInputWidget）的浏览器渲染契约：
- * 双层结构与type类、值管线（受控/非受控）、软校验、required指示器缺省、
- * inputProps通道与rest落点、标签让位类。
+ * TextInput（对齐原版OO.ui.TextInputWidget）的浏览器渲染结果：
+ * 双层结构与type类、值处理流程（受控/非受控）、软校验、required指示器缺省、
+ * inputProps通道与rest位置、标签让位类。
  */
 it("常规：根div输出input/textInput类链与type类，input承载输入", async () => {
   const screen = await render(<TextInput defaultValue="甲" />);
@@ -92,7 +92,7 @@ it("inputProps通道：非事件属性写进input（rest不冲突），事件串
   expect(input).toHaveAttribute("autoComplete", "off");
   expect(input).toHaveAttribute("spellCheck", "false");
   await typeValue(input, "x");
-  // 调用方onChange仍被串联调用（值管线不被截断）
+  // 调用方onChange仍被串联调用（值处理流程不被截断）
   expect(userOnChange).toHaveBeenCalled();
 });
 
@@ -130,7 +130,7 @@ it("inputRef指向内部input，组件ref指向根div", async () => {
 });
 
 describe("HTML快照", () => {
-  // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）
+  // 固定快照结构：差异应明确更新，不要依赖 -u 反推（以原版DOM为准，见comparison-guide「断言基准」）
   it("默认文本框", async () => {
     const screen = await render(<TextInput defaultValue="甲" />);
     expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(

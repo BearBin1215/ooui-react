@@ -4,7 +4,7 @@ import { getRoot } from "../../testing";
 import { PanelLayout } from ".";
 
 /**
- * PanelLayout（对齐原版OO.ui.PanelLayout）的类组合契约：
+ * PanelLayout（对齐原版OO.ui.PanelLayout）的类组合约定：
  * expanded缺省true、scrollable/padded/framed按需输出、hidden经Layout承担。
  */
 it("缺省：仅输出panelLayout与expanded类", async () => {

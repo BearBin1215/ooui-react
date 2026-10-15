@@ -32,7 +32,7 @@ export default App;
 
 ## Help text
 
-`help` has two presentations: `helpInline={false}` (default) renders an ⓘ icon in the header that opens a popup on click; `helpInline={true}` shows the help as inline text after the header.
+How `help` is presented depends on `helpInline`: `helpInline={false}` (default) renders an ⓘ icon in the header that opens a popup on click; `helpInline={true}` shows the help as inline text after the header.
 
 ```tsx preview
 import { CheckboxInput, FieldLayout, FieldsetLayout } from "ooui-react";
@@ -56,7 +56,7 @@ function App() {
 export default App;
 ```
 
-Both forms side by side — the default ⓘ popup and the inline text with `helpInline={true}`:
+Here the default ⓘ popup and the inline text with `helpInline={true}` appear side by side:
 
 ```tsx preview
 import { FieldLayout, FieldsetLayout, TextInput } from "ooui-react";
@@ -87,7 +87,7 @@ export default App;
 
 ## Group-level disable
 
-`disabled` lands on the native `<fieldset>`, so every input control inside the group is disabled by the browser's own mechanism — no per-item passing needed.
+`disabled` goes on the native `<fieldset>`, so every input control inside the group is disabled by the browser's own mechanism — no per-item passing needed.
 
 ```tsx preview
 import { CheckboxInput, FieldLayout, FieldsetLayout, TextInput } from "ooui-react";

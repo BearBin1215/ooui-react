@@ -32,7 +32,7 @@ const measurePlaceholderWidth = (el: HTMLInputElement, text: string): number => 
  * inline输入框应占满标签区最后一行的剩余空间，空间不足时换行取整行宽度（内容宽度仍超出时
  * 退化为「整行宽度 − 安全余量」）。宽度经命令式写入（React不接管该内联样式，不得写进JSX的
  * style）；测量走离屏克隆而非改写真实输入框，以免命令式改写受控输入框的value干扰值追踪与光标。
- * 仅TagMultiselect使用（依赖其content/group/input的DOM契约），故与组件同目录而非入共享hooks
+ * 仅TagMultiselect使用（依赖其content/group/input的DOM约定），故与组件同目录而非入共享hooks
  */
 export function useInlineInputWidth({
   enabled,
@@ -46,7 +46,7 @@ export function useInlineInputWidth({
   enabled: boolean;
   /** `.oo-ui-tagMultiselectWidget-content`元素：宽度基准与输入框定位的offsetParent */
   contentRef: RefObject<HTMLElement | null>;
-  /** inline输入框元素（inline模式下恒为标签组的末个子元素） */
+  /** inline输入框元素（inline模式下始终为标签组的末个子元素） */
   inputRef: RefObject<HTMLInputElement | null>;
   /** 占位符文本，用于占位符保底宽度的缓存 */
   placeholder?: string;
@@ -61,7 +61,7 @@ export function useInlineInputWidth({
   const lastWidthRef = useRef<number | null>(null);
   const placeholderRef = useLatestRef(placeholder);
 
-  // 测量只经ref读DOM与最新placeholder，引用跨渲染稳定：装卸与重测两个effect共用同一实例
+  // 测量只经ref读DOM与最新placeholder，引用跨渲染稳定：装卸与重测这两个effect共用同一实例
   const measure = useCallback(() => {
     const el = inputRef.current;
     const container = contentRef.current;

@@ -1,6 +1,6 @@
 ---
 title: MenuLayout 菜单布局
-description: "MenuLayout 组件的属性说明：menu 与 content 两块区域，menuPosition 四向定位、showMenu 收起与 expanded 铺满。"
+description: "MenuLayout 组件的属性说明：menu 与 content 两块区域，menuPosition 决定菜单位置、showMenu 收起与 expanded 铺满。"
 ---
 
 # MenuLayout 菜单布局
@@ -84,7 +84,7 @@ export default App;
 ```
 
 :::note
-`expanded`（缺省）形态按绝对定位铺满父元素，父元素需自行定位并给定尺寸；`expanded={false}` 为 static 形态、按内容收缩排列（上面的演示即该形态）。菜单的宽度与位置细节由主题 CSS 承载；带完整菜单交互的成品见 [BookletLayout](../booklet-layout/index.mdx) 与 [IndexLayout](../index-layout/index.mdx)。
+`expanded`（缺省）形态按绝对定位铺满父元素，父元素需自行定位并给定尺寸；`expanded={false}` 为 static 形态、按内容收缩排列（上面的演示就是该形态）。菜单的宽度与位置细节由主题 CSS 决定；带完整菜单交互的成品见 [BookletLayout](../booklet-layout/index.mdx) 与 [IndexLayout](../index-layout/index.mdx)。
 :::
 
 ## API

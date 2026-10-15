@@ -6,8 +6,8 @@ import { TextInput } from "../../widgets/TextInput";
 import { FieldLayout } from ".";
 
 /**
- * FieldLayout（对齐原版OO.ui.FieldLayout）的浏览器渲染契约：
- * 结构与align类、disabled类、invisibleLabel裁剪落点、标签联动双通道——
+ * FieldLayout（对齐原版OO.ui.FieldLayout）的浏览器渲染结果：
+ * 结构与align类、disabled类、invisibleLabel裁剪位置、标签联动双通道——
  * 输入类字段经htmlFor原生关联（通道A），无原生input的组容器经注册激活回调聚焦
  * （通道B）并以aria-labelledby反向关联。
  */
@@ -57,7 +57,7 @@ it("disabled：输出fieldLayout-disabled类", async () => {
   expect(getRoot(screen)).toHaveClass("oo-ui-fieldLayout-disabled");
 });
 
-it("invisibleLabel：裁剪类落在label元素上", async () => {
+it("invisibleLabel：裁剪类写在label元素上", async () => {
   const screen = await render(
     <FieldLayout label="字段名" invisibleLabel>
       <TextInput />
@@ -90,7 +90,7 @@ it("字段accessKey委托：label的tooltip附字段控件的键位后缀（原�
   const label = screen.container.querySelector("label")!;
   // 未配置getAccessKeyLabel解析器时按原版回落分支附原键值
   expect(label.getAttribute("title")).toBe("字段提示 [k]");
-  // accessKey本身仍落在输入元素上（落点不变，委托只让label的tooltip带上后缀）
+  // accessKey本身仍写在输入元素上（位置不变，委托只让label的tooltip带上后缀）
   expect(screen.container.querySelector("input")!.getAttribute("accessKey")).toBe("k");
 });
 

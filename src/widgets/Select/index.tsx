@@ -162,7 +162,7 @@ export interface SelectProps extends Omit<WidgetProps<HTMLDivElement>, "children
  * focusOwnerRef为「键盘焦点在别处、由该处驱动列表高亮」的组合通道（对齐原版
  * `SelectWidget.setFocusOwner`）——有值时高亮项的`aria-activedescendant`输出到该元素、
  * 列表根不再输出。列表根缺省不输出tabindex（对齐原版SelectWidget根无tabindex）。
- * 落点与开合时点的完整对照见dev-docs/comparison-guide.md「共享抽象」与dev-docs/DEVIATIONS.md
+ * 写入位置与开合时点的完整对照见dev-docs/comparison-guide.md「共享抽象」与dev-docs/DEVIATIONS.md
  */
 export interface SelectInternalProps extends SelectProps {
   /**
@@ -174,7 +174,7 @@ export interface SelectInternalProps extends SelectProps {
    * 焦点归属元素的管理期（仅与focusOwnerRef配套，缺省true即始终管理）。
    * 对齐原版MenuSelectWidget.toggle的开合时点：激活时无高亮则指向当前选中项、
    * 关闭时移除aria-activedescendant（隐藏选项的id不留在触发元素上）。
-   * MenuSelect传入菜单显隐；独立组合（SearchWidget输入框常驻驱动）不传即恒管理
+   * MenuSelect传入菜单显隐；独立组合（SearchWidget输入框常驻驱动）不传即始终管理
    */
   focusOwnerActive?: boolean;
 }
@@ -320,20 +320,20 @@ export const Select = forwardRef<HTMLDivElement, SelectInternalProps>(
     };
 
     /**
-     * 选项显示文本（前缀跳转的匹配输入，对齐原版读选项DOM textContent的口径）
+     * 选项显示文本（前缀跳转的匹配输入，对齐原版读选项DOM textContent的取值方式）
      */
     const optionTextOf = (optionValue: string | number) =>
       itemRefs.current.get(optionValue)?.textContent ?? "";
 
-    // outline与menu两种选项的props形状一致、仅渲染组件不同，故取一次组件；以不接受value
-    // 的OutlineOption归一到MenuOption的类型承载
+    // outline与menu这两种选项的props形状一致、仅渲染组件不同，故取一次组件；以不接受value
+    // 的OutlineOption统一为MenuOption的类型承载
     const OptionComponent: typeof MenuOption = outline ? OutlineOption : MenuOption;
 
     // 经useCallback稳定（内部读ref）：供高亮滚动的layout effect以稳定依赖引用。
     // 滚动只在选项就近的可滚动容器内进行、不触达window（scrollOptionIntoView）：菜单收起时
     // 面板停到屏外哨兵位，原生scrollIntoView会把整页拽到顶部，见该函数与dev-docs/DEVIATIONS.md。
     // 护栏只在实际发生滚动时置位并200ms后复位（对齐原版SelectWidget.scrollItemIntoView，
-    // oojs-ui.js:7642-7649）：悬停高亮也经同一layout effect到达这里，但悬停目标恒在可视区
+    // oojs-ui.js:7642-7649）：悬停高亮也经同一layout effect到达这里，但悬停目标始终在可视区
     // （delta=0），原版hover路径本就不滚动、不置位——无条件置位会把悬停导航冻结200ms
     const scrollItemIntoView = useCallback(
       (optionValue: string | number) => {
@@ -393,7 +393,7 @@ export const Select = forwardRef<HTMLDivElement, SelectInternalProps>(
       // 对齐原版：导航目标为高亮项，无高亮（或高亮项已不在可选集）时回退选中项；
       // 多选展示模式无单值选中语义、不回退（对齐原版onDocumentKeyDown的
       // `!this.multiselect && this.findSelectedItem()`，oojs-ui.js:7518-7520，
-      // 与下方aria-activedescendant的selectedFallbackIndex门控同口径）
+      // 与下方aria-activedescendant的selectedFallbackIndex门控规则一致）
       const selectedFallback =
         selectedValues === undefined && isValueSelectable(currentValue)
           ? currentValue
@@ -465,8 +465,8 @@ export const Select = forwardRef<HTMLDivElement, SelectInternalProps>(
     };
 
     /**
-     * 选项元素id（显式id优先，缺省按下标生成，经useOptionElementIds统一口径）：
-     * 供aria-activedescendant指向高亮项；下标口径与highlightedIndex一致
+     * 选项元素id（显式id优先，缺省按下标生成，经useOptionElementIds统一规则）：
+     * 供aria-activedescendant指向高亮项；下标规则与highlightedIndex一致
      */
     const optionElementId = useOptionElementIds(options);
     // 多选展示的选中集Set化：选项渲染按O(1)命中选中态
@@ -479,7 +479,7 @@ export const Select = forwardRef<HTMLDivElement, SelectInternalProps>(
         ? -1
         : options.findIndex((option) => option.value === currentHighlighted);
     // 无高亮时回退指向当前选中项（对齐原版MenuSelectWidget.toggle(true)的selectedItem分支；
-    // 多选展示无单值选中语义，不做回退——与handleKeyDown的selectedFallback门控同口径）
+    // 多选展示无单值选中语义，不做回退——与handleKeyDown的selectedFallback门控规则一致）
     const selectedFallbackIndex =
       highlightedIndex >= 0 || selectedValues !== undefined
         ? -1
@@ -523,7 +523,7 @@ export const Select = forwardRef<HTMLDivElement, SelectInternalProps>(
         }
         aria-labelledby={mergeAriaLabelledBy(fieldLabelId, ariaLabelledBy)}
         // 列表根缺省不输出tabindex（对齐原版SelectWidget根无tabindex、非TabIndexedElement）：
-        // 独立使用既不进Tab序也不可聚焦，FieldLayout标签点击随之落空（原版simulateLabelClick
+        // 独立使用既不进Tab序也不可聚焦，FieldLayout标签点击随之失效（原版simulateLabelClick
         // 空操作）。键盘改选由Dropdown/MenuSelect等触发元素经focusOwnerRef驱动。
         // 经resolveTabIndex的null通道表达该缺省（tabIndex未传即null→省略属性，disabled
         // 也不补-1）；调用方显式传值时按TabIndexedElement语义解析（disabled覆盖）

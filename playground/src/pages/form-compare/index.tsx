@@ -728,7 +728,7 @@ function ReactControlledInputs() {
       </div>
       <div>
         {/* 行名后缀为React侧行为补充说明，原版侧无此说明 */}
-        formNoValidate（提交属性落在DOM，无视觉差异）
+        formNoValidate（提交属性写在DOM，无视觉差异）
         <ButtonInput type="submit" formNoValidate>
           提交（formnovalidate）
         </ButtonInput>
@@ -885,7 +885,7 @@ function FormComparePage() {
           RadioSelectInput（默认选中首项语义）、CheckboxMultiselectInput（checkbox的name/value表单提交）、
           ButtonInput（submit按钮触发原生提交，两种标签形态，name/value作为表单字段进FormData）、
           ActionFieldLayout（输入框+按钮组合）、
-          FieldLayout标签联动（点击标签聚焦输入框/勾选首个非禁用项/按钮/下拉把手）、
+          FieldLayout标签联动（点击标签聚焦输入框/勾选首个非禁用项/按钮/下拉handle）、
           HiddenInputWidget（隐藏值随表单提交）、点击两侧提交按钮后FormData序列化结果应一致。
           「受控Inputs」区块验证受控value+程序化写回、Input族disabled、form的action/enctype
           与fieldInline（span根字段的输入区包装）、FieldsetLayout disabled

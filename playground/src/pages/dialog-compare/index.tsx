@@ -549,7 +549,7 @@ function ReactShortcutAndCustom() {
         contentClassName="dialog-compare-custom"
         head={
           <div style={{ padding: "8px 12px", borderBottom: "1px solid #c8ccd1" }}>
-            自定义head区（contentClassName落在content容器上）
+            自定义head区（contentClassName写在content容器上）
           </div>
         }
         bodyFitFoot
@@ -596,7 +596,7 @@ function ReactShortcutAndCustom() {
   );
 }
 
-/** 原版侧：把DropdownWidget挂进window body——原版浮层缺省落在控件自身$element内（即窗口子树内） */
+/** 原版侧：把DropdownWidget挂进window body——原版浮层缺省位于控件自身$element内（即窗口子树内） */
 function OriginalDialogWithFloats() {
   const dialogRef = useRef<OOUIWindow | null>(null);
   const { containerRef } = useOriginalWidgets((oo, container, register) => {
@@ -663,7 +663,7 @@ function ReactDialogWithFloats() {
         foot={<Button onClick={() => setOpen(false)}>关闭</Button>}
       >
         {/* 弹层放在首行：浮层按「锚点就近的可滚动容器」钳高（见DEVIATIONS的MenuSelect条），
-            锚点落在正文底部时可用空间会被弹窗body的滚动区吃掉，浮层只剩几像素 */}
+            锚点在正文底部时可用空间会被弹窗body的滚动区吃掉，浮层只剩几像素 */}
         <p>
           <PopupButton popupContent={<p>弹层内容</p>}>按钮弹层</PopupButton>
         </p>

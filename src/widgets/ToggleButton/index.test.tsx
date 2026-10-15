@@ -4,13 +4,13 @@ import { getRoot, snapshotHTML, tick } from "../../testing";
 import { FieldLayout } from "../../layouts/FieldLayout";
 import { ToggleButton } from ".";
 
-/** 开关状态落在按钮锚点上（对齐原版ToggleWidget的aria状态写入$tabIndexed=$button） */
+/** 开关状态写在按钮锚点上（对齐原版ToggleWidget的aria状态写入$tabIndexed=$button） */
 const getAnchor = (screen: { container: Element }) =>
   screen.container.querySelector<HTMLElement>("[role=button]")!;
 
 /**
- * ToggleButton（对齐原版OO.ui.ToggleButtonWidget）的浏览器渲染契约：
- * 继承链类（toggle→toggleButton，**不含**buttonWidget）、on/off形态类与aria-pressed落点、
+ * ToggleButton（对齐原版OO.ui.ToggleButtonWidget）的浏览器渲染结果：
+ * 继承链类（toggle→toggleButton，**不含**buttonWidget）、on/off形态类与aria-pressed位置、
  * 受控/非受控切换、禁用拦截，以及Button组合继承来的FieldLayout标签联动。
  */
 it("继承链不含oo-ui-buttonWidget（主题按钮行距规则不应命中）", async () => {
@@ -87,7 +87,7 @@ it("FieldLayout内：锚点经aria-labelledby关联label，点击标签聚焦锚
 });
 
 describe("HTML快照", () => {
-  // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）。
+  // 固定快照结构：差异应明确更新，不要依赖 -u 反推（以原版DOM为准，见comparison-guide「断言基准」）。
   // 根为span对齐原版（ToggleButtonWidget继承ButtonWidget故沿用ButtonElement的标签名）
   it("关", async () => {
     const screen = await render(<ToggleButton>开关</ToggleButton>);

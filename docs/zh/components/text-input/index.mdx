@@ -1,6 +1,6 @@
 ---
 title: TextInput 文本输入
-description: "TextInput 组件的属性说明：受控/非受控、类型白名单、标签与图标指示器、软校验，以及属性落点与 inputProps/inputRef 通道。"
+description: "TextInput 组件的属性说明：受控/非受控、类型白名单、标签与图标指示器、软校验，以及属性写入位置与 inputProps/inputRef 通道。"
 ---
 
 # TextInput 文本输入
@@ -11,7 +11,7 @@ description: "TextInput 组件的属性说明：受控/非受控、类型白名�
 
 ## 基本用法
 
-传入 `value` 即受控，否则组件自行维护输入状态，`defaultValue` 只作初始值。`onChange` 为值优先签名，第一个参数就是新的字符串值。
+传入 `value` 后即进入受控模式，否则组件自行维护输入状态，`defaultValue` 只作初始值。`onChange` 为值优先签名，第一个参数就是新的字符串值。
 
 ```tsx preview
 import { useState } from "react";
@@ -96,9 +96,9 @@ export default App;
 
 ## 软校验
 
-`validate` 是软反馈：值不满足时输入元素输出 `aria-invalid`、根元素叠加 invalid 标志类，**但不改写值**。缺省只有浏览器原生约束（如 `required`）参与提交校验。触发时机为值变更（防抖 250ms）、失焦即校验、聚焦时清除。
+`validate` 是软反馈：值不满足时输入元素输出 `aria-invalid`、根元素叠加 invalid 标志类，**但不改写值**。缺省只有浏览器原生约束（如 `required`）参与提交校验。触发时机为值变更（防抖 250ms）、失焦后立即校验、聚焦时清除。
 
-`validate` 接受三种形态：正则（`test` 判定）、函数（返回布尔或 `Promise<boolean>`）、或符号名 `'non-empty'`（非空）、`'integer'`（纯数字）。
+`validate` 接受的形态：正则（`test` 判定）、函数（返回布尔或 `Promise<boolean>`）、或符号名 `'non-empty'`（非空）、`'integer'`（纯数字）。
 
 ```tsx preview
 import { TextInput } from "ooui-react";
@@ -135,15 +135,15 @@ function App() {
 export default App;
 ```
 
-## 属性落点
+## 属性写入位置
 
-组件根是 `<div>`、输入元素是 `<input>`，三条落点规则（输入类组件通用）：
+组件根是 `<div>`、输入元素是 `<input>`，写入位置规则如下（输入类组件通用）：
 
-- props 的 `...rest`（`id`、`className`、`data-*` 等未声明属性）落在根 div 上；要写到原生 `<input>` 上的属性（如 `role`、`aria-*`、`autoComplete`）必须走 `inputProps` 通道。
+- props 的 `...rest`（`id`、`className`、`data-*` 等未声明属性）写入根 div；要写到原生 `<input>` 上的属性（如 `role`、`aria-*`、`autoComplete`）必须通过 `inputProps` 传入。
 - `inputRef` 指向内部 `<input>`（组件 `ref` 指向根 div），聚焦输入框用 `inputRef`。
-- `tabIndex`、`title`、`dir`、`accessKey` 由组件接管，直接落在 `<input>` 上（对齐原版落点），不走 `rest`。
+- `tabIndex`、`title`、`dir`、`accessKey` 由组件接管，直接写入 `<input>`（对齐原版写入位置），不通过 `rest`。
 
-`inputProps` 里的 `onChange` / `onBlur` / `onFocus` 会串联在组件自身逻辑之后，不会截断值管线与软校验。
+`inputProps` 里的 `onChange` / `onBlur` / `onFocus` 会串联在组件自身逻辑之后，不会截断值的处理流程与软校验。
 
 ```tsx preview
 import { useRef } from "react";
@@ -171,7 +171,7 @@ export default App;
 
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `value` | 输入值（受控，传入即受控模式） | `string` | — |
+| `value` | 输入值（受控，传入后即进入受控模式） | `string` | — |
 | `defaultValue` | 非受控初始值 | `string` | — |
 | `onChange` | 值变化回调（值优先，含原生事件） | `ChangeHandler<string, HTMLInputElement>` | — |
 | `type` | 输入类型，见[类型](#类型)白名单，非法值回退 `text` | `string` | `'text'` |
@@ -186,14 +186,14 @@ export default App;
 | `readOnly` | 只读 | `boolean` | `false` |
 | `disabled` | 是否禁用 | `boolean` | `false` |
 | `flags` | 根元素附加标志（软校验的 invalid 标志叠加其上） | `string \| string[]` | — |
-| `name` | 表单提交字段名（落在 `<input>`） | `string` | — |
-| `accessKey` | 快捷键（落在 `<input>`） | `string` | — |
+| `name` | 表单提交字段名（写入 `<input>`） | `string` | — |
+| `accessKey` | 快捷键（写入 `<input>`） | `string` | — |
 | `inputRef` | 内部 `<input>` 的引用 | `Ref<HTMLInputElement>` | — |
 | `inputProps` | 原生 `<input>` 的附加属性通道；`onChange`/`onBlur`/`onFocus` 串联在组件逻辑之后 | `object` | — |
 | `indicatorProps` | 指示器元素的附加属性 | `object` | — |
 | `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
 
-`required` 为真时，本组件在原生 `<input>` 上同时输出 `aria-required`（原版只写原生 `required` 属性）。该行为覆盖 TextInput 继承线（MultilineTextInput、NumberInput、ComboBoxInput 同）；非文本形态（Dropdown、Checkbox、Radio、SelectFile）不输出。{/* deviations: dev-aria-required */}
+`required` 为真时，本组件在原生 `<input>` 上同时输出 `aria-required`（原版只写原生 `required` 属性）。该行为覆盖继承自 TextInput 的组件（MultilineTextInput、NumberInput、ComboBoxInput 同样如此）；非文本形态（Dropdown、Checkbox、Radio、SelectFile）不输出。{/* deviations: dev-aria-required */}
 
 ## 另见
 

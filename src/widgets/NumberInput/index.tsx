@@ -136,14 +136,14 @@ export interface NumberInputProps
    * Extra-props channel for the native `<input>`; `onChange` / `onBlur` / `onFocus`
    * are chained after the component logic.
    *
-   * 原生 `<input>` 的附加属性通道（`...rest` 落在根 div）；`onChange`/`onBlur`/`onFocus`
-   * 串联在组件自身逻辑之后（数值解析管线不会被截断）
+   * 原生 `<input>` 的附加属性通道（`...rest` 写在根 div）；`onChange`/`onBlur`/`onFocus`
+   * 串联在组件自身逻辑之后（数值解析处理流程不会被截断）
    */
   inputProps?: UserInputProps<HTMLInputElement>;
 }
 
 // 实现说明：对齐原版OO.ui.NumberInputWidget——步进按钮/方向键（±step）与滚轮步进，值按min/max
-// 钳制但保留键入中的原文（失焦才收敛），空串视作无值，非法值经软校验标记
+// 钳制但保留键入中的原文（失焦才规范化），空字符串视作无值，非法值经软校验标记
 /**
  * A number input; input capabilities match TextInput.
  *
@@ -169,7 +169,7 @@ export const NumberInput = forwardRef<HTMLDivElement, NumberInputProps>(
       placeholder,
       readOnly,
       required,
-      // tabIndex落在input上（组件根为不可聚焦的div）
+      // tabIndex写在input上（组件根为不可聚焦的div）
       tabIndex,
       showButtons = true,
       step: stepProp,
@@ -178,9 +178,9 @@ export const NumberInput = forwardRef<HTMLDivElement, NumberInputProps>(
       buttonStep: buttonStepProp,
       pageStep: pageStepProp,
       flags,
-      // title落在input上（对齐原版InputWidget的TitledElement落点$input），不放外层div
+      // title写在input上（对齐原版InputWidget的TitledElement写入位置$input），不放外层div
       title,
-      // dir同落input（对齐原版setDir的落点）
+      // dir同样写在input（对齐原版setDir的写入位置）
       dir,
       inputRef,
       inputProps: inputPropsProp,
@@ -196,9 +196,9 @@ export const NumberInput = forwardRef<HTMLDivElement, NumberInputProps>(
     const buttonStep = buttonStepProp ?? step ?? DEFAULT_STEP;
     const pageStep = pageStepProp ?? buttonStep * PAGE_STEP_MULTIPLIER;
     // 废弃别名置位时开发期告警一次（原版静默采纳，见DEVIATIONS「等效替代」的NumberInput条）；
-    // step/buttonStep/pageStep非正数同告警（原版构造期抛错，本工程收为告警，
+    // step/buttonStep/pageStep非正数同告警（原版构造期抛错，本工程改为告警，
     // 见DEVIATIONS「舍弃」的非正 step 校验条）。告警按值变化触发（同key只告警一次），
-    // 收在effect里以保持渲染期无副作用
+    // 放在effect里以保持渲染期无副作用
     useEffect(() => {
       if (allowInteger || isInteger) {
         warnOnceInDev(
@@ -290,7 +290,7 @@ export const NumberInput = forwardRef<HTMLDivElement, NumberInputProps>(
       label,
       labelPosition,
       indicator,
-      // 数值解析挂入值管线（对齐原版语义：保留输入不做钳制，空串保持为空），
+      // 数值解析挂入值处理流程（对齐原版语义：保留输入不做钳制，空字符串保持为空），
       // 调用方经inputProps传入的onChange会串联在其后而非替换
       onCommitValue: (next, event) => {
         const parsed = +next;

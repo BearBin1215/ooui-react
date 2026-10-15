@@ -4,7 +4,7 @@ import { getRoot, snapshotHTML } from "../../testing";
 import { Message } from ".";
 
 /**
- * Message（对齐原版OO.ui.MessageWidget）的浏览器渲染契约：
+ * Message（对齐原版OO.ui.MessageWidget）的浏览器渲染约定：
  * 类型→图标/标志类/播报语义（error打断式）、inline形态、关闭按钮回调、非法type回退。
  */
 it("常规：块级消息，type输出flagged类与图标着色变体", async () => {
@@ -81,7 +81,7 @@ it("showClose渲染关闭按钮（aria标签取消息），点击回调onClose�
 });
 
 describe("HTML快照", () => {
-  // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）
+  // 固定快照结构：差异应明确更新，不要依赖 -u 反推（以原版DOM为准，见comparison-guide「断言基准」）
   it("warning块级消息", async () => {
     const screen = await render(<Message type="warning">注意</Message>);
     expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(

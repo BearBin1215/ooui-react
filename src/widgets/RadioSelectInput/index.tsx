@@ -57,7 +57,7 @@ export interface RadioSelectInputProps extends Omit<
   /**
    * Form field name (lands on the hidden `input` only).
    *
-   * 表单提交字段名（仅落在隐藏 `input` 上）。
+   * 表单提交字段名（仅写在隐藏 `input` 上）。
    */
   name?: string;
 }

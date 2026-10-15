@@ -311,7 +311,7 @@ function ReactContinuousBooklet() {
   );
 }
 
-/** 原版侧：editable大纲（原版move/remove事件须自行接线，重挂label） */
+/** 原版侧：editable大纲（原版move/remove事件须自行挂接回调，重挂label） */
 function OriginalEditableBooklet({ addLog }: { addLog: (msg: string) => void }) {
   const { containerRef } = useOriginalWidgets((oo, container, register) => {
     const ui = oo.ui as unknown as BookletUi;
@@ -482,7 +482,7 @@ function BookletComparePage() {
           对照点：outlined大纲页册（切页同步大纲选中）、outlined缺省（false）无大纲
           仅页面堆叠、autoFocus（切页聚焦页内首个可聚焦
           元素，false抑制）、continuous全部渲染+切页滚动定位、editable大纲
-          （上移/下移/移除控件，原版move/remove事件须调用方自行接线，本工程经
+          （上移/下移/移除控件，原版move/remove事件须调用方自行挂接回调，本工程经
           onMoveOption/onRemoveOption回调交调用方更新options——声明式受控属有意差异），
           outlineControlsExtra对应原版outlineControls的addItems额外按钮区，受控value
           切页。移除当前页后的失效回退为本工程增强（原版不补选，见DEVIATIONS.md）。

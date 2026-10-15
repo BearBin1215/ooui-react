@@ -17,7 +17,7 @@ const getOption = (screen: { container: Element }, name: string) =>
   )!;
 
 /**
- * CheckboxMultiselectInput（对齐原版OO.ui.CheckboxMultiselectInputWidget）的浏览器渲染契约：
+ * CheckboxMultiselectInput（对齐原版OO.ui.CheckboxMultiselectInputWidget）的浏览器渲染约定：
  * CheckboxMultiselect展示 + 各选项checkbox写入name与value承载表单提交、
  * 勾选提交完整值数组、组禁用下发。
  */

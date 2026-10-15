@@ -20,10 +20,10 @@ const OPTIONS = [
 ] as const;
 
 /**
- * Select（对齐原版OO.ui.SelectWidget）的浏览器渲染契约：
- * listbox根与状态类、aria-activedescendant的落点与选中项回退、键盘导航与选定、
+ * Select（对齐原版OO.ui.SelectWidget）的浏览器渲染约定：
+ * listbox根与状态类、aria-activedescendant的写入位置与选中项回退、键盘导航与选定、
  * 组禁用下发到选项（含图标变体抑制）、点击选定的choose/select双通道、
- * MenuOption的checkIcon落点（选项根首个子元素）。
+ * MenuOption的checkIcon写入位置（选项根首个子元素）。
  */
 it("listbox根：selectWidget类链+role=listbox+缺省不输出tabindex", async () => {
   const screen = await render(<Select options={[...OPTIONS]} />);
@@ -67,7 +67,7 @@ it("键盘导航：ArrowDown移动高亮并更新activedescendant，Enter提交o
   const onChange = vi.fn<(value: string | number, event?: unknown) => void>();
   const screen = await render(<Select options={[...OPTIONS]} onChange={onChange} />);
   const root = getRoot(screen);
-  // 根不可聚焦（缺省无tabindex），直接对根派发keydown验证其按键管线（前缀/导航/Enter）
+  // 根不可聚焦（缺省无tabindex），直接对根派发keydown验证其按键处理（前缀/导航/Enter）
   pressKey(root, "ArrowDown");
   await tick();
   const highlighted = root.querySelector(".oo-ui-optionWidget-highlighted")!;
@@ -109,7 +109,7 @@ it("启用组内的选中项输出progressive着色（组禁用不残留）", as
   ).toHaveClass("oo-ui-image-progressive");
 });
 
-it("选项flags：按标志输出image变体（icon与indicator同落），禁用项与未声明项不输出", async () => {
+it("选项flags：按标志输出image变体（icon与indicator同时写出），禁用项与未声明项不输出", async () => {
   const screen = await render(
     <Select
       options={[
@@ -125,7 +125,7 @@ it("选项flags：按标志输出image变体（icon与indicator同落），禁�
       ".oo-ui-menuOptionWidget, .oo-ui-menuSectionOptionWidget",
     ),
   ];
-  // MenuOption：icon与indicator同落（对齐主题Theme.updateElementClasses）；
+  // MenuOption：icon与indicator同时写出（对齐主题Theme.updateElementClasses）；
   // 图标选择器须排除checkIcon（它也是.iconElement-icon且DOM在首位）
   expect(
     destructive.querySelector(
@@ -146,7 +146,7 @@ it("选项flags：按标志输出image变体（icon与indicator同落），禁�
   expect(disabled.querySelector(".oo-ui-image-warning")).toBeNull();
 });
 
-it("选项flags与选中态叠加：progressive与标志变体同时落在图标上", async () => {
+it("选项flags与选中态叠加：progressive与标志变体同时写在图标上", async () => {
   const screen = await render(
     <Select
       options={[{ children: "删除", value: "del", flags: ["destructive"] }]}
@@ -160,7 +160,7 @@ it("选项flags与选中态叠加：progressive与标志变体同时落在图标
   expect(icon).toHaveClass("oo-ui-image-progressive");
 });
 
-it("MenuOption输出原版的checkIcon：选项根首个子元素，恒无变体类", async () => {
+it("MenuOption输出原版的checkIcon：选项根首个子元素，始终无变体类", async () => {
   const screen = await render(<Select options={[...OPTIONS]} defaultValue="b" />);
   const option = screen.container.querySelector(".oo-ui-menuOptionWidget")!;
   // 原版MenuOptionWidget构造期prepend一个checkIcon（dist/oojs-ui.js:8366-8379），
@@ -209,7 +209,7 @@ it("分组标题（无value）渲染MenuSectionOption且不可选中", async () 
   expect(onChange).not.toHaveBeenCalled();
 });
 
-it("拖拽跨项：mousemove落到另一可选项时按压随之迁移，mouseup提交落点项", async () => {
+it("拖拽跨项：mousemove移到另一可选项时按压随之迁移，mouseup提交移入项", async () => {
   const onChange = vi.fn<(value: string | number) => void>();
   const screen = await render(<Select options={[...OPTIONS]} onChange={onChange} />);
   const root = getRoot(screen);
@@ -222,7 +222,7 @@ it("拖拽跨项：mousemove落到另一可选项时按压随之迁移，mouseup
   expect(options[0]).toHaveClass("oo-ui-optionWidget-pressed");
   expect(root).toHaveClass("oo-ui-selectWidget-pressed");
 
-  // 拖拽监听挂在document捕获阶段，故派发在落点项即可解析到该选项
+  // 拖拽监听挂在document捕获阶段，故派发在移入项即可解析到该选项
   options[1]!.dispatchEvent(new MouseEvent("mousemove", { bubbles: true }));
   await tick();
   expect(options[1]).toHaveClass("oo-ui-optionWidget-pressed");

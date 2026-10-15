@@ -4,7 +4,7 @@ import { getRoot, snapshotHTML, tick } from "../../testing";
 import { SearchInput } from ".";
 
 /**
- * SearchInput（对齐原版OO.ui.SearchInputWidget）的浏览器渲染契约：
+ * SearchInput（对齐原版OO.ui.SearchInputWidget）的浏览器渲染约定：
  * search形态类与缺省图标、清除指示器随值显隐、点击/Enter清空并回焦、禁用不显示清除。
  */
 it("常规：search type类与缺省search图标", async () => {
@@ -71,7 +71,7 @@ it("禁用或只读时不显示清除指示器（对齐updateSearchIndicator的�
 });
 
 describe("HTML快照", () => {
-  // 快照锁结构：差异须有意识地更新，勿靠 -u 反推（靶心为原版DOM，见comparison-guide「渲染契约的靶心」）
+  // 快照锁定结构：差异应明确更新，不要依赖 -u 反推（以原版DOM为准，见comparison-guide「断言基准」）
   it("空值", async () => {
     const screen = await render(<SearchInput />);
     expect(snapshotHTML(screen.container)).toMatchInlineSnapshot(

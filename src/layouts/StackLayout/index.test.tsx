@@ -13,7 +13,7 @@ const getPages = (screen: { container: Element }) => [
 ];
 
 /**
- * StackLayout（对齐原版OO.ui.StackLayout）的浏览器渲染契约：
+ * StackLayout（对齐原版OO.ui.StackLayout）的浏览器渲染结果：
  * 页面按options渲染、激活页active类/其余隐藏、continuous全显+整体滚动、
  * onPageFocus随页内焦点通知。
  */

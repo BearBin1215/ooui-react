@@ -56,8 +56,8 @@ const key = (
 
 /**
  * press.ts的usePressedState：Button/Tool组共用的按压流。
- * 可观察契约：仅左键与Enter/空格进入按压、长按repeat不重复进入（否则keyup时onTrigger
- * 会N次齐触发）、释放须落在发起目标上才触发onTrigger、准入校验（canPress）与disabled
+ * 可观察行为：仅左键与Enter/空格进入按压、长按repeat不重复进入（否则keyup时onTrigger
+ * 会N次齐触发）、释放须发生在发起目标上才触发onTrigger、准入校验（canPress）与disabled
  * 的提前返回、document级监听使目标外释放也能复位。
  */
 it("非左键按下不进入按压态", async () => {
@@ -82,7 +82,7 @@ it("左键按下进入按压态；在发起目标上释放时复位并触发onTr
   expect(getHarnessRoot(screen).dataset.pressed).toBe("no");
 });
 
-it("释放落在另一目标上：按压态复位但不触发onTrigger", async () => {
+it("释放发生在另一目标上：按压态复位但不触发onTrigger", async () => {
   const onTrigger = vi.fn<(target: string) => void>();
   const screen = await render(<PressHarness onTrigger={onTrigger} />);
   mouse(getItem(screen, "a"), "mousedown");
@@ -174,13 +174,13 @@ function RegistryHarness({
 
 /**
  * press.ts的useOptionRegistry：选项DOM的双向索引。
- * 契约：同值的ref回调跨渲染复用（避免每渲染detach/attach）、值移除后索引随之淘汰、
+ * 约定：同值的ref回调跨渲染复用（避免每渲染detach/attach）、值移除后索引随之淘汰、
  * findItemFromNode沿祖先链由子节点反查选项值（链外节点返回null）。
  */
 it("registerItem：同值回调跨渲染复用；值移除后索引随之淘汰", async () => {
   const noop = () => {};
   const screen = await render(<RegistryHarness values={["a", "b"]} onLocate={noop} />);
-  // 淘汰契约在DOM上无等价可观察物（索引与回调缓存只维护在hook内部的ref里，press.ts
+  // 淘汰约定在DOM上无等价可观察物（索引与回调缓存只维护在hook内部的ref里，press.ts
   // 有意不向外部暴露内部状态），故在harness内读快照，勿改为外部可观察断言
   expect(getTestId(screen, "outer")).toHaveAttribute("data-index-keys", "a,b");
 

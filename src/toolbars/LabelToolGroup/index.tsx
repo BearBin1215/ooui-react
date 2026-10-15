@@ -14,28 +14,28 @@ export interface LabelToolGroupProps extends Omit<
   /**
    * Handle label.
    *
-   * 把手标签。
+   * handle标签。
    */
   label?: ReactNode;
 
   /**
    * Handle icon.
    *
-   * 把手图标。
+   * handle图标。
    */
   icon?: string;
 
   /**
    * Handle indicator.
    *
-   * 把手指示器。
+   * handle指示器。
    */
   indicator?: Indicators;
 
   /**
    * Handle tooltip, rendered on the root element.
    *
-   * 把手 tooltip，渲染在根元素上。
+   * handle tooltip，渲染在根元素上。
    */
   title?: string;
 

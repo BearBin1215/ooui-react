@@ -7,7 +7,7 @@ const getNative = (screen: { container: Element }) =>
   getRoot(screen).querySelector<HTMLElement>("button, input")!;
 
 /**
- * ButtonInput（对齐原版OO.ui.ButtonInputWidget）的浏览器渲染契约：
+ * ButtonInput（对齐原版OO.ui.ButtonInputWidget）的浏览器渲染约定：
  * span根 + 真实button/input的类链与表单属性、useInputTag形态、禁用拦截、
  * 按压态、title（invisibleLabel兜底 + accessKey键位后缀）。
  */
@@ -44,7 +44,7 @@ it("结构：span根承载input/buttonInput与按钮类，内层真实button承�
   );
 });
 
-it("表单属性：type/name/value/formNoValidate落到真实button", async () => {
+it("表单属性：type/name/value/formNoValidate写在真实button上", async () => {
   const screen = await render(
     <ButtonInput type="submit" name="act" value="save" formNoValidate>
       保存

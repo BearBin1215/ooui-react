@@ -15,7 +15,7 @@ const getOption = (screen: { container: Element }, name: string) =>
   )!;
 
 /**
- * ButtonSelect（对齐原版OO.ui.ButtonSelectWidget）的浏览器渲染契约：
+ * ButtonSelect（对齐原版OO.ui.ButtonSelectWidget）的浏览器渲染约定：
  * listbox根与按钮选项继承链、activedescendant指向选中项、点击/键盘直选、
  * 组禁用下发。
  */
@@ -37,7 +37,7 @@ it("结构：listbox根与select/buttonSelect类链，activedescendant指向选�
   expect(root.getAttribute("aria-activedescendant")).toBe(selected.getAttribute("id"));
 });
 
-it("按钮选项flags：根输出flaggedElement类、图标按标志输出image变体（带边框禁用项仅图标不落标志变体）", async () => {
+it("按钮选项flags：根输出flaggedElement类、图标按标志输出image变体（带边框禁用项仅图标不带标志变体）", async () => {
   const screen = await render(
     <ButtonSelect
       options={[
@@ -109,7 +109,7 @@ it("键盘直选：←→↑↓在可选值间环绕改选并跳过禁用项，E
   expect(onChange).toHaveBeenCalledTimes(3);
 });
 
-it("点击选项后焦点收进组根：无需先聚焦即可方向键改选（略优于原版）", async () => {
+it("点击选项后焦点移入组根：无需先聚焦即可方向键改选（略优于原版）", async () => {
   const onChange = vi.fn<(value: string | number) => void>();
   const screen = await render(
     <ButtonSelect options={[...OPTIONS]} defaultValue="a" onChange={onChange} />,

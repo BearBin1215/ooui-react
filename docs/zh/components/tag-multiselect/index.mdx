@@ -45,9 +45,9 @@ export default App;
 
 ## 白名单与限制
 
-- `allowedValues` 给出合法值域，落在其外的标签被判为非法（除非 `allowArbitrary`）。
+- `allowedValues` 给出合法值域，超出其范围的标签被判为非法（除非 `allowArbitrary`）。
 - `allowDuplicates` 允许重复值；`tagLimit` 限制标签数量，达到后输入禁用。
-- `allowDisplayInvalidTags` 让非法值仍以标签呈现并标 invalid，而非直接拒绝添加。
+- `allowDisplayInvalidTags` 让非法值仍以标签呈现并标 invalid；不开启时会直接拒绝添加。
 
 ```tsx preview
 import { useState } from "react";
@@ -73,11 +73,11 @@ function App() {
 export default App;
 ```
 
-输入 `紫` 这类值域外的文本并回车，标签仍会生成并带 invalid 标记（开启 `allowDisplayInvalidTags` 的效果；不开启时直接拒绝添加）；`tagLimit` 达到 2 个后输入框禁用。注意：组件整体的 invalid 标志（红框）比 `onInvalidTagsChange` 的口径更宽——失焦时输入框里还留着未提交文本也会标红。看到红框却没收到 `onInvalidTagsChange`，先检查输入框是否残留文本。
+输入 `紫` 这类值域外的文本并回车，标签仍会生成并带 invalid 标记（开启 `allowDisplayInvalidTags` 的效果；不开启时直接拒绝添加）；`tagLimit` 达到 2 个后输入框禁用。注意：组件整体的 invalid 标志（红框）比 `onInvalidTagsChange` 的判定范围更宽——失焦时输入框里还留着未提交文本也会标红。看到红框却没收到 `onInvalidTagsChange`，先检查输入框是否残留文本。
 
 ## 外部值清洗：pickValidTags
 
-导出的纯函数 `pickValidTags(values, { options?, allowedValues?, allowDuplicates? })` 返回传入值集合中**合法的子集**——剔除值域外的值与 `allowDuplicates` 为假时的重复项，与组件用同一套规则（传组件同款 props 即得与 `onInvalidTagsChange` 互补的集合）。外部数据回填 `value` 之前、或提交之前清洗标签时用它。{/* deviations: dev-tag-valid-callback */}
+导出的纯函数 `pickValidTags(values, { options?, allowedValues?, allowDuplicates? })` 返回传入值集合中**合法的子集**——剔除值域外的值与 `allowDuplicates` 为假时的重复项，与组件用同一套规则（传组件同款 props 即可得到与 `onInvalidTagsChange` 互补的集合）。外部数据回填 `value` 之前、或提交之前清洗标签时用它。{/* deviations: dev-tag-valid-callback */}
 
 ## 输入框位置与重排
 
@@ -110,7 +110,7 @@ export default App;
 
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `value` | 标签值集合（受控，传入即受控模式） | `(string \| number)[]` | — |
+| `value` | 标签值集合（受控，传入后即进入受控模式） | `(string \| number)[]` | — |
 | `defaultValue` | 非受控初始值 | `(string \| number)[]` | — |
 | `onChange` | 标签增删回调（值优先，回传标量数组） | `ChangeHandler<(string \| number)[]>` | — |
 | `allowedValues` | 合法值白名单（无菜单时的取值约束） | `(string \| number)[]` | — |
@@ -128,7 +128,7 @@ export default App;
 | `...rest` | 原生 `div` 属性直传根元素 | `HTMLAttributes<HTMLDivElement>` | — |
 
 :::note 与原版的差异
-原版的 `tag.data` 可为任意对象；本工程把标签身份恒为标量 `value`，以便受控数组可序列化、可比对。需要随标签携带对象时，改用 [MenuTagMultiselect](../menu-tag-multiselect/index.mdx) 的选项 `data` 字段，按 `value` 在自己的 `options` 里反查。{/* deviations: dev-tag-value-data */}
+原版的 `tag.data` 可为任意对象；在本工程中，标签的标识始终是标量 `value`，以便受控数组可序列化、可比对。需要随标签携带对象时，改用 [MenuTagMultiselect](../menu-tag-multiselect/index.mdx) 的选项 `data` 字段，按 `value` 在自己的 `options` 里反查。{/* deviations: dev-tag-value-data */}
 :::
 
 ## 另见

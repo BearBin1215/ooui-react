@@ -17,7 +17,7 @@ const getOption = (screen: { container: Element }, name: string) =>
   getOptions(screen).find((option) => option.textContent === name)!;
 
 /**
- * RadioSelect（对齐原版OO.ui.RadioSelectWidget）的浏览器渲染契约：
+ * RadioSelect（对齐原版OO.ui.RadioSelectWidget）的浏览器渲染约定：
  * radiogroup语义与按压态类、点击改选、↑↓←→环绕直接改选（跳过禁用项）、
  * 聚焦无选中项时自动选中首个非禁用项、组禁用的键盘/鼠标全禁。
  */

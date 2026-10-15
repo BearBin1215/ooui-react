@@ -48,15 +48,15 @@ export default App;
 ## 定位与翻转
 
 - `position` 取 `below`（缺省）、`above`、`before`（左侧）、`after`（右侧）。
-- `align` 控制在锚点上的对齐：`center`（缺省）、`forwards` / `backwards`（随书写方向/RTL 换物理侧），或 `force-left` / `force-right`（恒为物理左右，不随方向翻转）。
+- `align` 控制在锚点上的对齐：`center`（缺省）、`forwards` / `backwards`（随书写方向/RTL 换物理侧），或 `force-left` / `force-right`（始终是物理左右，不随方向翻转）。
 - `autoFlip`（默认开）在当前方向放不下时翻到对侧；`anchor`（默认开）画指向锚点的箭头。
 - 空间不足时浮层会被裁剪/钳制在可视区（或就近滚动容器）内，`containerPadding` 控制钳制内边距（默认 10px）；`hideWhenOutOfView`（默认开）让锚点滚出可视区时暂时隐藏浮层（不改 `open`）。
 
 :::note 与原版的差异
-滚动引起裁剪变化时会重新判定翻转方向（原版方向冻结到下次打开），滚动过程中浮层可能因此跳动。{/* deviations: dev-popup-scroll-reflip */}
+滚动引起裁剪变化时会重新判定翻转方向（原版会保持方向不变，直到下次打开），滚动过程中浮层可能因此跳动。{/* deviations: dev-popup-scroll-reflip */}
 :::
 
-最常用的两个调整：`position` 换弹出方位，`anchor={false}` 去掉指向锚点的箭头。
+最常用的调整：`position` 换弹出方位，`anchor={false}` 去掉指向锚点的箭头。
 
 ```tsx preview
 import { useRef, useState, type ReactNode } from "react";
@@ -119,7 +119,7 @@ export default App;
 
 ## 头部与底部
 
-`head` 开启头部区，渲染 `icon` + `label` + 右上角关闭按钮（`hideCloseButton` 可隐藏）；`footer` 是底部区域。点关闭按钮、点外部、Escape 都经 `onOpenChange(false)` 报出关闭意图。
+`head` 开启头部区，渲染 `icon` + `label` + 右上角关闭按钮（`hideCloseButton` 可隐藏）；`footer` 是底部区域。点关闭按钮、点外部、Escape 都通过 `onOpenChange(false)` 报告关闭。
 
 ```tsx preview
 import { useRef, useState } from "react";
@@ -158,7 +158,7 @@ export default App;
 
 ## 悬浮触发
 
-悬浮提示（术语解释、悬浮卡）是 Popup 的高频场景：开合完全由锚点的 `mouseenter` / `mouseleave` 驱动，并传 `autoClose={false}` 关掉外点与 Escape 通道。两个实现要点：浮层 portal 出锚点子树，鼠标移向浮层会先触发锚点的 `mouseleave`——收起前留一小段延时、移入浮层即取消；浮层内容再包一层自带 mouse 事件的元素，悬停浮层期间就不会收起。
+悬浮提示（术语解释、悬浮卡）是 Popup 的高频场景：开合完全由锚点的 `mouseenter` / `mouseleave` 驱动，并传 `autoClose={false}` 关掉外点与 Escape 通道。实现要点：浮层通过 portal 渲染到锚点子树之外，鼠标移向浮层时会先触发锚点的 `mouseleave`——收起前留一小段延时，鼠标移入浮层时取消；浮层内容再包一层自带 mouse 事件的元素，悬停浮层期间就不会收起。
 
 ```tsx preview
 import { useRef, useState } from "react";
@@ -214,12 +214,12 @@ export default App;
 
 | 属性 | 描述 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| `open` | 是否打开（受控，传入即受控模式；Popup 不自行打开） | `boolean` | — |
+| `open` | 是否打开（受控，传入后即进入受控模式；Popup 不自行打开） | `boolean` | — |
 | `defaultOpen` | 非受控初始打开态 | `boolean` | `false` |
 | `onOpenChange` | 开合变化回调（点关闭按钮 / 点外部 / Escape / Tab 越界触发） | `(open: boolean) => void` | — |
 | `container` | 锚定容器（`ref` 或元素）；缺省定位到 body 左上角 | `RefObject<HTMLElement \| null> \| HTMLElement \| null` | — |
 | `position` | 弹出方位 | `'above' \| 'below' \| 'before' \| 'after'` | `'below'` |
-| `align` | 对齐方向（逻辑值随 RTL 换侧，`force-*` 恒为物理侧） | `'center' \| 'forwards' \| 'backwards' \| 'force-left' \| 'force-right'` | `'center'` |
+| `align` | 对齐方向（逻辑值随 RTL 换侧，`force-*` 始终是物理侧） | `'center' \| 'forwards' \| 'backwards' \| 'force-left' \| 'force-right'` | `'center'` |
 | `anchor` | 是否画指向锚点的箭头 | `boolean` | `true` |
 | `autoClose` | 点击外部 / Escape 自动关闭 | `boolean` | — |
 | `autoCloseIgnore` | 自动关闭的忽略元素（如触发按钮） | `RefObject<HTMLElement \| null> \| HTMLElement \| null` | — |
@@ -233,7 +233,7 @@ export default App;
 | `width` / `height` | 弹层尺寸（px） | `number \| string` | `320` / — |
 | `footer` | 底部区域内容 | `ReactNode` | — |
 | `disabled` | 是否禁用 | `boolean` | `false` |
-| `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）落到浮层根 | `HTMLAttributes<HTMLDivElement>` | — |
+| `...rest` | 原生 `div` 属性（`className`、`id`、`data-*` 等）写到浮层根 | `HTMLAttributes<HTMLDivElement>` | — |
 
 ## 另见
 

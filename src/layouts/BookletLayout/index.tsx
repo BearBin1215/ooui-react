@@ -166,7 +166,7 @@ export const BookletLayout = forwardRef<HTMLDivElement, BookletLayoutProps>(
     },
     ref,
   ) => {
-    // 激活页选择：失效（被移除）时按原版stack的口径回退（下一个未被移除项→新末项），
+    // 激活页选择：失效（被移除）时按原版stack的规则回退（下一个未被移除项→新末项），
     // 受控回写/非受控提交见useLayoutSelection。回退随stack而非outline的理由见
     // dev-docs/DEVIATIONS.md「增强」的布局补选条
     const { effectiveValue: activeValue, selectIfChanged } = useLayoutSelection<
@@ -209,7 +209,7 @@ export const BookletLayout = forwardRef<HTMLDivElement, BookletLayoutProps>(
     // 对齐原版onStackLayoutSet：continuous时滚动至激活页（首次不滚动）；autoFocus时
     // 聚焦页内第一个可聚焦元素（焦点已在该页内时useAutoFocusPanel自动跳过；
     // 移动端形态抑制聚焦，对齐原版的!isMobile条件）。首帧不聚焦（skipInitialFocus，
-    // 与IndexLayout同口径）：原版构造期不自动选页、IndexLayout构造期focus()落在未挂载
+    // 与IndexLayout同规则）：原版构造期不自动选页、IndexLayout构造期focus()写在未挂载
     // 元素上同为no-op，两侧实际都不抢焦点；React版聚焦发生在挂载后，首帧不抢
     useAutoFocusPanel({
       activeValue,

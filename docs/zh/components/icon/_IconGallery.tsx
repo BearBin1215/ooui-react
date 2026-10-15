@@ -95,7 +95,7 @@ const NAME_STYLE: CSSProperties = {
 /** 「已复制」反馈的停留时长（ms） */
 const COPIED_DURATION = 1500;
 
-/** 画廊内可本地化的界面文案；图标名与分组名恒为语言中性的原值 */
+/** 画廊内可本地化的界面文案；图标名与分组名始终是语言中性的原值 */
 const LABELS = {
   zh: {
     search: "搜索图标名",
