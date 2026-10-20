@@ -149,7 +149,7 @@ export interface NumberInputProps
  *
  * 数字输入框，输入能力与 TextInput 一致。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/number-input/index.html
+ * @see https://ooui-react.pages.dev/components/number-input/
  */
 export const NumberInput = forwardRef<HTMLDivElement, NumberInputProps>(
   (

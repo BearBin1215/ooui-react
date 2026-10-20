@@ -5,9 +5,9 @@ body:
   - type: markdown
     attributes:
       value: |
-        Found an issue on the [docs site](https://bearbin1215.github.io/ooui-react/)? Content not matching the library, missing pages, or the site itself broken — describe it here. If the library itself misbehaves, use the Bug Report template instead.
+        Found an issue on the [docs site](https://ooui-react.pages.dev/)? Content not matching the library, missing pages, or the site itself broken — describe it here. If the library itself misbehaves, use the Bug Report template instead.
 
-        在[文档站](https://bearbin1215.github.io/ooui-react/)上发现问题？内容与库不符、页面缺失或站点本身故障，请在此描述。如果是库本身的行为问题，请改用 Bug Report 模板。
+        在[文档站](https://ooui-react.pages.dev/)上发现问题？内容与库不符、页面缺失或站点本身故障，请在此描述。如果是库本身的行为问题，请改用 Bug Report 模板。
 
   - type: dropdown
     id: type
@@ -25,7 +25,7 @@ body:
     id: location
     attributes:
       label: Location / 问题位置
-      description: e.g. https://bearbin1215.github.io/ooui-react/components/button
+      description: e.g. https://ooui-react.pages.dev/components/button
     validations:
       required: true
 

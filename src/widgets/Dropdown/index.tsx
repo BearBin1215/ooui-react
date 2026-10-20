@@ -74,7 +74,7 @@ export interface DropdownProps
  *
  * 下拉选择框。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/dropdown/index.html
+ * @see https://ooui-react.pages.dev/components/dropdown/
  */
 export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
   (

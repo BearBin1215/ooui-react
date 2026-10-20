@@ -259,7 +259,7 @@ export interface SelectFileInputWidgetProps
  * `<input type="file">`，点击即开系统选择器），二者经 ActionFieldLayout 排布；
  * 另有拖放区形态与只渲染按钮形态。Tab 停靠点为选择按钮，清除指示器键盘可达。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/select-file-input-widget/index.html
+ * @see https://ooui-react.pages.dev/components/select-file-input-widget/
  */
 export const SelectFileInputWidget = forwardRef<
   HTMLDivElement,

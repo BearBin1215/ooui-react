@@ -211,7 +211,7 @@ function getAnchorStyle(
  * 浮动面板：锚定到某个元素、自动定位与翻转的浮层，适合注解、Tooltip 一类的按需展示内容；
  * 按钮触发的场景可直接用 PopupButton。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/popup/index.html
+ * @see https://ooui-react.pages.dev/components/popup/
  */
 export const Popup = forwardRef<HTMLDivElement, PopupProps>(
   (

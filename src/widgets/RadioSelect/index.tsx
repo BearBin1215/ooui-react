@@ -80,7 +80,7 @@ export interface RadioSelectProps extends WidgetProps {
  *
  * 单选组：若干单选项排成一组，同组互斥、至多选中一项。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/radio-select/index.html
+ * @see https://ooui-react.pages.dev/components/radio-select/
  */
 export const RadioSelect = forwardRef<HTMLDivElement, RadioSelectProps>(
   (

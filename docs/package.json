@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/copy-ooui-assets.ts && rspress dev",
-    "build": "node scripts/copy-ooui-assets.ts && rspress build",
+    "build": "node scripts/copy-ooui-assets.ts && rspress build && node scripts/generate-sitemap.ts",
     "preview": "rspress preview",
     "typecheck": "tsc --noEmit"
   },

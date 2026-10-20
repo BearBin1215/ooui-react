@@ -51,7 +51,7 @@ export interface FormLayoutProps extends ElementProps<HTMLFormElement> {
  * 表单容器：渲染一个 `<form>`，把若干 FieldLayout 包起来。它本身不做数据管理，带 `name`
  * 的输入控件随原生 `<form>` 一起提交。不需要原生提交语义时，直接把控件摆在自己的容器里即可。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/form-layout/index.html
+ * @see https://ooui-react.pages.dev/components/form-layout/
  */
 export const FormLayout = forwardRef<HTMLFormElement, FormLayoutProps>(
   ({ className, children, method, action, enctype, ...rest }, ref) => (

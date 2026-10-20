@@ -37,7 +37,7 @@ export interface MenuLayoutProps extends Omit<LayoutProps, "onSelect"> {
  * 菜单布局：`menu` 区域与内容区域（`children`）按 `menuPosition` 排列；菜单收起时
  * 不渲染子树，避免隐形焦点陷阱。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/menu-layout/index.html
+ * @see https://ooui-react.pages.dev/components/menu-layout/
  */
 export const MenuLayout = forwardRef<HTMLDivElement, MenuLayoutProps>(
   (

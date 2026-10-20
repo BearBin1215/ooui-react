@@ -41,7 +41,7 @@ export interface CheckboxMultiselectInputProps extends Omit<
  * 映射后的选项集仅在 `options` 引用变化时重算，热点路径请传稳定引用（模块常量或
  * `useMemo`），不要内联数组字面量。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/checkbox-multiselect-input/index.html
+ * @see https://ooui-react.pages.dev/components/checkbox-multiselect-input/
  */
 export const CheckboxMultiselectInput = forwardRef<
   HTMLDivElement,

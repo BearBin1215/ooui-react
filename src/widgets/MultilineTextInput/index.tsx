@@ -54,7 +54,7 @@ const getDefaultMaxRows = (rows?: number) => Math.max(2 * (rows || 0), 10);
  *
  * 多行文本输入框，输入能力与 TextInput 一致。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/multiline-text-input/index.html
+ * @see https://ooui-react.pages.dev/components/multiline-text-input/
  */
 export const MultilineTextInput = forwardRef<HTMLDivElement, MultilineTextInputProps>(
   (

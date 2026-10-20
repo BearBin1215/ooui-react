@@ -27,7 +27,7 @@ export interface ProgressBarProps extends WidgetProps<HTMLDivElement> {
  *
  * 进度条。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/progress-bar/index.html
+ * @see https://ooui-react.pages.dev/components/progress-bar/
  */
 export const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
   ({ className, disabled, progress = false, ...rest }, ref) => {

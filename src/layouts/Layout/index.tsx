@@ -23,7 +23,7 @@ export interface LayoutProps extends Omit<ElementProps, "hidden"> {
  * 布局基类：为各布局组件统一处理 `hidden` 三态（`true` / `'until-found'` /
  * 可见）与随之的 `aria-hidden` 位置。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/layout/index.html
+ * @see https://ooui-react.pages.dev/components/layout/
  */
 export const Layout = forwardRef<HTMLDivElement, LayoutProps>(
   ({ className, children, hidden, ...rest }, ref) => {

@@ -54,7 +54,7 @@ pnpm format     # oxfmt 格式化（当前仅覆盖 ts/tsx，json/css/mdx 刻意
 
 ## 注释和文档
 
-docs/ 目录为本工程的文档工程，基于 Rspress 构建，托管到 GitHub Pages。
+docs/ 目录为本工程的文档工程，基于 Rspress 构建，正式站托管在 Cloudflare Pages（`https://ooui-react.pages.dev/`），GitHub Pages 是备份镜像。
 
 消费方可见的 jsdoc 注释包括组件概述、参数定义等，组件概述对应文档页面序言、参数定义对应文档页面的 API 章节。这部分内容需要对应，保持中英双语。
 

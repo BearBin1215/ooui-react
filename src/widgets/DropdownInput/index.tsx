@@ -114,7 +114,7 @@ const groupOptions = (options: DropdownInputOptionProps[]): OptionGroup[] => {
  * 内嵌隐藏 `<select>` 承载表单提交。传入值不在可选项内时回退为首个可选值；
  * 移动端形态（`OOUIProvider` 的 `isMobile`）下由原生 `<select>` 承担交互。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/dropdown-input/index.html
+ * @see https://ooui-react.pages.dev/components/dropdown-input/
  */
 export const DropdownInput = forwardRef<HTMLDivElement, DropdownInputProps>(
   (

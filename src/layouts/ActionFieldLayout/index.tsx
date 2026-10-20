@@ -29,7 +29,7 @@ export interface ActionFieldLayoutProps extends FieldLayoutProps {
  * 带操作按钮的字段布局，在 FieldLayout 基础上于字段区旁附加按钮，
  * 以组合方式复用 FieldLayout（原版为其子类）。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/action-field-layout/index.html
+ * @see https://ooui-react.pages.dev/components/action-field-layout/
  */
 export const ActionFieldLayout = forwardRef<HTMLDivElement, ActionFieldLayoutProps>(
   (

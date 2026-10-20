@@ -165,7 +165,7 @@ export interface ProcessDialogProps extends Omit<
  * primary 动作（右），尾部为其他动作；动作执行期间显示 pending 态，失败时错误
  * 面板提供 Dismiss / 重试。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/process-dialog/index.html
+ * @see https://ooui-react.pages.dev/components/process-dialog/
  */
 export const ProcessDialog = forwardRef<HTMLDivElement, ProcessDialogProps>(
   (

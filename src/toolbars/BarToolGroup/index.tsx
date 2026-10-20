@@ -23,7 +23,7 @@ export type BarToolGroupProps = ToolGroupBaseProps;
  * 平铺工具组（对齐原版 OO.ui.BarToolGroup）：工具以图标按钮横向平铺，
  * 标题与快捷键文案以 tooltip 展示。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/toolbar/index.html
+ * @see https://ooui-react.pages.dev/components/toolbar/
  */
 export const BarToolGroup = forwardRef<HTMLDivElement, BarToolGroupProps>(
   (

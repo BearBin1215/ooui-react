@@ -58,7 +58,7 @@ const EXPAND_COLLAPSE_TOOL_NAME = "more-fewer";
  * 列表工具组（对齐原版 OO.ui.ListToolGroup）：工具以标签文本纵向列表移入下拉
  * 面板，尾部可出现 More / Fewer 切换项控制可折叠工具的显隐（选中该项不收起面板）。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/toolbar/index.html
+ * @see https://ooui-react.pages.dev/components/toolbar/
  */
 export const ListToolGroup = forwardRef<HTMLDivElement, ListToolGroupProps>(
   (

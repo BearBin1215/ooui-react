@@ -42,7 +42,7 @@ export type ToggleButtonProps = Omit<
  *
  * 切换按钮：能“按下 / 弹起”的按钮。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/toggle-button/index.html
+ * @see https://ooui-react.pages.dev/components/toggle-button/
  */
 export const ToggleButton = forwardRef<HTMLSpanElement, ToggleButtonProps>(
   (

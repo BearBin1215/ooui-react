@@ -71,7 +71,7 @@ export interface CheckboxMultiselectProps extends WidgetProps {
  * 复选组（对齐原版 OO.ui.CheckboxMultiselectWidget）：若干复选项、可同时选中
  * 多项；支持 Shift+点击范围选择与方向键移动焦点。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/checkbox-multiselect/index.html
+ * @see https://ooui-react.pages.dev/components/checkbox-multiselect/
  */
 export const CheckboxMultiselect = forwardRef<HTMLDivElement, CheckboxMultiselectProps>(
   (

@@ -58,7 +58,7 @@ export interface TabSelectProps extends Omit<WidgetProps<HTMLDivElement>, "onSel
  *
  * 页签式选择：把一组互斥选项呈现为一排页签。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/tab-select/index.html
+ * @see https://ooui-react.pages.dev/components/tab-select/
  */
 export const TabSelect = forwardRef<HTMLDivElement, TabSelectProps>(
   (

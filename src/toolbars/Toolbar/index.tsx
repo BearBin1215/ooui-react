@@ -54,7 +54,7 @@ export interface ToolbarProps extends ElementProps<HTMLDivElement> {
  *
  * 工具栏：一条横栏容器，内部排列若干工具组，工具由工具组承载。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/toolbar/index.html
+ * @see https://ooui-react.pages.dev/components/toolbar/
  */
 export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(
   ({ children, position = "top", actions, className, ...rest }, ref) => {

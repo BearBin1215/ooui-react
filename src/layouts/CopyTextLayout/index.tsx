@@ -75,7 +75,7 @@ export interface CopyTextLayoutProps extends Omit<FieldLayoutProps, "children"> 
  * 复制文本布局：只读文本框 + 复制按钮，聚焦或点击按钮时自动全选文本。
  * 适合用户需要复制的只读内容。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/copy-text-layout/index.html
+ * @see https://ooui-react.pages.dev/components/copy-text-layout/
  */
 export const CopyTextLayout = forwardRef<HTMLDivElement, CopyTextLayoutProps>(
   (

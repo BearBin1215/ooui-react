@@ -47,7 +47,7 @@ export interface RadioInputProps extends Omit<
  * 单选框（对齐原版 OO.ui.RadioInputWidget）：span 根 + 原生 radio + 装饰 span
  * （圆点由主题 CSS 绘制）。不自带文字标签，需要标签时交给 FieldLayout 包裹。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/radio-input/index.html
+ * @see https://ooui-react.pages.dev/components/radio-input/
  */
 export const RadioInput = forwardRef<HTMLSpanElement, RadioInputProps>(
   (

@@ -82,7 +82,7 @@ export interface MessageProps extends WidgetProps<HTMLDivElement>, IconElement {
  * 消息提示条（对齐原版 OO.ui.MessageWidget）：`error` 类型用 `role="alert"`，
  * 其余类型用 `aria-live="polite"`。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/message/index.html
+ * @see https://ooui-react.pages.dev/components/message/
  */
 export const Message = forwardRef<HTMLDivElement, MessageProps>(
   (

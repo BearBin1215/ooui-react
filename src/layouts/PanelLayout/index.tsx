@@ -50,7 +50,7 @@ export interface PanelLayoutProps extends LayoutProps {
  * 面板：带内边距、滚动、铺满、边框开关的内容容器，也是 StackLayout 等布局
  * 的基础容器。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/panel-layout/index.html
+ * @see https://ooui-react.pages.dev/components/panel-layout/
  */
 export const PanelLayout = forwardRef<HTMLDivElement, PanelLayoutProps>(
   (

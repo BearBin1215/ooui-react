@@ -164,7 +164,7 @@ export const resolveValidate = (validate: TextInputValidate | undefined) => {
  *
  * 单行文本输入框，同时也是 MultilineTextInput、NumberInput、SearchInput 等输入组件的基础。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/text-input/index.html
+ * @see https://ooui-react.pages.dev/components/text-input/
  */
 export const TextInput = forwardRef<HTMLDivElement, TextInputInternalProps>(
   (

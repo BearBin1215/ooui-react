@@ -48,7 +48,7 @@ export interface ToggleSwitchProps extends Omit<
  *
  * 拨动开关。不自带文字标签，需要标签时交给 FieldLayout 包裹。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/toggle-switch/index.html
+ * @see https://ooui-react.pages.dev/components/toggle-switch/
  */
 export const ToggleSwitch = forwardRef<HTMLDivElement, ToggleSwitchProps>(
   (

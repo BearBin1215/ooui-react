@@ -64,7 +64,7 @@ export type CheckboxInputProps = Omit<
  *
  * 单个复选框。本组件不自带文字标签，需要标签时交给 FieldLayout 包裹。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/checkbox-input/index.html
+ * @see https://ooui-react.pages.dev/components/checkbox-input/
  */
 export const CheckboxInput = forwardRef<HTMLSpanElement, CheckboxInputProps>(
   (

@@ -120,7 +120,7 @@ function getPanelHidden(
  *
  * 页签布局：顶部页签菜单加下方面板栈。适合顶部页签 + 分块内容的设置页场景。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/index-layout/index.html
+ * @see https://ooui-react.pages.dev/components/index-layout/
  */
 export const IndexLayout = forwardRef<HTMLDivElement, IndexLayoutProps>(
   (

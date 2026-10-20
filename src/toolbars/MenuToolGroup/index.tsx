@@ -17,7 +17,7 @@ export type MenuToolGroupProps = PopupToolGroupBaseProps;
  * 菜单工具组（对齐原版 OO.ui.MenuToolGroup）：工具以标签横向排布放入下拉面板，
  * 组handle标签按激活工具的可见文本合成，无激活工具时回落 `label`。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/toolbar/index.html
+ * @see https://ooui-react.pages.dev/components/toolbar/
  */
 export const MenuToolGroup = forwardRef<HTMLDivElement, MenuToolGroupProps>(
   ({ tools, label, toolsClassName, className, ...rest }, ref) => {

@@ -39,7 +39,7 @@ export interface FieldLayoutProps extends WidgetProps<HTMLDivElement>, LabelElem
  *
  * 字段布局：把一个字段控件与它的标签排在一起，是 FormLayout 里的基本单元。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/field-layout/index.html
+ * @see https://ooui-react.pages.dev/components/field-layout/
  */
 export const FieldLayout = forwardRef<HTMLDivElement, FieldLayoutProps>(
   (

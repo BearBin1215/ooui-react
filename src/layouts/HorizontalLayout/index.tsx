@@ -10,7 +10,7 @@ export type HorizontalLayoutProps = LayoutProps;
  *
  * 横向布局：把子元素排成一行，排布交由主题 CSS 完成。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/horizontal-layout/index.html
+ * @see https://ooui-react.pages.dev/components/horizontal-layout/
  */
 export const HorizontalLayout = forwardRef<HTMLDivElement, HorizontalLayoutProps>(
   ({ className, children, ...rest }, ref) => {

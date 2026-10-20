@@ -20,7 +20,7 @@ export type IndicatorProps = Omit<WidgetProps<HTMLSpanElement>, "children"> &
  *
  * 指示器组件，通常在其他组件内渲染表示特定含义。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/indicator/index.html
+ * @see https://ooui-react.pages.dev/components/indicator/
  */
 export const Indicator = forwardRef<HTMLSpanElement, IndicatorProps>(
   ({ indicator, className, disabled, ...rest }, ref) => {

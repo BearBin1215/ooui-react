@@ -30,7 +30,7 @@ export type PageLayoutProps = PanelLayoutProps & {
  *
  * 页面板：StackLayout `options` 的项，激活时显示。通常不直接渲染。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/page-layout/index.html
+ * @see https://ooui-react.pages.dev/components/page-layout/
  */
 export const PageLayout = forwardRef<HTMLDivElement, PageLayoutProps>(
   (

@@ -75,7 +75,7 @@ export interface PromptOptions extends ConfirmAlertOptions {
  * `false`。命令式 API，与 MessageDialog 组件单向依赖。弹窗经 `OOUIProvider`
  * 渲染的宿主挂载，继承所在子树的 context；未包 Provider 时懒挂 body。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/imperative-dialogs/index.html
+ * @see https://ooui-react.pages.dev/components/imperative-dialogs/
  */
 export function confirm(
   message: ReactNode,
@@ -106,7 +106,7 @@ export function confirm(
  * 弹出仅含确定按钮的提示框（对齐原版 `OO.ui.alert`），关闭时兑现 `undefined`。
  * 命令式 API，与 MessageDialog 组件单向依赖。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/imperative-dialogs/index.html
+ * @see https://ooui-react.pages.dev/components/imperative-dialogs/
  */
 export function alert(message: ReactNode, options: AlertOptions = {}): Promise<void> {
   return enqueueDialog<void>(({ open, close }) => (
@@ -133,7 +133,7 @@ export function alert(message: ReactNode, options: AlertOptions = {}): Promise<v
  * 弹出带文本输入框的确认框（对齐原版 `OO.ui.prompt`）：确定（或输入框内按
  * Enter）时兑现输入值，取消 / ESC 时兑现 `null`。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/imperative-dialogs/index.html
+ * @see https://ooui-react.pages.dev/components/imperative-dialogs/
  */
 export function prompt(
   message: ReactNode,

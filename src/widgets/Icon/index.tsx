@@ -31,7 +31,7 @@ export interface IconProps extends WidgetProps<HTMLSpanElement>, IconElement {
  *
  * 基础图标组件。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/icon/index.html
+ * @see https://ooui-react.pages.dev/components/icon/
  */
 export const Icon = forwardRef<HTMLSpanElement, IconProps>(
   ({ icon, className, disabled, flags = [], ...rest }, ref) => {

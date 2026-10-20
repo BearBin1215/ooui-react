@@ -43,7 +43,7 @@ export interface MenuTagMultiselectProps extends Omit<
  *
  * 带候选菜单的标签输入，属性与 TagMultiselect 一致，另增必填的 `options`。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/menu-tag-multiselect/index.html
+ * @see https://ooui-react.pages.dev/components/menu-tag-multiselect/
  */
 export const MenuTagMultiselect = forwardRef<HTMLDivElement, MenuTagMultiselectProps>(
   (props, ref) => <TagMultiselect {...props} ref={ref} />,

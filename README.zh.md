@@ -1,4 +1,4 @@
-<div  align="center"><img src="https://bearbin1215.github.io/ooui-react/logo.svg" width="180" alt="ooui-react logo"></div>
+<div  align="center"><img src="https://ooui-react.pages.dev/logo.svg" width="180" alt="ooui-react logo"></div>
 
 <h1 align="center">ooui-react</h1>
 <p align="center"><a href="https://github.com/wikimedia/oojs-ui">OOUI</a> 组件库的 <a href="https://react.dev/">React</a> 实现。</p>
@@ -9,7 +9,7 @@
   <a href="https://rspress.rs/zh/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/docs-Rspress-blue?style=flat-square" alt="docs by rspress" /></a>
   <a href="https://github.com/BearBin1215/ooui-react/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/BearBin1215/ooui-react?style=flat-square" alt="License"></a>
 </p>
-<p align="center">中文 | <a href="https://github.com/BearBin1215/ooui-react/blob/main/README.md">English</a> | <a href="https://bearbin1215.github.io/ooui-react/">组件文档</a></p>
+<p align="center">中文 | <a href="https://github.com/BearBin1215/ooui-react/blob/main/README.md">English</a> | <a href="https://ooui-react.pages.dev/">组件文档</a></p>
 
 ## 特性
 
@@ -31,7 +31,16 @@ import { Button } from "ooui-react";
 <Button onClick={() => console.log("clicked")}>按钮</Button>
 ```
 
-样式引入、MediaWiki 站点使用等详见[组件文档](https://bearbin1215.github.io/ooui-react/guide/usage.html)。
+样式引入、MediaWiki 站点使用等详见[组件文档](https://ooui-react.pages.dev/guide/usage)。
+
+## 与 AI 协作
+
+文档站随每次构建发布面向 LLM 的纯文本文件：
+
+- [llms.txt](https://ooui-react.pages.dev/llms.txt)：索引文件，包含站内各页面的说明与链接
+- [llms-full.txt](https://ooui-react.pages.dev/llms-full.txt)：合并了全部中文内容
+
+引用单页时，在页面地址后追加 `.md` 即可获得该页的纯 Markdown 版本。英文站在 `/en/llms.txt` 与 `/en/llms-full.txt` 提供同样的文件。
 
 ## 参与完善
 

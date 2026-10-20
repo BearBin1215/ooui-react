@@ -37,7 +37,7 @@ export type LabelProps = WidgetProps<HTMLLabelElement> &
  *
  * 独立的表单标签，需要单独摆放一个标签时使用。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/label/index.html
+ * @see https://ooui-react.pages.dev/components/label/
  */
 export const Label = forwardRef<HTMLLabelElement, LabelProps>(
   ({ className, children, disabled, invisibleLabel, title, ...rest }, ref) => {

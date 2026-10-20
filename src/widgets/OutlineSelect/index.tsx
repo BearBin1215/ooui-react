@@ -29,7 +29,7 @@ export interface OutlineSelectProps extends Omit<SelectProps, "outline" | "optio
  *
  * 大纲样式的选择列表：用 `level`（0–2）表达层级缩进，适合目录这类有从属关系的列表。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/outline-select/index.html
+ * @see https://ooui-react.pages.dev/components/outline-select/
  */
 export const OutlineSelect = forwardRef<HTMLDivElement, OutlineSelectProps>(
   ({ className, tabIndex, ...rest }, ref) => {

@@ -196,7 +196,7 @@ export interface ButtonInternalProps extends ButtonProps {
  *
  * 基础按钮组件，同时也是 ToggleButton、PopupButton、ButtonMenuSelectWidget 等组件的按钮基座。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/button/index.html
+ * @see https://ooui-react.pages.dev/components/button/
  */
 export const Button = forwardRef<HTMLSpanElement, ButtonInternalProps>(
   (

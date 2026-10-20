@@ -57,7 +57,7 @@ export interface LabelToolGroupProps extends Omit<
  * 标签工具组（对齐原版 OO.ui.LabelToolGroup）：在工具栏内展示一段静态文本
  * （可带图标与指示器），不可交互、也不能容纳工具。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/toolbar/index.html
+ * @see https://ooui-react.pages.dev/components/toolbar/
  */
 export const LabelToolGroup = forwardRef<HTMLDivElement, LabelToolGroupProps>(
   (

@@ -82,7 +82,7 @@ export type PopupButtonProps = Omit<ButtonProps, "onClick" | "active"> &
  *
  * 弹出按钮：点击按钮开合一个锚定到它的浮层，并内建“点按钮与浮层之外自动关闭”。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/popup-button/index.html
+ * @see https://ooui-react.pages.dev/components/popup-button/
  */
 export const PopupButton = forwardRef<HTMLSpanElement, PopupButtonProps>(
   (

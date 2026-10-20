@@ -94,7 +94,7 @@ export interface SearchWidgetProps
  *
  * 搜索组件：查询框配始终可见的结果列表。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/search-widget/index.html
+ * @see https://ooui-react.pages.dev/components/search-widget/
  */
 export const SearchWidget = forwardRef<HTMLDivElement, SearchWidgetProps>(
   (

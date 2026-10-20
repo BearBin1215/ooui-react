@@ -19,7 +19,7 @@
     "type": "git",
     "url": "git+https://github.com/BearBin1215/ooui-react.git"
   },
-  "homepage": "https://bearbin1215.github.io/ooui-react/index.html",
+  "homepage": "https://ooui-react.pages.dev/",
   "license": "MIT",
   "author": "BearBin",
   "sideEffects": false,

@@ -1,4 +1,4 @@
-<p align="center"><img src="https://bearbin1215.github.io/ooui-react/logo.svg" width="180" alt="ooui-react logo"></p>
+<p align="center"><img src="https://ooui-react.pages.dev/logo.svg" width="180" alt="ooui-react logo"></p>
 
 <h1 align="center">ooui-react</h1>
 <p align="center">A <a href="https://react.dev/">React</a> implementation of the <a href="https://github.com/wikimedia/oojs-ui">OOUI</a> component library.</p>
@@ -9,7 +9,7 @@
   <a href="https://rspress.rs/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/docs-Rspress-blue?style=flat-square" alt="docs by rspress" /></a>
   <a href="https://github.com/BearBin1215/ooui-react/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/BearBin1215/ooui-react?style=flat-square" alt="License"></a>
 </p>
-<p align="center"><a href="https://github.com/BearBin1215/ooui-react/blob/main/README.zh.md">中文</a> | English | <a href="https://bearbin1215.github.io/ooui-react/en/">Documentation</a></p>
+<p align="center"><a href="https://github.com/BearBin1215/ooui-react/blob/main/README.zh.md">中文</a> | English | <a href="https://ooui-react.pages.dev/en/">Documentation</a></p>
 
 A React implementation of the [OOUI](https://github.com/wikimedia/oojs-ui) component library. Rewritten from scratch, with no runtime dependency on oojs-ui.
 
@@ -33,7 +33,16 @@ import { Button } from "ooui-react";
 <Button onClick={() => console.log("clicked")}>Click me</Button>
 ```
 
-For style imports, MediaWiki integration, and more, see the [Usage guide](https://bearbin1215.github.io/ooui-react/en/guide/usage.html).
+For style imports, MediaWiki integration, and more, see the [Usage guide](https://ooui-react.pages.dev/en/guide/usage).
+
+## Working with AI
+
+The docs site publishes plain-text files for LLMs on every build:
+
+- [llms.txt](https://ooui-react.pages.dev/en/llms.txt): an index file with descriptions and links for every page
+- [llms-full.txt](https://ooui-react.pages.dev/en/llms-full.txt): the whole English site content merged into a single file
+
+When citing a single page, appending `.md` to its URL gives the plain-Markdown version of that page. The Chinese site publishes the same files at the site root: `/llms.txt` and `/llms-full.txt`.
 
 ## Contributing
 

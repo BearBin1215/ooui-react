@@ -18,7 +18,7 @@ export type ButtonGroupProps = WidgetProps;
  *
  * 按钮组：把若干 Button 排在一起，相邻按钮首尾相连成一块。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/button-group/index.html
+ * @see https://ooui-react.pages.dev/components/button-group/
  */
 export const ButtonGroup = forwardRef<HTMLDivElement, ButtonGroupProps>(
   ({ className, disabled, children, ...rest }, ref) => {

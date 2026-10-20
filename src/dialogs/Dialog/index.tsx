@@ -142,7 +142,7 @@ export interface DialogProps extends ElementProps<HTMLDivElement> {
  *
  * 弹窗组件，提供 `MessageDialog`、`ProcessDialog` 等变体。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/dialog/index.html
+ * @see https://ooui-react.pages.dev/components/dialog/
  */
 export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
   (

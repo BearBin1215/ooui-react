@@ -167,7 +167,7 @@ export interface ComboBoxInputProps
  *
  * 可输入的下拉候选框：可自由编辑的输入框配下拉候选菜单，不强制输入必须是候选之一。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/combo-box-input/index.html
+ * @see https://ooui-react.pages.dev/components/combo-box-input/
  */
 export const ComboBoxInput = forwardRef<HTMLDivElement, ComboBoxInputProps>(
   (

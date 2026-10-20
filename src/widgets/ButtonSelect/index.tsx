@@ -53,7 +53,7 @@ export interface ButtonSelectProps extends Omit<WidgetProps<HTMLDivElement>, "on
  *
  * 按钮式选择：把一组互斥选项呈现为一排按钮。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/button-select/index.html
+ * @see https://ooui-react.pages.dev/components/button-select/
  */
 export const ButtonSelect = forwardRef<HTMLDivElement, ButtonSelectProps>(
   (

@@ -70,7 +70,7 @@ export interface StackLayoutProps extends Omit<PanelLayoutProps, "onChange"> {
  * 堆叠布局：按 `options` 渲染分页，仅显示激活页；`continuous` 时所有页同时可见、
  * 容器整体滚动。激活值缺失或失效时自动补选。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/stack-layout/index.html
+ * @see https://ooui-react.pages.dev/components/stack-layout/
  */
 export const StackLayout = forwardRef<HTMLDivElement, StackLayoutProps>(
   (

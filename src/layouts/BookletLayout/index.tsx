@@ -143,7 +143,7 @@ export interface BookletLayoutProps extends Omit<
  * 手册式布局：`outlined` 时左侧大纲（可编辑模式带移动/移除控件）、右侧页面栈；
  * 不开大纲时为纯堆叠面板。适合设置页、多节内容；激活页被移除时自动补选相邻页。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/booklet-layout/index.html
+ * @see https://ooui-react.pages.dev/components/booklet-layout/
  */
 export const BookletLayout = forwardRef<HTMLDivElement, BookletLayoutProps>(
   (

@@ -42,7 +42,7 @@ export interface HiddenInputWidgetProps extends ElementProps<HTMLInputElement> {
  * 为根元素，承载不展示但需随表单提交的值（如数组字段、与多值控件配对的值）。
  * 与原版不同：`disabled` 写到原生属性（禁用时不再提交）、`value` 为受控值。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/hidden-input-widget/index.html
+ * @see https://ooui-react.pages.dev/components/hidden-input-widget/
  */
 export const HiddenInputWidget = forwardRef<HTMLInputElement, HiddenInputWidgetProps>(
   ({ className, disabled, value = "", ...rest }, ref) => (

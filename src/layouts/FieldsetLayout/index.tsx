@@ -36,7 +36,7 @@ export interface FieldsetLayoutProps
  * 字段集：原生 `<fieldset>` 带 `<legend>` 头部（标题、图标、帮助入口）和组内
  * 字段项。根为原生 fieldset，`disabled` 可原生禁用组内所有输入控件。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/fieldset-layout/index.html
+ * @see https://ooui-react.pages.dev/components/fieldset-layout/
  */
 export const FieldsetLayout = forwardRef<HTMLFieldSetElement, FieldsetLayoutProps>(
   (

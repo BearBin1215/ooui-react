@@ -125,7 +125,7 @@ export interface ButtonMenuSelectWidgetProps extends Omit<ButtonProps, "onClick"
  * 按钮触发的命令菜单：选定后立即执行并收起菜单。与 Dropdown 记“当前选中项”不同，
  * 适合工具栏里“点了就执行一项命令”的场景。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/button-menu-select/index.html
+ * @see https://ooui-react.pages.dev/components/button-menu-select/
  */
 export const ButtonMenuSelectWidget = forwardRef<
   HTMLSpanElement,

@@ -72,7 +72,7 @@ export interface RadioSelectInputProps extends Omit<
  * 键盘交互，内嵌隐藏 `<input>` 承载表单提交。值不在可选项内时回退为首个可选
  * 值，故组件始终存在选中项（与 HTML radio 表单语义一致）。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/radio-select-input/index.html
+ * @see https://ooui-react.pages.dev/components/radio-select-input/
  */
 export const RadioSelectInput = forwardRef<HTMLDivElement, RadioSelectInputProps>(
   (

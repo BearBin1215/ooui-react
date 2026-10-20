@@ -156,7 +156,7 @@ export interface ButtonInputProps
  * 表单按钮（对齐原版 OO.ui.ButtonInputWidget）：真实 `<button>` / `<input>`
  * 元素，配合 FormLayout 做原生提交；无表单提交需求时请使用 Button。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/button-input/index.html
+ * @see https://ooui-react.pages.dev/components/button-input/
  */
 export const ButtonInput = forwardRef<HTMLSpanElement, ButtonInputProps>(
   (

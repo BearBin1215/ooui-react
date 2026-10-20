@@ -59,7 +59,7 @@ export interface SearchInputInternalProps extends SearchInputProps {
  *
  * 搜索输入框：TextInput 的搜索形态，值非空时出现清除指示器，点击即清空。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/search-input/index.html
+ * @see https://ooui-react.pages.dev/components/search-input/
  */
 export const SearchInput = forwardRef<HTMLDivElement, SearchInputInternalProps>(
   (

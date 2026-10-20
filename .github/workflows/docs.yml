@@ -47,6 +47,9 @@ jobs:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
       - name: Build docs
+        env:
+          # GitHub Pages 是备份镜像：canonical 指向正式站，页面注入 noindex 退索引
+          DOCS_MIRROR: "1"
         run: pnpm --filter ooui-react-docs build
 
       - uses: actions/upload-pages-artifact@v5

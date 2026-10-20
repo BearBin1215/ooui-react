@@ -203,7 +203,7 @@ export interface TagMultiselectInternalProps extends TagMultiselectProps {
  * 标签输入：把值以可移除的标签（chip）呈现。自由输入形态，需要“输入过滤 + 下拉候选”时用
  * MenuTagMultiselect。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/tag-multiselect/index.html
+ * @see https://ooui-react.pages.dev/components/tag-multiselect/
  */
 export const TagMultiselect = forwardRef<HTMLDivElement, TagMultiselectInternalProps>(
   (

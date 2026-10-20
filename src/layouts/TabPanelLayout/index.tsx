@@ -28,7 +28,7 @@ export interface TabPanelLayoutProps extends PanelLayoutProps {
  *
  * 页签面板：IndexLayout `options` 的项，根元素带 `role="tabpanel"`，通常不直接渲染。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/tab-panel-layout/index.html
+ * @see https://ooui-react.pages.dev/components/tab-panel-layout/
  */
 export const TabPanelLayout = forwardRef<HTMLDivElement, TabPanelLayoutProps>(
   ({ className, children, active, expanded = true, scrollable = true, ...rest }, ref) => {

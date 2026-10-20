@@ -7,12 +7,12 @@ body:
       value: |
         Thanks for the report. This library treats the original OOUI's DOM structure, class names and interaction behavior as its contract. Please check two things first:
 
-        - The [comparison page](https://bearbin1215.github.io/ooui-react/) on the docs site, to rule out intentional deviations
+        - The [comparison page](https://ooui-react.pages.dev/) on the docs site, to rule out intentional deviations
         - The [original OOUI demos](https://doc.wikimedia.org/oojs-ui/master/demos/), to see how the original behaves — matching the original is not a bug
 
         感谢反馈。本库以原版 OOUI 的 DOM 结构、类名与交互行为为契约，请先做两步对照：
 
-        - 到[文档站对照页](https://bearbin1215.github.io/ooui-react/)确认不是已记录的有意差异
+        - 到[文档站对照页](https://ooui-react.pages.dev/)确认不是已记录的有意差异
         - 到[原版演示](https://doc.wikimedia.org/oojs-ui/master/demos/)确认原版的表现，原版与原版一致的不算 bug
 
   - type: input

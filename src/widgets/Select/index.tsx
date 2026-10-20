@@ -187,7 +187,7 @@ export interface SelectInternalProps extends SelectProps {
  *
  * 选择列表：可点选的选项集合，既是 Dropdown 等浮层组件的内层列表，也可单独使用。
  *
- * @see https://bearbin1215.github.io/ooui-react/components/select/index.html
+ * @see https://ooui-react.pages.dev/components/select/
  */
 export const Select = forwardRef<HTMLDivElement, SelectInternalProps>(
   (
