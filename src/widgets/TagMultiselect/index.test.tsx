@@ -315,7 +315,7 @@ it("菜单模式：失焦时提交输入文本而非高亮项（先收起菜单�
   expect(onChange.mock.calls[0]?.[0]).toEqual(["b"]);
 });
 
-it("菜单模式：带残留文本重开菜单时打开帧显示全量（原版previouslySelectedValue机制）", async () => {
+it("菜单模式：带残留文本重新展开菜单时展示全部选项（原版previouslySelectedValue机制）", async () => {
   const screen = await render(
     <MenuTagMultiselect
       options={[...OPTIONS]}
@@ -330,8 +330,8 @@ it("菜单模式：带残留文本重开菜单时打开帧显示全量（原版p
   );
   await tick();
   expect(inputEl.value).toBe("香蕉");
-  // 聚焦重开菜单：打开帧始终显示全量，不按残留文本筛空候选（对齐原版toggle(true)先取
-  // previouslySelectedValue再showAll）
+  // 聚焦重新展开菜单：展开帧始终展示全部选项，不会按残留文本把候选集筛成空（对齐原版
+  // toggle(true) 先取 previouslySelectedValue 再 showAll）
   inputEl.focus();
   await tick();
   const visibleOptions = () =>

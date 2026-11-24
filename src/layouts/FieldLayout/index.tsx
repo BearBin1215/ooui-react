@@ -82,7 +82,7 @@ export const FieldLayout = forwardRef<HTMLDivElement, FieldLayoutProps>(
     );
     const accessKeyLabel = useAccessKeyLabel(fieldAccessKey);
 
-    // 非法align回退left（对齐原版FieldLayout.setAlignment的缺省分支，oojs-ui.js:13104-13110）
+    // 非法align回退left（对齐原版FieldLayout.setAlignment的缺省分支，oojs-ui.js:13115-13121）
     const alignClass = (["left", "right", "top", "inline"] as const).includes(align)
       ? align
       : "left";

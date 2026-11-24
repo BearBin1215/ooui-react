@@ -104,7 +104,7 @@ function OriginalTags() {
         placeholder: "输入过滤或从菜单选择",
         selected: ["option1"],
         options: menuItems,
-        // 原版addOptions仅按data/label/icon重建菜单项（dist/oojs-ui.js:20450），disabled须
+        // 原版addOptions仅按data/label/icon重建菜单项（dist/oojs-ui.js:20467），disabled须
         // 经菜单items通道注入真正的MenuOptionWidget
         menu: {
           items: [new MenuOption({ data: "x", label: "禁用项", disabled: true })],
@@ -530,7 +530,7 @@ function ReactVariants() {
       </div>
       <div>
         {/* labelText为React扩展：原版OptionWidget.getMatchText无显式matchText通道
-            （dist/oojs-ui.js:7175，取字符串label或渲染文本）。菜单前缀过滤与选定回填
+            （dist/oojs-ui.js:7177，取字符串label或渲染文本）。菜单前缀过滤与选定回填
             用labelText纯文本、不取渲染内容（rich项输入「富」不匹配、输入「rich」匹配）；
             富内容label未给labelText的选项（nokey项）退出前缀过滤 */}
         labelText（富内容选项的纯文本匹配键，React扩展）

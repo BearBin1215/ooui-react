@@ -66,7 +66,7 @@ export default App;
 
 ## Keyboard and choosing
 
-Typing only **opens the menu** and re-anchors the highlight to the option exactly matching the input (no match clears the highlight); the candidate list itself is not filtered by the input — to "filter as you type", narrow `options` yourself. Clicking the input also re-opens the menu. With `readOnly` the component is fully read-only: none of the open paths (arrow keys, the dropdown button, clicking the input) can expand the menu (the original would still expand a fully disabled menu on click; here read-only means no expansion).{/* deviations: dev-combobox-readonly */}
+Typing **opens the menu** and re-anchors the highlight to the option exactly matching the input (no match clears the highlight). While the menu stays open, further typing filters the candidates by prefix (normalized match on the option text); the keystroke that opens the menu still shows the whole list. Options whose `children` is not plain text have no match key and are hidden while filtering — pass `filterFromInput={false}` to always keep the whole list. Clicking the input also re-opens the menu. With `readOnly` the component is fully read-only: none of the open paths (arrow keys, the dropdown button, clicking the input) can expand the menu (the original would still expand a fully disabled menu on click; here read-only means no expansion).{/* deviations: dev-combobox-readonly */}
 
 Choosing (clicking an option, Enter, the dropdown button) writes the option text into the input and the value is always a string: **options with a numeric `value` never show as selected** (matching the original, which compares serialized text — `1` and `'1'` are not equal); use string values when you need the selected state.
 
@@ -91,6 +91,7 @@ Only ComboBoxInput-specific props are listed; input props are in [TextInput · A
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
 | `options` | Candidate option set (**required**); see [Selection and options](../../guide/options.mdx) | `DropdownOptionProps[]` | — |
+| `filterFromInput` | Filter candidates by input prefix while the menu is open | `boolean` | `true` |
 | `value` | Input text (controlled) | `string` | — |
 | `defaultValue` | Initial value for uncontrolled use | `string` | `''` |
 | `onChange` | Value-change callback (typed and chosen items both fire) | `ChangeHandler<string>` | — |

@@ -279,8 +279,8 @@ export const Popup = forwardRef<HTMLDivElement, PopupProps>(
 
     // 对齐原版FloatableElement.position()：重定位、滚出隐藏（hideWhenOutOfView）与裁剪
     // （ClippableElement.clip）由同一监听集（滚动/缩放/壳尺寸变化）触发、按序完成——
-    // 先切换滚出类、再写computePosition()结果、最后clip（`oojs-ui.js:5364-5380`），监听分别
-    // 绑在togglePositioning（`:5241-5244`）与toggleClipping（`:5636-5638`）。本工程将上述监听归并为
+    // 先切换滚出类、再写computePosition()结果、最后clip（`oojs-ui.js:5366-5382`），监听分别
+    // 绑在togglePositioning（`:5243-5246`）与toggleClipping（`:5638-5640`）。本工程将上述监听归并为
     // 单个effect：每轮回调内「重算布局→应用可视边界」，布局以compute()返回值就地传递、不经
     // layout state接力（state接力的旧形态会让滚动先按过期布局裁剪一轮、重渲染后再算一遍）。
     // 影响布局的props变化时须重新计算（含open期间切换container/anchor），对齐原版

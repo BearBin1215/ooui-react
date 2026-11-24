@@ -401,6 +401,7 @@ export default App;
 - **窄栏下 handle 的 tooltip 始终按生效的 `label` 兜底**。{/* deviations: dev-popuptoolgroup-title */}
 - **面板铺满容器宽时纵向仍按可视区限制高度并内部滚动**（工具始终可达）。{/* deviations: dev-panel-maxheight */}
 - **工具组增减后窄栏判定基准自动重测**，动态增减工具组的场景窄栏判定保持正确。{/* deviations: dev-narrow-threshold-reset */}
+- **不支持工具提升（`promoteToBar`，原版 0.54.3 新增）**：原版可声明弹层组里的某些工具在宽度充足时自动平铺到工具栏、变窄再收回；本工程未实现该能力，需要自行组合——常驻平铺的工具放进 `BarToolGroup`，随宽度切换则按容器宽度条件渲染不同工具组。{/* deviations: dev-toolbar-promote-to-bar */}
 - **工具栏置于底部（`position="bottom"`）时 More / Fewer 的箭头方向与原版相反**，功能不受影响。{/* deviations: dev-listtoolgroup-icons */}
 
 ## 另见

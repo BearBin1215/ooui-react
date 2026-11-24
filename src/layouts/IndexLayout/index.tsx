@@ -224,7 +224,7 @@ export const IndexLayout = forwardRef<HTMLDivElement, IndexLayoutProps>(
         <PanelLayout
           ref={stackRef}
           // continuous类驱动主题把面板转为relative流式排布（原版StackLayout经setContinuous
-          // 加类，oojs-ui-wikimediaui.css:2729），缺失时expanded面板absolute叠加、堆栈塌为0高
+          // 加类，oojs-ui-wikimediaui.css:2735），缺失时expanded面板absolute叠加、堆栈塌为0高
           className={clsx(
             "oo-ui-stackLayout",
             "oo-ui-indexLayout-stackLayout",

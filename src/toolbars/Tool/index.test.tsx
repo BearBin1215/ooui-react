@@ -38,7 +38,7 @@ it("弹层工具：选中即开合浮层，浮层显隐期间工具呈激活态"
   link.click();
   await tick();
   expect(onOpenChange).toHaveBeenLastCalledWith(true);
-  // 原版PopupTool.onPopupToggle：浮层可见即setActive(true)（oojs-ui-toolbars.js:1765-1768）
+  // 原版PopupTool.onPopupToggle：浮层可见即setActive(true)（oojs-ui-toolbars.js:2014-2017）
   expect(toolSpan).toHaveClass("oo-ui-tool-active");
   const popup = document.querySelector<HTMLElement>(".oo-ui-popupTool-popup")!;
   expect(popup).toHaveClass("oo-ui-popupWidget");
@@ -75,7 +75,7 @@ it("内嵌工具组：工具位渲染为内嵌组元素，不再渲染工具链�
   expect(wrapper.tagName).toBe("SPAN");
   expect(wrapper).toHaveClass("oo-ui-tool");
   expect(wrapper).toHaveClass("oo-ui-toolGroupTool");
-  // 原版ToolGroupTool构造期$link.remove()（oojs-ui-toolbars.js:1829-1832）：工具位无链接
+  // 原版ToolGroupTool构造期$link.remove()（oojs-ui-toolbars.js:2078-2081）：工具位无链接
   expect(getRoot(screen).querySelector('[data-tool-name="settings"]')).toBeNull();
   // 包装span的直接子节点即内嵌工具组根元素
   expect(wrapper.firstElementChild).toHaveClass("oo-ui-barToolGroup");

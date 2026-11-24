@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useMemo,
   useState,
   // 以别名导入：DOM的KeyboardEvent在下文经globalThis引用，避免被React的类型遮蔽
   type KeyboardEvent as ReactKeyboardEvent,
@@ -9,6 +10,7 @@ import {
 import {
   findRelativeSelectableItem,
   isComposingKeyEvent,
+  normalizeForMatching,
   type ElementOrRef,
 } from "../utils";
 import { usePrefixSearchBuffer } from "./prefixSearch";
@@ -46,6 +48,101 @@ export function createMenuOptionTextLookup<T extends string | number>(
     const index = valueIndex.get(optionValue);
     return menuRef.current?.children[index ?? -1]?.textContent ?? "";
   };
+}
+
+/**
+ * 输入框驱动的菜单选项前缀过滤（对齐原版 `MenuSelectWidget` 的 `filterFromInput` +
+ * `getItemMatcher`）：菜单展开的那一帧展示全部选项（原版 `toggle(true)` 先把输入值存入
+ * `previouslySelectedValue`），此后输入偏离该值才按规范化前缀匹配
+ * （见 {@link normalizeForMatching}）；分组标题随其下全部选项一起隐藏（原版
+ * `updateItemVisibility` 的 sectionEmpty 分支）。与原版 100ms 防抖的差别见 DEVIATIONS 的
+ * `dev-open-frame-snapshot`
+ *
+ * 匹配键由调用方给出：返回 `undefined` 的选项（如富内容标签没有纯文本形态）不参与过滤，
+ * 过滤期间不显示，并经 `warnUnmatched` 在开发期告警一次
+ */
+export function useInputFilteredOptions<T>({
+  options,
+  open,
+  inputValue,
+  getMatchText,
+  isGroupHeader,
+  enabled = true,
+  warnUnmatched,
+}: {
+  /** 完整选项集（含分组标题） */
+  options: T[];
+
+  /** 菜单是否展开：收起期展示全部选项（原版 `showAll` 的 `!isVisible()` 分支） */
+  open: boolean;
+
+  /** 输入框当前文本（过滤依据） */
+  inputValue: string;
+
+  /** 取选项的纯文本匹配键（对齐原版 `OptionWidget.getMatchText`）；返回 `undefined` 即不参与过滤 */
+  getMatchText: (option: T) => string | undefined;
+
+  /** 判定分组标题：标题本身不参与匹配，只随其下选项的可见性显隐 */
+  isGroupHeader?: (option: T) => boolean;
+
+  /** 是否启用过滤（对齐原版 `filterFromInput` 配置，缺省启用） */
+  enabled?: boolean;
+
+  /** 对没有匹配键、被排除在过滤外的选项报警（同一选项只应告警一次，去重由实现方负责） */
+  warnUnmatched: (option: T) => void;
+}): {
+  /** 过滤结果（未过滤时为入参原引用，可直接下发菜单） */
+  filtered: T[];
+} {
+  // 展开帧的输入值快照：与当前输入一致时展示全部选项——输入框带有残留文本（如点击输入框
+  // 重新展开）时，展开帧不会把候选集筛成空。快照随 open 变化在渲染期调整，用 state 而非
+  // ref：被丢弃的渲染会使 ref 与 state 不一致
+  const [openFrameInput, setOpenFrameInput] = useState("");
+  const [prevOpen, setPrevOpen] = useState(open);
+  if (open !== prevOpen) {
+    setPrevOpen(open);
+    if (open) {
+      setOpenFrameInput(inputValue);
+    }
+  }
+
+  const { filtered, unmatched } = useMemo(() => {
+    const query =
+      !enabled || !open || inputValue === openFrameInput
+        ? ""
+        : normalizeForMatching(inputValue);
+    if (!query) {
+      return { filtered: options, unmatched: [] as T[] };
+    }
+    const matched: T[] = [];
+    const noMatchKey: T[] = [];
+    // 祖先分组标题暂存：等到其下首个匹配选项时一并写入，全组不匹配则整体丢弃
+    let pendingHeaders: T[] = [];
+    for (const option of options) {
+      if (isGroupHeader?.(option)) {
+        pendingHeaders.push(option);
+        continue;
+      }
+      const matchText = getMatchText(option);
+      if (matchText === undefined) {
+        noMatchKey.push(option);
+        continue;
+      }
+      if (normalizeForMatching(matchText).startsWith(query)) {
+        matched.push(...pendingHeaders, option);
+        pendingHeaders = [];
+      }
+    }
+    return { filtered: matched, unmatched: noMatchKey };
+  }, [options, open, inputValue, openFrameInput, enabled, getMatchText, isGroupHeader]);
+
+  useEffect(() => {
+    for (const option of unmatched) {
+      warnUnmatched(option);
+    }
+  }, [unmatched, warnUnmatched]);
+
+  return { filtered };
 }
 
 /**
@@ -294,7 +391,7 @@ export function useMenuPopup<T extends string | number>({
         }
       }
       // 缓冲推进后阻止默认（对齐原版onDocumentKeyPress命中可打印字符后的preventDefault，
-      // oojs-ui.js:7716-7719）：空格不再滚动页面、不产生默认的文本插入动作。
+      // oojs-ui.js:7718-7721）：空格不再滚动页面、不产生默认的文本插入动作。
       // 原版还调stopPropagation（且监听在document捕获相位），会把事件拦在目标元素之前；
       // 本工程有意走冒泡（局部化，见DEVIATIONS「等效替代」的菜单键盘通道条），
       // 故不照搬——代价是目标与祖先的keypress监听者仍会收到该事件

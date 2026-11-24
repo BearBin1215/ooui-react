@@ -34,8 +34,8 @@ it("结构：barToolGroup类链与工具容器，工具链接输出图标/标题
     <BarToolGroup tools={[{ ...TOOLS[0], accelerator: "Ctrl+K" }]} />,
   );
   const root = getRoot(screen);
-  // 根：Widget基类类链 + ToolGroup的oo-ui-toolGroup（oojs-ui-toolbars.js:1149-1151），
-  // BarToolGroup构造期追加oo-ui-barToolGroup（oojs-ui-toolbars.js:2012）
+  // 根：Widget基类类链 + ToolGroup的oo-ui-toolGroup（oojs-ui-toolbars.js:1398-1400），
+  // BarToolGroup构造期追加oo-ui-barToolGroup（oojs-ui-toolbars.js:2261）
   expect(root.tagName).toBe("DIV");
   expect(root).toHaveClass("oo-ui-widget");
   expect(root).toHaveClass("oo-ui-widget-enabled");
@@ -43,24 +43,24 @@ it("结构：barToolGroup类链与工具容器，工具链接输出图标/标题
   expect(root).toHaveClass("oo-ui-barToolGroup");
 
   const tools = getTools(screen);
-  expect(tools).toHaveClass("oo-ui-toolGroup-tools"); // oojs-ui-toolbars.js:1148
-  expect(tools).toHaveClass("oo-ui-barToolGroup-tools"); // oojs-ui-toolbars.js:2013
-  expect(tools).toHaveClass("oo-ui-toolGroup-enabled-tools"); // oojs-ui-toolbars.js:1250
+  expect(tools).toHaveClass("oo-ui-toolGroup-tools"); // oojs-ui-toolbars.js:1397
+  expect(tools).toHaveClass("oo-ui-barToolGroup-tools"); // oojs-ui-toolbars.js:2262
+  expect(tools).toHaveClass("oo-ui-toolGroup-enabled-tools"); // oojs-ui-toolbars.js:1499
 
   // 工具：span.oo-ui-tool > a.oo-ui-tool-link > checkIcon + icon + title + accel
-  // （oojs-ui-toolbars.js:763-768 的$element/$link组装）
+  // （oojs-ui-toolbars.js:977-982 的$element/$link组装）
   const link = getLink(screen, "a");
   expect(link.tagName).toBe("A");
   expect(link).toHaveClass("oo-ui-tool-link");
   expect(link).toHaveAttribute("role", "button");
   expect(link).toHaveAttribute("tabIndex", "0");
-  // checkIcon是完整IconWidget（oojs-ui-toolbars.js:721-724），工具图标是IconElement裸span
+  // checkIcon是完整IconWidget（oojs-ui-toolbars.js:935-938），工具图标是IconElement裸span
   expect(link.querySelector(".oo-ui-tool-checkIcon")).toHaveClass("oo-ui-icon-check");
   expect(link.querySelector(".oo-ui-icon-picture")).toHaveClass("oo-ui-iconElement-icon");
   expect(link.querySelector(".oo-ui-tool-title")!.textContent).toBe("工具甲");
   const accel = link.querySelector(".oo-ui-tool-accel")!;
   expect(accel.textContent).toBe("Ctrl+K");
-  // lang/dir按原版固定（oojs-ui-toolbars.js:746-750）
+  // lang/dir按原版固定（oojs-ui-toolbars.js:960-964）
   expect(accel).toHaveAttribute("dir", "ltr");
   expect(accel).toHaveAttribute("lang", "en");
 
@@ -68,14 +68,14 @@ it("结构：barToolGroup类链与工具容器，工具链接输出图标/标题
   expect(toolSpan.tagName).toBe("SPAN");
   expect(toolSpan).toHaveClass("oo-ui-tool");
   expect(toolSpan).toHaveClass("oo-ui-tool-name-a");
-  expect(toolSpan).toHaveClass("oo-ui-tool-with-icon"); // oojs-ui-toolbars.js:1047
+  expect(toolSpan).toHaveClass("oo-ui-tool-with-icon"); // oojs-ui-toolbars.js:1296
 });
 
 it("符号名类：路径形式取前两段（'a/b/c'→oo-ui-tool-name-a-b）", async () => {
   const screen = await render(
     <BarToolGroup tools={[{ name: "a/b/c", label: "工具甲" }]} />,
   );
-  // 原版同一正则：oojs-ui-toolbars.js:766-767
+  // 原版同一正则：oojs-ui-toolbars.js:980-981
   expect(getToolSpan(screen, "a/b/c")).toHaveClass("oo-ui-tool-name-a-b");
 });
 
@@ -88,7 +88,7 @@ it("Bar组tooltip：title与快捷键拼为「标题 快捷键」，label不入t
       ]}
     />,
   );
-  // BarToolGroup的titleTooltips与accelTooltips皆为true（oojs-ui-toolbars.js:2026、2032）
+  // BarToolGroup的titleTooltips与accelTooltips皆为true（oojs-ui-toolbars.js:2275、2281）
   expect(getLink(screen, "a")).toHaveAttribute("title", "提示 Ctrl+K");
   // 两者都为空时不输出title属性（label始终为可见文本，不参与tooltip）
   expect(getLink(screen, "b").getAttribute("title")).toBeNull();
@@ -104,11 +104,11 @@ it("displayBothIconAndLabel：仅开启且有标签时输出tool-with-label", as
       ]}
     />,
   );
-  // 原版setDisplayBothIconAndLabel的条件：有标题且开关开启（oojs-ui-toolbars.js:959）
+  // 原版setDisplayBothIconAndLabel的条件：有标题且开关开启（oojs-ui-toolbars.js:1204）
   expect(getToolSpan(screen, "a")).not.toHaveClass("oo-ui-tool-with-label");
   expect(getToolSpan(screen, "b")).toHaveClass("oo-ui-tool-with-label");
   expect(getToolSpan(screen, "c")).not.toHaveClass("oo-ui-tool-with-label");
-  // 无图标：不出图标类（原版setIcon的hasIcon判定，oojs-ui-toolbars.js:1047）
+  // 无图标：不出图标类（原版setIcon的hasIcon判定，oojs-ui-toolbars.js:1296）
   expect(getToolSpan(screen, "c")).not.toHaveClass("oo-ui-tool-with-icon");
 });
 
@@ -139,7 +139,7 @@ it("全部工具禁用即组禁用：根与工具容器输出禁用态", async (
   const root = getRoot(screen);
   expect(root).toHaveClass("oo-ui-widget-disabled");
   expect(root).toHaveAttribute("aria-disabled", "true");
-  // 原版onDisable：$group切换disabled-tools/enabled-tools（oojs-ui-toolbars.js:1249-1250）
+  // 原版onDisable：$group切换disabled-tools/enabled-tools（oojs-ui-toolbars.js:1498-1499）
   expect(getTools(screen)).toHaveClass("oo-ui-toolGroup-disabled-tools");
   expect(getTools(screen)).not.toHaveClass("oo-ui-toolGroup-enabled-tools");
   expect(getLink(screen, "a")).toHaveAttribute("tabIndex", "-1");
@@ -155,7 +155,7 @@ it("组disabled prop：无论工具自身状态整组禁用", async () => {
 it("空组：toolGroup-empty整体隐藏，且按全部工具禁用判定为禁用组", async () => {
   const screen = await render(<BarToolGroup tools={[]} />);
   const root = getRoot(screen);
-  // 原版populate末尾的toggleClass（oojs-ui-toolbars.js:1460）
+  // 原版populate末尾的toggleClass（oojs-ui-toolbars.js:1709）
   expect(root).toHaveClass("oo-ui-toolGroup-empty");
   expect(root).toHaveClass("oo-ui-widget-disabled");
   expect(getTools(screen)).toHaveClass("oo-ui-toolGroup-disabled-tools");

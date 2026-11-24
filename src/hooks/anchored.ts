@@ -29,7 +29,7 @@ type PanelAlignSide = "start" | "end" | "center" | "fill";
  *
  * `center`按原版center步骤经`clip()`的单侧规则取：center以`left`定位（`computePosition().right`
  * 为空）、`getHorizontalAnchorEdge()`始终为`'left'`，itemRect右缘扩到容器右界后可用宽即
- * `far − max(near, 面板左缘)`（`oojs-ui.js:5857-5870`）——面板左缘在容器内时等价于
+ * `far − max(near, 面板左缘)`（`oojs-ui.js:5859-5872`）——面板左缘在容器内时等价于
  * `2×(far − centerX)`，越出容器左界时退化为整段可视跨距`far − near`。故`panelWidth`是入参
  *
  * start/end两侧空间按锚点相应缘在容器内限制边界——该缘已在容器外时计 0（放置不做钳制，越出容器的
@@ -84,7 +84,7 @@ export function resolvePanelAlignSide(
 /**
  * 按上下两侧可用空间选择浮层的展开方向（对齐原版`MenuSelectWidget.toggle`的翻转：
  * 首选方向放不下就切`static.flippedPositions`的对侧，对侧也放不下时取更高的那一侧
- * ——`dist/oojs-ui.js:8940-8957`）。
+ * ——`dist/oojs-ui.js:8943-8960`）。
  * 定侧逻辑统一用utils的`resolveFlipSide`（与`Popup`的`resolvePopupPosition`共用）：
  * 一次按预计算空间定侧，不做「先定位再测量」
  * @param spaces 上下两侧的可用高（锚点缘到可视边界，已扣视口留白与offset）

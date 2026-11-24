@@ -81,7 +81,7 @@ export const RadioOption = memo(
             // 对齐原版RadioOptionWidget：内层radio以tabIndex:-1+role:presentation屏蔽
             // 原生语义，由外层label（role=radio）承担可聚焦与读屏语义，避免radio套radio
             // 重复播报与多余的tab停靠点；value承接选项值（原版构造期
-            // new OO.ui.RadioInputWidget({ value: config.data, tabIndex: -1 })，oojs-ui.js:9270，
+            // new OO.ui.RadioInputWidget({ value: config.data, tabIndex: -1 })，oojs-ui.js:9273，
             // radio的value是表单提交通道）
             tabIndex={-1}
             role="presentation"

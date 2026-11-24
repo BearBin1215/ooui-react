@@ -55,7 +55,7 @@ playground 头部可在 wikimediaui / apex 两个原版主题与 LTR / RTL 两�
 - **原版侧只能沿可用路径构造**：原版有些状态无法经构造配置表达（如 `SelectFileInputWidget` 构造期传 `value` 会被丢弃，只能构造后 `setValue`）。对照页要按原版**可用**的路径构造，否则同一行两侧状态不同，会看起来像 React 侧实现错了。
 - **`OO.ui.isMobile()` 在 dist 里是始终返回 `false` 的桩**（源码注释即「由实现方决定」，dist 中没有任何组件把它覆盖成真值），原版所有移动端分支在纯 OOUI 环境下都不可达。本工程把它映射为 `OOUIProvider.isMobile`（见 §5），配置后这些分支才可达；遇到「原版有、React 版没有」的移动端差异时，先确认原版该分支是否真的可达。
 - **`FloatableElement.hideWhenOutOfView` 只给浮层加 `oo-ui-element-hidden` 类，并不改写 `aria-expanded`**：本工程把 `outOfView` 收在组件内部、由调用方维持 `aria-expanded`，两者行为一致，不是差异。
-- **原版个别配置的 JSDoc 与代码相悖，对照时以代码行为为准**：`PopupWidget` 的 `align: 'force-left'/'force-right'`，JSDoc（`dist/oojs-ui.js:6001-6002`）两行描述的是同一条映射（第二行是复制后未做镜像），按字面读会得出「force-left 在 LTR 等价 forwards」这种与名字相反的规范；实际行为见同文件 `alignMap`（`:6488-6497`）——LTR 下 `force-left → backwards`、RTL 下 `force-left → forwards`（`force-right` 反向），即弹层体始终在锚点的物理左/右侧、不随方向翻转，与 <https://www.mediawiki.org/wiki/OOUI/Widgets/Popups> 的配置说明（*the popup body is aligned to the left/right of the anchor in both LTR and RTL contexts*）一致。本工程按代码实现（`src/widgets/Popup/popupLayout.ts` 的 `resolveAlign`，断言见同目录 `popupLayout.test.ts`）。
+- **原版个别配置的 JSDoc 与代码相悖，对照时以代码行为为准**：`PopupWidget` 的 `align: 'force-left'/'force-right'`，JSDoc（`dist/oojs-ui.js:6003-6004`）两行描述的是同一条映射（第二行是复制后未做镜像），按字面读会得出「force-left 在 LTR 等价 forwards」这种与名字相反的规范；实际行为见同文件 `alignMap`（`:6490-6499`）——LTR 下 `force-left → backwards`、RTL 下 `force-left → forwards`（`force-right` 反向），即弹层体始终在锚点的物理左/右侧、不随方向翻转，与 <https://www.mediawiki.org/wiki/OOUI/Widgets/Popups> 的配置说明（*the popup body is aligned to the left/right of the anchor in both LTR and RTL contexts*）一致。本工程按代码实现（`src/widgets/Popup/popupLayout.ts` 的 `resolveAlign`，断言见同目录 `popupLayout.test.ts`）。
 
 ## 3 关键经验（踩坑沉淀）
 
@@ -130,14 +130,14 @@ playground 头部可在 wikimediaui / apex 两个原版主题与 LTR / RTL 两�
 - **原版基准的取法**：构造期 DOM（类名 / 属性 / 层级）在 `oojs-ui-{core,widgets,toolbars,windows}.js` 对应类的构造段；**层级能否被包裹**要看 `oojs-ui-<主题>.css` 的选择器形态——原版装饰 / 标签的定位规则大量是 `>` 直接子选择器（如 `.oo-ui-textInputWidget > .oo-ui-iconElement-icon`），把它塞进包裹层就是失配，而非只是「结构不同」。
 - **快照只能防「自己回退」**，不能证明「与原版对齐」；新增快照时同时注明该 DOM 来自原版哪一段构造代码（或指向对照页 / DEVIATIONS 条目）。
 - **实测纠正过的四处基准错误**（同类问题先往这几条上对）：
-  - `aria-haspopup` 原版是字面量 `'true'`（`oojs-ui-core.js:9118` DropdownWidget、`oojs-ui-widgets.js:3913` ButtonMenuSelectWidget），不用语义更精确的 `'listbox'`；三处触发元素同此规则。
+  - `aria-haspopup` 原版是字面量 `'true'`（`oojs-ui-core.js:9121` DropdownWidget、`oojs-ui-widgets.js:3919` ButtonMenuSelectWidget），不用语义更精确的 `'listbox'`；三处触发元素同此规则。
   - 手抄「原版自动生成的真 ButtonWidget」时，锚点必须是 `<a>` 并抄全 `rel="nofollow"` 与 `invisibleLabel` 时的 `title` 兜底（ComboBoxInput 的下拉按钮曾抄成 `<span>`）；原版只给该按钮 `aria-controls`，**不给** `aria-haspopup`（菜单归属由输入框的 `aria-owns` 声明）。
   - 根元素标签名逐类核对：`ToggleSwitchWidget` 未覆写 `getTagName` 故为 `div`，`ToggleButtonWidget` 继承 `ButtonWidget` 故为 `span`。
   - `InputWidget` 构造期始终写 `value`（未配置为空字符串）：不写该属性会使 radio / checkbox 的隐式提交值变成 `on`。
 - **三类不能直接用 DOM 比对定基准的差异**：
   1. `oo-ui-image-*` 变体类由原版主题 JS 的 `getElementClasses` / `updateElementClasses` 运行期写入（见 `oojs-ui-wikimediaui.js:44-86`：framed 且激活 / 禁用 / primary 则 invert，CheckboxInput 的 checkIcon 始终 invert），本工程改为静态求值（`mixins.ts`）。测试环境既无主题 CSS 也无主题 JS，**只能人工校主题 JS 的条件分支**，不能靠比对原版输出定对错。
   2. 原版自身在两主题下不一致者（如 `oo-ui-buttonElement-size-medium` 仅原版 JS 输出、两主题 CSS 均 0 条规则），本工程不输出，已记 DEVIATIONS。
-  3. 同一属性可能有多个写入方、稳态与初始态不同——`aria-owns` 原版先由 `ComboBoxInputWidget` / `ButtonMenuSelectWidget` 构造期写入（`oojs-ui-core.js:12689`、`oojs-ui-widgets.js:3913`），收起时再由 `MenuSelectWidget.onToggle` `removeAttr`（`oojs-ui-core.js:8986`）；**只观察未开合过的初始帧会得出「始终在」的错误结论**，取基准要跑完一个完整开合周期再看稳态。本工程三个菜单触发组件统一按开合增删，差异仅剩初始收起帧，已记 DEVIATIONS。
+  3. 同一属性可能有多个写入方、稳态与初始态不同——`aria-owns` 原版先由 `ComboBoxInputWidget` / `ButtonMenuSelectWidget` 构造期写入（`oojs-ui-core.js:12700`、`oojs-ui-widgets.js:3919`），收起时再由 `MenuSelectWidget.onToggle` `removeAttr`（`oojs-ui-core.js:8989`）；**只观察未开合过的初始帧会得出「始终在」的错误结论**，取基准要跑完一个完整开合周期再看稳态。本工程三个菜单触发组件统一按开合增删，差异仅剩初始收起帧，已记 DEVIATIONS。
 
 ## 4 共享抽象索引（改动前先查）
 
@@ -190,6 +190,7 @@ playground 头部可在 wikimediaui / apex 两个原版主题与 LTR / RTL 两�
   - **`screenReaderMode` 只有 Dropdown 传**：收起态也接管键盘并直接改选，对齐原版 `DropdownWidget.onFocus` / `onBlur` 切换的 `menu.screenReaderMode`（document 监听提前到聚焦期，`SelectWidget` 的 `isVisible()` 为假分支遂走 `chooseItem`）。由调用方以「触发元素聚焦中」布尔量驱动；BMSW 原版与本工程都不开启该模式（其收起态方向键不接管、不展开，交回默认行为，仅 Enter / Space 展开），有输入框的组件按键归输入路径。**启用侧的组件不要再自行在收起态分方向键分支**（Dropdown 收起时按 Enter / Space 才展开，方向键不展开）。
   - **前缀跳转（type-to-search）经 `getItemText` 启用**，对应原版无 `$input` 时绑定的 document `keypress`（窗口为菜单展开期，`screenReaderMode` 期同样绑定并在收起态命中即选定，起点对齐原版，导航键命中即清缓冲）。取文本用共用实现 `createMenuOptionTextLookup(options, menuRef)`（读菜单面板 DOM 文本，对齐原版读 textContent 的规则；依赖「Select 根 children 与 options 按下标一一对应」的 DOM 不变量），不要各自手写；带输入框的组件不传即不启用。算法与 `Select` 的 keydown 通道共用 `advancePrefixSearch`。
   - **高亮的清理时机随原版**：仅 Escape（原版 ESCAPE 分支 `setHighlighted(false)`）清除，其他收起通道保留（原版 `toggle(false)` 只置 `lastHighlightedItem=null`），否则下次展开的导航起点会与原版不一致。
+- **`useInputFilteredOptions`（menu）**：输入框驱动的菜单选项前缀过滤（对齐原版 `MenuSelectWidget` 的 `filterFromInput` + `getItemMatcher`），MenuTagMultiselect 与 ComboBoxInput（0.54.3 起缺省启用）共用，机制见 `hooks/menu.ts` 的 jsdoc。使用时注意两点：过滤生效期要把**过滤结果**传给 `useMenuPopup` 的 `values`（原版 `findRelativeSelectableItem` 跳过 `isVisible` 为假的项），而按值精确匹配的高亮重定位仍取全量（原版 `findItemFromData` 不看可见性）；没有匹配键的选项不参与过滤，经 `warnUnmatched` 报出，不要静默丢弃。展开帧快照与 100ms 防抖的取舍见 DEVIATIONS `dev-open-frame-snapshot`。
 - **`useGroupKeyboardSelection`（menu）**：直选型选项组（TabSelect / RadioSelect / ButtonSelect）的键盘改选，`selectableValues` 由调用方按展示顺序给出。选中提交带「值未变化不提交」守卫（对齐原版 `selectItem` 对已选中项的提前返回，`Select` 的 Enter 与拖拽提交同理）。它内部不调用 React Hook（返回读取入参的纯闭包），故可在 node 环境直接构造伪事件做约定测试。
 - **`useSelectableValues` / `useOptionElementIds`（select）**：选择族（Select 引擎族 / 直选族 / 菜单族）共用的两个原语。前者统一 `getSelectableValues` 的 memo 派生并附 Set 命中判定 `has`（拖拽逐帧 / 键盘高频路径 O(1)）；后者统一「显式 id 优先、缺省按下标（`useCleanId` 去 `:`）」的选项元素 id 规则（原版为 `ooui-` 前缀全局计数，机制不同、对外行为一致）。选择族组件一律经这两个原语取值，不再各自 `useMemo` 手抄派生。
 - **`useDirectSelect`（select）**：直选型选择组（ButtonSelect / TabSelect）的共用容器脚手架，提取两者逐字重复的部分——受控值态（`useControlledValue` + `commitIfChanged`）、可选值序列派生、选项 DOM 双向索引、拖拽选择、直选键盘改选、选项 id 生成与按压态类。各组件保留 root ref 策略（Button 走 `useFieldLabelFocus`、Tab 走 `useMergedRefs` 供滚动读取，经 `focusRoot` 回调下给 hook）、根 role / aria 模型、Option 组件绑定与各自独有交互（Tab 选中滚动可见 / 移动端居中、Button 的 `aria-activedescendant`）。指针按下时 hook 会调用 `focusRoot` 把焦点移入组根（原版 mousedown preventDefault 后焦点不动、键盘失效，此处对齐 ARIA APG 的改良，见 DEVIATIONS「增强」）。`RadioSelect` 差异更大（原生 radio input + `FieldLabelLinkProvider` + 聚焦自动选首项），**不并入本 hook**；`Select` 引擎族因键盘范式不同（高亮导航 vs 直选）也不合并——两族共享 `useSelectableValues` / `useOptionElementIds` / `selectWidgetStateClasses` 与 `findRelativeSelectableItem` / registry / drag 底层原语，容器脚手架不合并。

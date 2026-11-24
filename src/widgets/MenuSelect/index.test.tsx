@@ -28,13 +28,18 @@ const getMenu = () => document.querySelector<HTMLElement>(".oo-ui-menuSelectWidg
 
 /**
  * MenuSelect（对齐原版OO.ui.MenuSelectWidget）的浏览器渲染约定：
- * 菜单根输出有效文本方向（Provider.dir覆盖锚点继承方向），无可见项时整个面板隐藏。
+ * 菜单根输出有效文本方向（Provider.dir覆盖锚点继承方向），展开期无可见项时整个面板隐藏。
  * 其余交互约定在其调用方（Dropdown/MenuTagMultiselect）的用例内覆盖，此处不重复。
  */
-it("无可见项：菜单根输出oo-ui-menuSelectWidget-invisible（对齐原版updateItemVisibility的anyVisible）", async () => {
+it("无可见项：仅展开期输出oo-ui-menuSelectWidget-invisible（对齐原版updateItemVisibility的anyVisible && isVisible）", async () => {
   const screen = await render(<MenuSelect open options={[]} />);
   await tick();
   expect(getMenu()).toHaveClass("oo-ui-menuSelectWidget-invisible");
+
+  // 收起期不叠加该类（0.54.3把anyVisible判定放进isVisible门控，收起时自身已整体隐藏）
+  await screen.rerender(<MenuSelect open={false} options={[]} />);
+  await tick();
+  expect(getMenu()).not.toHaveClass("oo-ui-menuSelectWidget-invisible");
 
   await screen.rerender(<MenuSelect open options={OPTIONS} />);
   await tick();

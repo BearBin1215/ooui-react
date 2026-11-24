@@ -37,8 +37,8 @@ type ResolvedPopupAlign = "forwards" | "center" | "backwards";
 /**
  * `force-left`/`force-right` 按当前方向解析为等价的逻辑对齐值：物理别名按「弹层体始终在锚点物理
  * 左/右侧」的规则，故 `force-left` 在 LTR 等价 `backwards`、在 RTL 等价 `forwards`，`force-right` 相反。
- * 与原版 `PopupWidget.computePosition` 的 `alignMap` 逐字一致（`dist/oojs-ui.js:6488-6497`）。
- * 该配置的 JSDoc（`:6001-6002`）两行描述的是同一条映射、与代码相悖，以代码为准，
+ * 与原版 `PopupWidget.computePosition` 的 `alignMap` 逐字一致（`dist/oojs-ui.js:6490-6499`）。
+ * 该配置的 JSDoc（`:6003-6004`）两行描述的是同一条映射、与代码相悖，以代码为准，
  * 分析见 dev-docs/comparison-guide.md §2.4。
  */
 export function resolveAlign(align: PopupAlign, rtl: boolean): ResolvedPopupAlign {
@@ -78,7 +78,7 @@ export interface PopupLayout {
 
 /**
  * 箭头占位尺寸的兜底常量（px）：生效占位是主题CSS写在弹层根上的margin（运行时经computed
- * style实测，见 {@link measureAnchorShift}），wikimediaui为9（`oojs-ui-wikimediaui.css:1214-1270`
+ * style实测，见 {@link measureAnchorShift}），wikimediaui为9（`oojs-ui-wikimediaui.css:1220-1276`
  * 的四个`anchored-{top,bottom,start,end}`类各设一边）、apex为6。实测读不到时（anchored类未挂的
  * 首帧、无主题样式的测试环境）按wikimediaui兜底。仅{@link measureAnchorShift}内部使用
  */
@@ -86,10 +86,10 @@ const POPUP_ANCHOR_SIZE = 9;
 
 /**
  * 箭头盒溢出尺寸的兜底常量（px）：生效值是锚点元素伪元素边框溢出形成的scroll量（运行时按
- * 当前轴实测，对齐原版`this.$anchor[0]['scroll'+sizeProp]`，`dist/oojs-ui.js:6584`）——原版
+ * 当前轴实测，对齐原版`this.$anchor[0]['scroll'+sizeProp]`，`dist/oojs-ui.js:6586`）——原版
  * 以此为锚点腾挪的基准：锚点中线距弹层两端不足`2×anchorSize`时平移弹层。箭头盒自身是0×0
  * （原版注释「width()/height() returns 0 because of the CSS trickery」），尺寸全来自伪元素
- * 边框的溢出：wikimediaui（`oojs-ui-wikimediaui.css:1217-1230`）两轴实测均为11，apex为8。
+ * 边框的溢出：wikimediaui（`oojs-ui-wikimediaui.css:1223-1236`）两轴实测均为11，apex为8。
  * 实测读不到时（无主题样式的测试环境）按wikimediaui兜底
  */
 export const POPUP_ANCHOR_BOX_SIZE = 11;
@@ -118,7 +118,7 @@ export function measureAnchorShift(rootEl: HTMLElement | null | undefined): numb
 
 /**
  * 箭头盒在给定轴上的实测尺寸（px）：仅在主题CSS生效时可信——`.oo-ui-popupWidget-anchor`是无内容
- * 的绝对定位盒、自身0×0，箭头由`::before/::after`的边框画出（`oojs-ui-wikimediaui.css:1142-1156`），
+ * 的绝对定位盒、自身0×0，箭头由`::before/::after`的边框画出（`oojs-ui-wikimediaui.css:1148-1162`），
  * 故scroll量即溢出尺寸；无样式环境下它是撑满父宽的普通块盒，scroll量非箭头溢出，
  * 按 {@link POPUP_ANCHOR_BOX_SIZE} 兜底
  */
@@ -210,7 +210,7 @@ export function getAnchorEdge(position: PopupPosition): PopupAnchorEdge {
  * `anchorShift`为箭头占位：below/after以top/left定位时CSS margin自动生效，
  * above/before需手动补足（本工程统一以top/left定位，原版用bottom/right）。
  * `anchored`为是否显示指向锚点的箭头，决定原版`hPosMap`的 backwards 映射到`'before'`还是`'end'`
- * （`dist/oojs-ui.js:6504-6508`）：anchored 时以`'before'`初始位置（弹层终止端贴锚点起始端），
+ * （`dist/oojs-ui.js:6506-6510`）：anchored 时以`'before'`初始位置（弹层终止端贴锚点起始端），
  * 随后由 {@link resolveAnchorAdjust} 拉回到「锚点中线距终止端2×箭头盒」的位置
  */
 export function placePopup({
@@ -277,7 +277,7 @@ export function placePopup({
 
 /**
  * 箭头腾挪量：锚点距弹层两端不足`2×anchorSize`时平移弹层，为箭头留出指向空间
- * （对齐原版`PopupWidget.computePosition`的`positionAdjustment`分支，`dist/oojs-ui.js:6583-6596`；
+ * （对齐原版`PopupWidget.computePosition`的`positionAdjustment`分支，`dist/oojs-ui.js:6585-6598`；
  * 原版还叠加箭头元素的`margin`，但主题CSS未给该元素设 margin，故此处与之等价）。
  * `anchorSize`取箭头盒在给定轴上的实测溢出量（{@link measureArrowBoxSize}），非箭头占位。
  */
@@ -298,7 +298,7 @@ export function resolveAnchorAdjust(
 /**
  * 钳制边界（页面坐标，沿弹层被钳制的轴）：就近滚动容器内沿，缺省视口。
  * 视口分支取`documentElement.clientWidth/Height`（按`$container.innerWidth()`取值，不含滚动条）
- * 并计入视口留白（对齐原版computePosition的container钳制分支，`oojs-ui.js:6602-6610`；
+ * 并计入视口留白（对齐原版computePosition的container钳制分支，`oojs-ui.js:6604-6612`；
  * 该分支无clip buffer）；元素容器为rect页面坐标+clientWidth，不计视口留白（同原版）
  */
 export function getClampBounds(

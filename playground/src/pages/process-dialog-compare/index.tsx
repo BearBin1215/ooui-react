@@ -48,7 +48,7 @@ function OriginalProcessDialog() {
     DemoDialog.prototype.getActionProcess = function (action: string) {
       if (action === "continue") {
         // 单动作按钮pending：对continue按钮pushPending（原版PendingElement用法，
-        // 见oojs-ui.js:4977的文档示例），流程结束时popPending复原，与弹窗级头部条纹并存
+        // 见oojs-ui.js:4979的文档示例），流程结束时popPending复原，与弹窗级头部条纹并存
         const continueButton = this.getActions().get({ actions: "continue" })[0];
         continueButton.pushPending();
         attemptRef.current += 1;

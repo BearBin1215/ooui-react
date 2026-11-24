@@ -11,11 +11,11 @@ import {
 
 /**
  * Popup定位纯函数约定，以原版`PopupWidget.computePosition`为准：
- * - `resolveAlign`把`force-left`/`force-right`按方向统一为等价逻辑值（`alignMap`，`dist/oojs-ui.js:6488-6497`）。
- *   该配置的JSDoc（`:6001-6002`）两行描述的是同一条映射、与代码相悖，以代码为准，见comparison-guide§2.4。
- * - `placePopup`按`hPosMap`/`vPosMap`（`:6504-6513`）给出位置：对齐作用于`above/below`的横轴，`before/after`
+ * - `resolveAlign`把`force-left`/`force-right`按方向统一为等价逻辑值（`alignMap`，`dist/oojs-ui.js:6490-6499`）。
+ *   该配置的JSDoc（`:6003-6004`）两行描述的是同一条映射、与代码相悖，以代码为准，见comparison-guide§2.4。
+ * - `placePopup`按`hPosMap`/`vPosMap`（`:6506-6515`）给出位置：对齐作用于`above/below`的横轴，`before/after`
  *   作用于纵轴（纵轴不读方向、也不读是否有箭头）；终止端对齐带箭头时映射到`'before'`，由`resolveAnchorAdjust`
- *   的腾挪（`:6583-6596`）拉到「锚点中线距终止端2×箭头盒」的稳态。
+ *   的腾挪（`:6585-6598`）拉到「锚点中线距终止端2×箭头盒」的稳态。
  */
 describe("resolveAlign", () => {
   it("forwards/center/backwards 原样透传", () => {

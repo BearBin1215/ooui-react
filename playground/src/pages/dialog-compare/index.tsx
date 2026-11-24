@@ -167,7 +167,7 @@ function ReactLongLabelDialog() {
   );
 }
 
-/** 原版侧：open的data.actions只传accept——与OO.ui.alert相同的单按钮形态（oojs-ui.js:27247） */
+/** 原版侧：open的data.actions只传accept——与OO.ui.alert相同的单按钮形态（oojs-ui.js:27716） */
 function OriginalAcceptOnly() {
   const dialogRef = useRef<OOUIWindow | null>(null);
   const { containerRef } = useOriginalWidgets((oo, container, register) => {

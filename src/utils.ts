@@ -258,13 +258,13 @@ export function findScrollableContainer(el: HTMLElement | null): HTMLElement {
  * 将选项滚入其就近可滚动容器的可视区（`block:"nearest"` 语义：最小纵向位移使其完全可见），
  * 只对该容器施加位移、不冒泡到文档根。对齐原版 `SelectWidget.scrollItemIntoView` 经
  * `OO.ui.Element.static.scrollIntoView`「只对就近可滚动容器施加计算位移」的规则
- * （`oojs-ui.js:1347`、`:7642`）——而非原生 `Element.scrollIntoView`（后者会递归滚动含
+ * （`oojs-ui.js:1347`、`:7644`）——而非原生 `Element.scrollIntoView`（后者会递归滚动含
  * window 在内的每一层可滚动祖先）。
  *
  * **就近容器到达文档根时不滚动**：菜单收起时面板停到屏外哨兵位（见 {@link OFFSCREEN_POSITION}），
  * 此刻对屏外选项做文档级滚动会把整页拽到顶部；而菜单选项导航本就只应在菜单自身的溢出区内
  * 滚动，从不需要滚动页面（放得下的菜单其选项始终可见、放不下的菜单自身即滚动容器）。原版靠
- * 「收起菜单仍留在锚点附近」（`togglePositioning(false)` 清空内联定位，`oojs-ui.js:5259`）使
+ * 「收起菜单仍留在锚点附近」（`togglePositioning(false)` 清空内联定位，`oojs-ui.js:5261`）使
  * 文档级位移约等于 0 而无副作用，本工程收起统一停到屏外，故在此统一处理。代价：独立 `Select`
  * 若唯一可滚动祖先是页面本身，键盘导航不再滚动页面（deviations 见 dev-docs/DEVIATIONS.md）
  */
@@ -335,7 +335,7 @@ export interface VisibleBounds {
 /**
  * 滚动容器的可视区边界（viewport-relative，px）：视口为`documentElement.clientWidth/Height`
  * 矩形（不含滚动条沟槽，对齐原版clip的viewportRect与computePosition钳制的`$container.innerWidth()`
- * 规则），元素容器扣除滚动条沟槽（RTL时沟槽在左，对齐原版clip的方向分支，oojs-ui.js:5826-5835）。
+ * 规则），元素容器扣除滚动条沟槽（RTL时沟槽在左，对齐原版clip的方向分支，oojs-ui.js:5828-5837）。
  * 纯几何规则：视口留白与clip buffer由调用方按原版对应机制计入（见{@link getClipBounds}），
  * 需要未内缩的原始边界时才直接用本函数（如滚出判定）。
  * useAnchoredPanelLayout与Popup的裁剪/钳高/滚出/翻转判定共用
@@ -363,15 +363,15 @@ export function getVisibleBounds(scroller: HTMLElement): VisibleBounds {
 /**
  * 裁剪/翻转判定的可视区内缩量（px）：原版`ClippableElement.clip`给可视矩形四边各留7px余量
  * ——「Chosen by fair dice roll」，为阴影/边框留出空间，避免贴边即判为需裁剪/需翻转
- * （oojs-ui.js:5837-5844）。翻转与选侧的空间判定、钳高统一扣此量，对齐原版isClipped*的基准
+ * （oojs-ui.js:5839-5846）。翻转与选侧的空间判定、钳高统一扣此量，对齐原版isClipped*的基准
  */
 export const CLIP_BUFFER = 7;
 
 /**
  * 裁剪/翻转/选侧判定的内缩可视边界（viewport-relative，px）：在给定可视边界之上计入视口留白
  * 与{@link CLIP_BUFFER}，对齐原版`clip()`的可视矩形——viewportSpacing只作用于html容器
- * （本工程的视口回落值即`documentElement`，`oojs-ui.js:5813-5829`），buffer四边始终计入
- * （`:5837-5844`）。
+ * （本工程的视口回落值即`documentElement`，`oojs-ui.js:5815-5831`），buffer四边始终计入
+ * （`:5839-5846`）。
  * 边界经传入而非内部重测：滚动/缩放回调里调用方通常已持有一份（滚出判定要用未内缩的原始
  * 边界），重复测量会在高频路径上多一次rect与computed style读取
  */
@@ -396,9 +396,9 @@ export function getClipBounds(
  * 翻转定侧内核：「首选侧放得下→保持首选；否则试对侧；两侧都放不下时取空间更大的一侧
  * （相等时保持首选）」的共享判定。一次按预计算空间定侧，不做「先定位再测量」。
  * 消费方两处：`Popup`的`resolvePopupPosition`（四方位翻转，对齐原版`PopupWidget.toggle`
- * 的autoFlip，`dist/oojs-ui.js:6355-6406`）与`useAnchoredPanelLayout`的
+ * 的autoFlip，`dist/oojs-ui.js:6357-6408`）与`useAnchoredPanelLayout`的
  * `resolvePanelVerticalSide`（上下翻转，对齐原版`MenuSelectWidget.toggle`的
- * `static.flippedPositions`，`dist/oojs-ui.js:8940-8957`）
+ * `static.flippedPositions`，`dist/oojs-ui.js:8943-8960`）
  * @param preferred 首选侧
  * @param opposite 由当前侧求对侧的映射（对侧与首选侧必同轴，required才可用单一标量）
  * @param spaceOf 取某一侧的可用空间

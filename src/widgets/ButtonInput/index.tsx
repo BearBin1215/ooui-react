@@ -250,7 +250,7 @@ export const ButtonInput = forwardRef<HTMLSpanElement, ButtonInputProps>(
       tabIndex: resolveTabIndex(tabIndex, disabled),
       "aria-disabled": disabled || undefined,
       // title写在真实button/input上并做invisibleLabel兜底：对齐原版ButtonInputWidget经InputWidget
-      // 混入TitledElement（$titled即$input，oojs-ui.js:10026-10028/10357）的写入位置，属等效替代
+      // 混入TitledElement（$titled即$input，oojs-ui.js:10029-10031/10360）的写入位置，属等效替代
       // （见dev-docs/DEVIATIONS.md等效替代的ButtonInput条）
       title: resolveTitle({
         title,

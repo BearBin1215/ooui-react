@@ -21,10 +21,16 @@ import {
   indicatorElementClasses,
   resolveTabIndex,
 } from "../../mixins";
-import { isActivationKey, isComposingKeyEvent, type ChangeHandler } from "../../utils";
+import {
+  isActivationKey,
+  isComposingKeyEvent,
+  warnOnceInDev,
+  type ChangeHandler,
+} from "../../utils";
 import {
   useCleanId,
   useControlledValue,
+  useInputFilteredOptions,
   useMenuPopup,
   useMergedRefs,
   usePressedState,
@@ -66,6 +72,20 @@ export interface ComboBoxInputProps
    * 候选选项集（**必填**），输入时下拉展示；选定后写入输入框，输入框文本本身可自由编辑
    */
   options: DropdownOptionProps[];
+
+  /**
+   * Filter the menu's options by the input text (normalized prefix match) once the
+   * input is edited while the menu is open; opening the menu always shows all options.
+   * Options whose `children` is not a plain string have no match key and are hidden
+   * while filtering. Set `false` to keep the whole option set visible while typing.
+   *
+   * 是否按输入文本（规范化前缀匹配）过滤菜单选项——仅在菜单展开期间编辑输入框后生效，
+   * 菜单展开的那一帧始终展示全部选项。`children` 非纯文本的选项没有匹配键，过滤期间不显示。
+   * 传 `false` 则输入时始终展示全部选项。
+   *
+   * @default true
+   */
+  filterFromInput?: boolean;
 
   /**
    * Input text (controlled)
@@ -158,9 +178,32 @@ export interface ComboBoxInputProps
   inputProps?: UserInputProps<HTMLInputElement>;
 }
 
+/**
+ * 选项的前缀过滤匹配键（对齐原版`OptionWidget.getMatchText`读标签文本）：取纯文本
+ * `children`；富内容选项没有可比较的文本，返回`undefined`由调用方排除——声明式props下
+ * 读不到渲染文本，按`String(value)`匹配会把「苹果」匹配成「3」
+ */
+function comboBoxMatchText(option: DropdownOptionProps): string | undefined {
+  return typeof option.children === "string" ? option.children : undefined;
+}
+
+/** 分组标题判定：`options` 中不带 value 的项（见SelectOptionProps） */
+function isSectionOption(option: DropdownOptionProps): boolean {
+  return option.value === undefined;
+}
+
+/** 富内容选项没有匹配键的开发期提示（同一选项只告警一次） */
+function warnUnmatchedComboBoxOption(option: DropdownOptionProps) {
+  warnOnceInDev(
+    `combo-box-input:matchText:${String(option.value)}`,
+    "ComboBoxInput: 选项 children 不是纯文本，无法参与输入前缀过滤，过滤期间不显示。" +
+      `（value: ${String(option.value)}）`,
+  );
+}
+
 // 实现说明：对齐原版OO.ui.ComboBoxInputWidget——输入或点击输入框即展开菜单并按值精确匹配
-// 选中项，↑↓移动高亮、Enter选定高亮项并收起菜单、下拉按钮切换菜单；不像原生combobox那样
-// 强制输入内容必须是选项之一
+// 选中项、展开后继续输入按前缀过滤候选（filterFromInput，0.54.3缺省），↑↓移动高亮、Enter
+// 选定高亮项并收起菜单、下拉按钮切换菜单；不像原生combobox那样强制输入内容必须是选项之一
 /**
  * A combo box: a freely editable input with a dropdown candidate menu; the text
  * doesn't have to be one of the candidates.
@@ -173,6 +216,7 @@ export const ComboBoxInput = forwardRef<HTMLDivElement, ComboBoxInputProps>(
   (
     {
       options,
+      filterFromInput = true,
       className,
       disabled,
       readOnly,
@@ -226,8 +270,21 @@ export const ComboBoxInput = forwardRef<HTMLDivElement, ComboBoxInputProps>(
     // 标签元素引用（原版继承TextInputWidget：input按标签宽度预留内边距）
     const labelRef = useRef<HTMLSpanElement>(null);
     const controlsDisabled = disabled || readOnly;
-    // 可选项（有value且未禁用），键盘导航的目标集合
+    // 可选项（有value且未禁用）
     const { values: selectableValues } = useSelectableValues(options);
+    // 输入驱动的菜单过滤（对齐原版0.54.3起ComboBoxInputWidget传给菜单的 filterFromInput）
+    const { filtered: filteredOptions } = useInputFilteredOptions({
+      options,
+      open,
+      inputValue: currentValue,
+      enabled: filterFromInput,
+      getMatchText: comboBoxMatchText,
+      isGroupHeader: isSectionOption,
+      warnUnmatched: warnUnmatchedComboBoxOption,
+    });
+    // 键盘导航只在可见项之间移动（原版findRelativeSelectableItem跳过isVisible为假的项）
+    const { values: visibleValues } = useSelectableValues(filteredOptions);
+
     // 下拉按钮的无障碍标签（对齐原版ooui-combobox-button-label消息）
     const toggleOptionsLabel = useMessage("ooui-combobox-button-label");
 
@@ -255,7 +312,7 @@ export const ComboBoxInput = forwardRef<HTMLDivElement, ComboBoxInputProps>(
     } = useMenuPopup<string | number>({
       open,
       onClose: () => setOpen(false),
-      values: selectableValues,
+      values: visibleValues,
       ignore: [elementRef, menuRef],
       selectedValue: currentValue,
       onChoose: selectOption,
@@ -404,11 +461,11 @@ export const ComboBoxInput = forwardRef<HTMLDivElement, ComboBoxInputProps>(
     };
 
     // 下拉按钮按压态与键盘激活，对齐原版ButtonElement的相位：mousedown加按压类并
-    // return false（cancelButtonMouseDownEvents缺省true，阻止焦点转移，oojs-ui-core.js:2374-2392）；
-    // keydown仅加按压类、不阻默认（oojs-ui-core.js:2429-2443）；keypress在Enter/空格时
-    // emit click→onDropdownButtonClick（toggle+focus，oojs-ui-core.js:12784-12788）并
-    // return false（空格不滚动，oojs-ui-core.js:2462-2468）——activate经handleDropdownButtonClick
-    // 走同一开合通道。mouseup/keyup经document级capture监听复位（oojs-ui-core.js:2394/2445）。
+    // return false（cancelButtonMouseDownEvents缺省true，阻止焦点转移，oojs-ui-core.js:2376-2394）；
+    // keydown仅加按压类、不阻默认（oojs-ui-core.js:2431-2445）；keypress在Enter/空格时
+    // emit click→onDropdownButtonClick（toggle+focus，oojs-ui-core.js:12795-12799）并
+    // return false（空格不滚动，oojs-ui-core.js:2464-2470）——activate经handleDropdownButtonClick
+    // 走同一开合通道。mouseup/keyup经document级capture监听复位（oojs-ui-core.js:2396/2447）。
     // pressed类写在buttonElement根（span）：主题按压选择器要求其为.oo-ui-buttonElement-button
     // 的父级（oojs-ui-wikimediaui.css:343）
     const {
@@ -444,9 +501,9 @@ export const ComboBoxInput = forwardRef<HTMLDivElement, ComboBoxInputProps>(
       >
         {/* 图标与指示器须是根元素（同时带oo-ui-textInputWidget）的直接子节点、且排在-field之前：
             原版TextInputWidget先把input/图标/指示器append到根，ComboBoxInputWidget再新建$field把
-            $input与下拉按钮移进去（oojs-ui-core.js:12700-12704），装饰故留在根级；主题的装饰定位
+            $input与下拉按钮移进去（oojs-ui-core.js:12711-12715），装饰故留在根级；主题的装饰定位
             规则全为`.oo-ui-textInputWidget > .oo-ui-iconElement-icon`一类直接子选择器
-            （oojs-ui-core-wikimediaui.css:1718/1735/1787），移入field即全部失配 */}
+            （oojs-ui-core-wikimediaui.css:1724/1741/1793），移入field即全部失配 */}
         <IconBase icon={icon} {...decorationProps} />
         <IndicatorBase {...indicatorSlotProps} />
         <div ref={elementRef} className="oo-ui-comboBoxInputWidget-field">
@@ -478,9 +535,9 @@ export const ComboBoxInput = forwardRef<HTMLDivElement, ComboBoxInputProps>(
               // invisibleLabel）：类贡献走Widget/ButtonElement/IndicatorElement贡献器（禁用态随
               // readOnly，按压态为dropdownPressed），图标/标签/指示器槽位交给ButtonSlots（含
               // noIcon/noIndicator空占位）。锚点故而是`<a>`（无href）并带其固定输出rel=nofollow
-              // （setNoFollow缺省true，oojs-ui-core.js:4224；ToggleButtonWidget不走该通道故无
+              // （setNoFollow缺省true，oojs-ui-core.js:4226；ToggleButtonWidget不走该通道故无
               // rel），title为invisibleLabel→label兜底。aria关系只写aria-controls
-              // （oojs-ui-core.js:12692）——原版不给该按钮aria-haspopup，菜单归属已由上方输入框的
+              // （oojs-ui-core.js:12703）——原版不给该按钮aria-haspopup，菜单归属已由上方输入框的
               // aria-owns声明
               getWidgetClassName({ disabled: controlsDisabled }, "button"),
               buttonElementClasses({
@@ -529,7 +586,7 @@ export const ComboBoxInput = forwardRef<HTMLDivElement, ComboBoxInputProps>(
           onChoose={selectOption}
           value={currentValue}
           open={open}
-          options={options}
+          options={filteredOptions}
           highlightedValue={highlightedValue}
           onHighlightedChange={setHighlightedValue}
         />

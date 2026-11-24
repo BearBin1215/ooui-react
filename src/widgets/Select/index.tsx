@@ -253,7 +253,7 @@ export const Select = forwardRef<HTMLDivElement, SelectInternalProps>(
       ref,
       disabled,
     });
-    // 程序化滚动护栏的活跃计数（对齐原版SelectWidget.blockMouseOverEvents，oojs-ui.js:7246）：
+    // 程序化滚动护栏的活跃计数（对齐原版SelectWidget.blockMouseOverEvents，oojs-ui.js:7248）：
     // Chromium在程序化滚动期间及结束后约100-150ms会产生伪mouseover，不挡会把键盘高亮抢到
     // 光标下选项。计数而非布尔：连续两次滚动的时间窗可重叠，各计各的、互不提前复位
     const blockMouseOverEventsRef = useRef(0);
@@ -293,7 +293,7 @@ export const Select = forwardRef<HTMLDivElement, SelectInternalProps>(
      * 悬停可高亮项即高亮、离开清除；悬停高亮与键盘高亮共用同一状态，
      * 非受控时改内部state，受控时经onHighlightedChange回写（Dropdown/ComboBoxInput依赖）。
      * 程序化滚动护栏窗口内的mouseover整体吞掉（对齐原版onMouseOver首行的
-     * blockMouseOverEvents短路，oojs-ui.js:7484-7487）：伪事件不驱动高亮、
+     * blockMouseOverEvents短路，oojs-ui.js:7486-7489）：伪事件不驱动高亮、
      * 也不透传调用方监听。自身逻辑先行、调用方监听最后透传（与handleMouseLeave同序）
      */
     const handleMouseOver: MouseEventHandler<HTMLDivElement> = (e) => {
@@ -333,7 +333,7 @@ export const Select = forwardRef<HTMLDivElement, SelectInternalProps>(
     // 滚动只在选项就近的可滚动容器内进行、不触达window（scrollOptionIntoView）：菜单收起时
     // 面板停到屏外哨兵位，原生scrollIntoView会把整页拽到顶部，见该函数与dev-docs/DEVIATIONS.md。
     // 护栏只在实际发生滚动时置位并200ms后复位（对齐原版SelectWidget.scrollItemIntoView，
-    // oojs-ui.js:7642-7649）：悬停高亮也经同一layout effect到达这里，但悬停目标始终在可视区
+    // oojs-ui.js:7644-7651）：悬停高亮也经同一layout effect到达这里，但悬停目标始终在可视区
     // （delta=0），原版hover路径本就不滚动、不置位——无条件置位会把悬停导航冻结200ms
     const scrollItemIntoView = useCallback(
       (optionValue: string | number) => {
@@ -392,7 +392,7 @@ export const Select = forwardRef<HTMLDivElement, SelectInternalProps>(
       }
       // 对齐原版：导航目标为高亮项，无高亮（或高亮项已不在可选集）时回退选中项；
       // 多选展示模式无单值选中语义、不回退（对齐原版onDocumentKeyDown的
-      // `!this.multiselect && this.findSelectedItem()`，oojs-ui.js:7518-7520，
+      // `!this.multiselect && this.findSelectedItem()`，oojs-ui.js:7520-7522，
       // 与下方aria-activedescendant的selectedFallbackIndex门控规则一致）
       const selectedFallback =
         selectedValues === undefined && isValueSelectable(currentValue)

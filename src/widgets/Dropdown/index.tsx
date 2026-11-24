@@ -206,8 +206,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             selectOption(navigationValue);
           } else {
             // 展开态无导航目标时收起：原版此刻ENTER分支因currentItem不存在不被菜单键盘通道
-            // 消费（SelectWidget.onDocumentKeyDown，oojs-ui.js:7525-7531），事件落回handle的
-            // keydown→menu.toggle()（DropdownWidget.onKeyDown，oojs-ui.js:9202-9207）
+            // 消费（SelectWidget.onDocumentKeyDown，oojs-ui.js:7527-7533），事件落回handle的
+            // keydown→menu.toggle()（DropdownWidget.onKeyDown，oojs-ui.js:9205-9210）
             setOpen(false);
           }
           break;
@@ -239,7 +239,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
           tabIndex={resolveTabIndex(tabIndex, disabled)}
           aria-disabled={disabled || undefined}
           // 取原版的字面量`'true'`而非语义更precise的`'listbox'`：原版`DropdownWidget`构造期
-          // 即写`'aria-haspopup': 'true'`（oojs-ui-core.js:9118），读屏播报与主题行为均以
+          // 即写`'aria-haspopup': 'true'`（oojs-ui-core.js:9121），读屏播报与主题行为均以
           // 该值为准；本工程不另行改良（`ButtonMenuSelectWidget`同此规则）
           aria-haspopup="true"
           className="oo-ui-dropdownWidget-handle"

@@ -163,7 +163,7 @@ it("选项flags与选中态叠加：progressive与标志变体同时写在图标
 it("MenuOption输出原版的checkIcon：选项根首个子元素，始终无变体类", async () => {
   const screen = await render(<Select options={[...OPTIONS]} defaultValue="b" />);
   const option = screen.container.querySelector(".oo-ui-menuOptionWidget")!;
-  // 原版MenuOptionWidget构造期prepend一个checkIcon（dist/oojs-ui.js:8366-8379），
+  // 原版MenuOptionWidget构造期prepend一个checkIcon（dist/oojs-ui.js:8368-8381），
   // 故它是选项根的首个子元素；主题以`>`直接子选择器隐藏选中项的普通图标
   const checkIcon = option.firstElementChild!;
   expect(checkIcon).toHaveClass("oo-ui-menuOptionWidget-checkIcon");

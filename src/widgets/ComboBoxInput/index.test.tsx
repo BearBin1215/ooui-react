@@ -257,6 +257,111 @@ it("disabled：根输出disabled类链，键盘与下拉通道均不响应", asy
   expect(root).not.toHaveClass("oo-ui-comboBoxInputWidget-open");
 });
 
+/**
+ * 输入过滤（对齐原版0.54.3起ComboBoxInputWidget传给菜单的`filterFromInput: true`
+ * + `MenuSelectWidget.getItemMatcher`的prefix模式）：展开帧展示全部选项，此后按前缀过滤
+ */
+const FRUIT = [
+  { value: "apple", children: "苹果" },
+  { value: "banana", children: "香蕉" },
+  { value: "pie", children: "苹果派" },
+] as const;
+
+const getMenu = (): HTMLElement =>
+  document.querySelector<HTMLElement>(".oo-ui-menuSelectWidget")!;
+
+/** 菜单当前渲染的选项文本（含分组标题，按展示顺序） */
+const getMenuTexts = (): string[] =>
+  Array.from(
+    getMenu().querySelectorAll(".oo-ui-menuOptionWidget, .oo-ui-menuSectionOptionWidget"),
+  ).map((el) => el.textContent ?? "");
+
+it("输入过滤：展开帧展示全部选项，继续编辑按规范化前缀过滤", async () => {
+  const screen = await render(<ComboBoxInput options={[...FRUIT]} />);
+  const input = getInput(screen);
+  // 第一次键入只用于展开菜单：展开帧按展开时的输入快照展示全部选项
+  await typeValue(input, "苹");
+  expect(getMenuTexts()).toEqual(["苹果", "香蕉", "苹果派"]);
+  // 此后输入偏离快照才开始过滤，并以前缀匹配
+  await typeValue(input, "苹果");
+  expect(getMenuTexts()).toEqual(["苹果", "苹果派"]);
+  await typeValue(input, "苹果派");
+  expect(getMenuTexts()).toEqual(["苹果派"]);
+});
+
+it("过滤无匹配：选项全部隐藏、菜单仍展开并叠加-invisible", async () => {
+  const screen = await render(<ComboBoxInput options={[...FRUIT]} />);
+  const input = getInput(screen);
+  await typeValue(input, "苹");
+  await typeValue(input, "苹果zzz");
+  expect(getMenuTexts()).toEqual([]);
+  expect(getMenu()).toHaveClass("oo-ui-menuSelectWidget-invisible");
+  expect(getRoot(screen)).toHaveClass("oo-ui-comboBoxInputWidget-open");
+});
+
+it("filterFromInput={false}：输入不改动候选集", async () => {
+  const screen = await render(
+    <ComboBoxInput options={[...FRUIT]} filterFromInput={false} />,
+  );
+  const input = getInput(screen);
+  await typeValue(input, "苹");
+  await typeValue(input, "苹果");
+  expect(getMenuTexts()).toEqual(["苹果", "香蕉", "苹果派"]);
+});
+
+it("分组标题随其下选项显隐：全组不匹配时标题一并隐藏", async () => {
+  const screen = await render(
+    <ComboBoxInput
+      options={[
+        { children: "水果" },
+        { value: "apple", children: "苹果" },
+        { children: "蔬菜" },
+        { value: "carrot", children: "胡萝卜" },
+      ]}
+    />,
+  );
+  const input = getInput(screen);
+  await typeValue(input, "苹");
+  expect(getMenuTexts()).toEqual(["水果", "苹果", "蔬菜", "胡萝卜"]);
+  await typeValue(input, "苹果");
+  expect(getMenuTexts()).toEqual(["水果", "苹果"]);
+});
+
+it("富内容children无匹配键：过滤期间不显示", async () => {
+  const screen = await render(
+    <ComboBoxInput
+      options={[
+        { value: "apple", children: <span>苹果</span> },
+        { value: "banana", children: "香蕉" },
+      ]}
+    />,
+  );
+  const input = getInput(screen);
+  await typeValue(input, "香");
+  expect(getMenuTexts()).toEqual(["苹果", "香蕉"]);
+  await typeValue(input, "香蕉");
+  expect(getMenuTexts()).toEqual(["香蕉"]);
+});
+
+it("过滤后↑↓只在可见项之间移动（原版跳过isVisible为假的项）", async () => {
+  const screen = await render(<ComboBoxInput options={[...FRUIT]} />);
+  const input = getInput(screen);
+  input.focus();
+  await typeValue(input, "苹");
+  await typeValue(input, "苹果");
+  pressKey(input, "ArrowDown");
+  await tick();
+  expect(getMenu().querySelector(".oo-ui-optionWidget-highlighted")?.textContent).toBe(
+    "苹果",
+  );
+  // 全量序列里的「香蕉」已被过滤排除，第二跳直达「苹果派」
+  pressKey(input, "ArrowDown");
+  await tick();
+  expect(getMenu().querySelector(".oo-ui-optionWidget-highlighted")?.textContent).toBe(
+    "苹果派",
+  );
+});
+
 describe("HTML快照", () => {
   it("收起态（field与下拉按钮结构）", async () => {
     const screen = await render(<ComboBoxInput options={[...OPTIONS]} />);

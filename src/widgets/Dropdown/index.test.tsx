@@ -22,7 +22,7 @@ it("收起态：handle承载combobox语义与tabIndex，根输出dropdown类链�
   const handle = root.querySelector(".oo-ui-dropdownWidget-handle")!;
   expect(handle).toHaveAttribute("role", "combobox");
   expect(handle).toHaveAttribute("tabIndex", "0");
-  // aria-haspopup取原版字面量'true'（oojs-ui-core.js:9118），而非语义更precise的'listbox'
+  // aria-haspopup取原版字面量'true'（oojs-ui-core.js:9121），而非语义更precise的'listbox'
   expect(handle).toHaveAttribute("aria-haspopup", "true");
   expect(handle).toHaveAttribute("aria-expanded", "false");
   expect(handle).not.toHaveAttribute("aria-owns");

@@ -250,9 +250,9 @@ export const ButtonMenuSelectWidget = forwardRef<
             chooseOption(navigationValue);
           } else {
             // 展开态无导航目标时收起：原版此刻事件不被菜单键盘通道消费（currentItem不存在，
-            // SelectWidget.onDocumentKeyDown，oojs-ui.js:7525-7531），落回Button的keypress
-            // 激活通道模拟click开合（ButtonElement.onKeyPress，oojs-ui.js:2462-2468→
-            // ButtonMenuSelectWidget.onButtonMenuClick，oojs-ui.js:18747-18749）；本工程在
+            // SelectWidget.onDocumentKeyDown，oojs-ui.js:7527-7533），落回Button的keypress
+            // 激活通道模拟click开合（ButtonElement.onKeyPress，oojs-ui.js:2464-2470→
+            // ButtonMenuSelectWidget.onButtonMenuClick，oojs-ui.js:18764-18766）；本工程在
             // keydown分支直接收起，同样置位手势标记挡掉随后的模拟click（防菜单收而复开）
             keyboardGestureRef.current = true;
             setOpen(false);

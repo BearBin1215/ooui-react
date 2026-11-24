@@ -539,7 +539,7 @@ export const TagMultiselect = forwardRef<HTMLDivElement, TagMultiselectInternalP
           // 菜单开启且导航起点已是标签时走多选切换的移除：对齐原版菜单可见时
           // MenuSelectWidget.onDocumentKeyDown的ENTER分支交由SelectWidget.onDocumentKeyDown
           // 的chooseItem——多选菜单的已选定项先unselectItem再派发choose，经
-          // MenuTagMultiselectWidget.onMenuChoose移除对应标签（oojs-ui.js:8624-8632、
+          // MenuTagMultiselectWidget.onMenuChoose移除对应标签（oojs-ui.js:8626-8634、
           // 7525-7529、8124-8134）；其余情形提交高亮菜单项或输入文本为标签
           event.preventDefault();
           if (
@@ -614,7 +614,7 @@ export const TagMultiselect = forwardRef<HTMLDivElement, TagMultiselectInternalP
       }
       if (hasInput && allowEditTags && !item.fixed) {
         // 先加后删（对齐原版TagMultiselectWidget.onTagSelect的addTagFromInput→removeItems
-        // 次序，oojs-ui.js:19434-19448）：有输入文本先提交为新标签，tagLimit与合法性准入按
+        // 次序，oojs-ui.js:19451-19465）：有输入文本先提交为新标签，tagLimit与合法性准入按
         // 加法时点判定，提交成败不影响随后的删除
         let next = currentValue;
         if (inputValue) {
@@ -624,7 +624,7 @@ export const TagMultiselect = forwardRef<HTMLDivElement, TagMultiselectInternalP
           }
         }
         // 被点标签按「值+同类序数」定位后删除：原版removeItems按项引用定位
-        // （GroupElement.removeItems，oojs-ui.js:2781），本工程标签为标量值、无项引用可凭，
+        // （GroupElement.removeItems，oojs-ui.js:2783），本工程标签为标量值、无项引用可凭，
         // 先加后删时白名单序插入（buildAdded）可能插到被点项之前，按点击时下标删除会漂移
         // 误删他项。序数取旧列表中该值在其之前的出现次数（items[].occurrence），多重集语义
         // 下插入不改变既有项的序数身份

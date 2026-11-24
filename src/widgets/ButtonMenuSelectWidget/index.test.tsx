@@ -167,7 +167,7 @@ it("展开期可打印keypress补默认抑制（对齐原版onDocumentKeyPress�
   await tick();
 
   // 展开期可打印字符：原版onDocumentKeyPress对命中字符无条件preventDefault+stopPropagation
-  // （oojs-ui.js:7717-7718），本工程对齐preventDefault（document冒泡相位无需stopPropagation）
+  // （oojs-ui.js:7719-7720），本工程对齐preventDefault（document冒泡相位无需stopPropagation）
   const keypress = new KeyboardEvent("keypress", {
     key: "a",
     charCode: 97,

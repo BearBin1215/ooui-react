@@ -162,7 +162,7 @@ export const TagItem = memo(
        * 根元素监听click选中标签，关闭按钮嵌在其内，冒泡会连带触发select——菜单形态
        * 据此开菜单并高亮被删项、编辑形态据以回填文本，与「关闭按钮=仅移除」的语义相悖。
        * 原版TagItemWidget的$element.on('click', select)同样收到冒泡
-       * （dist/oojs-ui.js:18787-18802），此处有意偏离，见dev-docs/DEVIATIONS.md「增强」
+       * （dist/oojs-ui.js:18804-18819），此处有意偏离，见dev-docs/DEVIATIONS.md「增强」
        */
       const handleRemoveClick = (event: ButtonClickEvent) => {
         event.stopPropagation();

@@ -243,7 +243,7 @@ function OriginalHighlight({ addLog }: { addLog: (msg: string) => void }) {
     highlightBar.appendChild(clearButton);
     container.appendChild(highlightBar);
 
-    // 原版键盘导航开关挂SelectWidget的static（dist/oojs-ui.js:7332起），子类覆写static生效；
+    // 原版键盘导航开关挂SelectWidget的static（dist/oojs-ui.js:7334起），子类覆写static生效；
     // TS下无OO.inheritClass，经原型搭桥构造子类并继承static
     const makeStaticSubclass = (staticOverrides: Record<string, unknown>) => {
       const Sub = function (this: unknown, config: Record<string, unknown>) {

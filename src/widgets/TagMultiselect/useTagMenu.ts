@@ -1,8 +1,20 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from "react";
-import { useMenuPopup, useSelectableValues } from "../../hooks";
-import { normalizeForMatching, warnOnceInDev } from "../../utils";
+import { useInputFilteredOptions, useMenuPopup, useSelectableValues } from "../../hooks";
+import { warnOnceInDev } from "../../utils";
 import type { SelectOptionProps } from "../Select";
 import { tagDisplayLabel, tagMatchText, type TagOptionProps } from "./tagModel";
+
+/** 空选项集常量：非菜单形态（TagMultiselect基础形态）options为undefined时的稳定引用 */
+const NO_OPTIONS: TagOptionProps[] = [];
+
+/** 富内容标签缺 labelText 的开发期提示（同一选项只告警一次） */
+function warnUnmatchedTagOption(option: TagOptionProps) {
+  warnOnceInDev(
+    `tag-multiselect:labelText:${String(option.value)}`,
+    "TagMultiselect: 富内容 label 未提供 labelText，该选项不参与菜单前缀过滤。" +
+      `（value: ${String(option.value)}）`,
+  );
+}
 
 /** 菜单域所需的值模型切片（useTagValues的返回） */
 export interface TagMenuModelSlice {
@@ -78,62 +90,14 @@ export function useTagMenu({
   const { currentValue, addTag, removeTagByValue } = model;
   const [open, setOpen] = useState(false);
 
-  // 打开帧的输入值快照（对齐原版MenuSelectWidget.toggle(true)先取previouslySelectedValue）：
-  // 当前输入与快照一致时显示全量，自打开后的首次编辑起才按输入过滤——输入框带残留文本
-  // （如点击标签回填后重开）时打开帧不再筛空候选。快照随open跃迁在渲染期调整（渲染期调整
-  // state，不用ref：被丢弃的渲染会把ref带偏）
-  const [openFrameInput, setOpenFrameInput] = useState("");
-  const [prevOpen, setPrevOpen] = useState(open);
-  if (open !== prevOpen) {
-    setPrevOpen(open);
-    if (open) {
-      setOpenFrameInput(inputValue);
-    }
-  }
-
-  /**
-   * 菜单选项的过滤结果（对齐原版filterFromInput的标签前缀匹配；打开帧始终为全量）。
-   * `unmatchedValues`收集因缺纯文本匹配键而被排除的选项，供告警通道报出——过滤本身须保持
-   * 渲染期无副作用，告警另经effect发出
-   */
-  const { filtered, query, unmatchedValues } = useMemo(() => {
-    const source = options ?? [];
-    // showAll对齐原版`!isVisible() || previouslySelectedValue === $input.val()`：关闭期始终为全量
-    // （菜单不可见，仅免算），展开期与打开帧快照一致时也始终为全量，自首次编辑起偏离快照才过滤
-    const showAll = !open || inputValue === openFrameInput;
-    // 输入与匹配键两侧按同一规则规范化（原版getItemMatcher的行为），与Select前缀跳转一致
-    const normalizedQuery = showAll ? "" : normalizeForMatching(inputValue);
-    if (!normalizedQuery) {
-      return { filtered: source, query: "", unmatchedValues: [] as (string | number)[] };
-    }
-    // 过滤按纯文本匹配键（对齐原版getMatchText），显示走富内容label
-    const unmatched: (string | number)[] = [];
-    const matched = source.filter((option) => {
-      // 富标签未给labelText的选项无纯文本匹配键，不参与前缀过滤（语义见tagMatchText）
-      const matchText = tagMatchText(option);
-      if (matchText === undefined) {
-        unmatched.push(option.value);
-        return false;
-      }
-      return normalizeForMatching(matchText).startsWith(normalizedQuery);
-    });
-    return { filtered: matched, query: normalizedQuery, unmatchedValues: unmatched };
-    // open与快照参与依赖：打开瞬间快照刚更新，须重算使打开帧取到全量（仅凭input变化不触发）
-  }, [options, inputValue, open, openFrameInput]);
-
-  // 富内容label缺labelText时开发期告警一次（同值只告警一次，故effect反复触发无妨）
-  useEffect(() => {
-    if (!query) {
-      return;
-    }
-    for (const optionValue of unmatchedValues) {
-      warnOnceInDev(
-        `tag-multiselect:labelText:${String(optionValue)}`,
-        "TagMultiselect: 富内容 label 未提供 labelText，该选项不参与菜单前缀过滤。" +
-          `（value: ${String(optionValue)}）`,
-      );
-    }
-  }, [query, unmatchedValues]);
+  // 展开帧快照、前缀匹配与分组隐藏走菜单域的共用实现（本组件没有分组标题）
+  const { filtered } = useInputFilteredOptions({
+    options: options ?? NO_OPTIONS,
+    open,
+    inputValue,
+    getMatchText: tagMatchText,
+    warnUnmatched: warnUnmatchedTagOption,
+  });
 
   /** 菜单选项（过滤结果的渲染形态：显示走富内容label） */
   const menuSelectOptions: SelectOptionProps[] = useMemo(
@@ -167,7 +131,7 @@ export function useTagMenu({
   // 菜单开合与键盘高亮（端点钳制不环绕）；开启时点击外部/Escape关闭。基础形态open始终为false。
   // 不传getItemText：本组件有输入框，原版前缀跳转只绑定无$input的菜单，不启用。
   // 不传selectedValue：原版多选菜单的键盘路径对选定项无回退（SelectWidget.onDocumentKeyDown
-  // 的currentItem带`!this.multiselect`门，oojs-ui.js:7518-7520；MenuSelectWidget自身
+  // 的currentItem带`!this.multiselect`门，oojs-ui.js:7520-7522；MenuSelectWidget自身
   // `findHighlightedItem() || findFirstSelectedItem()`只服务TAB/ESCAPE分支，对多选形态
   // 均为无操作），导航起点始终为高亮项
   const {
@@ -204,7 +168,7 @@ export function useTagMenu({
   }, [open, inputValue]);
 
   // 菜单收起时清除高亮（对齐原版onMenuToggle的highlightItem(null)）与自动高亮记录
-  // （对齐原版toggle(false)分支的`lastHighlightedItem = null`，dist/oojs-ui.js:8990）
+  // （对齐原版toggle(false)分支的`lastHighlightedItem = null`，dist/oojs-ui.js:8993）
   useEffect(() => {
     if (!open) {
       lastAutoHighlightedRef.current = undefined;
@@ -228,7 +192,7 @@ export function useTagMenu({
     lastAutoHighlightedRef.current = menuSelectableValues[0];
     // 非法态（输入框有未提交文本或存在非法标签）的聚焦驱动展开不自动高亮：对齐原版
     // MenuTagMultiselectWidget.onInputFocus在toggle(true)后对聚焦前已非法的widget执行
-    // 无参highlightItem()清除刚设的高亮（oojs-ui.js:20233-20248）的净效果。仅记录自动
+    // 无参highlightItem()清除刚设的高亮（oojs-ui.js:20250-20265）的净效果。仅记录自动
     // 高亮项不写高亮——原版highlightItem()不清lastHighlightedItem，同一开启期内的过滤
     // 自动高亮仍被下方「上次自动高亮项可选」守卫压制，Enter随之走提交已键入文本路径。
     // 收起后键入的编辑驱动展开（原版onInputChange路径）不带此门

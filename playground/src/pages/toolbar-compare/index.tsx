@@ -689,7 +689,7 @@ function OriginalDisabledGroup() {
     );
 
     // forceExpand：仅colA固定显示，其余工具成为可折叠项（原版populate的simpleArrayDifference，
-    // oojs-ui.js:23289）；expanded为More/Fewer切换项的初始展开态（React为defaultExpanded）
+    // oojs-ui.js:23737）；expanded为More/Fewer切换项的初始展开态（React为defaultExpanded）
     appendRow(
       "ListToolGroup：forceExpand仅固定A（B/C可折叠），defaultExpanded初始展开",
       setupToolbar([
@@ -818,6 +818,8 @@ function ToolbarComparePage() {
           构造config.disabled，禁用时面板收起、handle不可聚焦）、List组的
           forceExpand/defaultExpanded/onToolSelect、Menu组的keepOpenToolNames与受控open
           （原版面板仅由handle开合，keepOpen与受控开合为React侧形态）。
+          原版0.54.3起支持工具提升（PopupToolGroup的`promoteToBar`），本工程未实现，
+          对照页不含该形态（见dev-docs/DEVIATIONS.md「暂未实现」节）。
         </>
       }
     >

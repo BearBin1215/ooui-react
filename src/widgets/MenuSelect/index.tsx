@@ -102,9 +102,10 @@ export const MenuSelect = forwardRef<HTMLDivElement, MenuSelectProps>(
       // `.oo-ui-menuSelectWidget-screenReaderMode.oo-ui-element-hidden`把收起期菜单从
       // display:none翻转为读屏可见的裁剪隐藏，aria-activedescendant指向的内容才可被读屏读到
       screenReaderMode && "oo-ui-menuSelectWidget-screenReaderMode",
-      // 无可见项时整个面板隐藏（对齐原版updateItemVisibility的anyVisible判定，主题规则
-      // display:none）：消费方的选项按输入过滤，全不匹配时不留一个空框
-      options.length === 0 && "oo-ui-menuSelectWidget-invisible",
+      // 无可见项时整个面板隐藏（对齐原版updateItemVisibility的`!anyVisible && isVisible()`，
+      // 0.54.3起只在展开期判定，主题规则display:none）：消费方的选项按输入过滤，全不匹配时
+      // 不留一个空框；收起期本就整体隐藏，不叠加该类
+      open && options.length === 0 && "oo-ui-menuSelectWidget-invisible",
       elementHiddenClasses(!open),
     );
 

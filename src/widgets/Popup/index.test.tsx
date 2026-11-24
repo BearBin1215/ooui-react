@@ -63,7 +63,7 @@ it("打开：移除hidden类、输出anchored-top（默认below，箭头在上�
 });
 
 it("align=backwards：带箭头时以'before'初始位置再腾挪，锚点中线距弹层终止端为2×箭头盒", async () => {
-  // 基准：原版hPosMap的 backwards: this.anchored ? 'before' : 'end'（dist/oojs-ui.js:6507）
+  // 基准：原版hPosMap的 backwards: this.anchored ? 'before' : 'end'（dist/oojs-ui.js:6509）
   // 与 positionAdjustment 的锚点腾挪（:6583-6596）。锚点宽100、弹层宽320（缺省），
   // 故锚点中线距终止端的稳态值只由箭头盒决定，与锚点宽度无关
   function Host() {

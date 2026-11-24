@@ -401,6 +401,7 @@ The full reference is in the tool-group components and the `ToolProps` type.
 - **In narrow mode the handle's tooltip always falls back to the effective `label`.** {/* deviations: dev-popuptoolgroup-title */}
 - **A panel that fills the container width is still height-clamped to the visible area with internal scrolling** (tools stay reachable). {/* deviations: dev-panel-maxheight */}
 - **The narrow-mode measurement baseline is remeasured when tool groups are added or removed**, so dynamic tool sets keep correct narrow detection. {/* deviations: dev-narrow-threshold-reset */}
+- **Tool promotion (`promoteToBar`, new in the original 0.54.3) is not supported**: the original can declare popup-group tools that move into the bar when there is room and return to the popup when narrow; here that has to be assembled by hand — put always-visible tools in a `BarToolGroup`, or conditionally render different tool groups based on the container width. {/* deviations: dev-toolbar-promote-to-bar */}
 - **On a bottom toolbar (`position="bottom"`) the More / Fewer arrow directions are inverted compared to the original**; functionality is unaffected. {/* deviations: dev-listtoolgroup-icons */}
 
 ## See also

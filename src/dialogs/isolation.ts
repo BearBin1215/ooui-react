@@ -8,7 +8,7 @@
  * 撤销即移除——调用方若在隔离范围内的节点上声明`inert`（React 19起支持该prop），
  * 其移除同样会与vdom失同步，勿在背景节点上声明。标记只作用于DOM属性，
  * 遮罩与视觉仍由主题CSS承接。与原版`WindowManager.toggleIsolation`
- * （`dist/oojs-ui.js:25377-25434`）的机制差异见dev-docs/DEVIATIONS.md「等效替代」
+ * （`dist/oojs-ui.js:25846-25903`）的机制差异见dev-docs/DEVIATIONS.md「等效替代」
  */
 
 /** 处于打开周期的弹窗登记表：key为弹窗实例的登记句柄，value为其管理器根元素 */

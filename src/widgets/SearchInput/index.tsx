@@ -36,16 +36,16 @@ export type SearchInputProps = Omit<
 export interface SearchInputInternalProps extends SearchInputProps {
   /**
    * 清除指示器的tabIndex覆写（缺省-1，对齐原版SearchInputWidget构造期的
-   * `$indicator.attr({ tabindex: -1, role: 'button' })`，oojs-ui.js:12201）。
+   * `$indicator.attr({ tabindex: -1, role: 'button' })`，oojs-ui.js:12204）。
    * SelectFileInputWidget的信息框覆写为0（原版`info.$indicator.attr('tabindex', 0)`，
-   * oojs-ui.js:14265——清除指示器是清空文件的唯一入口，须键盘可达）
+   * oojs-ui.js:14276——清除指示器是清空文件的唯一入口，须键盘可达）
    */
   indicatorTabIndex?: number;
 
   /**
    * 不注入缺省search图标（缺省false，图标仍可经icon显式给出）：SelectFileInputWidget
    * 的信息框图标由其icon参数决定、未传时无图标（对齐原版`setIcon(config.icon)`，
-   * config.icon缺省null，oojs-ui.js:14259），不得回退到'search'缺省
+   * config.icon缺省null，oojs-ui.js:14270），不得回退到'search'缺省
    */
   noDefaultIcon?: boolean;
 }

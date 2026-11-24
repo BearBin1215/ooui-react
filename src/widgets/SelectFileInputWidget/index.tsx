@@ -433,7 +433,7 @@ export const SelectFileInputWidget = forwardRef<
     };
 
     /**
-     * 信息框值变化：信息框被清空时同步清空文件集（对齐原版onInfoChange，oojs-ui.js:14629：
+     * 信息框值变化：信息框被清空时同步清空文件集（对齐原版onInfoChange，oojs-ui.js:14640：
      * 值为''即清文件、非空值不改变文件集）。信息框的input始终禁用、不可键入，用户唯一能
      * 改动信息框值的入口就是清除指示器，指示器把值置''后经此清空文件集
      */
@@ -526,23 +526,23 @@ export const SelectFileInputWidget = forwardRef<
       />
     );
 
-    // 信息框为SearchInput组合（对齐原版构造`new OO.ui.SearchInputWidget(...)`，oojs-ui.js:14254）：
+    // 信息框为SearchInput组合（对齐原版构造`new OO.ui.SearchInputWidget(...)`，oojs-ui.js:14265）：
     // 展示文件名，清除指示器是唯一的清除入口——指示器的清除交互（点击/Enter）把信息框值
     // 置''，再经handleInfoChange清空文件集，与原版的change→onInfoChange链结构相同
-    // （原版info.connect(this, { change: 'onInfoChange' })，oojs-ui.js:14350）
+    // （原版info.connect(this, { change: 'onInfoChange' })，oojs-ui.js:14361）
     const infoField = (
       <SearchInput
         className="oo-ui-selectFileInputWidget-info"
         // 图标由icon参数决定、未传时无图标（对齐原版setIcon(config.icon)，缺省null）
         icon={icon}
         noDefaultIcon
-        // 信息框自身移出Tab序（对齐原版info.$input.attr('tabindex', -1)，oojs-ui.js:14263）
+        // 信息框自身移出Tab序（对齐原版info.$input.attr('tabindex', -1)，oojs-ui.js:14274）
         tabIndex={-1}
         // 清除是唯一的清除入口，指示器须键盘可达（对齐原版info.$indicator.attr('tabindex', 0)，
-        // oojs-ui.js:14265）
+        // oojs-ui.js:14276）
         indicatorTabIndex={0}
         // input始终禁用：对齐原版setDisabled里无条件的`info.$input.attr('disabled', true)`
-        // （oojs-ui.js:14667，借此让findFocusable取不到它）。经inputProps通道承载、不驱动
+        // （oojs-ui.js:14678，借此让findFocusable取不到它）。经inputProps通道承载、不驱动
         // 根元素的禁用类，根禁用态由disabled prop随组件
         inputProps={{ disabled: true }}
         placeholder={placeholder ?? placeholderMessage}

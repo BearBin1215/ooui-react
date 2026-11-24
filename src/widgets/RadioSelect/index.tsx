@@ -120,7 +120,7 @@ export const RadioSelect = forwardRef<HTMLDivElement, RadioSelectProps>(
       selectWidgetStateClasses(pressed),
     );
 
-    // 对齐原版SelectWidget.onMouseDown（RadioSelectWidget继承，oojs-ui.js:7416-7428）：
+    // 对齐原版SelectWidget.onMouseDown（RadioSelectWidget继承，oojs-ui.js:7418-7430）：
     // return false在if之外无条件执行，禁用/右键同样阻止mousedown默认的焦点转移；preventDefault
     // 不阻碍label内radio的后续click激活勾选（原版即如此）。仅可用且左键时进入按压态
     const handlePress: MouseEventHandler<HTMLDivElement> = (e) => {
