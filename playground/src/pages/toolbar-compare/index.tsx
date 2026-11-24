@@ -795,6 +795,92 @@ function ReactDisabledAndPanel({ onLog }: { onLog: (msg: string) => void }) {
   );
 }
 
+/** React侧：工具提升（promoteToBar）——固定栏宽下部分工具平铺到工具栏，其余留在面板 */
+const PROMOTE_TOOL_NAMES = ["promOne", "promTwo", "promThree", "promFour", "promFive"];
+const promoteTools: ToolProps[] = PROMOTE_TOOL_NAMES.map((name, index) => ({
+  name,
+  label: `提升项${index + 1}`,
+  title: `提升项${index + 1}`,
+  onSelect: () => {},
+}));
+
+function ReactPromoteToolbar() {
+  return (
+    <div
+      style={{
+        width: 360,
+        resize: "horizontal",
+        overflow: "auto",
+        border: "1px dashed #999",
+        // 面板按就近滚动容器的可见空间钳高，底部留出打开「更多」面板的空间
+        paddingBottom: 140,
+      }}
+    >
+      <Toolbar>
+        <ListToolGroup
+          label="更多"
+          icon="ellipsis"
+          indicator="down"
+          promoteToBar={PROMOTE_TOOL_NAMES}
+          tools={promoteTools}
+        />
+      </Toolbar>
+    </div>
+  );
+}
+
+/** 原版侧：工具提升（PopupToolGroup的promoteToBar，0.54.3起） */
+function OriginalPromoteToolbar() {
+  const { containerRef } = useOriginalWidgets((oo, container, register) => {
+    const ui = oo.ui as any;
+    const createPromoteTool = (name: string, title: string) => {
+      class PromoteTool extends ui.Tool {
+        onSelect() {
+          /* 演示工具无动作，提升形态与宽度无关 */
+        }
+        onUpdateState() {
+          /* 演示工具不响应应用状态 */
+        }
+      }
+      PromoteTool.static = Object.create(ui.Tool.static);
+      Object.assign(PromoteTool.static, { name, title, group: "promote" });
+      return PromoteTool;
+    };
+    const toolFactory = new ui.ToolFactory();
+    PROMOTE_TOOL_NAMES.forEach((name, index) =>
+      toolFactory.register(createPromoteTool(name, `提升项${index + 1}`)),
+    );
+    const toolGroupFactory = new ui.ToolGroupFactory();
+    toolGroupFactory.register(ui.ListToolGroup);
+    const toolbar = new ui.Toolbar(toolFactory, toolGroupFactory);
+    toolbar.setup([
+      {
+        type: "list",
+        include: PROMOTE_TOOL_NAMES,
+        label: "更多",
+        icon: "ellipsis",
+        indicator: "down",
+        promoteToBar: PROMOTE_TOOL_NAMES,
+      },
+    ]);
+    container.appendChild(unwrapJQuery(toolbar.$element));
+    toolbar.initialize();
+    register(toolbar);
+  });
+  return (
+    <div
+      ref={containerRef}
+      style={{
+        width: 360,
+        resize: "horizontal",
+        overflow: "auto",
+        border: "1px dashed #999",
+        paddingBottom: 140,
+      }}
+    />
+  );
+}
+
 function ToolbarComparePage() {
   const [log, setLog] = useState<string[]>([]);
   return (
@@ -818,8 +904,11 @@ function ToolbarComparePage() {
           构造config.disabled，禁用时面板收起、handle不可聚焦）、List组的
           forceExpand/defaultExpanded/onToolSelect、Menu组的keepOpenToolNames与受控open
           （原版面板仅由handle开合，keepOpen与受控开合为React侧形态）。
-          原版0.54.3起支持工具提升（PopupToolGroup的`promoteToBar`），本工程未实现，
-          对照页不含该形态（见dev-docs/DEVIATIONS.md「暂未实现」节）。
+          「工具提升」区块两侧都在可拖拽调宽的定宽容器内声明同一个List组的
+          promoteToBar：宽度充足时工具平铺到组前（Bar形态、tooltip含标题与快捷键），
+          变窄按累计宽逐个收回、窄栏下全部收回，全部提升时组handle隐藏。React侧随
+          容器宽度变化即重算（拖动容器右缘可观察）；原版只在窗口resize时调
+          updatePromotedTools，容器自身调宽不会触发，需调整浏览器窗口宽度才更新。
         </>
       }
     >
@@ -837,6 +926,11 @@ function ToolbarComparePage() {
         <ReactDisabledAndPanel
           onLog={(msg) => setLog((prev) => [msg, ...prev].slice(0, 6))}
         />
+      </CompareColumns>
+
+      <h2>工具提升（promoteToBar）</h2>
+      <CompareColumns original={<OriginalPromoteToolbar />}>
+        <ReactPromoteToolbar />
       </CompareColumns>
 
       <h2>事件日志（React侧）</h2>

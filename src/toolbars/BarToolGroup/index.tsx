@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { forwardRef, useRef } from "react";
 import clsx from "clsx";
 import { getWidgetClassName } from "../../mixins";
 import {
@@ -38,8 +38,15 @@ export const BarToolGroup = forwardRef<HTMLDivElement, BarToolGroupProps>(
     ref,
   ) => {
     const groupDisabled = isGroupAutoDisabled(tools, disabled);
+    // 按压流只认本组直接承载的工具：内嵌工具组的同名工具不参与外层按压（见
+    // useToolGroupPressed的归属校验）
+    const toolsRef = useRef<HTMLDivElement>(null);
     const { pressedName, onMouseKeyDown, onToolKeyDown, onToolHoverChange } =
-      useToolGroupPressed(tools, groupDisabled);
+      useToolGroupPressed(
+        tools,
+        groupDisabled,
+        (toolElement) => toolElement.parentElement === toolsRef.current,
+      );
 
     // 空组加oo-ui-toolGroup-empty整体隐藏（对齐原版populate末尾的toggleClass）
     const classes = clsx(
@@ -58,6 +65,7 @@ export const BarToolGroup = forwardRef<HTMLDivElement, BarToolGroupProps>(
         ref={ref}
       >
         <div
+          ref={toolsRef}
           className={clsx(
             "oo-ui-toolGroup-tools",
             "oo-ui-barToolGroup-tools",

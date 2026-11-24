@@ -210,7 +210,7 @@ export default App;
 
 **MenuToolGroup** 以标签横向列表承载工具，handle 的标签由**激活工具**（`active: true`）的可见文本用「, 」连接而成，无激活工具时回退 `label`——适合段落格式、对齐方式一类「显示当前选择」的互斥菜单。{/* deviations: dev-menutoolgroup-label */}
 
-两个组共享同一套约定：面板开合统一通过 `open` / `defaultOpen` / `onOpenChange` 控制（handle 切换、选中收起、点外部、Escape 均回调）；`onToolSelect` 在任意工具被选中时收到该工具定义，可统一分发；选中工具后面板自动收起。组级 `disabled` 禁用全部工具；**全部工具禁用时组自动禁用**、`tools` 为空的组整体隐藏——按权限动态清空 `tools` 的场景无需额外处理。Escape 在捕获阶段关闭面板，工具栏嵌在 Dialog 里不会误关弹窗。{/* deviations: dev-toolbar-panel-escape */}
+两个组共享同一套约定：面板开合统一通过 `open` / `defaultOpen` / `onOpenChange` 控制（handle 切换、选中收起、点外部、Escape 均回调）；`onToolSelect` 在任意工具被选中时收到该工具定义（List 组的 More / Fewer 切换项也走同一通道），可统一分发；选中工具后面板自动收起。组级 `disabled` 禁用全部工具；**全部工具禁用时组自动禁用**、`tools` 为空的组整体隐藏——按权限动态清空 `tools` 的场景无需额外处理。Escape 在捕获阶段关闭面板，工具栏嵌在 Dialog 里不会误关弹窗。{/* deviations: dev-toolbar-panel-escape */}
 
 ```tsx preview
 import { useState } from "react";
@@ -312,6 +312,53 @@ function App() {
 export default App;
 ```
 
+## 工具提升
+
+`ListToolGroup` / `MenuToolGroup` 可经 `promoteToBar` 声明一批「宽度充足时平铺到工具栏」的工具：这些工具从面板移到工具组前的平铺区，按 Bar 组形态渲染（`title` 与 `accelerator` 拼入 tooltip）；栏宽不足时按原版规则把工具逐个收回面板，工具栏进入窄栏后不提升，全部工具都被提升时工具组 handle 自动隐藏。字符串为一个工具，嵌套数组为一组**整体提升**（整组容得下才提升，即原版 `[['bold', 'italic'], 'underline']` 的写法）。
+
+下例拖动容器右缘可观察工具逐个平铺到工具栏（`媒体` 与 `画廊` 同进同出）；收窄后按相反顺序把工具收回面板。内嵌工具组工具（`tools` 项带 `group`）也可列入名单，按其工具位宽度参与累计。
+
+栏宽变化的重算命中缓存时只按缓存宽度就地重算提升名单：仍被提升的工具不重挂，焦点与工具的弹出浮层因此保留；提升名单真的变化时，跨容器的工具会在面板与平铺区之间重新挂载——非受控的 `popup.open` 回到 `defaultOpen`、焦点回到文档，需要跨提升保持浮层状态时请使用受控 `popup.open`。
+
+```tsx preview
+import { ListToolGroup, Toolbar } from "ooui-react";
+
+function App() {
+  return (
+    <div
+      style={{
+        width: 300,
+        resize: "horizontal",
+        overflow: "auto",
+        border: "1px dashed #bbb",
+        padding: 4,
+        // 面板按就近滚动容器的可见空间钳高，底部留出打开「更多」面板的空间
+        paddingBottom: 140,
+      }}
+    >
+      <Toolbar>
+        <ListToolGroup
+          label="更多"
+          icon="ellipsis"
+          promoteToBar={["format", "style", ["media", "gallery"], "table"]}
+          tools={[
+            { name: "format", label: "格式", title: "格式" },
+            { name: "style", label: "样式", title: "样式" },
+            { name: "media", label: "媒体", title: "媒体" },
+            { name: "gallery", label: "画廊", title: "画廊" },
+            { name: "table", label: "表格", title: "表格" },
+          ]}
+        />
+      </Toolbar>
+    </div>
+  );
+}
+
+export default App;
+```
+
+与原版同名的 `promoteToBar` 相比：原版另接受工具工厂选择器（`{ group: '...' }`、`'*'`），本工程工具不经工厂注册，只接受显式工具名；原版只在窗口 resize 时重算，本工程栏宽变化（含容器尺寸变化）即重算，可提升工具集变化时重新测量宽度。{/* deviations: dev-toolbar-promote-to-bar */}
+
 ## 窄栏与位置
 
 工具栏宽度不足以平铺全部内容时自动进入**窄栏**：主题 CSS 收紧整体间距；工具与 handle 可按 `narrowConfig` 定制窄栏形态（收起标签、替换图标或文本，退出窄栏还原）。`position` 取 `top`（缺省）或 `bottom`，决定弹出面板朝下还是朝上展开。
@@ -389,6 +436,8 @@ export default App;
 - `popup`：弹出工具（见上节）。
 - `group`：内嵌工具组——工具位渲染为整个工具组而非工具链接（做「嵌套下拉」），handle 与选中态都由内嵌组承担，`title` / `icon` / `active` / `onSelect` 对本工具不生效，只有 `disabled` 同步为禁用态；与 `popup` 同给时 `group` 优先。{/* deviations: dev-toolgroup-tool-element */}
 
+工具组自身另有提升配置 `promoteToBar`（List / Menu 组）：可提升到工具栏的工具名，嵌套数组为整组提升，见上文「工具提升」。
+
 完整说明见各工具组与 `ToolProps` 类型。
 
 ## 与原版的差异
@@ -401,7 +450,7 @@ export default App;
 - **窄栏下 handle 的 tooltip 始终按生效的 `label` 兜底**。{/* deviations: dev-popuptoolgroup-title */}
 - **面板铺满容器宽时纵向仍按可视区限制高度并内部滚动**（工具始终可达）。{/* deviations: dev-panel-maxheight */}
 - **工具组增减后窄栏判定基准自动重测**，动态增减工具组的场景窄栏判定保持正确。{/* deviations: dev-narrow-threshold-reset */}
-- **不支持工具提升（`promoteToBar`，原版 0.54.3 新增）**：原版可声明弹层组里的某些工具在宽度充足时自动平铺到工具栏、变窄再收回；本工程未实现该能力，需要自行组合——常驻平铺的工具放进 `BarToolGroup`，随宽度切换则按容器宽度条件渲染不同工具组。{/* deviations: dev-toolbar-promote-to-bar */}
+- **工具提升（`promoteToBar`）只接受显式工具名，提升集变化时工具会重新挂载**：原版另支持工具工厂选择器（`{ group }` / `'*'`），且移动既有 DOM 节点、保留未受控浮层的开合态；本工程工具不经工厂注册，提升集变化时非受控的 `popup.open` 回到 `defaultOpen`、焦点回到文档。{/* deviations: dev-toolbar-promote-to-bar */}
 - **工具栏置于底部（`position="bottom"`）时 More / Fewer 的箭头方向与原版相反**，功能不受影响。{/* deviations: dev-listtoolgroup-icons */}
 
 ## 另见

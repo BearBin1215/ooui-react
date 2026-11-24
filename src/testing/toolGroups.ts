@@ -16,7 +16,10 @@ export const getPanel = (): HTMLElement =>
   document.querySelector<HTMLElement>(".oo-ui-popupToolGroup-tools")!;
 
 /**
- * 面板内按 `data-tool-name` 定位工具链接；不存在时返回 `null`（供收起/折叠类断言）。
+ * 面板内按 `data-tool-name` 定位工具；不存在时返回 `null`（供收起/折叠类断言）。
+ *
+ * 普通工具命中的是工具链接 `a.oo-ui-tool-link`，内嵌工具组工具（`ToolProps.group`）
+ * 命中的是工具位 `span.oo-ui-toolGroupTool`（两者都带该属性）。
  */
 export const getTool = (name: string): HTMLElement | null =>
   getPanel().querySelector<HTMLElement>(`[data-tool-name="${name}"]`);

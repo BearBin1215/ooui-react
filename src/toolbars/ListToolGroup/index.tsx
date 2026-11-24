@@ -1,13 +1,14 @@
-import { forwardRef } from "react";
+import { forwardRef, useRef } from "react";
 import clsx from "clsx";
 import { PopupToolGroupBase, type PopupToolGroupBaseProps } from "../PopupToolGroup";
 import { useControlledValue } from "../../hooks";
 import { useMessage } from "../../config";
+import { usePromotedToolNames } from "../Toolbar/context";
 import type { ToolProps } from "../Tool";
 
 export interface ListToolGroupProps extends Omit<
   PopupToolGroupBaseProps,
-  "tools" | "keepOpenToolNames"
+  "tools" | "keepOpenToolNames" | "hiddenToolNames" | "extraTools" | "promotionGroupKey"
 > {
   /**
    * The tools (overrides the base `tools` declaration).
@@ -50,13 +51,18 @@ export interface ListToolGroupProps extends Omit<
 /** 面板尾部展开/折叠切换项的符号名 */
 const EXPAND_COLLAPSE_TOOL_NAME = "more-fewer";
 
+/** 未展开时用于隐藏折叠项的名单占位（展开时没有隐藏项，复用模块级空数组） */
+const NO_COLLAPSIBLE_NAMES: string[] = [];
+
 /**
  * A list tool group (OO.ui.ListToolGroup): tools shown as a vertical text list in a
  * dropdown panel, with an optional More / Fewer toggle at the bottom controlling
- * collapsible tools (choosing the toggle keeps the panel open).
+ * collapsible tools (choosing the toggle keeps the panel open). Tools promoted to
+ * the toolbar are always shown there, regardless of the collapsed state.
  *
  * 列表工具组（对齐原版 OO.ui.ListToolGroup）：工具以标签文本纵向列表移入下拉
- * 面板，尾部可出现 More / Fewer 切换项控制可折叠工具的显隐（选中该项不收起面板）。
+ * 面板，尾部可出现 More / Fewer 切换项控制可折叠工具的显隐（选中该项不收起面板）；
+ * 被提升到工具栏的工具在工具栏上始终显示，不受折叠态影响。
  *
  * @see https://ooui-react.pages.dev/components/toolbar/
  */
@@ -78,6 +84,10 @@ export const ListToolGroup = forwardRef<HTMLDivElement, ListToolGroupProps>(
       value: expandedProp,
       defaultValue: defaultExpanded,
     });
+    // 提升态经Toolbar下发：本组自持注册键并与基类共享（基类登记测量信息，此处读取
+    // 提升名单决定 More/Fewer 的去留）
+    const promotionGroupKey = useRef({}).current;
+    const promotedNames = usePromotedToolNames(promotionGroupKey);
 
     // 可折叠工具集合：优先allowCollapse；给出forceExpand时其余均可折叠。
     // 名单与实际tools取交集（对齐原版populate的collapsibleTools过滤，无效名不产生More/Fewer项）
@@ -91,32 +101,36 @@ export const ListToolGroup = forwardRef<HTMLDivElement, ListToolGroupProps>(
     const collapsibleNames = requestedCollapsible.filter((name) =>
       toolNames.includes(name),
     );
-
-    const visibleTools = tools.filter(
-      (tool) => !collapsibleNames.includes(tool.name) || expanded,
-    );
+    // 可折叠工具全部被提升时不再需要 More/Fewer（对齐原版updateCollapsibleState的
+    // hasCollapsibleTools判定：提升的工具不在面板内，恒可见）
+    const hasCollapsibleTools = collapsibleNames.some((name) => !promotedNames.has(name));
+    // 未展开时折叠项不进面板；提升项由基类从面板剔除，此处无须区分
+    const hiddenToolNames = expanded ? NO_COLLAPSIBLE_NAMES : collapsibleNames;
 
     // 缺省标题经useMessage读取（对齐原版ooui-toolgroup-expand/collapse消息）
     const expandLabel = useMessage("ooui-toolgroup-expand");
     const collapseLabel = useMessage("ooui-toolgroup-collapse");
-    const extraTools: ToolProps[] =
-      collapsibleNames.length > 0
-        ? [
-            {
-              name: EXPAND_COLLAPSE_TOOL_NAME,
-              label: expanded ? collapseLabel : expandLabel,
-              icon: expanded ? "collapse" : "expand",
-              onSelect: () => commitExpanded((prev) => !prev),
-            },
-          ]
-        : [];
+    const extraTools: ToolProps[] = hasCollapsibleTools
+      ? [
+          {
+            name: EXPAND_COLLAPSE_TOOL_NAME,
+            label: expanded ? collapseLabel : expandLabel,
+            icon: expanded ? "collapse" : "expand",
+            onSelect: () => commitExpanded((prev) => !prev),
+          },
+        ]
+      : [];
 
     return (
       <PopupToolGroupBase
         {...rest}
         ref={ref}
-        tools={[...visibleTools, ...extraTools]}
-        keepOpenToolNames={[EXPAND_COLLAPSE_TOOL_NAME]}
+        promotionGroupKey={promotionGroupKey}
+        // 全量工具下传：提升计算与「全部工具被提升」需要完整工具集（含折叠项），
+        // 面板渲染由hiddenToolNames与提升名单共同收窄
+        tools={tools}
+        hiddenToolNames={hiddenToolNames}
+        extraTools={extraTools}
         toolsClassName={clsx("oo-ui-listToolGroup-tools", toolsClassName)}
         className={clsx(className, "oo-ui-listToolGroup")}
       />

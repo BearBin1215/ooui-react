@@ -156,7 +156,7 @@
   > id：dev-multioption-role ｜ 组件：CheckboxMultiselect ｜ 文档：components/checkbox-multiselect/index.mdx
 - **工具栏面板铺满容器时仍保留纵向钳高**。原版 `PopupToolGroup.setActive` 的填充分支先 `toggleClipping(false)`（横向与纵向裁剪一并撤掉）再写 `width`/`min-width`，面板高度不再受可视区约束；本工程只把宽度铺满容器，纵向仍按可用空间钳高并内部滚动（工具始终可达）。
   > id：dev-panel-maxheight ｜ 组件：Toolbar ｜ 文档：components/toolbar/index.mdx
-- **工具栏窄栏判定的内容宽度基准会随内容集变化重置**。原版的 `narrowThreshold` 只在构造期置 `null`（`dist/oojs-ui.js:20986`），`getNarrowThreshold` 惰性计算一次后**永久缓存**（`:21142-21148`），此后工具组增减仍沿用首次测量值；本工程在内容集变化（`actions`/`position`/`className` 变化触发 effect 重跑）时重置基准重测，能感知工具组增减。其余规则对齐原版：只在宽栏态测量（测量期临时摘掉 `oo-ui-toolbar-narrow` 取自然宽度，避免以被压缩的宽度为基准而误判），窄栏态复用缓存（窄栏下 `narrowConfig` 已替换 handle/工具文本，以窄栏内容为基准重测会无法退出窄栏）。
+- **工具栏窄栏判定的内容宽度基准会随内容集变化重置**。原版的 `narrowThreshold` 只在构造期置 `null`（`dist/oojs-ui.js:20986`），`getNarrowThreshold` 惰性计算一次后**永久缓存**（`:21142-21148`），此后工具组增减仍沿用首次测量值；本工程在内容集变化时标脏基准并重测：`actions`/`position`/`className` 变化触发 effect 重跑，工具区与动作区的 `childList` 变化经 `MutationObserver` 标脏；`characterData` 变化不标脏（避免每次改文案都触发两相测量）。其余规则对齐原版：只在宽栏态测量（测量期临时摘掉 `oo-ui-toolbar-narrow` 取自然宽度，避免以被压缩的宽度为基准而误判），窄栏态复用缓存（窄栏下 `narrowConfig` 已替换 handle/工具文本，以窄栏内容为基准重测会无法退出窄栏）。
   > id：dev-narrow-threshold-reset ｜ 组件：Toolbar ｜ 文档：components/toolbar/index.mdx
 - **命令式弹窗（`confirm`/`alert`/`prompt`）不做单窗口队列，重复调用层叠显示**。原版三个 API 共用全局单例 `WindowManager`，而该管理器是单窗口的：已有窗口打开时 `openWindow` 直接以 `Cannot open window: another window is open` 拒绝（`dist/oojs-ui.js:25421-25431`），`OO.ui.confirm` 等返回的 promise 随之永不兑现，第二层调用静默失效。本工程每个弹窗独立挂载（`src/dialogs/statics.tsx`），重复调用会层叠、逐个可交互——ESC 与焦点陷阱绑在弹窗自身，多层层叠时天然只有顶层响应。
   > id：dev-imperative-no-queue ｜ 组件：confirm、alert、prompt ｜ 文档：components/imperative-dialogs/index.mdx
@@ -291,10 +291,9 @@
   > id：dev-booklet-move-remove ｜ 组件：BookletLayout ｜ 文档：components/booklet-layout/index.mdx
 - **`FieldLayout` 的字段 accessKey 登记经 `useFieldAccessKey`**。原版 `FieldLayout` 覆写 `formatTitleWithAccessKey` 委托字段控件、把字段键位后缀并入 label 的 tooltip；本工程由字段控件经 `registerAccessKey` 登记，label 侧同样拼出 `Title [k]`。
   > id：dev-field-accesskey ｜ 组件：FieldLayout ｜ 文档：无需（已对齐项留档）
+- **工具提升（`promoteToBar`）经内容签名缓存与上下文通道实现**。原版 0.54.3 的 `PopupToolGroup` 接受 `promoteToBar`（工具名或名字集合的数组，按声明顺序成组提升，`dist/oojs-ui.js:23032`、`:23058`）；`Toolbar` 在窗口 resize 与 `initialize()` 时调 `updatePromotedTools()`（`:21105-21108`、`:21366`），测量值按工具实例身份惰性缓存（`:21302-21356`），再经 `setPromotedTools` 在组前平铺容器与面板之间移动 DOM 节点（`:23277-23317`）。本工程实现同等能力，但配置形态与触发时机不同：`promoteToBar` 只接受显式工具名（原版另支持 `ToolFactory.extract` 的 `{ name }` / `{ group }` / `'*'` 选择器，工具不经工厂注册，见 `dev-tool-factory`）；`Toolbar` 用 `ResizeObserver`(bar) + `MutationObserver`(内容) 驱动，栏宽变化即按缓存重算可容纳数量，可提升工具集变化时重新两相测量（测量值按 `promotion.ts` 的内容签名缓存）；提升态经 `ToolbarPromotionContext` 下发，`PopupToolGroup` 按提升名单在面板与平铺容器间切换渲染。逐项对齐：整组提升与集合边界、首个提升工具不计分隔边距、全组提升扣组宽（`promotion.ts` 的 `resolvePromotedTools`）、`oo-ui-tool-promoted`、`oo-ui-popupToolGroup-hasPromotedTools` / `allToolsPromoted`、Bar 形态 tooltip、全提升时收起面板。**已知差异**：提升集变化时工具在面板与平铺容器间重挂（React 跨父节点不搬运 DOM），未受控的 `popup.open` 回到 `defaultOpen`、焦点回到文档；原版移动既有节点，工具的浮层实例与开启态保留（`PopupTool` 的浮层挂在 `toolbar.$popups` 上，`:22636`），焦点本身两侧都不保证保留。需要跨提升保持浮层状态时请使用受控 `popup.open`。
+  > id：dev-toolbar-promote-to-bar ｜ 组件：Toolbar、PopupToolGroup、ListToolGroup、MenuToolGroup ｜ 文档：components/toolbar/index.mdx
 
 ### 暂未实现
 
 原版有、本工程也认可其价值，但当前没做（含只做了简化版）。
-
-- **Toolbar 的工具提升（`promoteToBar`）未实现**。原版 0.54.3 起 `PopupToolGroup` 接受 `promoteToBar`（工具名或名字集合的数组，按声明顺序成组提升，`dist/oojs-ui.js:23032`、`:23058`）：`Toolbar` 在窗口 resize 时调 `updatePromotedTools()`（`:21185`），用 `getPromotedToolCount()`（`:21239`）测量出工具栏剩余宽度还能容纳几个工具，再按组整组提升（`Tool.setPromoted`，`:21825`；被提升的工具按 Bar 组规则渲染 tooltip），组内工具全部被提升时给弹层 handle 加 `.oo-ui-popupToolGroup-allToolsPromoted` 隐藏（`oojs-ui-wikimediaui.css:3638`），宽度再不足时按同样的度量收回弹层。本工程没有这条通道，`PopupToolGroup` 不接受该配置——传入会作为未知属性透传到根元素（React 告警）。需要常驻平铺的工具直接放进 `BarToolGroup`；需要随宽度切换时，由调用方按容器宽度条件渲染 `BarToolGroup` / `ListToolGroup`。未做的原因：窄栏形态已由 `narrowConfig` 与窄栏判定覆盖（见 `dev-narrow-threshold-reset`），工具提升另需 Toolbar 级宽度测量、工具跨组搬移与主题类同步，实现与用例成本高而本库场景有限。状态：待排期。
-  > id：dev-toolbar-promote-to-bar ｜ 组件：Toolbar、PopupToolGroup ｜ 文档：components/toolbar/index.mdx

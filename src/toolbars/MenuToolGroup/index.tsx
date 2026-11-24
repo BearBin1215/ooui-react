@@ -3,11 +3,14 @@ import clsx from "clsx";
 import { PopupToolGroupBase, type PopupToolGroupBaseProps } from "../PopupToolGroup";
 
 /**
- * Props of the menu tool group (same as `PopupToolGroupBaseProps`).
+ * Props of the menu tool group (base props minus the List-group-only internal channels).
  *
- * 菜单工具组参数（与 `PopupToolGroupBaseProps` 一致）。
+ * 菜单工具组参数（基类参数去除 List 组专用的内部通道）。
  */
-export type MenuToolGroupProps = PopupToolGroupBaseProps;
+export type MenuToolGroupProps = Omit<
+  PopupToolGroupBaseProps,
+  "hiddenToolNames" | "extraTools" | "promotionGroupKey"
+>;
 
 /**
  * A menu tool group (OO.ui.MenuToolGroup): tools shown as a horizontal text list in

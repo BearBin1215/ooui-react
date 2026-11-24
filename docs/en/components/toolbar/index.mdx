@@ -210,7 +210,7 @@ Both consist of a handle plus a dropdown panel (the handle's icon/label/indicato
 
 **MenuToolGroup** holds tools as a horizontal text list, and the handle label is composed from the **active tool**'s (`active: true`) visible text joined with ", ", falling back to `label` when none is active — a fit for exclusive menus that display the current choice, such as paragraph format or alignment. {/* deviations: dev-menutoolgroup-label */}
 
-Shared convention of the two groups: the panel opens and closes through the common `open` / `defaultOpen` / `onOpenChange` controlled props (handle toggle, choosing a tool, outside click and Escape all fire it); `onToolSelect` receives the tool definition whenever any tool is chosen, for unified dispatch; the panel closes automatically after a tool is chosen. A group-level `disabled` disables every tool; **when all tools are disabled the group disables itself**, and a group with empty `tools` hides entirely — permission-driven scenarios that clear `tools` dynamically need no extra handling. Escape closes the panel in the capture phase, so a toolbar nested in a Dialog won't close the dialog by mistake. {/* deviations: dev-toolbar-panel-escape */}
+Shared convention of the two groups: the panel opens and closes through the common `open` / `defaultOpen` / `onOpenChange` controlled props (handle toggle, choosing a tool, outside click and Escape all fire it); `onToolSelect` receives the tool definition whenever any tool is chosen (the List group's More / Fewer toggle goes through the same channel), for unified dispatch; the panel closes automatically after a tool is chosen. A group-level `disabled` disables every tool; **when all tools are disabled the group disables itself**, and a group with empty `tools` hides entirely — permission-driven scenarios that clear `tools` dynamically need no extra handling. Escape closes the panel in the capture phase, so a toolbar nested in a Dialog won't close the dialog by mistake. {/* deviations: dev-toolbar-panel-escape */}
 
 ```tsx preview
 import { useState } from "react";
@@ -312,6 +312,53 @@ function App() {
 export default App;
 ```
 
+## Tool promotion
+
+`ListToolGroup` / `MenuToolGroup` accept `promoteToBar`: tools listed there move out of the panel into a flat area in front of the group whenever the toolbar has room (rendered in Bar-group form, with `title` and `accelerator` folded into the tooltip). When space runs out they return to the panel one by one, nothing is promoted while the toolbar is in narrow mode, and the group handle hides once every tool is promoted. A string promotes one tool; a nested array promotes a whole set together (only when all of its tools fit), i.e. the original's `[['bold', 'italic'], 'underline']` form.
+
+Drag the right edge of the container in the example below to watch tools move into the toolbar one at a time (`Media` and `Gallery` always move together); shrink it to move them back. Nested tool-group tools (a `tools` item with `group`) can also be listed; their tool slot width is what counts.
+
+When a bar-width recompute hits the cached measurements, the promoted list is recalculated in place: tools that stay promoted are not remounted, so focus and tool popup layers are preserved. When the promoted list really changes, tools that cross between the panel and the flat area are remounted: an uncontrolled `popup.open` returns to `defaultOpen` and focus returns to the document; use a controlled `popup.open` if the popup state must survive promotion.
+
+```tsx preview
+import { ListToolGroup, Toolbar } from "ooui-react";
+
+function App() {
+  return (
+    <div
+      style={{
+        width: 300,
+        resize: "horizontal",
+        overflow: "auto",
+        border: "1px dashed #bbb",
+        padding: 4,
+        // The panel is height-clamped to the nearest scroll container: leave room to open it
+        paddingBottom: 140,
+      }}
+    >
+      <Toolbar>
+        <ListToolGroup
+          label="More"
+          icon="ellipsis"
+          promoteToBar={["format", "style", ["media", "gallery"], "table"]}
+          tools={[
+            { name: "format", label: "Format", title: "Format" },
+            { name: "style", label: "Style", title: "Style" },
+            { name: "media", label: "Media", title: "Media" },
+            { name: "gallery", label: "Gallery", title: "Gallery" },
+            { name: "table", label: "Table", title: "Table" },
+          ]}
+        />
+      </Toolbar>
+    </div>
+  );
+}
+
+export default App;
+```
+
+Compared to the original's same-named `promoteToBar`: the original also accepts tool-factory selectors (`{ group: '...' }`, `'*'`), while here tools are not registered through a factory and only explicit tool names are supported; the original only recomputes on window resize, while here any bar-width change (including container resizes) recomputes, and a changed promotable tool set triggers a width remeasure. {/* deviations: dev-toolbar-promote-to-bar */}
+
 ## Narrow mode and position
 
 When the toolbar isn't wide enough to tile all its content, it enters **narrow mode**: the theme CSS tightens the overall spacing; tools and handles can customize their narrow form via `narrowConfig` (hide labels, swap icons or text, restored on leaving narrow mode). `position` is `top` (default) or `bottom`, deciding whether popup panels open downward or upward.
@@ -389,6 +436,8 @@ Common fields of a tool (an element of the `tools` array):
 - `popup`: popup tool (see the previous section).
 - `group`: a nested tool group — the tool slot renders a whole tool group instead of a tool link (for "nested dropdowns"); the handle and selection state are owned by the nested group, and `title` / `icon` / `active` / `onSelect` don't apply to this tool, only `disabled` carries over as the slot's disabled state; when both `popup` and `group` are given, `group` wins. {/* deviations: dev-toolgroup-tool-element */}
 
+A tool group itself has a promotion option `promoteToBar` (List / Menu groups): tool names to promote into the toolbar, with nested arrays promoting a set together — see "Tool promotion" above.
+
 The full reference is in the tool-group components and the `ToolProps` type.
 
 ## Differences from OOUI
@@ -401,7 +450,7 @@ The full reference is in the tool-group components and the `ToolProps` type.
 - **In narrow mode the handle's tooltip always falls back to the effective `label`.** {/* deviations: dev-popuptoolgroup-title */}
 - **A panel that fills the container width is still height-clamped to the visible area with internal scrolling** (tools stay reachable). {/* deviations: dev-panel-maxheight */}
 - **The narrow-mode measurement baseline is remeasured when tool groups are added or removed**, so dynamic tool sets keep correct narrow detection. {/* deviations: dev-narrow-threshold-reset */}
-- **Tool promotion (`promoteToBar`, new in the original 0.54.3) is not supported**: the original can declare popup-group tools that move into the bar when there is room and return to the popup when narrow; here that has to be assembled by hand — put always-visible tools in a `BarToolGroup`, or conditionally render different tool groups based on the container width. {/* deviations: dev-toolbar-promote-to-bar */}
+- **Tool promotion (`promoteToBar`) only accepts explicit tool names, and tools are remounted when the promoted set changes**: the original also accepts tool-factory selectors (`{ group }` / `'*'`) and moves existing DOM nodes, keeping uncontrolled popup state; here tools are not factory-registered, and when the promoted set changes an uncontrolled `popup.open` returns to `defaultOpen` and focus returns to the document. {/* deviations: dev-toolbar-promote-to-bar */}
 - **On a bottom toolbar (`position="bottom"`) the More / Fewer arrow directions are inverted compared to the original**; functionality is unaffected. {/* deviations: dev-listtoolgroup-icons */}
 
 ## See also

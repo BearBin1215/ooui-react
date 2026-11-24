@@ -228,6 +228,9 @@ export interface ToolViewProps {
 
   /** 组级禁用（组disabled或全部工具禁用）下发到链接：不可Tab聚焦且aria-disabled */
   groupDisabled?: boolean;
+
+  /** 是否处于提升态（从弹层面板提升到工具栏前的平铺容器，对齐原版Tool.setPromoted） */
+  promoted?: boolean;
 }
 
 /**
@@ -319,6 +322,7 @@ export function ToolView({
   tooltip = false,
   accelTooltip = false,
   groupDisabled,
+  promoted = false,
 }: ToolViewProps) {
   const linkDisabled = !!tool.disabled || !!groupDisabled;
   const narrow = useToolbarNarrow();
@@ -351,11 +355,16 @@ export function ToolView({
     );
     return (
       <span
+        // 工具位无链接（原版ToolGroupTool构造期$link.remove()），名称属性供提升测量按名定位；
+        // 按压流只认 a.oo-ui-tool-link[data-tool-name]，故它不参与外层组的按压流
+        data-tool-name={tool.name}
         className={clsx(
           getWidgetClassName({ disabled: nestedDisabled }),
           "oo-ui-tool",
           "oo-ui-toolGroupTool",
           getToolNameClassName(tool.name),
+          // 提升态标记（对齐原版Tool.setPromoted，ToolGroupTool同样继承该方法）
+          promoted && "oo-ui-tool-promoted",
         )}
         aria-disabled={nestedDisabled || undefined}
       >
@@ -374,6 +383,9 @@ export function ToolView({
       "oo-ui-tool-with-label",
     // 浮层开启期间工具呈激活态（对齐原版onPopupToggle的setActive）
     (pressed || tool.active || (!!tool.popup && popupOpen)) && "oo-ui-tool-active",
+    // 提升态标记（对齐原版Tool.setPromoted的oo-ui-tool-promoted，两主题无该类规则，
+    // 保留为状态钩子）
+    promoted && "oo-ui-tool-promoted",
     tool.popup && "oo-ui-popupTool",
   );
 
@@ -427,9 +439,15 @@ export function ToolView({
  * 组级按压流，对齐原版ToolGroup.onMouseKeyDown/onDocumentMouseKeyUp：
  * 左键在可用工具上按下进入按压态（oo-ui-tool-active），松开时指针仍在发起工具上就触发onSelect；
  * 工具链接的keydown/keyup（Enter/空格）同流程。按压流的进入/复位/document级监听由
- * usePressedState统一承担，本hook仅补充工具组的按压目标解析与视觉抑制
+ * usePressedState统一承担，本hook仅补充工具组的按压目标解析与视觉抑制。
+ * `ownsToolElement`限定本组直接承载的工具根：内嵌工具组的面板/浮层事件会冒泡到外层
+ * 组容器，原版按工具实例身份区分，这里按容器归属排除
  */
-export function useToolGroupPressed(tools: ToolProps[], disabled?: boolean) {
+export function useToolGroupPressed(
+  tools: ToolProps[],
+  disabled?: boolean,
+  ownsToolElement?: (toolElement: HTMLElement) => boolean,
+) {
   // 工具集经ref读取最新：mousedown→mouseup期间props更新（active/onSelect变化）后
   // 仍取新值，对齐原版经实例属性（this.pressed等）的活引用，避免闭包捕获渲染时的过期tools
   const toolsRef = useLatestRef(tools);
@@ -437,13 +455,26 @@ export function useToolGroupPressed(tools: ToolProps[], disabled?: boolean) {
   // 移回同一工具或在其上松开仍会触发选择）
   const [pressedBlurred, setPressedBlurred] = useState(false);
 
-  /** 从事件目标解析工具符号名（经`[data-tool-name]`就近向上匹配） */
+  /**
+   * 从事件目标解析工具符号名：只认工具链接（对齐原版findTargetTool的
+   * `.closest('.oo-ui-tool-link')`，oojs-ui.js:22281-22290），并要求链接所属工具根的
+   * 直接父节点是本组容器。内嵌工具组的面板事件会经React合成事件冒泡到外层组容器，
+   * 原版靠工具实例身份区分（`$item.parent().data('oo-ui-tool')` + `this.pressed === tool`），
+   * 按名字反查时须补归属校验，否则内嵌组同名工具会误触发外层工具
+   */
   const findToolName = (node: EventTarget | null): string | null => {
     if (!(node instanceof Element)) {
       return null;
     }
-    const link = node.closest("[data-tool-name]");
-    return link?.getAttribute("data-tool-name") ?? null;
+    const link = node.closest<HTMLElement>("a.oo-ui-tool-link[data-tool-name]");
+    if (!link) {
+      return null;
+    }
+    const toolElement = link.closest<HTMLElement>(".oo-ui-tool");
+    if (!toolElement || (ownsToolElement && !ownsToolElement(toolElement))) {
+      return null;
+    }
+    return link.getAttribute("data-tool-name");
   };
 
   const { pressedTarget, onMouseDown, onKeyDown } = usePressedState<string>({

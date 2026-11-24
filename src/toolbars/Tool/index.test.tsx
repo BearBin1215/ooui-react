@@ -75,8 +75,12 @@ it("内嵌工具组：工具位渲染为内嵌组元素，不再渲染工具链�
   expect(wrapper.tagName).toBe("SPAN");
   expect(wrapper).toHaveClass("oo-ui-tool");
   expect(wrapper).toHaveClass("oo-ui-toolGroupTool");
-  // 原版ToolGroupTool构造期$link.remove()（oojs-ui-toolbars.js:2078-2081）：工具位无链接
-  expect(getRoot(screen).querySelector('[data-tool-name="settings"]')).toBeNull();
+  // 原版ToolGroupTool构造期$link.remove()（oojs-ui-toolbars.js:2078-2081）：工具位无链接。
+  // 名称属性只用于提升测量定位，按压流只认 a.oo-ui-tool-link[data-tool-name]
+  expect(
+    getRoot(screen).querySelector('a.oo-ui-tool-link[data-tool-name="settings"]'),
+  ).toBeNull();
+  expect(wrapper).toHaveAttribute("data-tool-name", "settings");
   // 包装span的直接子节点即内嵌工具组根元素
   expect(wrapper.firstElementChild).toHaveClass("oo-ui-barToolGroup");
   expect(getRoot(screen).querySelector('[data-tool-name="inner"]')).toBeTruthy();

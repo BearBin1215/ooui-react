@@ -2,7 +2,9 @@ import { expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { getRoot, pressMouse, tick } from "../../testing";
 import { getPanel, getTool } from "../../testing/toolGroups";
+import { BarToolGroup } from "../BarToolGroup";
 import { ToolbarNarrowProvider } from "../Toolbar/context";
+import type { ToolProps } from "../Tool";
 import { ListToolGroup } from ".";
 
 const TOOLS = [
@@ -72,6 +74,31 @@ it("allowCollapse：未展开时可折叠工具不入面板，尾部More切换�
   pressMouse(getTool("more-fewer")!);
   await tick();
   expect(getTool("b")).toBeNull();
+});
+
+it("More / Fewer：选中同样经onToolSelect派发，面板保持打开", async () => {
+  const onToolSelect = vi.fn<(tool: ToolProps) => void>();
+  const screen = await render(
+    <ListToolGroup
+      label="更多"
+      tools={[...TOOLS]}
+      allowCollapse={["b"]}
+      onToolSelect={onToolSelect}
+    />,
+  );
+  getRoot(screen).querySelector<HTMLElement>(".oo-ui-popupToolGroup-handle")!.click();
+  await tick(30);
+  expect(getPanel()).not.toHaveClass("oo-ui-element-hidden");
+
+  pressMouse(getTool("more-fewer")!);
+  await tick();
+  // 附加工具与声明工具走同一选择通道（对齐原版ListToolGroup.onMouseKeyUp：
+  // 跳过PopupToolGroup的收起分支后仍调用工具自身的onSelect）
+  expect(onToolSelect).toHaveBeenCalledWith(
+    expect.objectContaining({ name: "more-fewer" }),
+  );
+  expect(getPanel()).not.toHaveClass("oo-ui-element-hidden");
+  expect(getTool("more-fewer")!.textContent).toContain("Fewer");
 });
 
 it("forceExpand：未列入的工具均可折叠（与allowCollapse名单取交集）", async () => {
@@ -198,4 +225,45 @@ it("窄栏配置：窄栏时以已定义字段替换handle图标/标签/可见�
   // 标签不可见：裁剪类落label元素，根元素的oo-ui-labelElement被抑制（原版setInvisibleLabel）
   expect(label).toHaveClass("oo-ui-labelElement-invisible");
   expect(root).not.toHaveClass("oo-ui-labelElement");
+});
+
+it("内嵌工具组的同名工具不触发外层组的按压/选择", async () => {
+  const outerSelect = vi.fn<() => void>();
+  const innerSelect = vi.fn<() => void>();
+  await render(
+    <ListToolGroup
+      label="更多"
+      defaultOpen
+      tools={[
+        { name: "same", label: "外层同名", onSelect: outerSelect },
+        {
+          name: "nested",
+          // 平铺内嵌组：链接本身就在外层组容器内，最容易被按名字误判
+          group: (
+            <BarToolGroup
+              tools={[{ name: "same", label: "内层同名", onSelect: innerSelect }]}
+            />
+          ),
+        },
+      ]}
+    />,
+  );
+  await tick(30);
+  const panel = getPanel();
+  const innerLink = panel
+    .querySelector<HTMLElement>('[data-tool-name="nested"]')!
+    .querySelector<HTMLElement>('a.oo-ui-tool-link[data-tool-name="same"]')!;
+  pressMouse(innerLink);
+  await tick();
+  // 内层组自己的按压流处理；外层组按「工具根的直接父容器」拒绝，不误触发同名工具
+  expect(innerSelect).toHaveBeenCalledOnce();
+  expect(outerSelect).not.toHaveBeenCalled();
+
+  // 外层同名工具本身仍可正常选择（归属校验不误伤直接承载的工具）
+  const outerLink = panel.querySelector<HTMLElement>(
+    ':scope > .oo-ui-tool > a.oo-ui-tool-link[data-tool-name="same"]',
+  )!;
+  pressMouse(outerLink);
+  await tick();
+  expect(outerSelect).toHaveBeenCalledOnce();
 });

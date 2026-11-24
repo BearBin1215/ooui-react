@@ -17,7 +17,7 @@ const DISABLED_TOOLS = [
 
 const getHandle = (screen: { container: Element }) =>
   getRoot(screen).querySelector<HTMLElement>(".oo-ui-popupToolGroup-handle")!;
-/** data-tool-name就位于工具链接自身（a.oo-ui-tool-link），面板内可聚焦项即它 */
+/** 普通工具的data-tool-name位于工具链接自身（a.oo-ui-tool-link），面板内可聚焦项即它 */
 const getToolLink = (name: string) => getTool(name)!;
 /** 面板Tab流转三分支都靠keydown驱动，故需cancelable事件以断言preventDefault */
 const tabOn = (el: Element, shiftKey = false) => {
